@@ -12,13 +12,17 @@ Project Lead:
 Charla M. Burnett (Refugees Welcome!) charla.burnett89@gmail.com
 
 MapBox Support: 
-
+Marena Brinkhurst marena.brinkhurst@mapbox.com
+Sam Fader sam.fader@mapbox.com 
+Mall Wood mal.wood@mapbox.com,
+Joe Clark joe.clark@mapbox.com,
 
 Code4Boston Support: 
+Thad Kerosky <thadknull@gmail.com>
+Matt mattz@codeforboston.org
 
 Slack: 
 #migrantservicemap
-
 
 
 
