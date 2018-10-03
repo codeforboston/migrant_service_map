@@ -27,6 +27,8 @@ Slack:
 Weekly Meeting Minutes: 
 https://docs.google.com/document/d/1Q4KbIK_mSc1YiAWd6nZ9qgy0cJgI_m5sBXKJMqfagHo/edit?usp=sharing
 
+Draft Link:
+https://bl.ocks.org/malwoodsantoro/raw/bb965255726264a1187d0de845f32c41/
 
 
 Summary
