@@ -31,7 +31,7 @@ Draft Link:
 https://bl.ocks.org/malwoodsantoro/raw/bb965255726264a1187d0de845f32c41/
 
 Database: 
-https://docs.google.com/spreadsheets/d/1yuYBtejcDPPxkY3ogHkqGEp7h3RrZ_3B2SUsraASWcs/edit#gid=1593998996
+https://docs.google.com/spreadsheets/d/1yuYBtejcDPPxkY3ogHkqGEp7h3RrZ_3B2SUsraASWcs/edit?usp=sharing
 
 Summary
 
