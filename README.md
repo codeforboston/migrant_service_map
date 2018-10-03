@@ -24,6 +24,9 @@ Matt mattz@codeforboston.org
 Slack: 
 #migrantservicemap
 
+Weekly Meeting Minutes: 
+https://docs.google.com/document/d/1Q4KbIK_mSc1YiAWd6nZ9qgy0cJgI_m5sBXKJMqfagHo/edit?usp=sharing
+
 
 
 Summary
