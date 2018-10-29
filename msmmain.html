@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Migrant Service Map</title>
+
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.45.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.45.0/mapbox-gl.css' rel='stylesheet' />
+    <script async defer src="https://api.mapbox.com/mapbox-assembly/v0.21.2/assembly.js"></script>
+    <link href="https://api.mapbox.com/mapbox-assembly/v0.21.2/assembly.min.css" rel="stylesheet">
+    <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.2.0/mapbox-gl-geocoder.min.js'></script>
+    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.2.0/mapbox-gl-geocoder.css' type='text/css' />
+    <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
+
+    <!-- Bootstrap -->
+    <link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="../vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/Users/charlaburnett/Documents/fontawesome-free-5.4.2-web/css/all.css" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="../vendors/nprogress/nprogress.css" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link href=" /Users/charlaburnett/Documents/Practice/Migrant Service Map/rwbranding.css" rel="stylesheet">
+  </head>
+
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+        <div class="col-md-3 left_col">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title" style="border: 0;">
+              <a href="https://refugeeswelcomehome.org/" class="site_title"><span>Migrant Service Map</span></a>
+            </div>
+
+            <div class="clearfix"></div>
+
+          
+            <br />
+
+            <!-- sidebar menu -->
+            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+              <div class="menu_section">
+                <h3>Service Type</h3>
+                <ul class="nav side-menu">
+                  <li><a><i class="fa fa-home"></i> Community Center<span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="index.html">Org 1</a></li>
+                      <li><a href="index2.html">Org 2</a></li>
+                      <li><a href="index3.html">Org 3</a></li>
+                    </ul>
+                  </li>
+                  <li><a><i class="fa fa-edit"></i> Education <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="form.html">Org 1</a></li>
+                      <li><a href="form_advanced.html">Org 2</a></li>
+                      <li><a href="form_validation.html">Org 3</a></li>
+                    </ul>
+                  </li>
+                  <li><a><i class="fa fa-desktop"></i> Legal<span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="general_elements.html">Org 1</a></li>
+                      <li><a href="media_gallery.html">Org 2</a></li>
+                      <li><a href="typography.html"> Org 3 </a></li>
+                    </ul>
+                  </li>
+                  <li><a><i class="fa fa-table"></i> Health<span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="tables.html">Org 1</a></li>
+                      <li><a href="tables_dynamic.html"> Or 2</a></li>
+                    </ul>
+                  </li>
+                  <li><a><i class="fa fa-bar-chart-o"></i> Food Assistance <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="chartjs.html">Org 1</a></li>
+                      <li><a href="chartjs2.html">Org 2</a></li>
+                      <li><a href="morisjs.html">Org 3</a></li>
+                    </ul>
+                  </li>
+                  <li><a><i class="fa fa-clone"></i>Employment <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="fixed_sidebar.html">Org 1</a></li>
+                      <li><a href="fixed_footer.html">Org 2</a></li>
+                      <li><a href="fixed_footer.html">Org 3</a></li>
+                    </ul>
+                  </li>
+                  <li><a><i class="fa fa-clone"></i>Housing <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="fixed_sidebar.html">Org 1</a></li>
+                      <li><a href="fixed_footer.html">Org 2</a></li>
+                      <li><a href="fixed_footer.html">Org 3</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+              <div class="menu_section">
+                <h3>Other Criteria</h3>
+                <ul class="nav side-menu">
+                  <li><a><i class="fa fa-bug"></i> Visa Status <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="e_commerce.html">Refugee</a></li>
+                      <li><a href="projects.html">Asylum Seeker</a></li>
+                      <li><a href="project_detail.html">Undocumented</a></li>
+                      <li><a href="project_detail.html">Perm. Resident</a></li>
+                    </ul>
+                  </li>
+                  </ul>
+              </div>
+
+            </div>
+            <!-- sidebar menu -->
+
+            <!-- menu footer buttons -->
+            <div class="sidebar-footer hidden-small"></div>
+            </div>
+            <!-- menu footer buttons -->
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+          <div class="nav_menu">
+            <nav>
+              <div class="nav toggle">
+                </div><a id="menu_toggle"><i class="fa fa-bars"></i></a>
+              </div>
+
+        <!-- page content -->
+        <body class="prose">
+          <nav id="nav child_menu"></nav>
+          <div id='map'></div>
+
+          <!-- legend -->
+          <div id='legend' class='bg-white w100 color-black round shadow-darken10 px12 py12 txt-l'>
+            <strong class='block mb6'>Distance to location (miles)</strong>
+            <div class='grid txt-s align-center'>
+              <div class='col flex-child--grow'><button class='btn btn--s bg-green-dark'>.5</button></div>
+              <div class='col flex-child--grow'><button class='btn btn--s bg-green'>1</button></div>
+              <div class='col flex-child--grow'><button class='btn btn--s bg-green-light'>3</button></div>
+              <div class='col flex-child--grow'><button class='btn btn--s bg-green-faint'>5</button></div>
+            </div>
+          
+          
+          <script>
+            mapboxgl.accessToken = 'pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw';
+            var map = new mapboxgl.Map({
+              container: 'map', // container id
+              style: 'mapbox://styles/refugeeswelcome/cjh9k11zz15ds2spbs4ld6y9o', // stylesheet location
+              center: [-71.066954, 42.359947], // starting position [lng, lat]
+              zoom: 11 // starting zoom
+            });
+            var geocoder = new MapboxGeocoder({
+              accessToken: mapboxgl.accessToken
+            });
+            map.addControl(geocoder);
+            map.on('load', function(){
+            var toggleableLayerIds = [ 'community-centers', 'education', 'employment', 'financial-assistance', 'food-assistance', 'health', 'housing', 'mental-health', 'origin-based-community-center', 'resettlement-agency' ];
+            for (var i = 0; i < toggleableLayerIds.length; i++) {
+              var id = toggleableLayerIds[i];
+                //click event for pop-ups to each layer
+                map.on('click', toggleableLayerIds[i], function (e) {
+                  var coordinates = e.features[0].geometry.coordinates.slice();
+                  var name = e.features[0].properties.name;
+                  var website = e.features[0].properties.website;
+                  var bio = e.features[0].properties.bio;
+                  var telephone = e.features[0].properties.telephone;
+                  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                      coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+                  }
+                  new mapboxgl.Popup()
+                    .setLngLat(coordinates)
+                    .setHTML('<h4>' + name + '</h4>' + '<a href=' + website + '>' + website + '</a>' + '<br><br>' + '<i>' + bio + '</i>' + '<br><br><b>Telephone: </b>' + telephone)
+                    .addTo(map);
+                });
+                //toggling functionality
+                var link = document.createElement('a');
+                link.href = '#';
+                link.className = 'active';
+                link.textContent = id;
+                link.onclick = function (e) {
+                  var clickedLayer = this.textContent;
+                  e.preventDefault();
+                  e.stopPropagation();
+                  var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+                  if (visibility === 'visible') {
+                    map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+                    this.className = '';
+                  } else {
+                    this.className = 'active';
+                    map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+                  }
+                };
+                var layers = document.getElementById('menu');
+                layers.appendChild(link);
+            }
+            //on geocoder results, add turf circles
+            map.addSource('single-point', {
+                "type": "geojson",
+                "data": {
+                    "type": "FeatureCollection",
+                    "features": []
+                }
+            });
+            map.addLayer({
+                "id": "point",
+                "source": "single-point",
+                "type": "circle",
+                "paint": {
+                    "circle-radius": 10,
+                    "circle-color": "#007cbf"
+                }
+            });
+            geocoder.on('result', function(ev) {
+              map.removeLayer('circle-outline');
+              map.removeLayer('circle-outline-two');
+              map.removeLayer('circle-outline-three');
+              map.removeLayer('circle-outline-four');
+              map.getSource('single-point').setData(ev.result.geometry);
+              var center = {
+                "type": "Feature",
+                "properties": {
+                  "marker-color": "#0f0"
+                },
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": ev.result.geometry.coordinates
+                }
+              };
+              var radius = .5;
+              var options = {steps: 100, units: 'miles'};
+              var circle = turf.circle(center, radius, options);
+              map.addLayer({
+                "id": "circle-outline",
+                "type": "line",
+                "source": {
+                    "type": "geojson",
+                    "data": circle
+                  },
+                "paint": {
+                  "line-color": "#046328",
+                  "line-opacity": 0.8,
+                  "line-width": 10,
+                  "line-offset": 5
+                  },
+                  "layout": {
+                  }
+              });
+              var radiusTwo = 1;
+              var circleTwo = turf.circle(center, radiusTwo, options);
+                map.addLayer({
+                  "id": "circle-outline-two",
+                  "type": "line",
+                  "source": {
+                    "type": "geojson",
+                      "data": circleTwo
+                    },
+                    "paint": {
+                      "line-color": "#00AA46",
+                      "line-opacity": 0.8,
+                      "line-width": 10,
+                      "line-offset": 5
+                    },
+                    "layout": {
+                    }
+                });
+                var radiusThree = 3;
+                var circleThree = turf.circle(center, radiusThree, options);
+                   map.addLayer({
+                     "id": "circle-outline-three",
+                     "type": "line",
+                     "source": {
+                          "type": "geojson",
+                          "data": circleThree
+                        },
+                        "paint": {
+                          "line-color": "#71C780",
+                          "line-opacity": 0.8,
+                          "line-width": 10,
+                          "line-offset": 5
+                        },
+                       "layout": {
+                       }
+                  });
+                  var radiusFour = 5;
+                  var circleFour = turf.circle(center, radiusFour, options);
+                  map.addLayer({
+                    "id": "circle-outline-four",
+                    "type": "line",
+                    "source": {
+                      "type": "geojson",
+                      "data": circleFour
+                    },
+                    "paint": {
+                      "line-color": "#D5EDDB",
+                      "line-opacity": 0.8,
+                      "line-width": 10,
+                      "line-offset": 5
+                    },
+                    "layout": {
+                       }
+                   });
+             });
+          });
+          </script>
+          
+           
+        <!-- page content --
+
+    <!- jQuery -->
+    <script src="../vendors/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="../vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- FastClick -->
+    <script src="../vendors/fastclick/lib/fastclick.js"></script>
+    <!-- NProgress -->
+    <script src="../vendors/nprogress/nprogress.js"></script>
+    <!-- Chart.js -->
+    <script src="../vendors/Chart.js/dist/Chart.min.js"></script>
+
+    <!-- Custom Theme Scripts -->
+    <script src="../build/js/custom.min.js"></script>
+	
+  </body>
+</html>
