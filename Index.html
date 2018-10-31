@@ -14,22 +14,22 @@
     <style>
         body { margin:0; padding:0; }
         #map { position:absolute; top:0; bottom:0; width:100%; z-index:-1; }
-
         #menu {
           background: #fff;
           position: absolute;
-          z-index: 1;
+          opacity: .85;
+          z-index: 10;
           top:  100px;
           left: 10px;
           border-radius: 3px;
-          width: 120px;
+          height: 50px;
+          width: 140px;
           border: 1px solid rgba(0,0,0,0.4);
           font-family: 'Open Sans', sans-serif;
         }
-
         #menu a {
           font-size: 13px;
-          color: #404040;
+          color: black;
           display: block;
           margin: 0;
           padding: 0;
@@ -38,41 +38,33 @@
           border-bottom: 1px solid rgba(0,0,0,0.25);
           text-align: center;
         }
-
         #menu a:last-child {
           border: none;
         }
-
         #menu a:hover {
           background-color: #f8f8f8;
           color: #404040;
         }
-
         #menu a.active {
           background-color: #d7b221;≤
           color: #ffffff;
         }
-
         #menu a.active:hover {
           background: #d7b221;
         }
-
         .mapboxgl-ctrl-geocoder {
           top: 100px;
           right:100px;
         }
-
         .mapboxgl-popup-content {
           width: 250px;
         }
-
         #legend {
         position: absolute;
         right: 24px;
         bottom: 120px;
         z-index: 1;
       }
-
     </style>
 </head>
 <body class="prose">
@@ -102,20 +94,14 @@
     center: [-71.066954, 42.359947], // starting position [lng, lat]
     zoom: 11 // starting zoom
   });
-
   var geocoder = new MapboxGeocoder({
     accessToken: mapboxgl.accessToken
   });
-
   map.addControl(geocoder);
-
   map.on('load', function(){
-
   var toggleableLayerIds = [ 'community-centers', 'education', 'employment', 'financial-assistance', 'food-assistance', 'health', 'housing', 'mental-health', 'origin-based-community-center', 'resettlement-agency' ];
-
   for (var i = 0; i < toggleableLayerIds.length; i++) {
     var id = toggleableLayerIds[i];
-
       //click event for pop-ups to each layer
       map.on('click', toggleableLayerIds[i], function (e) {
         var coordinates = e.features[0].geometry.coordinates.slice();
@@ -123,30 +109,24 @@
         var website = e.features[0].properties.website;
         var bio = e.features[0].properties.bio;
         var telephone = e.features[0].properties.telephone;
-
         while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
             coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
         }
-
         new mapboxgl.Popup()
           .setLngLat(coordinates)
           .setHTML('<h4>' + name + '</h4>' + '<a href=' + website + '>' + website + '</a>' + '<br><br>' + '<i>' + bio + '</i>' + '<br><br><b>Telephone: </b>' + telephone)
           .addTo(map);
       });
-
       //toggling functionality
       var link = document.createElement('a');
       link.href = '#';
       link.className = 'active';
       link.textContent = id;
-
       link.onclick = function (e) {
         var clickedLayer = this.textContent;
         e.preventDefault();
         e.stopPropagation();
-
         var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
-
         if (visibility === 'visible') {
           map.setLayoutProperty(clickedLayer, 'visibility', 'none');
           this.className = '';
@@ -155,11 +135,9 @@
           map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
         }
       };
-
       var layers = document.getElementById('menu');
       layers.appendChild(link);
   }
-
   //on geocoder results, add turf circles
   map.addSource('single-point', {
       "type": "geojson",
@@ -168,7 +146,6 @@
           "features": []
       }
   });
-
   map.addLayer({
       "id": "point",
       "source": "single-point",
@@ -178,16 +155,12 @@
           "circle-color": "#007cbf"
       }
   });
-
   geocoder.on('result', function(ev) {
-
     map.removeLayer('circle-outline');
     map.removeLayer('circle-outline-two');
     map.removeLayer('circle-outline-three');
     map.removeLayer('circle-outline-four');
-
     map.getSource('single-point').setData(ev.result.geometry);
-
     var center = {
       "type": "Feature",
       "properties": {
@@ -198,11 +171,9 @@
         "coordinates": ev.result.geometry.coordinates
       }
     };
-
     var radius = .5;
     var options = {steps: 100, units: 'miles'};
     var circle = turf.circle(center, radius, options);
-
     map.addLayer({
       "id": "circle-outline",
       "type": "line",
@@ -219,7 +190,6 @@
         "layout": {
         }
     });
-
     var radiusTwo = 1;
     var circleTwo = turf.circle(center, radiusTwo, options);
       map.addLayer({
@@ -238,7 +208,6 @@
           "layout": {
           }
       });
-
       var radiusThree = 3;
       var circleThree = turf.circle(center, radiusThree, options);
          map.addLayer({
@@ -257,7 +226,6 @@
              "layout": {
              }
         });
-
         var radiusFour = 5;
         var circleFour = turf.circle(center, radiusFour, options);
         map.addLayer({
@@ -277,9 +245,7 @@
              }
          });
    });
-
 });
-
 </script>
 
 </body>
