@@ -21,7 +21,7 @@
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <!-- Font Awesome -->
-    <!-- <link href="../vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet"> -->
+    <link href="./font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
     <!-- NProgress -->
     <link href="https://unpkg.com/nprogress@0.2.0/nprogress.css" rel="stylesheet">
@@ -31,13 +31,13 @@
   </head>
 
         <!-- page content -->
-        <body class="prose">
-          <!-- <nav id="nav child_menu"></nav> -->
+        <body class="nav-md">
+          <nav id="nav child_menu"></nav>
           
           <div class="container body">
             <div class="main_container">
-                <div id='map'></div>
-          <div class="nav-md">
+              <body class="prose">
+                  <div id='map'></div>
                   <div class="col-md-3 left_col" style="z-index: 1">
                     <div class="left_col scroll-view">
                       <div class="navbar nav_title" style="border: 0;">
@@ -50,8 +50,76 @@
                       <br />
           
                       <!-- sidebar menu -->
-                      <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
-                        <div id="menu_container" class="menu_section"></div>
+                      <div id="sidebar-menu" class="main_menu_side hidden-print main-menu">
+                        <h3>Service Type</h3>
+                        <ul id="menu_container" class="nav side-menu" style="display: block" ></ul>
+                            <ul class="nav side-menu">
+                              <li><a><i class="fa fa-home"></i> Community Center <span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu">
+                                  <li><a href="#">Org 1</a></li>
+                                  <li><a href="#">Org 1</a></li>
+                                  <li><a href="#">Org 1</a></li>
+                                </ul>
+                              </li>
+                              <li><a><i class="fa fa-edit"></i> Education <span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu">
+                                  <li><a href="#">Org 1</a></li>
+                                  <li><a href="#">Org 1</a></li>
+                                  <li><a href="#">Org 1</a></li>
+                                </ul>
+                              </li>
+                              <li><a><i class="fa fa-desktop"></i> Legal <span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu">
+                                  <li><a href="#">Org 1</a></li>
+                                  <li><a href="#">Org 1</a></li>
+                                  <li><a href="#">Org 1</a></li>
+                                </ul>
+                              </li>
+                              <li><a><i class="fa fa-table"></i> Health <span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu">
+                                  <li><a href="#">Org 1</a></li>
+                                  <li><a href="#">Org 1</a></li>
+                                  <li><a href="#">Org 1</a></li>
+                                </ul>
+                              </li>
+                              <li><a><i class="fa fa-bar-chart-o"></i> Food Assistance <span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu">
+                                  <li><a href="#">Org 1</a></li>
+                                  <li><a href="#">Org 1</a></li>
+                                  <li><a href="#">Org 1</a></li>
+                                </ul>
+                              </li>
+                              <li><a><i class="fa fa-clone"></i> Employment <span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu">
+                                  <li><a href="#">Org 1</a></li>
+                                  <li><a href="#">Org 1</a></li>
+                                  <li><a href="#">Org 1</a></li>
+                                </ul>
+                              </li>
+                              <li><a><i class="fa fa-clone"></i> Housing <span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu">
+                                  <li><a href="#">Org 1</a></li>
+                                  <li><a href="#">Org 1</a></li>
+                                  <li><a href="#">Org 1</a></li>
+                                </ul>
+                              </li>
+                            </ul>
+                      </div>
+                          <div class="menu_section">
+                            <h3>Other Criteria</h3>
+                            <ul class="nav side-menu">
+                              <li><a><i class="fa fa-bug"></i> Visa Status <span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu">
+                                  <li><a href="#">Refugee</a></li>
+                                  <li><a href="#">Asylum Seeker</a></li>
+                                  <li><a href="#">Undocumented</a></li>
+                                  <li><a href="#">Perm. Resident</a></li>
+                                </ul>
+                              </li>
+                              </ul>
+                          </div>
+
+                        </div>
                       <!-- sidebar menu -->
           
                       <!-- menu footer buttons -->
@@ -63,6 +131,7 @@
               </div>
             
           
+          
                   <!-- top navigation -->
                   <div class="top_nav">
                     <div class="nav_menu">
@@ -70,7 +139,7 @@
                         <div class="nav toggle">
                           </div><a id="menu_toggle"><i class="fa fa-bars"></i></a>
                         </div>
-          
+                   
           <!-- legend -->
           <div id='legend' class='bg-white w100 color-black round shadow-darken10 px12 py12 txt-l'>
             <strong class='block mb6'>Distance to location (miles)</strong>
@@ -81,6 +150,7 @@
               <div class='col flex-child--grow'><button class='btn btn--s bg-green-faint'>5</button></div>
             </div>
 
+   
 
           <script>
             mapboxgl.accessToken = 'pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw';
@@ -97,6 +167,7 @@
             map.on('load', function(){
             var toggleableLayerIds = [ 'community-centers', 'education', 'employment', 'financial-assistance', 'food-assistance', 'health', 'housing', 'mental-health', 'origin-based-community-center', 'resettlement-agency' ];
             var toggleableLayerTitle = [ 'Community Centers', 'Education', 'Employment', 'Financial Assistance', 'Food Assistance', 'Health', 'Housing', 'Mental Health']
+            
             for (var i = 0; i < toggleableLayerIds.length; i++) {
               var id = toggleableLayerIds[i];
               var title = toggleableLayerTitle[i];
@@ -110,36 +181,68 @@
                   while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
                       coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
                   }
-
+           
                   new mapboxgl.Popup()
                     .setLngLat(coordinates)
                     .setHTML('<h4>' + name + '</h4>' + '<a href=' + website + '>' + website + '</a>' + '<br><br>' + '<i>' + bio + '</i>' + '<br><br><b>Telephone: </b>' + telephone)
                     .addTo(map);
                 });
 
-
                 //toggling functionality
                 var link = document.createElement('a');
+                var icon = document.createElement('i'); 
+                icon.className = "fa fa-home";
                 link.href = '#';
                 link.id = id; 
-                link.className = 'active';
+                link.className = '';
                 link.style = 'font-family: sans-serif';
-                link.textContent = title; 
+                link.innerText = title; 
                 link.onclick = function (e) {
                   var clickedLayer = this.id;
+                  var menuItem = document.getElementById(this.id); 
+                  console.log(menuItem, this.id, clickedLayer); 
                   e.preventDefault();
                   e.stopPropagation();
                   var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
                   if (visibility === 'visible') {
                     map.setLayoutProperty(clickedLayer, 'visibility', 'none');
-                    this.className = '';
+                    this.nextElementSibling.className = 'nav child_menu';
+                    this.nextElementSibling.style.display = 'block';
                   } else {
-                    this.className = 'active';
+                    this.nextElementSibling.className = 'nav child_menu active'; 
                     map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+                    this.nextElementSibling.style.display = 'none';
                   }
+                  
                 };
+
                 var layers = document.getElementById("menu_container");
-                layers.appendChild(link);
+                var liList = document.createElement('li')
+                var ulList = document.createElement('ul');
+               
+                liList.className = "nav"; 
+                ulList.className = "nav child_menu active-sm";
+                
+            
+                liList.appendChild(link).appendChild(icon); 
+                liList.appendChild(ulList); 
+
+
+                var j = 0; 
+                while ( j < 3 ) {
+                  var anonSource = document.createElement('a');
+                  anonSource.href = '#'; 
+                  anonSource.id = 'anonSource_' + j;
+                  anonSource.innerText = anonSource.id;
+                  var liA = document.createElement('li');
+                  // liA.className = 'nav side_menu';
+                  liA.appendChild(anonSource);
+                  ulList.appendChild(liA); 
+                  j++
+                }
+
+                layers.appendChild(liList);
+
             }
             //on geocoder results, add turf circles
             map.addSource('single-point', {
@@ -255,20 +358,20 @@
         <!-- page content -->
 
     <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
     <!-- Bootstrap -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
         <!-- FastClick -->
-    <script src="./fastclick/lib/fastclick.js"></script>
+    <!-- <script src="./fastclick/lib/fastclick.js"></script> -->
     <!-- NProgress -->
-    <script src="https://unpkg.com/nprogress@0.2.0/nprogress.js"></script>
+    <!-- <script src="https://unpkg.com/nprogress@0.2.0/nprogress.js"></script> -->
     <!-- Chart.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script> -->
 
     <!-- Custom Theme Scripts -->
-    <script src="./custom.min.js"></script>
+    <!-- <script src="../custom.min.js"></script> -->
 
   </body>
 </html>
