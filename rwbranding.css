@@ -5,8 +5,7 @@ html , body{
    }
 
    body { margin:0; padding:0; }
-        #map { position:absolute; top:0; bottom:0; width:100%; z-index:-1; }
-        }
+        #map { position:absolute; top:0; bottom:0; width:100%; z-index: 0; }
         #menu a:last-child {
           border: none;
         }
@@ -241,7 +240,7 @@ branding3 {
    }
    .nav-sm .nav.child_menu li.active,
    .nav-sm .nav.side-menu li.active-sm {
-       border-right: 5px solid rgb(181, 146, 185))
+       border-right: 5px solid rgb(181, 146, 185);
    }
    .nav-sm ul.nav.child_menu ul,
    .nav-sm .nav.side-menu li.active-sm ul ul {
@@ -824,7 +823,7 @@ branding3 {
    }
    .nav.child_menu li li a:hover,
    .nav.child_menu li li a.active {
-       color: rgb(181, 146, 185))
+       color: rgb(181, 146, 185);
    }
    .nav>li>a {
        position: relative;
@@ -1565,9 +1564,9 @@ branding3 {
        text-shadow: none;
        top: 100%;
        z-index: 9998;
-       border: 1px solid rgb(251, 176, 52));
+       border: 1px solid rgb(251, 176, 52);
        border-top-left-radius: 0;
-       border-top-right-radius: 0
+       border-top-right-radius: 0;
    }
    .dropdown-menu>li>a {
        color: #5A738E

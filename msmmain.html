@@ -183,6 +183,7 @@
                 link.href = '#';
                 link.className = 'active';
                 link.textContent = id;
+                link.style.color = 'rgb(97, 51, 93)';
                 link.onclick = function (e) {
                   var clickedLayer = this.textContent;
                   e.preventDefault();
@@ -196,7 +197,7 @@
                     map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
                   }
                 };
-                var layers = document.getElementById('menu');
+                var layers = document.getElementById('sidebar-menu');
                 layers.appendChild(link);
             }
             //on geocoder results, add turf circles
