@@ -191,18 +191,20 @@
                 //toggling functionality
                 var link = document.createElement('a');
                 var icon = document.createElement('i'); 
+                var chevron = document.createElement('span');
                 icon.className = "fa fa-home";
+                chevron.className = "fa fa-chevron-down";
                 link.href = '#';
                 link.id = id; 
                 link.className = '';
                 link.style = 'font-family: sans-serif';
-                link.innerText = title; 
+                link.text = ' ' + title + ' ' ; 
                 link.onclick = function (e) {
+                  e.preventDefault();
+                  e.stopPropagation();
                   var clickedLayer = this.id;
                   var menuItem = document.getElementById(this.id); 
                   console.log(menuItem, this.id, clickedLayer); 
-                  e.preventDefault();
-                  e.stopPropagation();
                   var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
                   if (visibility === 'visible') {
                     map.setLayoutProperty(clickedLayer, 'visibility', 'none');
@@ -223,8 +225,10 @@
                 liList.className = "nav"; 
                 ulList.className = "nav child_menu active-sm";
                 
-            
-                liList.appendChild(link).appendChild(icon); 
+
+                var insertLink = liList.appendChild(link)
+                insertLink.insertAdjacentElement('beforeend', chevron);
+                insertLink.insertAdjacentElement('afterbegin', icon);
                 liList.appendChild(ulList); 
 
 
