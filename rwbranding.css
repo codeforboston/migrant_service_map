@@ -802,7 +802,7 @@ html , body{
        border-radius: 50%
    }
    .nav-md ul.nav.child_menu li:after {
-       border-left: 1px solid rgb(181, 146, 185);
+       /* border-left: 1px solid rgb(181, 146, 185); */
        bottom: 0;
        content: "";
        left: 27px;
