@@ -9,13 +9,13 @@
 
     <title>Migrant Service Map</title>
 
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.45.0/mapbox-gl.css' rel='stylesheet' />
+    <link href="https://api.mapbox.com/mapbox-assembly/v0.21.2/assembly.min.css" rel="stylesheet">
+    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.2.0/mapbox-gl-geocoder.css' type='text/css' />
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.45.0/mapbox-gl.js'></script>
-    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.45.0/mapbox-gl.css' rel='stylesheet' />
     <script async defer src="https://api.mapbox.com/mapbox-assembly/v0.21.2/assembly.js"></script>
-    <link href="https://api.mapbox.com/mapbox-assembly/v0.21.2/assembly.min.css" rel="stylesheet">
     <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.2.0/mapbox-gl-geocoder.min.js'></script>
-    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.2.0/mapbox-gl-geocoder.css' type='text/css' />
     <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
 
     <!-- Bootstrap -->
@@ -30,112 +30,65 @@
     <link href=" ./rwbranding.css" rel="stylesheet">
   </head>
 
-  <body class="nav-md">
-    <div class="container body">
-      <div class="main_container">
-        <div class="col-md-3 left_col">
-          <div class="left_col scroll-view">
-            <div class="navbar nav_title" style="border: 0;">
-              <a href="https://refugeeswelcomehome.org/" class="site_title"><span>Migrant Service Map</span></a>
-            </div>
-
-            <div class="clearfix"></div>
-
-
-            <br />
-
-            <!-- sidebar menu -->
-            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
-              <div class="menu_section">
-                <h3>Service Type</h3>
-                <ul class="nav side-menu">
-                  <li><a><i class="fa fa-home"></i> Community Center<span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                      <li><a href="index.html">Org 1</a></li>
-                      <li><a href="index2.html">Org 2</a></li>
-                      <li><a href="index3.html">Org 3</a></li>
-                    </ul>
-                  </li>
-                  <li><a><i class="fa fa-edit"></i> Education <span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                      <li><a href="form.html">Org 1</a></li>
-                      <li><a href="form_advanced.html">Org 2</a></li>
-                      <li><a href="form_validation.html">Org 3</a></li>
-                    </ul>
-                  </li>
-                  <li><a><i class="fa fa-desktop"></i> Legal<span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                      <li><a href="general_elements.html">Org 1</a></li>
-                      <li><a href="media_gallery.html">Org 2</a></li>
-                      <li><a href="typography.html"> Org 3 </a></li>
-                    </ul>
-                  </li>
-                  <li><a><i class="fa fa-table"></i> Health<span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                      <li><a href="tables.html">Org 1</a></li>
-                      <li><a href="tables_dynamic.html"> Or 2</a></li>
-                    </ul>
-                  </li>
-                  <li><a><i class="fa fa-bar-chart-o"></i> Food Assistance <span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                      <li><a href="chartjs.html">Org 1</a></li>
-                      <li><a href="chartjs2.html">Org 2</a></li>
-                      <li><a href="morisjs.html">Org 3</a></li>
-                    </ul>
-                  </li>
-                  <li><a><i class="fa fa-clone"></i>Employment <span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                      <li><a href="fixed_sidebar.html">Org 1</a></li>
-                      <li><a href="fixed_footer.html">Org 2</a></li>
-                      <li><a href="fixed_footer.html">Org 3</a></li>
-                    </ul>
-                  </li>
-                  <li><a><i class="fa fa-clone"></i>Housing <span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                      <li><a href="fixed_sidebar.html">Org 1</a></li>
-                      <li><a href="fixed_footer.html">Org 2</a></li>
-                      <li><a href="fixed_footer.html">Org 3</a></li>
-                    </ul>
-                  </li>
-                </ul>
-              </div>
-              <div class="menu_section">
-                <h3>Other Criteria</h3>
-                <ul class="nav side-menu">
-                  <li><a><i class="fa fa-bug"></i> Visa Status <span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                      <li><a href="e_commerce.html">Refugee</a></li>
-                      <li><a href="projects.html">Asylum Seeker</a></li>
-                      <li><a href="project_detail.html">Undocumented</a></li>
-                      <li><a href="project_detail.html">Perm. Resident</a></li>
-                    </ul>
-                  </li>
-                  </ul>
-              </div>
-
-            </div>
-            <!-- sidebar menu -->
-
-            <!-- menu footer buttons -->
-            <div class="sidebar-footer hidden-small"></div>
-            </div>
-            <!-- menu footer buttons -->
-          </div>
-        </div>
-
-        <!-- top navigation -->
-        <div class="top_nav">
-          <div class="nav_menu">
-            <nav>
-              <div class="nav toggle">
-                </div><a id="menu_toggle"><i class="fa fa-bars"></i></a>
-              </div>
-
         <!-- page content -->
-        <body class="prose">
+        <body class="nav-md">
           <nav id="nav child_menu"></nav>
-          <div id='map'></div>
+          
+          <div class="container body">
+            <div class="main_container">
+              <body class="prose">
+                  <div id='map'></div>
+                  <div class="col-md-3 left_col" style="z-index: 1">
+                    <div class="left_col scroll-view">
+                      <div class="navbar nav_title" style="border: 0;">
+                        <a href="https://refugeeswelcomehome.org/" class="site_title"><span>Migrant Service Map</span></a>
+                      </div>
+          
+                      <div class="clearfix"></div>
+          
+          
+                      <br />
+          
+                      <!-- sidebar menu -->
+                      <div id="sidebar-menu" class="menu_section main_menu_side hidden-print main-menu">
+                        <h3>Service Type</h3>
+                        <ul id="menu_container" class="menu_section nav side-menu" style="display: block" ></ul>
+                      </div>
+                      <div class="menu_section main_menu_side hidden-print main-menu">
+                        <h3>Other Criteria</h3>
+                        <ul class="nav side-menu">
+                          <li><a><i class="fa fa-bug"></i> Visa Status <span class="fa fa-chevron-down"></span></a>
+                            <ul class="nav child_menu">
+                              <li><a href="#">Refugee</a></li>
+                              <li><a href="#">Asylum Seeker</a></li>
+                              <li><a href="#">Undocumented</a></li>
+                              <li><a href="#">Perm. Resident</a></li>
+                            </ul>
+                          </li>
+                          </ul>
+                      </div>
 
+                    </div>
+                      <!-- sidebar menu -->
+          
+                      <!-- menu footer buttons -->
+                      <div class="sidebar-footer hidden-small"></div>
+                      </div>
+                      <!-- menu footer buttons -->
+                    </div>
+                  </div>
+              </div>
+            
+          
+          
+                  <!-- top navigation -->
+                  <div class="top_nav">
+                    <div class="nav_menu">
+                      <nav>
+                        <div class="nav toggle">
+                          </div><a id="menu_toggle"><i class="fa fa-bars"></i></a>
+                        </div>
+                   
           <!-- legend -->
           <div id='legend' class='bg-white w100 color-black round shadow-darken10 px12 py12 txt-l'>
             <strong class='block mb6'>Distance to location (miles)</strong>
@@ -146,6 +99,7 @@
               <div class='col flex-child--grow'><button class='btn btn--s bg-green-faint'>5</button></div>
             </div>
 
+          <script src="./toggleableLayersObjects.js"></script>
 
           <script>
             mapboxgl.accessToken = 'pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw';
@@ -160,11 +114,13 @@
             });
             map.addControl(geocoder);
             map.on('load', function(){
-            var toggleableLayerIds = [ 'community-centers', 'education', 'employment', 'financial-assistance', 'food-assistance', 'health', 'housing', 'mental-health', 'origin-based-community-center', 'resettlement-agency' ];
-            for (var i = 0; i < toggleableLayerIds.length; i++) {
-              var id = toggleableLayerIds[i];
-                //click event for pop-ups to each layer
-                map.on('click', toggleableLayerIds[i], function (e) {
+      
+          
+            for (var i = 0; i < Object.keys(toggleableLayers).length; i++) {
+              var id = toggleableLayers[i].id;
+              var title = toggleableLayers[i].title;
+                // click event for pop-ups to each layer
+            map.on('click', toggleableLayers[i].id, function (e) {
                   var coordinates = e.features[0].geometry.coordinates.slice();
                   var name = e.features[0].properties.name;
                   var website = e.features[0].properties.website;
@@ -173,31 +129,79 @@
                   while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
                       coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
                   }
+           
                   new mapboxgl.Popup()
                     .setLngLat(coordinates)
                     .setHTML('<h4>' + name + '</h4>' + '<a href=' + website + '>' + website + '</a>' + '<br><br>' + '<i>' + bio + '</i>' + '<br><br><b>Telephone: </b>' + telephone)
                     .addTo(map);
                 });
+
                 //toggling functionality
                 var link = document.createElement('a');
+                var icon = document.createElement('i'); 
+                var chevron = document.createElement('span');
+                icon.className = "fa fa-home";
+                chevron.className = "fa fa-chevron-down";
                 link.href = '#';
-                link.className = 'active';
-                link.textContent = id;
+                link.id = id; 
+                link.className = '';
+                link.style = 'font-family: sans-serif';
+                link.text = ' ' + title + ' ' ; 
                 link.onclick = function (e) {
-                  var clickedLayer = this.textContent;
                   e.preventDefault();
                   e.stopPropagation();
+                  var clickedLayer = this.id;
+                  var menuItem = document.getElementById(this.id); 
+            
                   var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
                   if (visibility === 'visible') {
                     map.setLayoutProperty(clickedLayer, 'visibility', 'none');
-                    this.className = '';
+                    this.nextElementSibling.className = 'nav child_menu';
+                    this.nextElementSibling.style.display = 'block';
                   } else {
-                    this.className = 'active';
+                    this.nextElementSibling.className = 'nav child_menu active'; 
                     map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+                    this.nextElementSibling.style.display = 'none';
                   }
+                  
                 };
-                var layers = document.getElementById('menu');
-                layers.appendChild(link);
+
+                var layers = document.getElementById("menu_container");
+                var liList = document.createElement('li')
+                var ulList = document.createElement('ul');
+               
+                liList.className = "nav"; 
+                ulList.className = "nav child_menu active-sm";
+                
+
+                var insertLink = liList.appendChild(link)
+                insertLink.insertAdjacentElement('beforeend', chevron);
+                insertLink.insertAdjacentElement('afterbegin', icon);
+                liList.appendChild(ulList); 
+
+
+                var j = 0; 
+
+                var unsortedResources = toggleableLayers[i].resources; 
+                var resourceKeys = Object.keys(unsortedResources);
+                var unsortedResourceArray = resourceKeys.map(a => unsortedResources[a]);
+                var sortedResources = unsortedResourceArray.sort((a , b) => b.activityLevel - a.activityLevel); 
+
+
+                while ( j < Object.keys(sortedResources).length ) {
+                  var anonSource = document.createElement('a');
+                  anonSource.id = sortedResources[j].id;
+                  anonSource.href = sortedResources[j].href; 
+                  anonSource.innerText = sortedResources[j].id + '\n activity: ' + Math.round(sortedResources[j].activityLevel*100);
+                  var liA = document.createElement('li');
+                  // liA.className = 'nav side_menu';
+                  liA.appendChild(anonSource);
+                  ulList.appendChild(liA); 
+                  j++
+                }
+
+                layers.appendChild(liList);
+
             }
             //on geocoder results, add turf circles
             map.addSource('single-point', {
@@ -312,21 +316,22 @@
 
         <!-- page content -->
 
+
     <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
     <!-- Bootstrap -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
         <!-- FastClick -->
-    <script src="./fastclick/lib/fastclick.js"></script>
+    <!-- <script src="./fastclick/lib/fastclick.js"></script> -->
     <!-- NProgress -->
-    <script src="https://unpkg.com/nprogress@0.2.0/nprogress.js"></script>
+    <!-- <script src="https://unpkg.com/nprogress@0.2.0/nprogress.js"></script> -->
     <!-- Chart.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script> -->
 
     <!-- Custom Theme Scripts -->
-    <script src="./custom.min.js"></script>
+    <!-- <script src="../custom.min.js"></script> -->
 
   </body>
 </html>
