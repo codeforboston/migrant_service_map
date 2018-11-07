@@ -33,8 +33,6 @@
         <!-- page content -->
         <body class="nav-md">
           <nav id="nav child_menu"></nav>
-          
-          <div class="container body">
             <div class="main_container">
               <body class="prose">
                   <div id='map'></div>
@@ -50,9 +48,9 @@
                       <br />
           
                       <!-- sidebar menu -->
-                      <div id="sidebar-menu" class="menu_section main_menu_side hidden-print main-menu">
+                      <div id="sidebar-menu" class="menu_section main_menu_side hidden-print main-menu active">
                         <h3>Service Type</h3>
-                        <ul id="menu_container" class="menu_section nav side-menu" style="display: block" ></ul>
+                        <ul id="menu_container" class="menu_section nav side-menu active" style="display: block" ></ul>
                       </div>
                       <div class="menu_section main_menu_side hidden-print main-menu">
                         <h3>Other Criteria</h3>
@@ -135,7 +133,6 @@
                     .setHTML('<h4>' + name + '</h4>' + '<a href=' + website + '>' + website + '</a>' + '<br><br>' + '<i>' + bio + '</i>' + '<br><br><b>Telephone: </b>' + telephone)
                     .addTo(map);
                 });
-
                 //toggling functionality
                 var link = document.createElement('a');
                 var icon = document.createElement('i'); 
@@ -165,7 +162,6 @@
                   }
                   
                 };
-
                 var layers = document.getElementById("menu_container");
                 var liList = document.createElement('li')
                 var ulList = document.createElement('ul');
@@ -173,21 +169,15 @@
                 liList.className = "nav"; 
                 ulList.className = "nav child_menu active-sm";
                 
-
                 var insertLink = liList.appendChild(link)
                 insertLink.insertAdjacentElement('beforeend', chevron);
                 insertLink.insertAdjacentElement('afterbegin', icon);
                 liList.appendChild(ulList); 
-
-
                 var j = 0; 
-
                 var unsortedResources = toggleableLayers[i].resources; 
                 var resourceKeys = Object.keys(unsortedResources);
                 var unsortedResourceArray = resourceKeys.map(a => unsortedResources[a]);
                 var sortedResources = unsortedResourceArray.sort((a , b) => b.activityLevel - a.activityLevel); 
-
-
                 while ( j < Object.keys(sortedResources).length ) {
                   var anonSource = document.createElement('a');
                   anonSource.id = sortedResources[j].id;
@@ -199,9 +189,7 @@
                   ulList.appendChild(liA); 
                   j++
                 }
-
                 layers.appendChild(liList);
-
             }
             //on geocoder results, add turf circles
             map.addSource('single-point', {
