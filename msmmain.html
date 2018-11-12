@@ -117,6 +117,7 @@
             for (var i = 0; i < Object.keys(toggleableLayers).length; i++) {
               var id = toggleableLayers[i].id;
               var title = toggleableLayers[i].title;
+              var idStyle = map.setLayoutProperty(id, 'visibility', 'none');
                 // click event for pop-ups to each layer
             map.on('click', toggleableLayers[i].id, function (e) {
                   var coordinates = e.features[0].geometry.coordinates.slice();
@@ -151,13 +152,13 @@
                   var menuItem = document.getElementById(this.id); 
             
                   var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
-                  if (visibility === 'visible') {
-                    map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+                  if (visibility === 'none') {
+                    map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
                     this.nextElementSibling.className = 'nav child_menu';
                     this.nextElementSibling.style.display = 'block';
                   } else {
                     this.nextElementSibling.className = 'nav child_menu active'; 
-                    map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+                    map.setLayoutProperty(clickedLayer, 'visibility', 'none');
                     this.nextElementSibling.style.display = 'none';
                   }
                   
