@@ -1,75 +1,94 @@
 
 function getResourceObject(){
   var services = map.querySourceFeatures('composite', {sourceLayer: 'refugees-services'});
-  var menuObject = {};
+  var resourceObject = {};
     for (var i = 0; i < services.length; i++) {
       var type = services[i].properties.type; 
-      if ( ! Object.keys(menuObject).includes(type) ) {
-        menuObject[type] = []; 
+      if ( ! Object.keys(resourceObject).includes(type) ) {
+        resourceObject[type] = []; 
       }
-      menuObject[type].push(services[i].properties); 
+
+      var resource = services[i].properties; 
+      resource.coordinates = services[i].geometry.coordinates; 
+      resource.lngLat = services[i].lngLat; 
+      resourceObject[type].push(resource); 
+
     }
-  return menuObject; 
-}
-
-
-function makeSectionHeader(category){
-  var icon = document.createElement('i'),
-      resourceName = document.createElement('p'), 
-      chevron = document.createElement('chevron'),
-      liEntry = document.createElement('li'),
-      aEntry = document.createElement('a'),
-      categoryId = category.toLowerCase().split(" ").join('-');
-
-  icon.className = 'fa fa-home inl-bl mr-2'; 
-
-  resourceName.className = 'inl-bl';
-  resourceName.innerText = category;
-
-  chevron.className = 'fa fa-chevron-down inl-bl ml-2';
-
-  aEntry.href = "#" + categoryId; 
-  
-
-  liEntry.className = 'link--lighten75 pl-2 bg-transparent';
-  liEntry.setAttribute('data-toggle', 'collapse');
-  liEntry.setAttribute('data-target', '.' + categoryId); 
-  liEntry.appendChild(aEntry); 
-  liEntry.appendChild(icon);
-  liEntry.appendChild(resourceName);
-  liEntry.appendChild(chevron);
-
-  return liEntry; 
+  return resourceObject; 
 }
 
 function makeResourceEntry(resourceObject) {
-  var liContainer = document.createElement('li'); 
-  var liList = document.createElement('a');
-  liList.id = resourceObject.name.toLowerCase().split(" ").join('-'); 
-  liList.href = liList.website; 
-  liList.innerText = resourceObject.name;
-  liList.className = 'link--lighten75';
+  var liLink = document.createElement('a');
+  var liList = document.createElement('li'); 
+  var liContainer = document.createElement('div'); 
+  liLink.id = resourceObject.name.toLowerCase().split(" ").join('-'); 
+  var name = resourceObject.name; 
+  var website = resourceObject.website;
+  var bio = resourceObject.bio;
+  var telephone = resourceObject.telephone; 
+  var type = resourceObject.type; 
+  var coordinates = resourceObject.coordinates; 
+ 
+  liLink.onclick = function(e) {
+    new mapboxgl.Popup()
+      .setLngLat(coordinates)
+      .setHTML('<h4>' + name + '</h4>' + '<a href=' + website + '>' + website + '</a>' + '<br><br>' + '<i>' + bio + '</i>' + '<br><br><b>Telephone: </b>' + telephone)
+      .addTo(map);
+  }
 
-  liContainer.appendChild(liList); 
+  liContainer.id = resourceObject.name; 
+  liLink.innerHTML = resourceObject.name;
+  liLink.className = 'resource-entry';
+  liList.className = 'wide-highlight collapsed '+ liLink.id;
+  liContainer.className = 'resource-entry-box';
+  
+  liContainer.appendChild(liLink); 
+  liList.appendChild(liContainer); 
 
-  return liContainer; 
+  return liList; 
+}
+
+function makeSectionHeader(category){
+  var liEntry = document.createElement('li'),
+      icon = document.createElement('i'),
+      chevron = document.createElement('chevron'),
+      aEntry = document.createElement('a'),
+      titleA = document.createElement('a'),
+      h2Wrap = document.createElement('h2'),
+      categoryId = category.toLowerCase().split(" ").join('-');
+  
+  aEntry.href = "#" + categoryId; 
+  aEntry.id = categoryId;
+  aEntry.onclick = toggleResourceEntries;
+  aEntry.innerText = category;
+
+  icon.className = 'fa fa-tree'
+  chevron.className = 'fa fa-chevron-down';
+  titleA.className = 'header-box';
+  liEntry.className = 'menu-section-head';
+
+  titleA.appendChild(icon);
+  titleA.appendChild(h2Wrap).appendChild(aEntry);
+  titleA.appendChild(chevron);
+  liEntry.appendChild(titleA);
+
+  return liEntry; 
 }
 
 function makeSection(category){  
   var categoryId = category.toLowerCase().split(" ").join('-'); 
   var resourceObject = getResourceObject(); 
   var ulResource = document.createElement('ul');
-  ulResource.className = 'list-group list-group-item pre-scrollable pl-3 bg-transparent border--0'; 
+  ulResource.className = 'resource-section collapsed ' + categoryId;
 
     for (var i = 0; i < resourceObject[category].length; i++ ) {
       var entry = makeResourceEntry(resourceObject[category][i]);
-      entry.className = 'link--lighten75 m-2 pb-2 collapse bg-transparent ' + categoryId; 
+      entry.className += " " + categoryId; 
       ulResource.appendChild(entry);
   }
 
   return ulResource; 
 };
-
 
 function assembleMenu(){
   var context = document.getElementById('menu_container');
@@ -79,7 +98,43 @@ function assembleMenu(){
   for (var i = 0; i < sectionHeads.length; i++) {
       var header = makeSectionHeader(sectionHeads[i]);
       var section = makeSection(sectionHeads[i]);
-      header.appendChild(section); 
+      var liSection = document.createElement('li');
+      var myId = sectionHeads[i].toLowerCase().split(" ").join('-');
+      liSection.className += " " + myId; 
+      header.className += " " + myId; 
       context.appendChild(header);
+      liSection.appendChild(section); 
+      context.appendChild(liSection);
   }
+  return context; 
 };
+
+
+function toggleResourceEntries(e) {
+  e.preventDefault()
+  
+  if (map.getLayoutProperty(e.target.id, 'visibility') === 'none') {
+    map.setLayoutProperty(e.target.id, 'visibility', 'visible');
+  } else {
+    map.setLayoutProperty(e.target.id, 'visibility', 'none');
+  };
+
+  var mySectionHead = e.srcElement.parentElement.parentElement.parentElement
+  mySectionHead.classList.toggle('open');
+
+  var mySection = document.getElementsByClassName('resource-section ' + e.target.id);
+
+  mySection[0].parentElement.classList.toggle('collapsed');
+  
+  var targets = document.getElementsByClassName(e.target.id);
+  for (var i = 0; i < targets.length; i++) {
+    var mytarget = targets[i]; 
+    mytarget.classList.toggle('collapsed');
+    // mytarget.parentElement.classList.toggle('collapsed');
+  }
+
+}
+
+
+
+

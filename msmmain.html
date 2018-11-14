@@ -12,93 +12,82 @@
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.45.0/mapbox-gl.css' rel='stylesheet' />
     <link href="https://api.mapbox.com/mapbox-assembly/v0.21.2/assembly.min.css" rel="stylesheet">
     <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.2.0/mapbox-gl-geocoder.css' type='text/css' />
+    <link rel='stylesheet' href='./rwbranding.css' type='text/css' />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <link rel='stylesheet' href='./main.css' type='text/css' />
+    
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.45.0/mapbox-gl.js'></script>
     <script async defer src="https://api.mapbox.com/mapbox-assembly/v0.21.2/assembly.js"></script>
     <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.2.0/mapbox-gl-geocoder.min.js'></script>
     <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
+    <script src="./main.js"></script>
+    <script src="./toggleableLayersObjects.js"></script>
+    
 
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <!-- Font Awesome -->
-    <link href="./font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
-    <!-- NProgress -->
-    <link href="https://unpkg.com/nprogress@0.2.0/nprogress.css" rel="stylesheet">
-
-    <!-- Custom Theme Style -->
-    <link href=" ./rwbranding.css" rel="stylesheet">
   </head>
+<body>
+        
+  <div id='map'></div>
+    
+  <!-- top navigation -->    
+  <nav> 
+     <div class='titleBox'><a href="https://refugeeswelcomehome.org/"><h1>Migrant Service Map</h1><a></div>
+    <div id='top_menu'>
+      <a class='top-nav'>Top Nav</a>
+      <a class='top-nav'>Top Nav</a>
+      <a class='top-nav'>Top Nav</a>
+    </div>
+ </nav>
 
-        <!-- page content -->
-        <body class="nav-md">
-          <nav id="nav child_menu"></nav>
-            <div class="main_container">
-              <body class="prose">
-                  <div id='map'></div>
-                  <div class="col-md-4 left_col" style="z-index: 1">
-                    <div class="left_col scroll-view">
-                      <div class="navbar nav_title" style="border: 0;">
-                        <a href="https://refugeeswelcomehome.org/" class="site_title"><h4>Migrant Service Map</h4></a>
-                      </div>
-          
-                      <div class="clearfix"></div>
-          
-          
-                      <br />
-          
-                      <!-- sidebar menu -->
-                      <div id="sidebar-menu" class="bg-0 link--lighten75">
-             
-                          <h4 class='list-group-item pl-2 bg-transparent bg-0 border--0'>Service Type</h4>
-                          <ul id="menu_container" class="list-group-item pre-scrollable bg-0 bg-transparent p-0 pb-3 pt-3 border--0"></ul>
-             
-                          <h4 class='list-group-item bg-transparent link--lighten75 border--0'>Other Criteria</h4>
-                          <ul id="criteria_container" class="list-group-item pre-scrollable bg-0 bg-transparent p-0 pb-3 pt-3 bootstrap">
-                          
-                          <h4 class='list-group-item bg-transparent link--lighten75 border--0'>Visa Status</h4>
-                          <ul class="border--0">
-                            <li><a href="#">Refugee</a></li>
-                            <li><a href="#">Asylum Seeker</a></li>
-                            <li><a href="#">Undocumented</a></li>
-                            <li><a href="#">Perm. Resident</a></li>
-                          </ul>
-                            
-                    </div>
-                      <!-- sidebar menu -->
-          
-                      <!-- menu footer buttons -->
-                      <div id="footer" class="text-lg-center">footer</div>
-                      </div>
-                      <!-- menu footer buttons -->
-                    </div>
-                  </div>
-              </div>
-            
-          
-          
-                  <!-- top navigation -->
-                  <div class="top_nav">
-                    <div class="nav_menu">
-                      <nav>
-                        <div class="nav toggle">
-                          </div><a id="menu_toggle"><i class="fa fa-bars"></i></a>
-                        </div>
+<!--site title-->
+<div class="side-menu" onload="callMenu">
+  <div id="scrollable_menu">
+<!-- sidebar menu -->
+  <ul id="menu_content" >
+    <li>
+      <div><h3>Service Type</h3></div>
+      <ul id="menu_container"></ul>
+    </li>
+    <li>
+      <div><h3>Other Criteria</h3></div>
+      <ul id='other_criteria'></ul>
+    </li>
+    <li>
+      <div><h3>Visa Status</h3></div>
+      <ul id="visa_status"></ul>
+    </li>
+  </ul>
+
+</div>
+  <!-- menu footer buttons -->
+  <div id="menu_toggle"><a href="">menu toggle bottom</a></div>                      
+  <!-- menu footer buttons -->
+
+</div>
+
+
+
                    
           <!-- legend -->
-          <div id='legend' class='bg-white w100 color-black round shadow-darken10 px12 py12 txt-l'>
+          <!-- <div id='legend' class='bg-white w100 color-black round shadow-darken10 px12 py12 txt-l'>
             <strong class='block mb6'>Distance to location (miles)</strong>
             <div class='grid txt-s align-center'>
               <div class='col flex-child--grow'><button class='btn btn--s bg-green-dark'>.5</button></div>
               <div class='col flex-child--grow'><button class='btn btn--s bg-green'>1</button></div>
               <div class='col flex-child--grow'><button class='btn btn--s bg-green-light'>3</button></div>
               <div class='col flex-child--grow'><button class='btn btn--s bg-green-faint'>5</button></div>
-            </div>
+            </div> -->
 
-          <script src="./toggleableLayersObjects.js"></script>
-          <script src="./main.js"></script>
+    
 
           <script>
+
+          
+            // function callMenu(){
+            //   assembleMenu(); 
+            // }
+
             mapboxgl.accessToken = 'pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw';
             var map = new mapboxgl.Map({
               container: 'map', // container id
@@ -110,16 +99,16 @@
               accessToken: mapboxgl.accessToken
             });
             map.addControl(geocoder);
+
+          
+
             map.on('load', function(){
        
-              assembleMenu();
-              // populateResourceList(sectionHeads);
-
             for (var i = 0; i < Object.keys(toggleableLayers).length; i++) {
               var id = toggleableLayers[i].id;
-              var title = toggleableLayers[i].title;
               var idStyle = map.setLayoutProperty(id, 'visibility', 'none');
-                // click event for pop-ups to each layer
+         
+              // click event for pop-ups to each layer
             map.on('click', toggleableLayers[i].id, function (e) {
                   var coordinates = e.features[0].geometry.coordinates.slice();
                   var name = e.features[0].properties.name;
@@ -135,53 +124,9 @@
                     .setHTML('<h4>' + name + '</h4>' + '<a href=' + website + '>' + website + '</a>' + '<br><br>' + '<i>' + bio + '</i>' + '<br><br><b>Telephone: </b>' + telephone)
                     .addTo(map);
                 });
-
-
-                //toggling functionality
-                // var link = document.createElement('a');
-                // var icon = document.createElement('i'); 
-                // var chevron = document.createElement('span');
-                // icon.className = "fa fa-home";
-                // chevron.className = "fa fa-chevron-down";
-                // link.href = '#';
-                // link.id = id; 
-                // link.className = '';
-                // link.style = 'font-family: sans-serif';
-                // link.text = ' ' + title + ' ' ; 
-                // link.onclick = toggleVisibility; 
-
-                // // var layers = document.getElementById("menu_container");
-                // // var liList = menuSectionHeader();
-                // // var ulList = document.createElement('ul');
-               
-                
-                // ulList.className = "list-group list-group-item border--0 collapse show";
-                
-                // var insertLink = liList.appendChild(link)
-                // insertLink.insertAdjacentElement('beforeend', chevron);
-                // insertLink.insertAdjacentElement('afterbegin', icon);
-
-                // liList.appendChild(ulList); 
-
-
-                // var j = 0; 
-                // var unsortedResources = toggleableLayers[i].resources; 
-                // var resourceKeys = Object.keys(unsortedResources);
-                // var unsortedResourceArray = resourceKeys.map(a => unsortedResources[a]);
-                // var sortedResources = unsortedResourceArray.sort((a , b) => b.activityLevel - a.activityLevel); 
-                // while ( j < Object.keys(sortedResources).length ) {
-                //   var anonSource = document.createElement('a');
-                //   anonSource.id = sortedResources[j].id;
-                //   anonSource.href = sortedResources[j].href; 
-                //   anonSource.innerText = sortedResources[j].id + '\n activity: ' + Math.round(sortedResources[j].activityLevel*100);
-                //   var liA = document.createElement('li');
-                //   // liA.className = 'nav side_menu';
-                //   liA.appendChild(anonSource);
-                //   ulList.appendChild(liA); 
-                //   j++
-                // }
-                // layers.appendChild(liList);
             }
+
+            var menu = assembleMenu();
             //on geocoder results, add turf circles
             map.addSource('single-point', {
                 "type": "geojson",
@@ -297,15 +242,15 @@
 
 
     <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script> -->
     <!-- Bootstrap -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script> -->
         <!-- FastClick -->
     <!-- <script src="./fastclick/lib/fastclick.js"></script> -->
     <!-- NProgress -->
-    <!-- <script src="https://unpkg.com/nprogress@0.2.0/nprogress.js"></script> -->
+    <script src="https://unpkg.com/nprogress@0.2.0/nprogress.js"></script>
     <!-- Chart.js -->
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script> -->
 
