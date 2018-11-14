@@ -36,10 +36,10 @@
             <div class="main_container">
               <body class="prose">
                   <div id='map'></div>
-                  <div class="col-md-3 left_col" style="z-index: 1">
+                  <div class="col-md-4 left_col" style="z-index: 1">
                     <div class="left_col scroll-view">
                       <div class="navbar nav_title" style="border: 0;">
-                        <a href="https://refugeeswelcomehome.org/" class="site_title"><span>Migrant Service Map</span></a>
+                        <a href="https://refugeeswelcomehome.org/" class="site_title"><h4>Migrant Service Map</h4></a>
                       </div>
           
                       <div class="clearfix"></div>
@@ -48,29 +48,27 @@
                       <br />
           
                       <!-- sidebar menu -->
-                      <div id="sidebar-menu" class="menu_section main_menu_side hidden-print main-menu active">
-                        <h3>Service Type</h3>
-                        <ul id="menu_container" class="menu_section nav side-menu active" style="display: block" ></ul>
-                      </div>
-                      <div class="menu_section main_menu_side hidden-print main-menu">
-                        <h3>Other Criteria</h3>
-                        <ul class="nav side-menu">
-                          <li><a><i class="fa fa-bug"></i> Visa Status <span class="fa fa-chevron-down"></span></a>
-                            <ul class="nav child_menu">
-                              <li><a href="#">Refugee</a></li>
-                              <li><a href="#">Asylum Seeker</a></li>
-                              <li><a href="#">Undocumented</a></li>
-                              <li><a href="#">Perm. Resident</a></li>
-                            </ul>
-                          </li>
+                      <div id="sidebar-menu" class="bg-0 link--lighten75">
+             
+                          <h4 class='list-group-item pl-2 bg-transparent bg-0 border--0'>Service Type</h4>
+                          <ul id="menu_container" class="list-group-item pre-scrollable bg-0 bg-transparent p-0 pb-3 pt-3 border--0"></ul>
+             
+                          <h4 class='list-group-item bg-transparent link--lighten75 border--0'>Other Criteria</h4>
+                          <ul id="criteria_container" class="list-group-item pre-scrollable bg-0 bg-transparent p-0 pb-3 pt-3 bootstrap">
+                          
+                          <h4 class='list-group-item bg-transparent link--lighten75 border--0'>Visa Status</h4>
+                          <ul class="border--0">
+                            <li><a href="#">Refugee</a></li>
+                            <li><a href="#">Asylum Seeker</a></li>
+                            <li><a href="#">Undocumented</a></li>
+                            <li><a href="#">Perm. Resident</a></li>
                           </ul>
-                      </div>
-
+                            
                     </div>
                       <!-- sidebar menu -->
           
                       <!-- menu footer buttons -->
-                      <div class="sidebar-footer hidden-small"></div>
+                      <div id="footer" class="text-lg-center">footer</div>
                       </div>
                       <!-- menu footer buttons -->
                     </div>
@@ -98,6 +96,7 @@
             </div>
 
           <script src="./toggleableLayersObjects.js"></script>
+          <script src="./main.js"></script>
 
           <script>
             mapboxgl.accessToken = 'pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw';
@@ -112,8 +111,10 @@
             });
             map.addControl(geocoder);
             map.on('load', function(){
-      
-          
+       
+              assembleMenu();
+              // populateResourceList(sectionHeads);
+
             for (var i = 0; i < Object.keys(toggleableLayers).length; i++) {
               var id = toggleableLayers[i].id;
               var title = toggleableLayers[i].title;
@@ -134,63 +135,52 @@
                     .setHTML('<h4>' + name + '</h4>' + '<a href=' + website + '>' + website + '</a>' + '<br><br>' + '<i>' + bio + '</i>' + '<br><br><b>Telephone: </b>' + telephone)
                     .addTo(map);
                 });
+
+
                 //toggling functionality
-                var link = document.createElement('a');
-                var icon = document.createElement('i'); 
-                var chevron = document.createElement('span');
-                icon.className = "fa fa-home";
-                chevron.className = "fa fa-chevron-down";
-                link.href = '#';
-                link.id = id; 
-                link.className = '';
-                link.style = 'font-family: sans-serif';
-                link.text = ' ' + title + ' ' ; 
-                link.onclick = function (e) {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  var clickedLayer = this.id;
-                  var menuItem = document.getElementById(this.id); 
-            
-                  var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
-                  if (visibility === 'none') {
-                    map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
-                    this.nextElementSibling.className = 'nav child_menu';
-                    this.nextElementSibling.style.display = 'block';
-                  } else {
-                    this.nextElementSibling.className = 'nav child_menu active'; 
-                    map.setLayoutProperty(clickedLayer, 'visibility', 'none');
-                    this.nextElementSibling.style.display = 'none';
-                  }
-                  
-                };
-                var layers = document.getElementById("menu_container");
-                var liList = document.createElement('li')
-                var ulList = document.createElement('ul');
+                // var link = document.createElement('a');
+                // var icon = document.createElement('i'); 
+                // var chevron = document.createElement('span');
+                // icon.className = "fa fa-home";
+                // chevron.className = "fa fa-chevron-down";
+                // link.href = '#';
+                // link.id = id; 
+                // link.className = '';
+                // link.style = 'font-family: sans-serif';
+                // link.text = ' ' + title + ' ' ; 
+                // link.onclick = toggleVisibility; 
+
+                // // var layers = document.getElementById("menu_container");
+                // // var liList = menuSectionHeader();
+                // // var ulList = document.createElement('ul');
                
-                liList.className = "nav"; 
-                ulList.className = "nav child_menu active-sm";
                 
-                var insertLink = liList.appendChild(link)
-                insertLink.insertAdjacentElement('beforeend', chevron);
-                insertLink.insertAdjacentElement('afterbegin', icon);
-                liList.appendChild(ulList); 
-                var j = 0; 
-                var unsortedResources = toggleableLayers[i].resources; 
-                var resourceKeys = Object.keys(unsortedResources);
-                var unsortedResourceArray = resourceKeys.map(a => unsortedResources[a]);
-                var sortedResources = unsortedResourceArray.sort((a , b) => b.activityLevel - a.activityLevel); 
-                while ( j < Object.keys(sortedResources).length ) {
-                  var anonSource = document.createElement('a');
-                  anonSource.id = sortedResources[j].id;
-                  anonSource.href = sortedResources[j].href; 
-                  anonSource.innerText = sortedResources[j].id + '\n activity: ' + Math.round(sortedResources[j].activityLevel*100);
-                  var liA = document.createElement('li');
-                  // liA.className = 'nav side_menu';
-                  liA.appendChild(anonSource);
-                  ulList.appendChild(liA); 
-                  j++
-                }
-                layers.appendChild(liList);
+                // ulList.className = "list-group list-group-item border--0 collapse show";
+                
+                // var insertLink = liList.appendChild(link)
+                // insertLink.insertAdjacentElement('beforeend', chevron);
+                // insertLink.insertAdjacentElement('afterbegin', icon);
+
+                // liList.appendChild(ulList); 
+
+
+                // var j = 0; 
+                // var unsortedResources = toggleableLayers[i].resources; 
+                // var resourceKeys = Object.keys(unsortedResources);
+                // var unsortedResourceArray = resourceKeys.map(a => unsortedResources[a]);
+                // var sortedResources = unsortedResourceArray.sort((a , b) => b.activityLevel - a.activityLevel); 
+                // while ( j < Object.keys(sortedResources).length ) {
+                //   var anonSource = document.createElement('a');
+                //   anonSource.id = sortedResources[j].id;
+                //   anonSource.href = sortedResources[j].href; 
+                //   anonSource.innerText = sortedResources[j].id + '\n activity: ' + Math.round(sortedResources[j].activityLevel*100);
+                //   var liA = document.createElement('li');
+                //   // liA.className = 'nav side_menu';
+                //   liA.appendChild(anonSource);
+                //   ulList.appendChild(liA); 
+                //   j++
+                // }
+                // layers.appendChild(liList);
             }
             //on geocoder results, add turf circles
             map.addSource('single-point', {
