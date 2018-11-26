@@ -39,7 +39,7 @@ function makeResourceEntry(resourceObject) {
   liContainer.id = resourceObject.name; 
   liLink.innerHTML = resourceObject.name;
   liLink.className = 'resource-entry';
-  liList.className = 'wide-highlight collapsed '+ liLink.id;
+  liList.className = 'collapsed '+ liLink.id;
   liContainer.className = 'resource-entry-box';
   
   liContainer.appendChild(liLink); 

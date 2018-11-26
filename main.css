@@ -1,10 +1,10 @@
 :root {
-    --bg-color: #542398; 
+    --bg-color: #50165c; 
     --bg-secondary: #75c; 
     --basic-txt-color: #e0deff; 
-    --highlight-txt-color: #ee8f36; 
-    --highlight-prime: rgb(112, 7, 241); 
-    --lowlight-prime: rgb(70, 28, 90); 
+    --highlight-txt-color: #ce60e4; 
+    --highlight-prime: #5d2f66; 
+    --lowlight-prime: #3e1946; 
 }
 
 html, body {
@@ -60,7 +60,7 @@ nav {
     padding-left: 2rem; 
     padding-bottom: 2rem; 
     background-color: var(--bg-color);
-    border-bottom:  0.5px solid var(--lowlight-prime);
+    /* border-bottom:  0.5px solid var(--lowlight-prime); */
     z-index: 1; 
 }
 
@@ -90,7 +90,7 @@ ul, li {
 .side-menu {
     display: block; 
     position: static;
-    width: 28%;
+    width: 20%;
     background-color: var(--bg-color);
     overflow: hidden;
     z-index: 1;
@@ -117,7 +117,7 @@ ul, li {
 }
 
 .menu-section-head {
-    align-content: center; 
+    align-items: center; 
     justify-content: center;
     padding: 0.5rem; 
     padding-left: 2rem;
@@ -127,26 +127,31 @@ ul, li {
 
 .menu-section-head i, 
 .menu-section-head chevron, 
-.menu-section-head a {
-    display: inline-block;
-    height: 100%;  
-    padding: .5rem;
-    padding-left: 0; 
+.menu-section-head h2 {
+    /* display: inline-block;
+    height: 100%;   */
+    /* padding: .5rem; */
+    /* padding-left: 0;  */
+}
+
+.menu-section-head i, 
+.menu-section-head chevron {
+    flex: 1; 
+}
+
+.menu-section-head h2 {
+    flex: 6; 
 }
 
 .menu-section-head:hover, .menu-section-head.open  {
     background-color:  var(--highlight-prime); 
     border-top: 1px solid var(--basic-txt-color);
-    border-bottom: 1px solid var(--lowlight-prime);
-}
-
-.wide-highlight {
-    max-height: 6rem;
+    /* border-bottom: 1px solid var(--lowlight-prime); */
 }
 
 .resource-entry {
     padding: 0.5rem; 
-    padding-left: 2rem; 
+    padding-left: 3rem; 
     color: var(--basic-txt-color); 
     display: block;
 }
@@ -156,6 +161,7 @@ ul, li {
     padding-left: 1rem; 
     padding-right: 3rem;
     background-color: var(--bg-color);
+    background-color: var(--lowlight-prime)
 }
 
 .resource-entry-box:hover {
@@ -172,11 +178,13 @@ ul, li {
     overflow-y: scroll;
     scrollbar-darkshadow-color: grey; 
     transition: max-height 0.5s 0.2s;
-    border-bottom: 1px solid var(--lowlight-prime); 
+    border-left: 6px solid var(--highlight-prime);
+    /* border-bottom: 1px solid var(--lowlight-prime);  */
 }
 
 .header-box {
-    display: inline-block;
+    display: flex;
+    align-items: center; 
 }
 
 .resource-section.collapsed {
