@@ -220,7 +220,8 @@ defineInterfaceishType("InterfaceDeclaration");
     exact: {
       validate: (0, _utils.assertValueType)("boolean"),
       default: false
-    }
+    },
+    inexact: (0, _utils.validateOptional)((0, _utils.assertValueType)("boolean"))
   }
 });
 (0, _utils.default)("ObjectTypeInternalSlot", {

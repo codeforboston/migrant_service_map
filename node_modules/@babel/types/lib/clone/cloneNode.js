@@ -36,6 +36,10 @@ function cloneNode(node, deep = true) {
 
   if (type === "Identifier") {
     newNode.name = node.name;
+
+    if (has(node, "typeAnnotation")) {
+      newNode.typeAnnotation = deep ? cloneIfNodeOrArray(node.typeAnnotation, true) : node.typeAnnotation;
+    }
   } else if (!has(_definitions.NODE_FIELDS, type)) {
     throw new Error(`Unknown node type: "${type}"`);
   } else {
