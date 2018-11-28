@@ -251,23 +251,15 @@ function _evaluate(path, state) {
     state.confident = wasConfident;
     const right = evaluateCached(path.get("right"), state);
     const rightConfident = state.confident;
-    state.confident = leftConfident && rightConfident;
 
     switch (node.operator) {
       case "||":
-        if (left && leftConfident) {
-          state.confident = true;
-          return left;
-        }
-
+        state.confident = leftConfident && (!!left || rightConfident);
         if (!state.confident) return;
         return left || right;
 
       case "&&":
-        if (!left && leftConfident || !right && rightConfident) {
-          state.confident = true;
-        }
-
+        state.confident = leftConfident && (!left || rightConfident);
         if (!state.confident) return;
         return left && right;
     }
