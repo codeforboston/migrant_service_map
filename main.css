@@ -7,10 +7,61 @@
     --lowlight-prime: #3e1946; 
 }
 
+#map {
+    -webkit-font-smoothing: antialiased;
+    border-bottom-color: rgb(251, 176, 52);
+    border-bottom-style: none;
+    border-bottom-width: 0px;
+    border-image-outset: 0px;
+    border-image-repeat: stretch;
+    border-image-slice: 100%;
+    border-image-source: none;
+    border-image-width: 1;
+    border-left-color: rgb(251, 176, 52);
+    border-left-style: none;
+    border-left-width: 0px;
+    border-right-color: rgb(251, 176, 52);
+    border-right-style: none;
+    border-right-width: 0px;
+    border-top-color: rgb(251, 176, 52);
+    border-top-style: none;
+    border-top-width: 0px;
+    box-sizing: border-box;
+    color: rgb(251, 176, 52);
+    cursor: grab;
+    display: block;
+    font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    font-stretch: normal;
+    font-style: normal;
+    font-variant-caps: normal;
+    font-weight: normal;
+    height: 377px;
+    line-height: 20px;
+    margin-bottom: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: 0px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 0px;
+    position: absolute;
+    vertical-align: baseline;
+    width: 819px;
+    position:absolute; 
+    top:10vh; 
+    left: 20%; 
+    bottom: 5vh; 
+    width:80%; 
+    height: 85vh; 
+    z-index: 0;
+}
+
 html, body {
     height: 100vh;
     width: 100%;
-    overflow: hidden;  
+    overflow: visible;  
 }
 
 h1 {
@@ -119,7 +170,7 @@ ul, li {
 .menu-section-head {
     align-items: center; 
     justify-content: center;
-    padding: 0.5rem; 
+    padding: 1rem; 
     padding-left: 2rem;
     /* border-top: 0.5px solid var(--lowlight-prime); 
     border-bottom:  0.5px solid var(--lowlight-prime); */
