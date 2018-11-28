@@ -5,7 +5,7 @@ html , body{
    }
 
    body { margin:0; padding:0; }
-        #map { position:absolute; top:10vh; left: 20%; bottom:0; width:100%; z-index: 0; }
+        #map { position:absolute; top:10vh; left: 20%; bottom: 5vh; width:80%; z-index: 0; }
         #menu a:last-child {
           border: none;
         }
