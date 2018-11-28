@@ -1,24 +1,25 @@
 {
   "name": "migrant_service_map",
-  "version": "1.0.0",
-  "description": "",
-  "main": "Chart.min.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/codeforboston/migrant_service_map.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/codeforboston/migrant_service_map/issues"
-  },
-  "homepage": "https://github.com/codeforboston/migrant_service_map#readme",
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
-    "express": "^4.16.4"
-  }
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3",
+    "react-scripts": "2.1.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
