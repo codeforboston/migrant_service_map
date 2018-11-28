@@ -1,23 +1,23 @@
+import mapboxgl from 'mapbox-gl';
 
-export function getResourceObject(map){
-  var services = map.querySourceFeatures('composite', {sourceLayer: 'refugees-services'});
-  var resourceObject = {};
-    for (var i = 0; i < services.length; i++) {
-      var type = services[i].properties.type; 
-      if ( ! Object.keys(resourceObject).includes(type) ) {
-        resourceObject[type] = []; 
-      }
 
-      var resource = services[i].properties; 
-      resource.coordinates = services[i].geometry.coordinates; 
-      resource.lngLat = services[i].lngLat; 
-      resourceObject[type].push(resource); 
-
-    }
+export function getResourceObject(sources){
+  var resourceObject = sources.map( i => {
+      var resource = i.properties; 
+      resource.coordinates = i.geometry.coordinates; 
+      resource.lngLat = i.lngLat; 
+      return resource; 
+    }); 
   return resourceObject; 
 }
 
-export function makeResourceEntry(map, mapboxgl, resourceObject) {
+// get the types from mapbox data
+export function getCategories(sources){
+  return sources.map(source => source.properties.type)
+    .filter((value, index, self) => self.indexOf(value) === index ); 
+};
+
+export function makeResourceEntry(resourceObject) {
   var liLink = document.createElement('a');
   var liList = document.createElement('li'); 
   var liContainer = document.createElement('div'); 
@@ -25,15 +25,14 @@ export function makeResourceEntry(map, mapboxgl, resourceObject) {
   var name = resourceObject.name; 
   var website = resourceObject.website;
   var bio = resourceObject.bio;
-  var telephone = resourceObject.telephone; 
-  var type = resourceObject.type; 
+  var telephone = resourceObject.telephone;
   var coordinates = resourceObject.coordinates; 
  
   liLink.onclick = function(e) {
     new mapboxgl.Popup()
       .setLngLat(coordinates)
-      .setHTML('<h4>' + name + '</h4>' + '<a href=' + website + '>' + website + '</a>' + '<br><br>' + '<i>' + bio + '</i>' + '<br><br><b>Telephone: </b>' + telephone)
-      .addTo(map);
+      .setHTML('<h4>' + name + '</h4><a href=' + website + '>' + website + '</a><br><br><i>' + bio + '</i><br><br><b>Telephone: </b>' + telephone)
+      // .addTo(map);
   }
 
   liContainer.id = resourceObject.name; 

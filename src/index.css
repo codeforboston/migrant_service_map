@@ -73,7 +73,12 @@ a, p, h1, h2, h3, h4, h5, h6, i {
   padding: 1rem;
   align-self: flex-start;
   text-align: left; 
-  object-fit: contain; 
+  object-fit: cover; 
+}
+
+.map.map-container {
+  display: flex;
+  flex: row;
 }
 
 .child-menu { 
