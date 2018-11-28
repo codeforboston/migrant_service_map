@@ -9,145 +9,85 @@
 
     <title>Migrant Service Map</title>
 
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.45.0/mapbox-gl.css' rel='stylesheet' />
+    <link href="https://api.mapbox.com/mapbox-assembly/v0.21.2/assembly.min.css" rel="stylesheet">
+    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.2.0/mapbox-gl-geocoder.css' type='text/css' />
+    <link rel='stylesheet' href='./rwbranding.css' type='text/css' />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <link rel='stylesheet' href='./main.css' type='text/css' />
+    
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.45.0/mapbox-gl.js'></script>
-    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.45.0/mapbox-gl.css' rel='stylesheet' />
     <script async defer src="https://api.mapbox.com/mapbox-assembly/v0.21.2/assembly.js"></script>
-    <link href="https://api.mapbox.com/mapbox-assembly/v0.21.2/assembly.min.css" rel="stylesheet">
     <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.2.0/mapbox-gl-geocoder.min.js'></script>
-    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.2.0/mapbox-gl-geocoder.css' type='text/css' />
     <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
+    <script src="./main.js"></script>
+    <script src="./toggleableLayersObjects.js"></script>
+    
 
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <!-- Font Awesome -->
-    <link href="./font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
-    <!-- NProgress -->
-    <link href="https://unpkg.com/nprogress@0.2.0/nprogress.css" rel="stylesheet">
-
-    <!-- Custom Theme Style -->
-    <link href=" ./rwbranding.css" rel="stylesheet">
   </head>
+<body>
+        
+  <div id='map'></div>
+    
+  <!-- top navigation -->    
+  <nav> 
+     <div class='titleBox'><a href="https://refugeeswelcomehome.org/"><h1>Migrant Service Map</h1><a></div>
+    <div id='top_menu'>
+      <a class='top-nav'>Top Nav</a>
+      <a class='top-nav'>Top Nav</a>
+      <a class='top-nav'>Top Nav</a>
+    </div>
+ </nav>
 
-  <body class="nav-md">
-    <div class="container body">
-      <div class="main_container">
-        <div class="col-md-3 left_col">
-          <div class="left_col scroll-view">
-            <div class="navbar nav_title" style="border: 0;">
-              <a href="https://refugeeswelcomehome.org/" class="site_title"><span>Migrant Service Map</span></a>
-            </div>
+<!--site title-->
+<div class="side-menu" onload="callMenu">
+  <div id="scrollable_menu">
+<!-- sidebar menu -->
+  <ul id="menu_content" >
+    <li>
+      <div><h3>Service Type</h3></div>
+      <ul id="menu_container"></ul>
+    </li>
+    <li>
+      <div><h3>Other Criteria</h3></div>
+      <ul id='other_criteria'></ul>
+    </li>
+    <li>
+      <div><h3>Visa Status</h3></div>
+      <ul id="visa_status"></ul>
+    </li>
+  </ul>
 
-            <div class="clearfix"></div>
+</div>
+  <!-- menu footer buttons -->
+  <div id="menu_toggle"><a href="">menu toggle bottom</a></div>                      
+  <!-- menu footer buttons -->
+
+</div>
 
 
-            <br />
 
-            <!-- sidebar menu -->
-            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
-              <div class="menu_section">
-                <h3>Service Type</h3>
-                <ul class="nav side-menu">
-                  <li><a><i class="fa fa-home"></i> Community Center<span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                      <li><a href="index.html">Org 1</a></li>
-                      <li><a href="index2.html">Org 2</a></li>
-                      <li><a href="index3.html">Org 3</a></li>
-                    </ul>
-                  </li>
-                  <li><a><i class="fa fa-edit"></i> Education <span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                      <li><a href="form.html">Org 1</a></li>
-                      <li><a href="form_advanced.html">Org 2</a></li>
-                      <li><a href="form_validation.html">Org 3</a></li>
-                    </ul>
-                  </li>
-                  <li><a><i class="fa fa-desktop"></i> Legal<span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                      <li><a href="general_elements.html">Org 1</a></li>
-                      <li><a href="media_gallery.html">Org 2</a></li>
-                      <li><a href="typography.html"> Org 3 </a></li>
-                    </ul>
-                  </li>
-                  <li><a><i class="fa fa-table"></i> Health<span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                      <li><a href="tables.html">Org 1</a></li>
-                      <li><a href="tables_dynamic.html"> Or 2</a></li>
-                    </ul>
-                  </li>
-                  <li><a><i class="fa fa-bar-chart-o"></i> Food Assistance <span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                      <li><a href="chartjs.html">Org 1</a></li>
-                      <li><a href="chartjs2.html">Org 2</a></li>
-                      <li><a href="morisjs.html">Org 3</a></li>
-                    </ul>
-                  </li>
-                  <li><a><i class="fa fa-clone"></i>Employment <span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                      <li><a href="fixed_sidebar.html">Org 1</a></li>
-                      <li><a href="fixed_footer.html">Org 2</a></li>
-                      <li><a href="fixed_footer.html">Org 3</a></li>
-                    </ul>
-                  </li>
-                  <li><a><i class="fa fa-clone"></i>Housing <span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                      <li><a href="fixed_sidebar.html">Org 1</a></li>
-                      <li><a href="fixed_footer.html">Org 2</a></li>
-                      <li><a href="fixed_footer.html">Org 3</a></li>
-                    </ul>
-                  </li>
-                </ul>
-              </div>
-              <div class="menu_section">
-                <h3>Other Criteria</h3>
-                <ul class="nav side-menu">
-                  <li><a><i class="fa fa-bug"></i> Visa Status <span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                      <li><a href="e_commerce.html">Refugee</a></li>
-                      <li><a href="projects.html">Asylum Seeker</a></li>
-                      <li><a href="project_detail.html">Undocumented</a></li>
-                      <li><a href="project_detail.html">Perm. Resident</a></li>
-                    </ul>
-                  </li>
-                  </ul>
-              </div>
-
-            </div>
-            <!-- sidebar menu -->
-
-            <!-- menu footer buttons -->
-            <div class="sidebar-footer hidden-small"></div>
-            </div>
-            <!-- menu footer buttons -->
-          </div>
-        </div>
-
-        <!-- top navigation -->
-        <div class="top_nav">
-          <div class="nav_menu">
-            <nav>
-              <div class="nav toggle">
-                </div><a id="menu_toggle"><i class="fa fa-bars"></i></a>
-              </div>
-
-        <!-- page content -->
-        <body class="prose">
-          <nav id="nav child_menu"></nav>
-          <div id='map'></div>
-
+                   
           <!-- legend -->
-          <div id='legend' class='bg-white w100 color-black round shadow-darken10 px12 py12 txt-l'>
+          <!-- <div id='legend' class='bg-white w100 color-black round shadow-darken10 px12 py12 txt-l'>
             <strong class='block mb6'>Distance to location (miles)</strong>
             <div class='grid txt-s align-center'>
               <div class='col flex-child--grow'><button class='btn btn--s bg-green-dark'>.5</button></div>
               <div class='col flex-child--grow'><button class='btn btn--s bg-green'>1</button></div>
               <div class='col flex-child--grow'><button class='btn btn--s bg-green-light'>3</button></div>
               <div class='col flex-child--grow'><button class='btn btn--s bg-green-faint'>5</button></div>
-            </div>
+            </div> -->
 
+    
 
           <script>
+
+          
+            // function callMenu(){
+            //   assembleMenu(); 
+            // }
+
             mapboxgl.accessToken = 'pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw';
             var map = new mapboxgl.Map({
               container: 'map', // container id
@@ -159,12 +99,17 @@
               accessToken: mapboxgl.accessToken
             });
             map.addControl(geocoder);
+
+          
+
             map.on('load', function(){
-            var toggleableLayerIds = [ 'community-centers', 'education', 'employment', 'financial-assistance', 'food-assistance', 'health', 'housing', 'mental-health', 'origin-based-community-center', 'resettlement-agency' ];
-            for (var i = 0; i < toggleableLayerIds.length; i++) {
-              var id = toggleableLayerIds[i];
-                //click event for pop-ups to each layer
-                map.on('click', toggleableLayerIds[i], function (e) {
+       
+            for (var i = 0; i < Object.keys(toggleableLayers).length; i++) {
+              var id = toggleableLayers[i].id;
+              var idStyle = map.setLayoutProperty(id, 'visibility', 'none');
+         
+              // click event for pop-ups to each layer
+            map.on('click', toggleableLayers[i].id, function (e) {
                   var coordinates = e.features[0].geometry.coordinates.slice();
                   var name = e.features[0].properties.name;
                   var website = e.features[0].properties.website;
@@ -173,32 +118,15 @@
                   while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
                       coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
                   }
+           
                   new mapboxgl.Popup()
                     .setLngLat(coordinates)
                     .setHTML('<h4>' + name + '</h4>' + '<a href=' + website + '>' + website + '</a>' + '<br><br>' + '<i>' + bio + '</i>' + '<br><br><b>Telephone: </b>' + telephone)
                     .addTo(map);
                 });
-                //toggling functionality
-                var link = document.createElement('a');
-                link.href = '#';
-                link.className = 'active';
-                link.textContent = id;
-                link.onclick = function (e) {
-                  var clickedLayer = this.textContent;
-                  e.preventDefault();
-                  e.stopPropagation();
-                  var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
-                  if (visibility === 'visible') {
-                    map.setLayoutProperty(clickedLayer, 'visibility', 'none');
-                    this.className = '';
-                  } else {
-                    this.className = 'active';
-                    map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
-                  }
-                };
-                var layers = document.getElementById('menu');
-                layers.appendChild(link);
             }
+
+            var menu = assembleMenu();
             //on geocoder results, add turf circles
             map.addSource('single-point', {
                 "type": "geojson",
@@ -312,21 +240,22 @@
 
         <!-- page content -->
 
+
     <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script> -->
     <!-- Bootstrap -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script> -->
         <!-- FastClick -->
-    <script src="./fastclick/lib/fastclick.js"></script>
+    <!-- <script src="./fastclick/lib/fastclick.js"></script> -->
     <!-- NProgress -->
     <script src="https://unpkg.com/nprogress@0.2.0/nprogress.js"></script>
     <!-- Chart.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script> -->
 
     <!-- Custom Theme Scripts -->
-    <script src="./custom.min.js"></script>
+    <!-- <script src="../custom.min.js"></script> -->
 
   </body>
 </html>

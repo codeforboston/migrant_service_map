@@ -46,7 +46,7 @@
           color: #404040;
         }
         #menu a.active {
-          background-color: #d7b221;≤
+          background-color: #d7b221;
           color: #ffffff;
         }
         #menu a.active:hover {
@@ -136,7 +136,7 @@
         }
       };
       var layers = document.getElementById('menu');
-      layers.appendChild(link);
+      layers.appendChild('<li>' + link + '</li>');
   }
   //on geocoder results, add turf circles
   map.addSource('single-point', {
