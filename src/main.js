@@ -1,149 +1,59 @@
 import React from 'react'; 
-// import mapboxgl from 'mapbox-gl'
-
-export const style = {
-    'style': 'object',
-    'resource': {'color': 'red', 'listStyle': 'none', 'alignItems': 'left'},
-    'text': {
-        'fontSize': '1rem', 
-        'color': 'alicewhite', 
-        'display':'block', 
-        'padding':'1rem',
-        'textAlign': 'left'
-    },
-    'list': {
-        'listStyle': 'none', 
-        'display':'flex', 
-        'flexDirection': 'column', 
-        'alignItems': 'start', 
-        'justifyContent':'start'
-    }
-}
-
-export const resourceObjects = [
-        {'name': 'name1',
-        'id': 'id1', 
-        'website': 'website', 
-        'bio': 'bio',
-        'telephone': 'telephone', 
-        'type': 'type1',
-        'coordinates': 'coordinates',
-        'onClick': 'onClick',
-        'className': 'className'},
-        {'name': 'name2',
-        'id': 'id2', 
-        'website': 'website', 
-        'bio': 'bio',
-        'telephone': 'telephone', 
-        'type': 'type2',
-        'coordinates': 'coordinates',
-        'onClick': 'onClick',
-        'className': 'className'},
-       { 'name': 'name3',
-        'id': 'id3', 
-        'website': 'website', 
-        'bio': 'bio',
-        'telephone': 'telephone', 
-        'type': 'type3',
-        'coordinates': 'coordinates',
-        'onClick': 'onClick',
-        'className': 'className'},
-        { 'name': 'name4',
-         'id': 'id3', 
-         'website': 'website', 
-         'bio': 'bio',
-         'telephone': 'telephone', 
-         'type': 'type3',
-         'coordinates': 'coordinates',
-         'onClick': 'onClick',
-         'className': 'className'},
-         { 'name': 'name5',
-          'id': 'id3', 
-          'website': 'website',     
-          'bio': 'bio',
-          'telephone': 'telephone', 
-          'type': 'type3',
-          'coordinates': 'coordinates',
-          'onClick': 'onClick',
-          'className': 'className'},
-          { 'name': 'name6',
-           'id': 'id3', 
-           'website': 'website', 
-           'bio': 'bio',
-           'telephone': 'telephone', 
-           'type': 'type3',
-           'coordinates': 'coordinates',
-           'onClick': 'onClick',
-           'className': 'className'}
-]; 
-
-const icons = {
-    'type1':'mb1',
-    'type2':'mb2',
-    'type3':'mb3',
-    'type4': 'mb4'
-}; 
+import { resourceObjects } from './helper_functions.js';
 
 
-export function TestPattern() {
-    return (
-        <ul>
-            <li>test pattern this is a test pattern</li>
-        </ul>
-    )
-}
-
-
-
+//the individual resources (company, school, non-profit)
 export function ResourceListItem(props) {
     return (
-        <li style={style.text}><a href="#target" /* onClick={mapboxPopup}*/ >{props.name}</a></li>
+        <li className='list-item'><a href="#target" /* onClick={mapboxPopup}*/ >{props.name}</a></li>
     )
 }
 
+//array of the types of resources -- forms the main menu entries. Draws from the live database so should change with updates. 
 export const categoryList = makeTypeList(resourceObjects);
 
+//get the types from the temporary 'data' object 
 function makeTypeList(objectArray){
     return objectArray.map(function(a){ return a.type }).filter(function(value, index, self){
         return self.indexOf(value) === index ; 
     })
 }; 
 
-
-
+// get the types from mapbox data
 // function getCategories(){
 //     let map = 'mapbox reference'; 
 //     let services = map.querySourceFeatures('composite', {sourceLayer: 'refugees-services'}); 
-//     let serviceCategories = []; 
-//     for (let i = 0 ; i < services ; i++){
-//         let type = services[i].properties.type; 
-//         if ( ! Object.keys(serviceCategories).includes(type) ) {
-//             serviceCategories.push(type); 
-//         }
-//     }
+//     return services.map(function(a){ return a.type }).filter(function(value, index, self){
+    // return self.indexOf(value) === index ; 
 // }
 
-export function ResourceSectionHeader(props){
+//TO-DO when mapbox hooks up 
+function toggleMapIcons(){ 'toggle(category)' };
 
+//toggles child menu
+function toggleChildMenu(category){ 
+    console.log('toggleChildMenu', category);
+    var myMenu = document.getElementById('list-' + category);
+    console.log(myMenu); 
+    myMenu.classList.toggle('show')
+ };
+
+
+export function ResourceSectionHeader(props){
     return (
-        <div style={{'display':'flex', 'alignItems': 'center', 'justifyContent': 'start', 'fontSize':'1rem'}}>
+        <div className='section-header'>
             <i>{'icon'}</i>
-            <h2 style={style.text}><a href="#target">{props.category}</a></h2>
+            <h2><a href="#target" onClick={function(){ return toggleChildMenu(props.category)}}>{props.category}</a></h2>
             <i>{'chevron'}</i>
         </div>
     )
 }
 
 
-function toggleMapIcons(){ 'toggle(category)' };
-
-function toggleChildMenu(){ 'toggle(catoegory)' };
-
-
 export function ResourceList(props){
     // const style={'scroll': 'scroll'};
     return(
-        <ul style={{'listStyle': 'none', 'textAlign':'left'}}>
+        <ul className='child-menu' id={'list-' + props.category}>
         {resourceObjects.filter(function(resource){
                 return resource.type === props.category
             }).map(function(resource) {

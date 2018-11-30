@@ -19,6 +19,13 @@ li {
   flex-direction: column; 
   align-items: start; 
   justify-content: start;
+  margin-left: 0; 
+  padding-left: 0; 
+}
+
+ul {
+  margin-left: 0; 
+  padding-left: 0; 
 }
 
 a, p, h1, h2, h3, h4, h5, h6, i {
@@ -30,8 +37,49 @@ a, p, h1, h2, h3, h4, h5, h6, i {
   padding: 1rem; 
 }
 
+.flex-container {
+  display: flex; 
+  flex-direction: row; 
+  align-items: flex-start; 
+  justify-items: flex-start; 
+}
+
 .side-menu {
-  text-align: left; 
+  text-align: left;
+  display: flex;
+  flex-direction: column; 
+  flex: 1; 
+  max-width: 250px;
+  min-width: 150px;
   margin-left: 0; 
-  padding-left: 2rem; 
+  padding: 0 2rem;
+  border-right: 2px solid #8c45cf; 
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  flex: 1; 
+}
+
+.list-item {
+  margin: 0.5rem;
+  
+}
+
+.map {
+  flex: 1; 
+  max-width: 50%;
+  padding: 1rem;
+  align-self: flex-start;
+  text-align: left; 
+  object-fit: contain; 
+}
+
+.child-menu { 
+  display: none; 
+}
+
+.child-menu.show {
+  display: block;
 }
