@@ -1,8 +1,10 @@
 # Migrant Service Map
 
-Migrant Service Map-MSM Project (start date 9.13.18)
+## Migrant Service Map-MSM Project
 
-by [Refugees Welcome](https://refugeeswelcomehome.org/)!
+(start date 9.13.18)
+
+## by [Refugees Welcome](https://refugeeswelcomehome.org/)!
 
 ## Partners: MapBox and Code for Boston
 
