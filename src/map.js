@@ -13,7 +13,7 @@ class Map extends React.Component {
     constructor(props){
         super(props); 
         this.state = {
-            services: [], 
+            providers: [], 
             resourcesObject: {}, 
             categoriesList: []
         }
@@ -22,12 +22,11 @@ class Map extends React.Component {
     componentDidMount() {
         console.log('map comp loaded');
        
-        
         let map = new mapboxgl.Map({
-        container: 'map', // container id
-        style: 'mapbox://styles/refugeeswelcome/cjh9k11zz15ds2spbs4ld6y9o', // stylesheet location
-        center: [-71.066954, 42.359947], // starting position [lng, lat]
-        zoom: 11 // starting zoom
+            container: 'map', // container id
+            style: 'mapbox://styles/refugeeswelcome/cjh9k11zz15ds2spbs4ld6y9o', // stylesheet location
+            center: [-71.066954, 42.359947], // starting position [lng, lat]
+            zoom: 11 // starting zoom
         });
         
     
@@ -38,32 +37,15 @@ class Map extends React.Component {
         map.addControl(geocoder);
 
         map.on('load', () => {
-            let sources = map.querySourceFeatures('composite', {sourceLayer: 'refugees-services'});
-            let categoriesList = getCategories(sources); 
-            let resourcesObject = getResourceObject(sources); 
-            this.setState({services: sources,
+            const providers = map.querySourceFeatures('composite', {sourceLayer: 'refugees-services'});
+            const categoriesList = getCategories(providers); 
+            const resourcesObject = getResourceObject(providers); 
+            this.setState({providers: providers,
                     categoriesList: categoriesList, 
                     resourcesObject: resourcesObject});
 
+        map.on('click', (e) => this.popUp(e, map)); 
 
-
-
-        map.on('click', (e) => {
-            var coordinates = e.features[0].geometry.coordinates.slice();
-            var name = e.features[0].properties.name;
-            var website = e.features[0].properties.website;
-            var bio = e.features[0].properties.bio;
-            var telephone = e.features[0].properties.telephone;
-            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-            }
-            
-            new mapboxgl.Popup()
-                .setLngLat(coordinates)
-                .setHTML('<h4>' + name + '</h4><a href=' + website + '>' + website + '</a><br><br><i>' + bio + '</i><br><br><b>Telephone: </b>' + telephone)
-                .addTo(map);
-        // }); 
-    
         map.addSource('single-point', {
             "type": "geojson",
             "data": {
@@ -71,13 +53,13 @@ class Map extends React.Component {
                 "features": []
             }
         });
-        map.addSource('single-point', {
-            "type": "geojson",
-            "data": {
-                "type": "FeatureCollection",
-                "features": []
-            }
-        });
+        // map.addSource('single-point', {
+        //     "type": "geojson",
+        //     "data": {
+        //         "type": "FeatureCollection",
+        //         "features": []
+        //     }
+        // });
         map.addLayer({
             "id": "point",
             "source": "single-point",
@@ -177,11 +159,25 @@ class Map extends React.Component {
                 "layout": {}
             });
         });
-    });
-}); 
+    });  
+};
+
+popUp = (e) => {
+    // var coordinates = e.features[0].geometry.coordinates.slice();
+    // var name = e.features[0].properties.name;
+    // var website = e.features[0].properties.website;
+    // var bio = e.features[0].properties.bio;
+    // var telephone = e.features[0].properties.telephone;
+    // while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+    //     coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+    // }
     
-}
-;
+    // new mapboxgl.Popup()
+    //     .setLngLat(coordinates)
+        // .setHTML('<h4>' + name + '</h4><a href=' + website + '>' + website + '</a><br><br><i>' + bio + '</i><br><br><b>Telephone: </b>' + telephone)
+        // .addTo(map);
+}; 
+
 
     componentWillUnmount() {
         this.map.remove();
@@ -191,13 +187,13 @@ class Map extends React.Component {
 
     render(){
         return (
-        <div className='map map-container' >
+        <div className='map-container' >
             <Menu categoriesList={this.state.categoriesList}
                   resourcesObject={this.state.resourcesObject} />
             <div id='map'
                 className='map'
                 ref={el => this.mapContainer = el}
-                >addLayer
+                >
             </div> 
         </div>
         )

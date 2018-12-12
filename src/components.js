@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
-import { ResourceSectionHeader, ResourceList } from './main.js';
+import { ResourceList, ResourceSectionHeader } from './main.js';
 
 export class TopNav extends Component {
     render() {
         return (
             <nav>
-                <div className='top-nav'><a href="https://refugeeswelcomehome.org/"><h1>Migrant Service Map</h1></a></div>
+                <div className='header-title'>
+                    <a href="https://refugeeswelcomehome.org/">
+                        <h1>Migrant Service Map</h1>
+                    </a>
+                </div>
                 <div id='top-nav' className='top-nav'>
                     <a className='top-nav' href="#target" >Top Nav</a>
                     <a className='top-nav' href="#target" >Top Nav</a>
@@ -21,7 +25,7 @@ export default class Menu extends Component {
         // debugger;
         return(
             <ul className='side-menu'>
-                <li>
+                <li >
                     <h3>Service Type</h3>
                     <ul>{this.props.categoriesList.map(category => (
                             <div key={category} >
@@ -32,12 +36,12 @@ export default class Menu extends Component {
                                     <ResourceList resourcesObject={this.props.resourcesObject} category={category} />
                                 </li>
                             </div>
-                        ))}</ul>
+                    ))}</ul>
                 </li>
                 <li>
                     <h3>Other Criteria</h3>
                     <ul>
-                        <li><h4>Visa Status</h4></li>
+                        <li><h2>Visa Status</h2></li>
                     </ul>
                 </li>
             </ul>
