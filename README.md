@@ -24,9 +24,11 @@ Thanks for choosing to support our initiative to support and strengthen migrant 
 - Thad Kerosky <thadknull@gmail.com>
 - Matt mattz@codeforboston.org
 
-## Resources
+## Project Materials and communications
 
-- Slack: #migrantservicemap
+- Slack Channel: #migrantservicemap
+  - [Join Code for Boston's Slack Workplace]
+- [Project Board]
 - [Weekly Meeting Minutes](https://docs.google.com/document/d/1Q4KbIK_mSc1YiAWd6nZ9qgy0cJgI_m5sBXKJMqfagHo/edit?usp=sharing)
 - [Draft Link](https://bl.ocks.org/malwoodsantoro/raw/bb965255726264a1187d0de845f32c41/)
 - [Database](https://docs.google.com/spreadsheets/d/1yuYBtejcDPPxkY3ogHkqGEp7h3RrZ_3B2SUsraASWcs/edit?usp=sharing)
@@ -47,18 +49,40 @@ The types of services include, housing, work placement, english, legal assistanc
 
 #### Node
 
-If you don't have nodejs installed, [install it](https://nodejs.org/en/download/). If you don't know, do `node --version` in your terminal/command prompt. If you don't get a number, you don't have it. You can also install [NVM](https://github.com/creationix/nvm) and run `nvm use` in your terminal to use the correct version (you may have to `nvm install` if you don't currently have the correct version installed).
+If you don't have nodejs installed, [install it](https://nodejs.org/en/download/). If you don't know, do `node --version` in your terminal/command prompt. If you don't get a number, you don't have it.
 
 #### Github
 
 If you're new to github look at [How to: fork a repo](https://help.github.com/articles/fork-a-repo/).
 
-### Setup Instructions
+### Setup
 
-1. Fork and clone the repo, creating a link (remote branch) to the Code for Boston repo.
-2. In your termainal/command prompt, do `git checkout reboot`. _Do not touch the `master` branch._
-   Active development branch
+1. Fork the repo
+2. and `clone` the repo, creating a link (remote branch) to the Code for Boston repo.
+3. In your terminal/command prompt inside the directory:
+
+```
+git checkout reboot
+npm install
+```
+
+**Reboot** is the active development branch. Do not touch the `master` branch.
+
+### Running the App
+
+- In your terminal/command prompt run `npm start` to start the app. In your browser navigate to http://localhost:3000/msmmain.html
+- To close the server ...
+
+4.
 
 ## Testing
 
 TODO
+
+## Tech Stack
+
+- [Reactjs](https://facebook.github.io/react/docs/react-api.html)
+- [Mapbox]
+- [Bootstrap]
+
+## Resources
