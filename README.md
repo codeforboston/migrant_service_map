@@ -1,12 +1,12 @@
 # Migrant Service Map
 
-## Migrant Service Map-MSM Project
+### Migrant Service Map-MSM Project
 
 (start date 9.13.18)
 
-## by [Refugees Welcome](https://refugeeswelcomehome.org/)!
+### by [Refugees Welcome](https://refugeeswelcomehome.org/)!
 
-## Partners: MapBox and Code for Boston
+### Partners: MapBox and Code for Boston
 
 Thanks for choosing to support our initiative to support and strengthen migrant service provision in the greater Boston area. For more information about our organization, vist [Refugees Welcome](https://refugeeswelcomehome.org/).
 
@@ -53,15 +53,30 @@ The types of services include, housing, work placement, english, legal assistanc
 
 If you don't have nodejs installed, [install it](https://nodejs.org/en/download/). If you don't know, do `node --version` in your terminal/command prompt. If you don't get a number, you don't have it.
 
-#### Github
+#### Git and Github
 
-If you're new to github look at [How to: fork a repo](https://help.github.com/articles/fork-a-repo/).
+If you're new to github check out [Github Guide, Hello World](https://guides.github.com/activities/hello-world/) to make an account and get started with Github and [How to: fork a repo](https://help.github.com/articles/fork-a-repo/) to learn how to fork a repo.
 
 ### Setup
 
-1. Fork the repo
-2. and `clone` the repo, creating a link (remote branch) to the Code for Boston repo.
-3. In your terminal/command prompt cd (change directory) into the new folder. Inside the directory:
+1. Fork the repository: On GitHub, navigate to the [repository](https://github.com/codeforboston/migrant_service_map). In the top-right corner of the page, click Fork.
+2. On GitHub, navigate to your fork of the migrant_service_map repository. In the Clone with HTTPs section, click to copy the clone URL for the repository.
+3. Clone your fork: In your terminal type `git clone`, paste the URL you copied and press enter. In your terminal/command prompt cd (change directory) into the new folder. Inside the directory:
+
+```
+git clone
+https://github.com/YOUR-USERNAME/migrant_service_map.git
+cd migrant_service_map
+```
+
+4. Add the migrant_service_map repository as a remote to your fork:
+
+```
+git remote add upstream
+https://github.com/codeforboston/migrant_service_map.git
+```
+
+4. Installing: Checkout branch reboot and install
 
 ```
 git checkout reboot
@@ -76,7 +91,13 @@ npm install
 
 - To stop the local server press ctrl + c in your terminal
 
-4.
+### Updating
+
+To learn more about keeping your fork up to date view this [article](https://help.github.com/articles/syncing-a-fork/),1. When there is an update, in your terminal inside your local repo:
+
+```
+git fetch upstream
+```
 
 ## Testing
 
