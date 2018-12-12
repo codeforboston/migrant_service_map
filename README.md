@@ -96,7 +96,9 @@ npm install
 To learn more about keeping your fork up to date view this [article](https://help.github.com/articles/syncing-a-fork/),1. When there is an update, in your terminal inside your local repo:
 
 ```
-git fetch upstream
+git checkout reboot
+git pull origin
+npm install
 ```
 
 ## Testing
