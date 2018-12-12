@@ -59,7 +59,7 @@ If you're new to github look at [How to: fork a repo](https://help.github.com/ar
 
 1. Fork the repo
 2. and `clone` the repo, creating a link (remote branch) to the Code for Boston repo.
-3. In your terminal/command prompt inside the directory:
+3. In your terminal/command prompt cd (change directory) into the new folder. Inside the directory:
 
 ```
 git checkout reboot
@@ -70,8 +70,9 @@ npm install
 
 ### Running the App
 
-- In your terminal/command prompt run `npm start` to start the app. In your browser navigate to http://localhost:3000/msmmain.html
-- To close the server ...
+- In your terminal/command prompt run `npm start` to start the app. It will open automatically in a browser window.
+
+- To stop the local server press ctrl + c in your terminal
 
 4.
 
@@ -82,7 +83,5 @@ TODO
 ## Tech Stack
 
 - [Reactjs](https://facebook.github.io/react/docs/react-api.html)
-- [Mapbox]
-- [Bootstrap]
-
-## Resources
+- [Mapbox](https://www.mapbox.com/)
+- [Bootstrap](https://getbootstrap.com/)
