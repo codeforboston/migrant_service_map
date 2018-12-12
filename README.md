@@ -2,15 +2,15 @@
 
 Migrant Service Map-MSM Project (start date 9.13.18)
 
-by Refugees Welcome!
+by [Refugees Welcome](https://refugeeswelcomehome.org/)!
 
 ## Partners: MapBox and Code for Boston
 
-Thanks for choosing to support our initiative to support and strengthen migrant service provision in the greater Boston area. For more information about our organization, vist refugeeswelcomehome.org
+Thanks for choosing to support our initiative to support and strengthen migrant service provision in the greater Boston area. For more information about our organization, vist [Refugees Welcome](https://refugeeswelcomehome.org/).
 
 ### Project Lead:
 
-- Charla M. Burnett (Refugees Welcome!) charla.burnett89@gmail.com
+- Charla M. Burnett ([Refugees Welcome](https://refugeeswelcomehome.org/)) charla.burnett89@gmail.com
 
 ### MapBox Support:
 
