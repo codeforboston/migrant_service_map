@@ -3,7 +3,7 @@ import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import './index.css';
 import { getCategories, getResourceObject } from './map-services.js';
-import Menu from "./components/Menu";
+import Menu from "./components/Menu/Menu";
 
 
 mapboxgl.accessToken = 'pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw';
