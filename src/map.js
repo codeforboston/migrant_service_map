@@ -17,18 +17,18 @@ class Map extends React.Component {
             resources: []
         }
    }
-  
+
     componentDidMount() {
         console.log('map comp loaded');
-       
+
         let map = new mapboxgl.Map({
             container: 'map', // container id
             style: 'mapbox://styles/refugeeswelcome/cjh9k11zz15ds2spbs4ld6y9o', // stylesheet location
             center: [-71.066954, 42.359947], // starting position [lng, lat]
             zoom: 11 // starting zoom
         });
-        
-    
+
+
         var geocoder = new MapboxGeocoder({
             accessToken: mapboxgl.accessToken
         });
@@ -42,7 +42,7 @@ class Map extends React.Component {
             this.setState({providers: providers,
                     resources: resources});
 
-        map.on('click', (e) => this.popUp(e, map)); 
+        map.on('click', (e) => this.popUp(e, map));
 
         map.addSource('single-point', {
             "type": "geojson",
@@ -169,12 +169,12 @@ popUp = (e) => {
     // while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
     //     coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
     // }
-    
+
     // new mapboxgl.Popup()
     //     .setLngLat(coordinates)
         // .setHTML('<h4>' + name + '</h4><a href=' + website + '>' + website + '</a><br><br><i>' + bio + '</i><br><br><b>Telephone: </b>' + telephone)
         // .addTo(map);
-}; 
+};
 
 
     componentWillUnmount() {
