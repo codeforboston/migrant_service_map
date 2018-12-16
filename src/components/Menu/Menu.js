@@ -1,33 +1,45 @@
 import React, { Component } from "react";
-import MenuCategory from "./MenuCategory";
+import DropdownMenu from "./DropdownMenu";
+import DropdownMenuItem from "./DropdownMenuItem";
 
 export default class Menu extends Component {
+
   render() {
-    let resources = this.props.resourcesObject;
+    const { resources } = this.props;
+    this.servicesByType = {};
+    this.serviceTypes = [];
+
+    /**
+     * extracting map -
+     * servicesByType = {
+     *    "Health": [<health resource 1>, <health resource 2>, ...],
+     *    "Education": [<education resource 1>, <education resource 2>, ...],
+     *    ... etc
+     * }
+     */
+    resources.forEach(resource => {
+      const { type } = resource;
+      this.servicesByType[type] = this.servicesByType[type] || []; // Initialize the array if needed
+      this.servicesByType[type].push(resource);
+
+      if (!this.serviceTypes.includes(type)) {
+        this.serviceTypes.push(type);
+      }
+    });
+
     return (
       <div className="side-menu">
-        <li>
-          <h3>Service Type</h3>
-          <ul>
-            {this.props.categoriesList.map((category, index) => (
-              <MenuCategory
-                key={index}
-                category={category}
-                items={resources.filter(
-                  resource => resource.type === category
-                )}
-              />
-            ))}
-          </ul>
-        </li>
-        <li>
-          <h3>Other Criteria</h3>
-          <ul>
-            <li>
-              <h2>Visa Status</h2>
-            </li>
-          </ul>
-        </li>
+        <DropdownMenu text="Service Type">
+          {this.serviceTypes.map((serviceType, index) => (
+            <DropdownMenuItem
+              key={index}
+              text={serviceType}
+              items={this.servicesByType[serviceType]}
+            />
+          ))}
+        </DropdownMenu>
+        <DropdownMenu text="Other Criteria" />
+        <DropdownMenu text="Visa Status" />
       </div>
     );
   }

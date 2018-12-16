@@ -11,11 +11,10 @@ mapboxgl.accessToken = 'pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZ
 
 class Map extends React.Component {
     constructor(props){
-        super(props); 
+        super(props);
         this.state = {
-            providers: [], 
-            resourcesObject: {}, 
-            categoriesList: []
+            providers: [],
+            resources: []
         }
    }
   
@@ -38,11 +37,10 @@ class Map extends React.Component {
 
         map.on('load', () => {
             const providers = map.querySourceFeatures('composite', {sourceLayer: 'refugees-services'});
-            const categoriesList = getCategories(providers); 
-            const resourcesObject = getResourceObject(providers); 
+            const serviceTypes = getCategories(providers);
+            const resources = getResourceObject(providers);
             this.setState({providers: providers,
-                    categoriesList: categoriesList, 
-                    resourcesObject: resourcesObject});
+                    resources: resources});
 
         map.on('click', (e) => this.popUp(e, map)); 
 
@@ -159,7 +157,7 @@ class Map extends React.Component {
                 "layout": {}
             });
         });
-    });  
+    });
 };
 
 popUp = (e) => {
@@ -188,16 +186,15 @@ popUp = (e) => {
     render(){
         return (
         <div className='map-container' >
-            <Menu categoriesList={this.state.categoriesList}
-                  resourcesObject={this.state.resourcesObject} />
+            <Menu resources={this.state.resources} />
             <div id='map'
                 className='map'
                 ref={el => this.mapContainer = el}
                 >
-            </div> 
+            </div>
         </div>
         )
     };
-}; 
+};
 
 export default Map;
