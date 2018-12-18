@@ -16,20 +16,21 @@ class Map extends React.Component {
             providers: [],
             resources: []
         }
-        this.map = {}; 
+        this.map = null; 
+        this.handleProviderClick = this.handleProviderClick.bind(this); 
         this.handleProviderClick = this.handleProviderClick.bind(this); 
    }
 
-   handleProviderClick(e) {
-        //    const lngLat = [], 
-        //          name = "", 
-        //          website = "", 
-        //          bio = "", 
-        //          telephone = 0; 
+   handleProviderClick(provider) {
+    let { name, type, coordinates, website, bio, telephone } = provider.provider; 
+        
+    new mapboxgl.Popup()
+        .setLngLat(coordinates)
+        .setHTML('<h4>' + name + '</h4><a href=' + website + '>' + website + '</a><br><br><i>' + bio + '</i><br><br><b>Telephone: </b>' + telephone)
+        .addTo(this.map);
+   }
 
- 
-
-    //    map.on('click', (e) => {
+   handleMapClick(e) {
         var coordinates = e.features[0].geometry.coordinates.slice();
         var name = e.features[0].properties.name;
         var website = e.features[0].properties.website;
@@ -38,22 +39,14 @@ class Map extends React.Component {
         while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
             coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
         }
-
-        console.log('consts', coordinates, name, website, bio, telephone);
-        console.log('e', e); 
         
         new mapboxgl.Popup()
             .setLngLat(coordinates)
             .setHTML('<h4>' + name + '</h4><a href=' + website + '>' + website + '</a><br><br><i>' + bio + '</i><br><br><b>Telephone: </b>' + telephone)
             .addTo(this.map);
-   }
-
-
-
-   handleMapClick(e) {
-    console.log('handled map click', e);
-   }
-
+        
+    }
+  
     componentDidMount() {
         console.log('map comp loaded');
 
@@ -63,8 +56,8 @@ class Map extends React.Component {
             center: [-71.066954, 42.359947], // starting position [lng, lat]
             zoom: 11 // starting zoom
         });
-
-
+        this.map = map; 
+    
         var geocoder = new MapboxGeocoder({
             accessToken: mapboxgl.accessToken
         });
@@ -76,9 +69,11 @@ class Map extends React.Component {
             const serviceTypes = getCategories(providers);
             const resources = getResourceObject(providers);
             this.setState({providers: providers,
-                    resources: resources});
+                    categoriesList: categoriesList, 
+                    resourcesObject: resourcesObject});
+            const providerToLayerName = (provider) => provider.properties.type.toLowerCase().split(" ").join("-");
 
-        map.on('click', ["Education"], () => console.log( "education" )); //(e) => this.handleMapClick(e)); 
+            providers.map( provider => map.on('click', providerToLayerName(provider), (e) => this.handleMapClick(e)));
 
         map.addSource('single-point', {
             "type": "geojson",
@@ -196,33 +191,16 @@ class Map extends React.Component {
     });
 };
 
-popUp = (e) => {
-    // var coordinates = e.features[0].geometry.coordinates.slice();
-    // var name = e.features[0].properties.name;
-    // var website = e.features[0].properties.website;
-    // var bio = e.features[0].properties.bio;
-    // var telephone = e.features[0].properties.telephone;
-    // while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-    //     coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-    // }
-
-    // new mapboxgl.Popup()
-    //     .setLngLat(coordinates)
-        // .setHTML('<h4>' + name + '</h4><a href=' + website + '>' + website + '</a><br><br><i>' + bio + '</i><br><br><b>Telephone: </b>' + telephone)
-        // .addTo(map);
-};
-
-
     componentWillUnmount() {
         this.map.remove();
     }
 
-
-
     render(){
         return (
         <div className='map-container' >
-            <Menu resources={this.state.resources} />
+            <Menu categoriesList={this.state.categoriesList}
+                  resourcesObject={this.state.resourcesObject}
+                  onclick={(e) => this.handleProviderClick(e)} />
             <div id='map'
                 className='map'
                 ref={el => this.mapContainer = el}
