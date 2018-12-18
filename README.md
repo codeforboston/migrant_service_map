@@ -12,10 +12,7 @@ Project Lead:
 Charla M. Burnett (Refugees Welcome!) charla.burnett89@gmail.com
 
 MapBox Support: 
-Marena Brinkhurst marena.brinkhurst@mapbox.com
-Sam Fader sam.fader@mapbox.com 
-Mall Wood mal.wood@mapbox.com,
-Joe Clark joe.clark@mapbox.com,
+Marena Brinkhurst, Sam Fader, Mal Wood-Santoro, and Joe Clark can be reached at help@mapbox.com
 
 Code4Boston Support: 
 Thad Kerosky <thadknull@gmail.com>
