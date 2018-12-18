@@ -16,6 +16,42 @@ class Map extends React.Component {
             providers: [],
             resources: []
         }
+        this.map = {}; 
+        this.handleProviderClick = this.handleProviderClick.bind(this); 
+   }
+
+   handleProviderClick(e) {
+        //    const lngLat = [], 
+        //          name = "", 
+        //          website = "", 
+        //          bio = "", 
+        //          telephone = 0; 
+
+ 
+
+    //    map.on('click', (e) => {
+        var coordinates = e.features[0].geometry.coordinates.slice();
+        var name = e.features[0].properties.name;
+        var website = e.features[0].properties.website;
+        var bio = e.features[0].properties.bio;
+        var telephone = e.features[0].properties.telephone;
+        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        }
+
+        console.log('consts', coordinates, name, website, bio, telephone);
+        console.log('e', e); 
+        
+        new mapboxgl.Popup()
+            .setLngLat(coordinates)
+            .setHTML('<h4>' + name + '</h4><a href=' + website + '>' + website + '</a><br><br><i>' + bio + '</i><br><br><b>Telephone: </b>' + telephone)
+            .addTo(this.map);
+   }
+
+
+
+   handleMapClick(e) {
+    console.log('handled map click', e);
    }
 
     componentDidMount() {
@@ -42,7 +78,7 @@ class Map extends React.Component {
             this.setState({providers: providers,
                     resources: resources});
 
-        map.on('click', (e) => this.popUp(e, map));
+        map.on('click', ["Education"], () => console.log( "education" )); //(e) => this.handleMapClick(e)); 
 
         map.addSource('single-point', {
             "type": "geojson",
