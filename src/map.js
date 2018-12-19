@@ -66,11 +66,7 @@ class Map extends React.Component {
 
         map.on('load', () => {
             const providers = map.querySourceFeatures('composite', {sourceLayer: 'refugees-services'});
-            const serviceTypes = getCategories(providers);
-            const resources = getResourceObject(providers);
-            this.setState({providers: providers,
-                    categoriesList: categoriesList, 
-                    resourcesObject: resourcesObject});
+            this.setState({providers: providers});
             const providerToLayerName = (provider) => provider.properties.type.toLowerCase().split(" ").join("-");
 
             providers.map( provider => map.on('click', providerToLayerName(provider), (e) => this.handleMapClick(e)));
@@ -198,8 +194,7 @@ class Map extends React.Component {
     render(){
         return (
         <div className='map-container' >
-            <Menu categoriesList={this.state.categoriesList}
-                  resourcesObject={this.state.resourcesObject}
+            <Menu resources={getResourceObject(this.state.providers)}
                   onclick={(e) => this.handleProviderClick(e)} />
             <div id='map'
                 className='map'
