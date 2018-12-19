@@ -1,9 +1,9 @@
 import React from 'react';
 import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
-import './index.css';
-import { getCategories, getResourceObject } from './map-services.js';
-import Menu from "./components/Menu/Menu";
+import '../index.css';
+import { getCategories, getResourceObject } from '../map-services';
+import Menu from "./Menu/Menu";
 
 
 mapboxgl.accessToken = 'pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw';
@@ -17,7 +17,6 @@ class Map extends React.Component {
             resources: []
         }
         this.map = null; 
-        this.handleProviderClick = this.handleProviderClick.bind(this); 
         this.handleProviderClick = this.handleProviderClick.bind(this); 
    }
 

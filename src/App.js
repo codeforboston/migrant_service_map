@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Column, Row } from "simple-flexbox";
 import TopNav from "./components/TopNav";
-import Map from "./map";
+import Map from "./components/Map";
 import "./App.css";
 
 class App extends Component {
@@ -18,3 +18,4 @@ class App extends Component {
 }
 
 export default App;
+ 
