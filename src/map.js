@@ -3,7 +3,7 @@ import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import './index.css';
 import { getCategories, getResourceObject } from './map-services.js';
-import Menu from "./components/Menu";
+import Menu from "./components/Menu/Menu";
 
 
 mapboxgl.accessToken = 'pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw';
@@ -11,25 +11,24 @@ mapboxgl.accessToken = 'pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZ
 
 class Map extends React.Component {
     constructor(props){
-        super(props); 
+        super(props);
         this.state = {
-            providers: [], 
-            resourcesObject: {}, 
-            categoriesList: []
+            providers: [],
+            resources: []
         }
    }
-  
+
     componentDidMount() {
         console.log('map comp loaded');
-       
+
         let map = new mapboxgl.Map({
             container: 'map', // container id
             style: 'mapbox://styles/refugeeswelcome/cjh9k11zz15ds2spbs4ld6y9o', // stylesheet location
             center: [-71.066954, 42.359947], // starting position [lng, lat]
             zoom: 11 // starting zoom
         });
-        
-    
+
+
         var geocoder = new MapboxGeocoder({
             accessToken: mapboxgl.accessToken
         });
@@ -38,13 +37,12 @@ class Map extends React.Component {
 
         map.on('load', () => {
             const providers = map.querySourceFeatures('composite', {sourceLayer: 'refugees-services'});
-            const categoriesList = getCategories(providers); 
-            const resourcesObject = getResourceObject(providers); 
+            const serviceTypes = getCategories(providers);
+            const resources = getResourceObject(providers);
             this.setState({providers: providers,
-                    categoriesList: categoriesList, 
-                    resourcesObject: resourcesObject});
+                    resources: resources});
 
-        map.on('click', (e) => this.popUp(e, map)); 
+        map.on('click', (e) => this.popUp(e, map));
 
         map.addSource('single-point', {
             "type": "geojson",
@@ -159,7 +157,7 @@ class Map extends React.Component {
                 "layout": {}
             });
         });
-    });  
+    });
 };
 
 popUp = (e) => {
@@ -171,12 +169,12 @@ popUp = (e) => {
     // while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
     //     coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
     // }
-    
+
     // new mapboxgl.Popup()
     //     .setLngLat(coordinates)
         // .setHTML('<h4>' + name + '</h4><a href=' + website + '>' + website + '</a><br><br><i>' + bio + '</i><br><br><b>Telephone: </b>' + telephone)
         // .addTo(map);
-}; 
+};
 
 
     componentWillUnmount() {
@@ -188,16 +186,15 @@ popUp = (e) => {
     render(){
         return (
         <div className='map-container' >
-            <Menu categoriesList={this.state.categoriesList}
-                  resourcesObject={this.state.resourcesObject} />
+            <Menu resources={this.state.resources} />
             <div id='map'
                 className='map'
                 ref={el => this.mapContainer = el}
                 >
-            </div> 
+            </div>
         </div>
         )
     };
-}; 
+};
 
 export default Map;
