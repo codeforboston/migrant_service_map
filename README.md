@@ -114,11 +114,9 @@ npm install
 ### Setting up your code editor
 
 - To configure syntax highlighting, view the [Babel documentation](https://babeljs.io/docs/en/editors/)
--
 - For more information visit the [Create React App docs](https://facebook.github.io/create-react-app/docs/setting-up-your-editor)
--
 
-### Linting
+### Linting and Style
 
 - Create React App has linting built in.
 - We are using the ---- style guide.
