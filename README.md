@@ -111,12 +111,33 @@ If there is a merge conflict that cannot be resolved automatically, the output f
 npm install
 ```
 
+### Setting up your code editor
+
+- To configure syntax highlighting, view the [Babel documentation](https://babeljs.io/docs/en/editors/)
+-
+- For more information visit the [Create React App docs](https://facebook.github.io/create-react-app/docs/setting-up-your-editor)
+-
+
+### Linting
+
+- Create React App has linting built in.
+- We are using the ---- style guide.
+- Consider installing a linter into your code editor. If you are using VSCode you can use [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).
+- Each time you run `npm start`, create react app will produce a list of style warnings that include the file name and number. Please fix these warnings before you submit a pull request.
+  For example:
+
+```
+./src/map-services.js
+  Line 21:  'name' is assigned a value but never used         no-unused-vars
+```
+
 ## Testing
 
 TODO
 
 ## Tech Stack
 
-- [Reactjs](https://facebook.github.io/react/docs/react-api.html)
+- [Reactjs](https://reactjs.org/)
+- [Create React App](https://reactjs.org/blog/2018/10/01/create-react-app-v2.html)
 - [Mapbox](https://www.mapbox.com/)
 - [Bootstrap](https://getbootstrap.com/)
