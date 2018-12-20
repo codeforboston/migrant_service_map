@@ -23,7 +23,7 @@ export default class DropdownMenu extends React.Component {
 
     return (
       <>
-        <a href="#" onClick={this.onMenuClicked}>
+        <a href="#target" onClick={this.onMenuClicked}>
           <Row>
             <span style={{ flexGrow: 1 }}>{text}</span>
             <div>{expanded ? "v" : ">"}</div>

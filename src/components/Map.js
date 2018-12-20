@@ -1,22 +1,46 @@
 import React from 'react';
 import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
-import './index.css';
-import { getCategories, getResourceObject } from './map-services.js';
-import Menu from "./components/Menu/Menu";
+import '../index.css';
+import Menu from "./Menu/Menu";
+import {
+    setPopUp
+} from "./PopUp.js";
 
 
 mapboxgl.accessToken = 'pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw';
 
 
 class Map extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
-            providers: [],
-            resources: []
+            providers: []
         }
-   }
+        this.map = null;
+        this.mapContainer = React.createRef();
+        this.handleProviderClick = this.handleProviderClick.bind(this);
+    }
+
+    handleProviderClick(provider) {
+        let { name, website, bio, telephone } = provider.properties;
+        let { coordinates } = provider.geometry;
+
+        setPopUp(name, website, bio, telephone, coordinates, this.map);
+    }
+
+    handleMapClick(e) {
+        var coordinates = e.features[0].geometry.coordinates.slice();
+        var name = e.features[0].properties.name;
+        var website = e.features[0].properties.website;
+        var bio = e.features[0].properties.bio;
+        var telephone = e.features[0].properties.telephone;
+        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        }
+
+        setPopUp(name, website, bio, telephone, coordinates, this.map);
+    }
 
     componentDidMount() {
         console.log('map comp loaded');
@@ -28,6 +52,7 @@ class Map extends React.Component {
             zoom: 11 // starting zoom
         });
 
+        this.map = map; // for passing map instance to click handlers
 
         var geocoder = new MapboxGeocoder({
             accessToken: mapboxgl.accessToken
@@ -36,22 +61,56 @@ class Map extends React.Component {
         map.addControl(geocoder);
 
         map.on('load', () => {
-            const providers = map.querySourceFeatures('composite', {sourceLayer: 'refugees-services'});
-            const serviceTypes = getCategories(providers);
-            const resources = getResourceObject(providers);
-            this.setState({providers: providers,
-                    resources: resources});
+            const providers = map.querySourceFeatures('composite', {
+                sourceLayer: 'refugees-services'
+            });
+            this.setState({
+                providers: providers
+            });
+            const providerToLayerName = (provider) => provider.properties.type.toLowerCase().split(" ").join("-");
 
-        map.on('click', (e) => this.popUp(e, map));
+            providers.map(provider => map.on('click', providerToLayerName(provider), e => this.handleMapClick(e)));
 
-        map.addSource('single-point', {
-            "type": "geojson",
-            "data": {
-                "type": "FeatureCollection",
-                "features": []
-            }
+            map.addSource('single-point', {
+                "type": "geojson",
+                "data": {
+                    "type": "FeatureCollection",
+                    "features": []
+                }
+            });
+
         });
-        // map.addSource('single-point', {
+        // });
+    };
+
+
+    componentWillUnmount() {
+        this.map.remove();
+    }
+
+    render() {
+        return ( 
+            <div className = 'map-container' >
+                <Menu providers = {this.state.providers}
+                handleProviderClick = {this.handleProviderClick}
+                /> 
+                <div id = 'map'
+                    className = 'map'
+                    ref = {el => this.mapContainer = el} >
+                </div> 
+            </div>
+        )
+    };
+};
+
+export default Map;
+
+
+
+
+
+
+/*     // map.addSource('single-point', {
         //     "type": "geojson",
         //     "data": {
         //         "type": "FeatureCollection",
@@ -155,46 +214,4 @@ class Map extends React.Component {
                     "line-offset": 5
                 },
                 "layout": {}
-            });
-        });
-    });
-};
-
-popUp = (e) => {
-    // var coordinates = e.features[0].geometry.coordinates.slice();
-    // var name = e.features[0].properties.name;
-    // var website = e.features[0].properties.website;
-    // var bio = e.features[0].properties.bio;
-    // var telephone = e.features[0].properties.telephone;
-    // while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-    //     coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-    // }
-
-    // new mapboxgl.Popup()
-    //     .setLngLat(coordinates)
-        // .setHTML('<h4>' + name + '</h4><a href=' + website + '>' + website + '</a><br><br><i>' + bio + '</i><br><br><b>Telephone: </b>' + telephone)
-        // .addTo(map);
-};
-
-
-    componentWillUnmount() {
-        this.map.remove();
-    }
-
-
-
-    render(){
-        return (
-        <div className='map-container' >
-            <Menu resources={this.state.resources} />
-            <div id='map'
-                className='map'
-                ref={el => this.mapContainer = el}
-                >
-            </div>
-        </div>
-        )
-    };
-};
-
-export default Map;
+            });*/
