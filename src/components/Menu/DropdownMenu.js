@@ -10,17 +10,12 @@ export default class DropdownMenu extends React.Component {
     };
   }
 
-  onMenuClicked = (event)  => {
+  onMenuClicked = event => {
     event.preventDefault(); // Keep the browser from reloading
     let { expanded } = this.state;
     expanded = !expanded;
     this.setState({ expanded });
-    
-    const layerName = event.target.innerText.toLowerCase().split(" ").join("-"); 
-    this.props.toggleMapIcons(layerName); 
   };
-
-
 
   render() {
     const { text } = this.props;
