@@ -6,6 +6,7 @@ import Menu from "./Menu/Menu";
 import {
     setPopUp
 } from "./PopUp.js";
+import { providerToLayerName } from '../main.js'
 
 
 mapboxgl.accessToken = 'pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw';
@@ -15,11 +16,13 @@ class Map extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            providers: []
+            providers: [], 
+            serviceTypes: []
         }
         this.map = null;
         this.mapContainer = React.createRef();
         this.handleProviderClick = this.handleProviderClick.bind(this);
+        this.toggleMapIcons = this.toggleMapIcons.bind(this);
     }
 
     handleProviderClick(provider) {
@@ -42,6 +45,24 @@ class Map extends React.Component {
         setPopUp(name, website, bio, telephone, coordinates, this.map);
     }
 
+    toggleMapIcons(layerName) {
+        console.log('toggle', layerName);
+
+        if(this.map.getLayer(layerName) !== undefined) {
+        const visibility = this.map.getLayoutProperty(layerName, 'visibility');
+        
+        visibility === 'visible' ? 
+                this.map.setLayoutProperty(layerName, 'visibility', 'none')
+            : this.map.setLayoutProperty(layerName, 'visibility', 'visible')
+        } else {
+            console.log("not a layer")
+        }
+
+    };
+      
+    
+
+
     componentDidMount() {
         console.log('map comp loaded');
 
@@ -61,26 +82,27 @@ class Map extends React.Component {
         map.addControl(geocoder);
 
         map.on('load', () => {
-            const providers = map.querySourceFeatures('composite', {
-                sourceLayer: 'refugees-services'
-            });
+            // get service providers info from mapbox
+            const providers = map.querySourceFeatures('composite', { sourceLayer: 'refugees-services' });
+
+            // get provider types and make an array of unique values
+            const serviceTypes = Array.from(providers).map(provider => provider.properties.type).filter((value, index, self) => self.indexOf(value) === index) ; 
+
+            // convert serviceType values array into layer-name-case. 
+            const layerNames = serviceTypes.map(type => type.toLowerCase().split(" ").join("-")); 
+
             this.setState({
-                providers: providers
+                providers: providers, 
+                serviceTypes: serviceTypes
             });
-            const providerToLayerName = (provider) => provider.properties.type.toLowerCase().split(" ").join("-");
+            
+            // set up a popup for each map icon 
+            providers.map(provider => map.on('click', providerToLayerName(provider), (e) => this.handleMapClick(e))); 
 
-            providers.map(provider => map.on('click', providerToLayerName(provider), e => this.handleMapClick(e)));
-
-            map.addSource('single-point', {
-                "type": "geojson",
-                "data": {
-                    "type": "FeatureCollection",
-                    "features": []
-                }
-            });
+            // hide map icons at first (the default is for icons to show)
+            layerNames.map(layer => map.setLayoutProperty(layer, 'visibility', 'none')); 
 
         });
-        // });
     };
 
 
@@ -92,6 +114,8 @@ class Map extends React.Component {
         return ( 
             <div className = 'map-container' >
                 <Menu providers = {this.state.providers}
+                serviceTypes = {this.state.serviceTypes}
+                toggleMapIcons = {this.toggleMapIcons}
                 handleProviderClick = {this.handleProviderClick}
                 /> 
                 <div id = 'map'
