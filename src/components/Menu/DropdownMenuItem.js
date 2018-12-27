@@ -14,7 +14,7 @@ export default class DropdownMenuItem extends Component {
       <>
         <a href="#target" 
           className="list-item" 
-          onClick={() => clickHandler(item)}>  {/*//{(e) => this.onItemClick(item, e)}>*/}
+          onClick={() => clickHandler(item)}>  
           {text}
         </a>  
       </>
