@@ -3,43 +3,36 @@ import DropdownMenu from "./DropdownMenu";
 import DropdownMenuItem from "./DropdownMenuItem";
 
 export default class Menu extends Component {
-
   render() {
-    const { resources } = this.props;
-    this.servicesByType = {};
-    this.serviceTypes = [];
+    const { providers, serviceTypes } = this.props;
 
-    /**
-     * extracting map -
-     * servicesByType = {
-     *    "Health": [<health resource 1>, <health resource 2>, ...],
-     *    "Education": [<education resource 1>, <education resource 2>, ...],
-     *    ... etc
-     * }
-     */
-    resources.forEach(resource => {
-      const { type } = resource;
-      this.servicesByType[type] = this.servicesByType[type] || []; // Initialize the array if needed
-      this.servicesByType[type].push(resource);
-
-      if (!this.serviceTypes.includes(type)) {
-        this.serviceTypes.push(type);
-      }
-    });
+    const filteredProvidersList = type =>
+      providers.filter(provider => provider.properties.type === type);
 
     return (
       <div className="side-menu">
-        <DropdownMenu text="Service Type">
-          {this.serviceTypes.map((serviceType, index) => (
-            <DropdownMenuItem
-              key={index}
-              text={serviceType}
-              items={this.servicesByType[serviceType]}
-            />
+        <DropdownMenu text="Service Type" {...this.props}>
+          {serviceTypes.map((serviceType, index) => (
+            <DropdownMenu text={serviceType} key={index} {...this.props}>
+              {filteredProvidersList(serviceType).map((provider, i) => (
+                <DropdownMenuItem
+                  key={i}
+                  text={provider.properties.name}
+                  item={provider}
+                  clickHandler={this.props.handleMenuItemClick}
+                />
+              ))}
+            </DropdownMenu>
           ))}
         </DropdownMenu>
-        <DropdownMenu text="Other Criteria" />
-        <DropdownMenu text="Visa Status" />
+        <DropdownMenu text="Other Criteria" {...this.props}>
+          <DropdownMenuItem
+            key={1}
+            text={"placeholder"}
+            items={["item1", "item2"]}
+          />
+        </DropdownMenu>
+        <DropdownMenu text="Visa Status" {...this.props} />
       </div>
     );
   }
