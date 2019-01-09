@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import mapboxgl from "mapbox-gl";
-import ReactDOM from "react-dom";
+import React, { Component } from 'react';
+import mapboxgl from 'mapbox-gl';
+import ReactDOM from 'react-dom';
 
 export const insertPopup = (map, coordinates, props) => {
-  const DOMInsert = document.createElement("div");
+  const DOMInsert = document.createElement('div');
 
   new mapboxgl.Popup()
     .setLngLat(coordinates)
@@ -15,7 +15,7 @@ export const insertPopup = (map, coordinates, props) => {
 
 export class Popup extends Component {
   componentDidMount() {
-    console.log("popup mounted");
+    console.log('popup mounted');
   }
 
   render() {
@@ -35,7 +35,7 @@ export class Popup extends Component {
           </span>
           <span className="popup-info">
             <img alt="home icon" src="https://icon.now.sh/home" />
-            {address || "address"}
+            {address || 'address'}
           </span>
         </div>
         <div className="popup-text">{bio}</div>
@@ -52,7 +52,7 @@ export class AcceptingNewClients extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isAccepting: true
+      isAccepting: true,
     };
   }
 
@@ -66,7 +66,7 @@ export class AcceptingNewClients extends Component {
     return (
       <IndicatorLight
         shouldBeOn={this.state.isAccepting}
-        text={"accepting clients"}
+        text={'accepting clients'}
         onClick={this.handleClick}
       />
     );
@@ -77,7 +77,7 @@ export class SaveButton extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isSaved: false
+      isSaved: false,
     };
   }
 
@@ -89,7 +89,7 @@ export class SaveButton extends Component {
 
   render() {
     let { isSaved } = this.state;
-    let text = isSaved ? "saved" : "save";
+    let text = isSaved ? 'saved' : 'save';
     return (
       <IndicatorCheck
         shouldBeOn={isSaved}
@@ -104,8 +104,8 @@ export const IndicatorLight = props => {
   let { shouldBeOn, text, onClick, colorOn, colorOff } = props;
 
   //user can choose other colors, but setting default colors here
-  const thisColorOn = colorOn ? colorOn : "green"; 
-  const thisColorOff = colorOff ? colorOff : "#BCBCBC"; 
+  const thisColorOn = colorOn ? colorOn : 'green';
+  const thisColorOff = colorOff ? colorOff : '#BCBCBC';
 
   const fillCircle = (
     <svg height="22px" width="22px">
@@ -138,8 +138,8 @@ export const IndicatorCheck = props => {
   let { shouldBeOn, text, onClick, colorOn, colorOff } = props;
 
   //user can choose other colors, but setting default colors here
-  const thisColorOn = colorOn ? colorOn : "#2699FB";
-  const thisColorOff = colorOff ? colorOff : "none";
+  const thisColorOn = colorOn ? colorOn : '#2699FB';
+  const thisColorOff = colorOff ? colorOff : 'none';
 
   const color = shouldBeOn ? thisColorOn : thisColorOff;
 

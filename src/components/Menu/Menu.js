@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import DropdownMenu from "./DropdownMenu";
-import DropdownMenuItem from "./DropdownMenuItem";
+import React, { Component } from 'react';
+import DropdownMenu from './DropdownMenu';
+import DropdownMenuItem from './DropdownMenuItem';
 
 export default class Menu extends Component {
   render() {
@@ -28,8 +28,8 @@ export default class Menu extends Component {
         <DropdownMenu text="Other Criteria" {...this.props}>
           <DropdownMenuItem
             key={1}
-            text={"placeholder"}
-            items={["item1", "item2"]}
+            text={'placeholder'}
+            items={['item1', 'item2']}
           />
         </DropdownMenu>
         <DropdownMenu text="Visa Status" {...this.props} />

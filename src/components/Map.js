@@ -1,20 +1,20 @@
-import React from "react";
-import mapboxgl from "mapbox-gl";
-import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
-import "../index.css";
-import Menu from "./Menu/Menu";
-import { insertPopup, Popup } from "./PopUp.js";
-import { providerToLayerName } from "../main.js";
+import React from 'react';
+import mapboxgl from 'mapbox-gl';
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import '../index.css';
+import Menu from './Menu/Menu';
+import { insertPopup, Popup } from './PopUp.js';
+import { providerToLayerName } from '../main.js';
 
 mapboxgl.accessToken =
-  "pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw";
+  'pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw';
 
 class Map extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       providers: [],
-      serviceTypes: []
+      serviceTypes: [],
     };
     this.map = null;
     this.mapContainer = React.createRef();
@@ -40,41 +40,41 @@ class Map extends React.Component {
   }
 
   toggleMapIcons(layerName) {
-    console.log("toggle", layerName);
+    console.log('toggle', layerName);
 
     if (this.map.getLayer(layerName) !== undefined) {
-      const visibility = this.map.getLayoutProperty(layerName, "visibility");
+      const visibility = this.map.getLayoutProperty(layerName, 'visibility');
 
-      visibility === "visible"
-        ? this.map.setLayoutProperty(layerName, "visibility", "none")
-        : this.map.setLayoutProperty(layerName, "visibility", "visible");
+      visibility === 'visible'
+        ? this.map.setLayoutProperty(layerName, 'visibility', 'none')
+        : this.map.setLayoutProperty(layerName, 'visibility', 'visible');
     } else {
-      console.log("not a layer");
+      console.log('not a layer');
     }
   }
 
   componentDidMount() {
-    console.log("map comp loaded");
+    console.log('map comp loaded');
 
     let map = new mapboxgl.Map({
-      container: "map", // container id
-      style: "mapbox://styles/refugeeswelcome/cjh9k11zz15ds2spbs4ld6y9o", // stylesheet location
+      container: 'map', // container id
+      style: 'mapbox://styles/refugeeswelcome/cjh9k11zz15ds2spbs4ld6y9o', // stylesheet location
       center: [-71.066954, 42.359947], // starting position [lng, lat]
-      zoom: 11 // starting zoom
+      zoom: 11, // starting zoom
     });
 
     this.map = map; // for passing map instance to click handlers
 
     var geocoder = new MapboxGeocoder({
-      accessToken: mapboxgl.accessToken
+      accessToken: mapboxgl.accessToken,
     });
 
     map.addControl(geocoder);
 
-    map.on("load", () => {
+    map.on('load', () => {
       // get service providers info from mapbox
-      const providers = map.querySourceFeatures("composite", {
-        sourceLayer: "refugees-services"
+      const providers = map.querySourceFeatures('composite', {
+        sourceLayer: 'refugees-services',
       });
 
       // get provider types and make an array of unique values
@@ -86,23 +86,23 @@ class Map extends React.Component {
       const layerNames = serviceTypes.map(type =>
         type
           .toLowerCase()
-          .split(" ")
-          .join("-")
+          .split(' ')
+          .join('-')
       );
 
       this.setState({
         providers: providers,
-        serviceTypes: serviceTypes
+        serviceTypes: serviceTypes,
       });
 
       // set up a popup for each map icon
       layerNames.map(name =>
-        map.on("click", name, e => this.handleMapClick(e))
+        map.on('click', name, e => this.handleMapClick(e))
       );
 
       // hide map icons at first (the default is for icons to show)
       layerNames.map(layer =>
-        map.setLayoutProperty(layer, "visibility", "none")
+        map.setLayoutProperty(layer, 'visibility', 'none')
       );
     });
   }
