@@ -37,6 +37,28 @@ a, p, h1, h2, h3, h4, h5, h6, i {
   text-decoration: none; 
 }
 
+.organization {
+  background-color: #8c45cf;
+  color: white;
+  text-decoration: none;
+}
+
+#input_org {
+  width: 150px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+#button_org {
+  width: 60px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
 h2 {
   font-size: 1rem; 
   font-weight: 500; 
