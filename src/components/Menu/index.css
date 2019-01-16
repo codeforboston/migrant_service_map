@@ -1,0 +1,176 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html, body, div#root {
+  height: 100%;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+li {
+  list-style: none; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: start; 
+  justify-content: start;
+  margin-left: 0; 
+  padding-left: 0; 
+}
+
+ul {
+  margin-left: 0; 
+  padding-left: 0; 
+}
+
+a, p, h1, h2, h3, h4, h5, h6, i {
+  color: #8c45cf;
+  text-decoration: none; 
+}
+
+.organization {
+  background-color: #8c45cf;
+  color: white;
+  text-decoration: none;
+}
+
+#input_org {
+  width: 150px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+#button_org {
+  width: 60px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+h2 {
+  font-size: 1rem; 
+  font-weight: 500; 
+  padding: 0.2rem; 
+
+}
+
+nav {
+  padding: 0; 
+  max-height: 3rem;   
+  display: flex; 
+  background-color: #8c45cf;
+}
+
+.top-nav {
+  display: flex; 
+  align-items: center;
+}
+
+.top-nav a {
+  flex: 1; 
+  padding: 0.2rem 1rem; 
+  margin: 2px; 
+  border-radius: 3px; 
+  border: 1px solid #8c45cf; 
+  color: white; 
+}
+
+.header-title a {
+  display: flex; 
+  flex: 1; 
+  align-items: center;
+  justify-items: center; 
+  text-decoration: none;
+}
+
+.header-title {
+  display: flex; 
+  align-content: center; 
+  padding: 1rem; 
+}
+
+.header-title h1 {
+  color: white; 
+}
+
+.flex-container {
+  display: flex; 
+  flex-direction: row; 
+  align-items: flex-start; 
+  justify-items: flex-start; 
+}
+
+.side-menu {
+  text-align: left;
+  display: flex;
+  flex-direction: column; 
+  flex: 1;
+  max-height: 700px;
+  max-width: 250px;
+  min-width: 150px;
+  overflow-y: scroll; 
+  margin-left: 0; 
+  padding:  0 0 2rem 2rem; 
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-items: flex-end; 
+  width: 100%; 
+  flex: 1;
+}
+
+.section-header a,
+.section-header i {
+  padding: 0.3rem; 
+}
+
+.section-header:hover {
+  background-color: #8c45cf;
+}
+
+.section-header:hover a,
+.section-header:hover i {
+  color: white; 
+}
+
+.list-item {
+  margin: 0.5rem;
+}
+
+.map {
+  flex: 1;
+}
+
+.mapboxgl-canvas {
+
+}
+
+.map-container {
+  display: flex; 
+  flex-direction: row; 
+  width: 100%;
+}
+
+.child-menu { 
+  display: none;
+  max-height: 380px; 
+  overflow: scroll; 
+}
+
+.child-menu.show {
+  display: block;
+}
