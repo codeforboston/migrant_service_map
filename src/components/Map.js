@@ -41,6 +41,45 @@ class Map extends React.Component {
         .map(({ id, geometry: { coordinates }, properties }) => ({ id, coordinates, ...properties }));
 
       this.props.initializeProviders(providers);
+      // hide map icons at first (the default is for icons to show)
+    //   layerNames.map(layer =>
+    //     map.setLayoutProperty(layer, "visibility", "none")
+    //   );
+
+    //   this.map.addSource("filteredFeatures", {
+    //     type: "geojson",
+    //     data: {
+    //       type: "FeatureCollection",
+    //       features: [this.state.providers[0]]
+    //     }
+    //   });
+
+    //   this.map.loadImage(
+    //     "https://img.icons8.com/material/24/000000/logo.png",
+    //     function(error, image) {
+    //       if (error) throw error;
+    //       map.addImage("distance", image);
+    //     }
+    //   );
+
+    //   this.map.addLayer({
+    //     id: "filteredByDistance",
+    //     source: "filteredFeatures",
+    //     type: "symbol",
+    //     layout: {
+    //       "icon-image": "distance",
+    //       "icon-size": 1
+    //     }
+    //   });
+    });
+
+  }
+
+  newSymbolLayer() {
+    console.log("newsymbollayer");
+    this.map.getSource("filteredFeatures").setData({
+      type: "FeatureCollection",
+      features: this.state.filteredProviders
     });
   }
 
@@ -48,7 +87,35 @@ class Map extends React.Component {
     this.props.providerTypes.forEach(this.reflectProviderVisibility);
   }
 
+  setFilter = e => {
+    const distance = e.target.value;
+    const distances = this.state.providers.map(provider => {
+      return {
+        provider: provider,
+        distance: turf.distance(
+          turf.point(provider.geometry.coordinates),
+          turf.point(this.state.mapCenter)
+        )
+      };
+    });
+
+    const closePlaces = distances
+      .filter(el => el.distance < distance)
+      .map(el => el.provider);
+
+    this.setState((state) => { return {
+      filteredProviders: closePlaces,
+      distanceVisible: distance
+    }}, this.newSymbolLayer);
+   
+    console.log("filteredProviders " + this.state.filteredProviders.length)
+    // this.newSymbolLayer();
+  };
+
+
+
   componentWillUnmount() {
+    // this.newSymbolLayer();
     this.map.remove();
   }
 
@@ -61,13 +128,13 @@ class Map extends React.Component {
 
 export default connect(({ providerTypes }) => ({ providerTypes }), { initializeProviders, toggleProviderVisibility })(Map);
 
-/*     // map.addSource('single-point', {
-        //     "type": "geojson",
-        //     "data": {
-        //         "type": "FeatureCollection",
-        //         "features": []
-        //     }
-        // });
+/* map.addSource('single-point', {
+            "type": "geojson",
+            "data": {
+                "type": "FeatureCollection",
+                "features": []
+            }
+        });
         map.addLayer({
             "id": "point",
             "source": "single-point",
@@ -165,4 +232,5 @@ export default connect(({ providerTypes }) => ({ providerTypes }), { initializeP
                     "line-offset": 5
                 },
                 "layout": {}
-            });*/
+            });
+*/
