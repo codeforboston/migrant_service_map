@@ -7,8 +7,8 @@ export default class Search extends Component {
     return (
       <div>
       <form>
-        <input type="text" id='organization' placeholder="Organization" defaultValue="" ref={providerValue}/>
-        <input type="button" onClick={() => SearchProvider(providers)} value="Search"/>
+        <input type="text" id="input_org" className='organization'  placeholder="Organization, City, State" defaultValue="" ref={providerValue}/>
+        <input type="button" id="button_org" className='organization' onClick={() => SearchProvider(providers)} value="Search"/>
 
       </form>
       </div>
