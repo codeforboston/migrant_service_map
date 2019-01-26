@@ -1,12 +1,10 @@
-import React from 'react';
-import mapboxgl from 'mapbox-gl';
-import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
-import '../index.css';
+import React from "react";
+import mapboxgl from "mapbox-gl";
+import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
+import "../index.css";
 import Menu from "./Menu/Menu";
-import {
-    setPopUp
-} from "./PopUp.js";
-import { providerToLayerName } from '../main.js'
+import { insertPopup, Popup } from "./PopUp.js";
+import { providerToLayerName } from "../main.js";
 
 
 mapboxgl.accessToken = 'pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw';
@@ -29,16 +27,14 @@ class Map extends React.Component {
     }
 
     handleProviderClick(provider) {
-        let { name, website, bio, telephone } = provider.properties;
         let { coordinates } = provider.geometry;
-
-        setPopUp(name, website, bio, telephone, coordinates, this.map);
+        insertPopup(this.map, coordinates, provider.properties);
     }
 
     SearchProvider(provider) {
-      const filteredProvidersName = (name) => provider.filter(provider => provider.properties.name === name);
-      const filteredProvidersCity = (city) => provider.filter(provider => provider.properties.city === city);
-      const filteredProvidersState = (state) => provider.filter(provider => provider.properties.state === state);
+      const filteredProvidersName = (name) => provider.filter(provider => provider.properties.name.includes(name));
+      const filteredProvidersCity = (city) => provider.filter(provider => provider.properties.city.includes(city));
+      const filteredProvidersState = (state) => provider.filter(provider => provider.properties.state.includes(state));
       let input = this.providerValue.current.value;
       filteredProvidersName(input).map(provider => this.handleProviderClick(provider));
       filteredProvidersCity(input).map(provider => this.handleProviderClick(provider));
@@ -49,79 +45,86 @@ class Map extends React.Component {
     }
 
 //English at Large
-    handleMapClick(e) {
-        var coordinates = e.features[0].geometry.coordinates.slice();
-        var name = e.features[0].properties.name;
-        var website = e.features[0].properties.website;
-        var bio = e.features[0].properties.bio;
-        var telephone = e.features[0].properties.telephone;
-        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-        }
+  handleMapClick(e) {
+    let coordinates = e.features[0].geometry.coordinates.slice();
 
-
-
-        setPopUp(name, website, bio, telephone, coordinates, this.map);
+    while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+      coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
     }
 
-    toggleMapIcons(layerName) {
-        console.log('toggle', layerName);
+    insertPopup(this.map, coordinates, e.features[0].properties);
+  }
 
-        if(this.map.getLayer(layerName) !== undefined) {
-        const visibility = this.map.getLayoutProperty(layerName, 'visibility');
-        
-        visibility === 'visible' ? 
-                this.map.setLayoutProperty(layerName, 'visibility', 'none')
-            : this.map.setLayoutProperty(layerName, 'visibility', 'visible')
-        } else {
-            console.log("not a layer")
-        }
+  toggleMapIcons(layerName) {
+    console.log("toggle", layerName);
 
-    };
+    if (this.map.getLayer(layerName) !== undefined) {
+      const visibility = this.map.getLayoutProperty(layerName, "visibility");
+
+      visibility === "visible"
+        ? this.map.setLayoutProperty(layerName, "visibility", "none")
+        : this.map.setLayoutProperty(layerName, "visibility", "visible");
+    } else {
+      console.log("not a layer");
+    }
+  }
 
     componentDidMount() {
-        console.log('map comp loaded');
 
-        let map = new mapboxgl.Map({
-            container: 'map', // container id
-            style: 'mapbox://styles/refugeeswelcome/cjh9k11zz15ds2spbs4ld6y9o', // stylesheet location
-            center: [-71.066954, 42.359947], // starting position [lng, lat]
-            zoom: 11 // starting zoom
-        });
+      console.log("map comp loaded");
 
-        this.map = map; // for passing map instance to click handlers
+      let map = new mapboxgl.Map({
+        container: "map", // container id
+        style: "mapbox://styles/refugeeswelcome/cjh9k11zz15ds2spbs4ld6y9o", // stylesheet location
+        center: [-71.066954, 42.359947], // starting position [lng, lat]
+        zoom: 11 // starting zoom
+      });
 
-        var geocoder = new MapboxGeocoder({
-            accessToken: mapboxgl.accessToken
-        });
+      this.map = map; // for passing map instance to click handlers
 
+      var geocoder = new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken
+      });
         map.addControl(geocoder);
+        map.addControl(new mapboxgl.NavigationControl());
 
 
-        map.on('load', () => {
-            // get service providers info from mapbox
-          const providers = map.querySourceFeatures('composite', { sourceLayer: 'refugees-services' });
-
-          // get provider types and make an array of unique values
-          const serviceTypes = Array.from(providers).map(provider => provider.properties.type).filter((value, index, self) => self.indexOf(value) === index) ;
-
-          // convert serviceType values array into layer-name-case.
-            const layerNames = serviceTypes.map(type => type.toLowerCase().split(" ").join("-")); 
-
-            this.setState({
-                providers: providers, 
-                serviceTypes: serviceTypes
-
-            });
-
-            // set up a popup for each map icon
-            providers.map(provider => map.on('click', providerToLayerName(provider), (e) => this.handleMapClick(e)));
 
 
-            // hide map icons at first (the default is for icons to show)
-            layerNames.map(layer => map.setLayoutProperty(layer, 'visibility', 'none')); 
-
+      map.on("load", () => {
+        // get service providers info from mapbox
+        const providers = map.querySourceFeatures("composite", {
+          sourceLayer: "refugees-services"
         });
+
+        // get provider types and make an array of unique values
+        const serviceTypes = Array.from(providers)
+          .map(provider => provider.properties.type)
+          .filter((value, index, self) => self.indexOf(value) === index);
+
+        // convert serviceType values array into layer-name-case.
+        const layerNames = serviceTypes.map(type =>
+          type
+            .toLowerCase()
+            .split(" ")
+            .join("-")
+        );
+
+        this.setState({
+          providers: providers,
+          serviceTypes: serviceTypes
+        });
+
+        // set up a popup for each map icon
+        layerNames.map(name =>
+          map.on("click", name, e => this.handleMapClick(e))
+        );
+
+        // hide map icons at first (the default is for icons to show)
+        layerNames.map(layer =>
+          map.setLayoutProperty(layer, "visibility", "none")
+        );
+      });
     };
 
 
