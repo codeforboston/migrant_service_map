@@ -5,6 +5,8 @@ import { initializeProviders, toggleProviderVisibility } from '../actions';
 // import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 // import { insertPopup, Popup } from "./PopUp.js";
 
+import '../map.css';
+
 mapboxgl.accessToken =
   "pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw";
 

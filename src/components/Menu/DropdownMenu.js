@@ -1,4 +1,5 @@
 import React from "react";
+import classNames from 'classnames';
 import { Row } from "simple-flexbox";
 
 export default function DropdownMenu({ id, onToggle, text, expanded, children }) {
@@ -9,12 +10,10 @@ export default function DropdownMenu({ id, onToggle, text, expanded, children })
 
   return (
     <>
-      <a href="#target" onClick={onMenuClicked}>
-        <Row>
-          <span style={{ flexGrow: 1 }}>{text}</span>
-          <div>{expanded ? "v" : ">"}</div>
-        </Row>
-      </a>
+      <Row onClick={onMenuClicked} className={classNames(["dropdown-menu", { expanded }])}>
+        <span style={{ flexGrow: 1 }}>{text}</span>
+        <div>{expanded ? "^" : "v"}</div>
+      </Row>
       {expanded && children}
     </>
   );

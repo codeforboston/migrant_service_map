@@ -8,8 +8,10 @@ export default function DropdownMenuItem({ text, item, clickHandler }) {
   };
 
   return (
-    <a href="#target" className="list-item" onClick={onItemClick}>
-      {text}
-    </a>
+    <div className="list-item">
+      <a href="#target" onClick={onItemClick}>
+        {text}
+      </a>
+    </div>
   );
 }

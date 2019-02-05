@@ -1,0 +1,31 @@
+.top-nav {
+  display: flex;
+  align-items: center;
+}
+
+.top-nav a {
+  flex: 1;
+  padding: 0.2rem 1rem;
+  margin: 2px;
+  border-radius: 3px;
+  border: 1px solid #8c45cf;
+  color: white;
+}
+
+.header-title a {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-items: center;
+  text-decoration: none;
+}
+
+.header-title {
+  display: flex;
+  align-content: center;
+  padding: 1rem;
+}
+
+.header-title h1 {
+  color: white;
+}

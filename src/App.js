@@ -12,15 +12,13 @@ import "./App.css";
 export default function App() {
   return (
     <Provider store={store}>
-      <Column style={{ height: "100%" }}>
+      <div>
         <TopNav />
-        <Row style={{ flexGrow: 1 }} alignItems="stretch">
-          <div className="map-container">
-            <Menu />
-            <Map />
-          </div>
-        </Row>
-      </Column>
+        <div className="map-container">
+          <Menu />
+          <Map />
+        </div>
+      </div>
     </Provider>
   );
 }
