@@ -16,6 +16,8 @@ class Map extends React.Component {
     this.map.setLayoutProperty(type.id, 'visibility', visibility);
   }
 
+ 
+
   componentDidMount() {
     const map = new mapboxgl.Map({
       container: "map", // container id

@@ -10,14 +10,10 @@ export default class DistanceFilter extends Component {
       distanceVisible: []
     };
   }
-  
-  clearFilter = () => {
-    let { filterDistance, providers } = this.props;
-    filterDistance(providers);
-  };
+ 
 
   render() {
-    let { filterDistance } = this.props; 
+    let { filterDistance, clearFilter } = this.props; 
     const distances = [1, 2, 5];
     return (
       <ul>
@@ -36,7 +32,7 @@ export default class DistanceFilter extends Component {
             </div>
           </li>
         ))}
-        <button onClick={this.clearFilter}>Clear filter</button>
+        <button onClick={clearFilter}>Clear filter</button>
       </ul>
     );
   }
