@@ -89,30 +89,30 @@ class Map extends React.Component {
     this.props.providerTypes.forEach(this.reflectProviderVisibility);
   }
 
-  setFilter = e => {
-    const distance = e.target.value;
-    const distances = this.state.providers.map(provider => {
-      return {
-        provider: provider,
-        distance: turf.distance(
-          turf.point(provider.geometry.coordinates),
-          turf.point(this.state.mapCenter)
-        )
-      };
-    });
+//   setFilter = e => {
+//     const distance = e.target.value;
+//     const distances = this.state.providers.map(provider => {
+//       return {
+//         provider: provider,
+//         distance: turf.distance(
+//           turf.point(provider.geometry.coordinates),
+//           turf.point(this.state.mapCenter)
+//         )
+//       };
+//     });
 
-    const closePlaces = distances
-      .filter(el => el.distance < distance)
-      .map(el => el.provider);
+//     const closePlaces = distances
+//       .filter(el => el.distance < distance)
+//       .map(el => el.provider);
 
-    this.setState((state) => { return {
-      filteredProviders: closePlaces,
-      distanceVisible: distance
-    }}, this.newSymbolLayer);
+//     this.setState((state) => { return {
+//       filteredProviders: closePlaces,
+//       distanceVisible: distance
+//     }}, this.newSymbolLayer);
    
-    console.log("filteredProviders " + this.state.filteredProviders.length)
-    // this.newSymbolLayer();
-  };
+//     console.log("filteredProviders " + this.state.filteredProviders.length)
+//     // this.newSymbolLayer();
+//   };
 
 
 
