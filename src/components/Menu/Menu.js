@@ -1,39 +1,32 @@
-import React, { Component } from "react";
+import React from "react";
+import { connect } from "react-redux";
+
 import DropdownMenu from "./DropdownMenu";
 import DropdownMenuItem from "./DropdownMenuItem";
+import { toggleProviderVisibility } from '../../actions';
 
-export default class Menu extends Component {
-  render() {
-    const { providers, serviceTypes } = this.props;
+import './side-menu.css';
 
-    const filteredProvidersList = type =>
-      providers.filter(provider => provider.properties.type === type);
-
-    return (
-      <div className="side-menu">
-        <DropdownMenu text="Service Type" {...this.props}>
-          {serviceTypes.map((serviceType, index) => (
-            <DropdownMenu text={serviceType} key={index} {...this.props}>
-              {filteredProvidersList(serviceType).map((provider, i) => (
-                <DropdownMenuItem
-                  key={i}
-                  text={provider.properties.name}
-                  item={provider}
-                  clickHandler={this.props.handleMenuItemClick}
-                />
-              ))}
-            </DropdownMenu>
-          ))}
-        </DropdownMenu>
-        <DropdownMenu text="Other Criteria" {...this.props}>
-          <DropdownMenuItem
-            key={1}
-            text={"placeholder"}
-            items={["item1", "item2"]}
-          />
-        </DropdownMenu>
-        <DropdownMenu text="Visa Status" {...this.props} />
+export function Menu({ providerTypes, toggleProviderVisibility }) {
+  return (
+    <div className="side-menu">
+      <div className="service-providers">
+        <h3>Service Providers</h3>
+        {providerTypes.map(serviceType => (
+          <DropdownMenu key={serviceType.id} id={serviceType.id} text={serviceType.name} expanded={serviceType.visible} onToggle={toggleProviderVisibility}>
+            {serviceType.providers.sort((a,b) => a.name.localeCompare(b.name)).map((provider, i) => (
+              <DropdownMenuItem
+                key={i}
+                text={provider.name}
+                item={provider}
+                // clickHandler={this.props.handleMenuItemClick}
+              />
+            ))}
+          </DropdownMenu>
+        ))}
       </div>
-    );
-  }
+    </div>
+  );
 }
+
+export default connect(({ providerTypes }) => ({ providerTypes }), { toggleProviderVisibility })(Menu);

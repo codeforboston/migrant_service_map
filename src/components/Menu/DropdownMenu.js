@@ -1,41 +1,20 @@
 import React from "react";
+import classNames from 'classnames';
 import { Row } from "simple-flexbox";
 
-export default class DropdownMenu extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      expanded: false
-    };
-  }
-
-  onMenuClicked = (event)  => {
+export default function DropdownMenu({ id, onToggle, text, expanded, children }) {
+  const onMenuClicked = (event)  => {
     event.preventDefault(); // Keep the browser from reloading
-    let { expanded } = this.state;
-    expanded = !expanded;
-    this.setState({ expanded });
-    
-    const layerName = event.target.innerText.toLowerCase().split(" ").join("-"); 
-    this.props.toggleMapIcons(layerName); 
+    onToggle(id);
   };
 
-
-
-  render() {
-    const { text } = this.props;
-    const { expanded } = this.state;
-
-    return (
-      <>
-        <a href="#target" onClick={this.onMenuClicked}>
-          <Row>
-            <span style={{ flexGrow: 1 }}>{text}</span>
-            <div>{expanded ? "v" : ">"}</div>
-          </Row>
-        </a>
-        {expanded && this.props.children}
-      </>
-    );
-  }
+  return (
+    <>
+      <Row onClick={onMenuClicked} className={classNames(["dropdown-menu", { expanded }])}>
+        <span style={{ flexGrow: 1 }}>{text}</span>
+        <div>{expanded ? "^" : "v"}</div>
+      </Row>
+      {expanded && children}
+    </>
+  );
 }

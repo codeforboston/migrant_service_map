@@ -1,21 +1,24 @@
-import React, { Component } from "react";
+import React from "react";
+import { Provider } from 'react-redux';
 import { Column, Row } from "simple-flexbox";
 import TopNav from "./components/TopNav";
+import Menu from './components/Menu/Menu';
 import Map from "./components/Map";
+
+import store from './store';
+
 import "./App.css";
 
-class App extends Component {
-  render() {
-    return (
-      <Column style={{ height: "100%" }}>
+export default function App() {
+  return (
+    <Provider store={store}>
+      <div>
         <TopNav />
-        <Row style={{ flexGrow: 1 }} alignItems="stretch">
+        <div className="map-container">
+          <Menu />
           <Map />
-        </Row>
-      </Column>
-    );
-  }
+        </div>
+      </div>
+    </Provider>
+  );
 }
-
-export default App;
- 

@@ -4,11 +4,15 @@
   "private": true,
   "dependencies": {
     "@mapbox/mapbox-gl-geocoder": "^2.3.0",
+    "classnames": "^2.2.6",
+    "dot-prop-immutable": "^1.5.0",
     "mapbox": "^1.0.0-beta10",
     "mapbox-gl": "^0.51.0",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
+    "react-redux": "^6.0.0",
     "react-scripts": "2.1.1",
+    "redux": "^4.0.1",
     "simple-flexbox": "^1.2.0"
   },
   "scripts": {

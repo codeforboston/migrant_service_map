@@ -1,0 +1,43 @@
+.side-menu {
+  position: absolute;
+
+  width: 315px;
+  height: calc(100vh - 2em); /* TODO this should be flex box column */
+}
+
+.side-menu > div {
+  margin: 15px;
+  padding: 4px;
+
+  max-height: 100%;
+
+  background-color: white;
+  filter: drop-shadow(0 3px 3px gray);
+
+  overflow-y: scroll;
+}
+
+.dropdown-menu {
+  cursor: pointer;
+  color: gray;
+  font-weight: bold;
+  margin: 7px 2px;
+}
+
+.dropdown-menu.expanded {
+  color: #8c45cf;
+}
+
+
+/* .side-menu {
+  /* text-align: left; */
+  /* display: flex;
+  flex-direction: column;
+  flex: 1;
+  max-height: 700px;
+  min-width: 150px;
+  overflow-y: scroll;
+  /* margin-left: 0;
+  /* padding: 0 0 2rem 2rem;
+}
+ */
