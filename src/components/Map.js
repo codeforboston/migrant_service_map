@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from 'react-redux';
 import mapboxgl from "mapbox-gl";
 import { initializeProviders, toggleProviderVisibility } from '../actions';
-// import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
+import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 // import { insertPopup, Popup } from "./PopUp.js";
 
 import '../map.css';
@@ -26,10 +26,10 @@ class Map extends React.Component {
 
     this.map = map; // for passing map instance to click handlers
 
-    // var geocoder = new MapboxGeocoder({
-    //   accessToken: mapboxgl.accessToken
-    // });
-    // map.addControl(geocoder);
+    var geocoder = new MapboxGeocoder({
+      accessToken: mapboxgl.accessToken
+    });
+    map.addControl(geocoder);
 
     map.on("load", () => {
       // get service providers info from mapbox
