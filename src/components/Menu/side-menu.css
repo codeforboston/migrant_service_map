@@ -1,6 +1,6 @@
 .side-menu {
   position: absolute;
-
+  z-index: 1;
   width: 315px;
   height: calc(100vh - 2em); /* TODO this should be flex box column */
 }
