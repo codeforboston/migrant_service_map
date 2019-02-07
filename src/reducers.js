@@ -1,6 +1,6 @@
 import dotProp from 'dot-prop-immutable';
 
-import { INITIALIZE_PROVIDERS, TOGGLE_TYPE, CHANGE_DISTANCE } from './actions';
+import { INITIALIZE_PROVIDERS, TOGGLE_TYPE, CLEAR_DISTANCE, CHANGE_DISTANCE } from './actions';
 
 export function providerTypes(state = [], action) {
   switch (action.type) {
@@ -32,7 +32,10 @@ function groupProvidersByType(providers) {
 
 export function filterProviders(state = [], action) {
   switch( action.type ) {
+    case CLEAR_DISTANCE: // both init and 'clear' button
+      return { ...state, distance: null }
     case CHANGE_DISTANCE:
+      return { ...state, distance: action.distance }
     default:
       return state;
   }

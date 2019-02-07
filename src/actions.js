@@ -1,6 +1,7 @@
 export const INITIALIZE_PROVIDERS = 'INITIALIZE_PROVIDERS';
 export const TOGGLE_TYPE = 'TOGGLE_TYPE';
 export const CHANGE_DISTANCE = 'CHANGE_DISTANCE';
+export const CLEAR_DISTANCE = 'CLEAR_DISTANCE';
 
 export function initializeProviders(providers) {
   return {
@@ -22,9 +23,9 @@ export function changeDistanceFilter(distance) {
     distance
   }
 }
-export function clearFilter() {
+
+export function clearDistanceFilter() {
   return {
-    type: CHANGE_DISTANCE,  
-    distance: Infinity
+    type: CLEAR_DISTANCE,
   }
 }
