@@ -1,20 +1,21 @@
 import React from "react";
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 import mapboxgl from "mapbox-gl";
-import { initializeProviders, toggleProviderVisibility } from '../actions';
+import { initializeProviders, toggleProviderVisibility } from "../actions";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
-// import { insertPopup, Popup } from "./PopUp.js";
+import * as turf from "@turf/turf";
+import { insertPopup, Popup } from "./PopUp.js";
 
-import '../map.css';
+import "../map.css";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw";
 
 class Map extends React.Component {
-  reflectProviderVisibility = (type) => {
-    const visibility = type.visible ? 'visible' : 'none';
-    this.map.setLayoutProperty(type.id, 'visibility', visibility);
-  }
+  reflectProviderVisibility = type => {
+    const visibility = type.visible ? "visible" : "none";
+    this.map.setLayoutProperty(type.id, "visibility", visibility);
+  };
 
   componentDidMount() {
     const map = new mapboxgl.Map({
@@ -37,15 +38,48 @@ class Map extends React.Component {
         sourceLayer: "refugees-services"
       });
 
-      const providers = Array.from(providerFeatures)
-        .map(({ id, geometry: { coordinates }, properties }) => ({ id, coordinates, ...properties }));
+      const providers = Array.from(providerFeatures).map(
+        ({ id, geometry: { coordinates }, properties }) => ({
+          id,
+          coordinates,
+          ...properties
+        })
+      );
 
       this.props.initializeProviders(providers);
+
+      this.addLayerToMap(providerFeatures);
     });
   }
 
+
+  addLayerToMap = sourceObjArr => {
+    this.map.loadImage(
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Cat_silhouette.svg/400px-Cat_silhouette.svg.png",
+      (error, image) => {
+        if (error) throw error;
+        this.map.addImage("icon", image);
+        this.map.addLayer({
+          id: "providersLayer",
+          source: {
+            type: "geojson",
+            data: {
+              type: "FeatureCollection",
+              features: sourceObjArr
+            }
+          },
+          type: "symbol",
+          layout: {
+            "icon-image": "icon",
+            "icon-size": 0.2
+          }
+        });
+      }
+    );
+  };
+
   componentDidUpdate() {
-    this.props.providerTypes.forEach(this.reflectProviderVisibility);
+    //   this.props.providerTypes.forEach(this.reflectProviderVisibility);
   }
 
   componentWillUnmount() {
@@ -53,13 +87,14 @@ class Map extends React.Component {
   }
 
   render() {
-    return (
-      <div id="map" className="map" />
-    );
+    return <div id="map" className="map" />;
   }
 }
 
-export default connect(({ providerTypes }) => ({ providerTypes }), { initializeProviders, toggleProviderVisibility })(Map);
+export default connect(
+  ({ providerTypes }) => ({ providerTypes }),
+  { initializeProviders, toggleProviderVisibility }
+)(Map);
 
 /*     // map.addSource('single-point', {
         //     "type": "geojson",
