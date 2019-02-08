@@ -2,30 +2,29 @@ import mapboxgl from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import * as turf from "@turf/turf";
 
-  setFilter = e => {
-    let { filterDistance, searchCenter, providers } = this.props;
-    const distance = e.target.value;
+export default function getProvidersByDistance( providers, distance ) {
+
+    const searchCenter = [-71.066954, 42.359947];
     const distances = providers.map(provider => {
       return {
         provider: provider,
         distance: turf.distance(
-          turf.point(provider.geometry.coordinates),
+          turf.point(provider.coordinates),
           turf.point(searchCenter)
         )
       };
     });
+
     const closePlaces = distances
       .filter(el => el.distance < distance)
       .map(el => el.provider);
 
-    console.log(closePlaces);
+    console.log(closePlaces.length, "of", providers.length, "within", distance, "miles");
 
-    filterDistance(closePlaces);
+  // clearFilter = () => {
+  //   let { filterDistance, providers } = this.props;
+  //   filterDistance(providers);
+  // };
 
-    this.setState({ distanceVisible: distance });
-  };
-
-  clearFilter = () => {
-    let { filterDistance, providers } = this.props;
-    filterDistance(providers);
-  };
+  return closePlaces;
+}

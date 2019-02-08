@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 import DropdownMenu from "./DropdownMenu";
 import DropdownMenuItem from "./DropdownMenuItem";
-import DistanceFilter from "../DistanceFilter";
+import DistanceFilter from "./DistanceFilter";
 import { toggleProviderVisibility } from '../../actions';
 
 import './side-menu.css';
