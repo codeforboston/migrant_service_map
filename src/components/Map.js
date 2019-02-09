@@ -30,6 +30,7 @@ class Map extends React.Component {
     var geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken
     });
+
     map.addControl(geocoder);
 
     map.on("load", () => {
@@ -48,11 +49,27 @@ class Map extends React.Component {
 
       this.props.initializeProviders(providers);
 
-      this.addLayerToMap(providerFeatures);
+      this.addLayerToMap(this.filteredList(providerFeatures));
     });
   }
 
+  handleMapClick(e) {
+    let coordinates = e.features[0].geometry.coordinates.slice();
 
+    while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+      coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+    }
+
+    insertPopup(this.map, coordinates, e.features[0].properties);
+  }
+
+  filteredList = sourceObjArr => {
+    const newList = sourceObjArr.filter(obj =>
+      obj.properties.type.match("Community")
+    );
+    console.log(newList);
+    return newList;
+  };
   addLayerToMap = sourceObjArr => {
     this.map.loadImage(
       "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Cat_silhouette.svg/400px-Cat_silhouette.svg.png",
@@ -76,10 +93,17 @@ class Map extends React.Component {
         });
       }
     );
+
+    this.map.on("click", "providersLayer", e => this.handleMapClick(e));
+  };
+
+  highlightSomeIcons = (layerName, sourceObjArr) => {
+    const myLayer = this.map.getLayer(layerName);
+    //will need to set up a source to adjust what is on a layer.
   };
 
   componentDidUpdate() {
-    //   this.props.providerTypes.forEach(this.reflectProviderVisibility);
+    this.props.providerTypes.forEach(this.reflectProviderVisibility);
   }
 
   componentWillUnmount() {
