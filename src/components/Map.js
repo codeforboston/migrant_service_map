@@ -26,8 +26,13 @@ class Map extends React.Component {
     const visibility = type.visible ? 'visible' : 'none';
 
     if ( visibility === 'visible' && distance ) { // distance filter has a non-null value
-        this.map.setLayoutProperty(type.id, 'visibility', 'none');
-        this.updateFilteredLayerSource( getProvidersByDistance(type.providers, distance) )
+        // this.map.setLayoutProperty(type.id, 'visibility', 'none');
+        // this.updateFilteredLayerSource( getProvidersByDistance(type.providers, distance) )
+        this.map.getSource("composite").setData({
+            type: "FeatureCollection",
+            features: getProvidersByDistance(type.providers, distance)
+          });
+      
     } else {
         this.map.setLayoutProperty(type.id, 'visibility', visibility);
     }
@@ -65,39 +70,6 @@ class Map extends React.Component {
     //     map.setLayoutProperty(layer, "visibility", "none")
     //   );
 
-        // yeah, yeah. this is just for sanity in debugging
-        // find an appropriate lifecycle or callback or action to trigger this setup
-        let timeout = window.setTimeout( function() {
-
-            console.log("adding map layer for filtered results")
-            this.map.addSource("filteredFeatures", {
-                type: "geojson",
-                data: {
-                type: "FeatureCollection",
-                features: [providers[0]]
-                }
-            });
-
-            // Init for showing filtered providers later
-            this.map.loadImage(
-                "https://img.icons8.com/material/24/000000/logo.png",
-                function(error, image) {
-                if (error) throw error;
-                map.addImage("distance", image);
-                }
-            );
-
-            this.map.addLayer({
-                id: "filteredByDistance",
-                source: "filteredFeatures",
-                type: "symbol",
-                layout: {
-                "icon-image": "distance",
-                "icon-size": 1
-                }
-            });
-
-        }.bind(this), 8500);
     });
 
   }
