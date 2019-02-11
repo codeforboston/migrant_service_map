@@ -4,7 +4,6 @@ import mapboxgl from "mapbox-gl";
 import { initializeProviders, toggleProviderVisibility } from "../actions";
 import "../map.css";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
-import "../index.css";
 import * as turf from "@turf/turf";
 
 mapboxgl.accessToken =
@@ -169,7 +168,7 @@ class Map extends React.Component {
           ...properties
         })
       );
-
+  
       this.props.initializeProviders(providers);
     });
   }
