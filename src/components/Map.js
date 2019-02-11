@@ -1,44 +1,74 @@
 import React from "react";
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 import mapboxgl from "mapbox-gl";
-import { initializeProviders, toggleProviderVisibility } from '../actions';
-import getProvidersByDistance from '../selectors'
+import { initializeProviders, toggleProviderVisibility } from "../actions";
+import getProvidersByDistance from "../selectors";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 // import { insertPopup, Popup } from "./PopUp.js";
 
-import '../map.css';
+import "../map.css";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw";
 
 class Map extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      providerFeatures: []
+    };
+    this.map = "";
+  }
 
-  updateFilteredLayerSource = (filteredProviders) => {
+  updateFilteredLayerSource = filteredProviders => {
     console.log("newsymbollayer with", filteredProviders);
     this.map.getSource("filteredFeatures").setData({
       type: "FeatureCollection",
-      features: filteredProviders
+      features: this.state.providerFeatures
     });
-  }
+  };
 
-  reflectProviderVisibility = (type) => {
+  reflectProviderVisibility = type => {
     const distance = this.props.filterProviders.distance;
-    const visibility = type.visible ? 'visible' : 'none';
+    const visibility = type.visible ? "visible" : "none";
 
-    if ( visibility === 'visible' && distance ) { // distance filter has a non-null value
-        // this.map.setLayoutProperty(type.id, 'visibility', 'none');
-        // this.updateFilteredLayerSource( getProvidersByDistance(type.providers, distance) )
-        this.map.getSource("composite").setData({
-            type: "FeatureCollection",
-            features: getProvidersByDistance(type.providers, distance)
-          });
-      
+    if (visibility === "visible" && distance) {
+      // distance filter has a non-null value
+      // this.map.setLayoutProperty(type.id, 'visibility', 'none');
+      this.updateFilteredLayerSource(
+        getProvidersByDistance(this.state.providerFeatures, distance)
+      ); // type.providers, distance) )
+
+      //   this.map.getSource("filteredFeatures").setData({
+      //     type: "FeatureCollection",
+      //     features: this.props.filteredProviders // getProvidersByDistance(type.providers, distance)
+      //   });
     } else {
-        this.map.setLayoutProperty(type.id, 'visibility', visibility);
+      this.map.setLayoutProperty(type.id, "visibility", visibility);
     }
-  }
+  };
 
- 
+  addSourceToMap = arr => {
+    this.map.addSource("filteredFeatures", {
+      type: "geojson",
+      data: {
+        type: "FeatureCollection",
+        features: arr
+      }
+    });
+  };
+
+  addLayerToMap = typeId => {
+    this.map.addLayer({
+      id: typeId + "filtered",
+      source: "filteredFeatures",
+      type: "symbol", 
+      layout: {
+          "icon-image": "cat",
+          "icon-size": 0.5
+      }
+    });
+  };
 
   componentDidMount() {
     const map = new mapboxgl.Map({
@@ -54,56 +84,67 @@ class Map extends React.Component {
       accessToken: mapboxgl.accessToken
     });
     map.addControl(geocoder);
-
+    map.loadImage(
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Cat_silhouette.svg/400px-Cat_silhouette.svg.png",
+      function(error, image) {
+        if (error) throw error;
+        map.addImage("cat", image);
+      }
+    );
     map.on("load", () => {
       // get service providers info from mapbox
       const providerFeatures = map.querySourceFeatures("composite", {
         sourceLayer: "refugees-services"
       });
 
-      const providers = Array.from(providerFeatures)
-        .map(({ id, geometry: { coordinates }, properties }) => ({ id, coordinates, ...properties }));
+      this.setState({ providerFeatures: providerFeatures });
 
+      const providers = Array.from(providerFeatures).map(
+        ({ id, geometry: { coordinates }, properties }) => ({
+          id,
+          coordinates,
+          ...properties
+        })
+      );
+      this.addSourceToMap(this.state.providerFeatures);
+      this.addLayerToMap("educationfiltered");
       this.props.initializeProviders(providers);
+
       // hide map icons at first (the default is for icons to show)
-    //   layerNames.map(layer =>
-    //     map.setLayoutProperty(layer, "visibility", "none")
-    //   );
-
+      //   layerNames.map(layer =>
+      //     map.setLayoutProperty(layer, "visibility", "none")
+      //   );
     });
-
   }
 
   componentDidUpdate() {
     this.props.providerTypes.forEach(this.reflectProviderVisibility);
   }
 
-//   setFilter = e => {
-//     const distance = e.target.value;
-//     const distances = this.state.providers.map(provider => {
-//       return {
-//         provider: provider,
-//         distance: turf.distance(
-//           turf.point(provider.geometry.coordinates),
-//           turf.point(this.state.mapCenter)
-//         )
-//       };
-//     });
+  //   setFilter = e => {
+  //     const distance = e.target.value;
+  //     const distances = this.state.providers.map(provider => {
+  //       return {
+  //         provider: provider,
+  //         distance: turf.distance(
+  //           turf.point(provider.geometry.coordinates),
+  //           turf.point(this.state.mapCenter)
+  //         )
+  //       };
+  //     });
 
-//     const closePlaces = distances
-//       .filter(el => el.distance < distance)
-//       .map(el => el.provider);
+  //     const closePlaces = distances
+  //       .filter(el => el.distance < distance)
+  //       .map(el => el.provider);
 
-//     this.setState((state) => { return {
-//       filteredProviders: closePlaces,
-//       distanceVisible: distance
-//     }}, this.newSymbolLayer);
-   
-//     console.log("filteredProviders " + this.state.filteredProviders.length)
-//     // this.newSymbolLayer();
-//   };
+  //     this.setState((state) => { return {
+  //       filteredProviders: closePlaces,
+  //       distanceVisible: distance
+  //     }}, this.newSymbolLayer);
 
-
+  //     console.log("filteredProviders " + this.state.filteredProviders.length)
+  //     // this.newSymbolLayer();
+  //   };
 
   componentWillUnmount() {
     // this.newSymbolLayer();
@@ -111,13 +152,14 @@ class Map extends React.Component {
   }
 
   render() {
-    return (
-      <div id="map" className="map" />
-    );
+    return <div id="map" className="map" />;
   }
 }
 
-export default connect(({ providerTypes, filterProviders }) => ({ providerTypes, filterProviders }), { initializeProviders, toggleProviderVisibility })(Map);
+export default connect(
+  ({ providerTypes, filterProviders }) => ({ providerTypes, filterProviders }),
+  { initializeProviders, toggleProviderVisibility }
+)(Map);
 
 /* map.addSource('single-point', {
             "type": "geojson",
