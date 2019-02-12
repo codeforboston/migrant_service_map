@@ -11,6 +11,19 @@ import "../map.css";
 mapboxgl.accessToken =
   "pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw";
 
+// TODO
+// make source function
+// make layer function
+// turn providers back into features to inject in the map
+
+// Steps
+// create all sources
+// create all layers
+// to change things .setData on the sources
+
+// Future dreams
+// user can see their provider saves on a separate layer
+
 class Map extends React.Component {
   constructor(props) {
     super(props);
@@ -20,54 +33,77 @@ class Map extends React.Component {
     this.map = "";
   }
 
-  updateFilteredLayerSource = filteredProviders => {
-    console.log("newsymbollayer with", filteredProviders);
-    this.map.getSource("filteredFeatures").setData({
-      type: "FeatureCollection",
-      features: this.state.providerFeatures
-    });
-  };
-
   reflectProviderVisibility = type => {
     const distance = this.props.filterProviders.distance;
     const visibility = type.visible ? "visible" : "none";
 
-    if (visibility === "visible" && distance) {
+    if ( type.visible && distance) {
       // distance filter has a non-null value
-      // this.map.setLayoutProperty(type.id, 'visibility', 'none');
-      this.updateFilteredLayerSource(
-        getProvidersByDistance(this.state.providerFeatures, distance)
+      this.updateSource(
+        type.id,
+        getProvidersByDistance(type.providers, distance)
       ); // type.providers, distance) )
-
+      this.map.setLayoutProperty(type.id, 'visibility', 'none');
+      this.map.setLayoutProperty(type.id+"filtered", "visibility", "visible");
+        
       //   this.map.getSource("filteredFeatures").setData({
       //     type: "FeatureCollection",
       //     features: this.props.filteredProviders // getProvidersByDistance(type.providers, distance)
       //   });
     } else {
       this.map.setLayoutProperty(type.id, "visibility", visibility);
+      if (this.map.getLayer(type.id+"filtered")) {
+        this.map.setLayoutProperty(type.id+"filtered", "visibility", visibility);
+      }
     }
   };
 
-  addSourceToMap = arr => {
-    this.map.addSource("filteredFeatures", {
+  addSourceToMap = (typeId ) => {
+    this.map.addSource(typeId, {
       type: "geojson",
       data: {
         type: "FeatureCollection",
-        features: arr
+        features: []
       }
     });
   };
 
+  updateSource = (typeId, filteredProviders) => {
+    console.log("newsymbollayer with", filteredProviders);
+    if ( !this.map.getSource(typeId) ) {
+      this.addSourceToMap( typeId )
+      this.addLayerToMap( typeId )
+    }
+    this.map.getSource(typeId).setData({
+      type: "FeatureCollection",
+      features: this.convertProvidersToGeoJSON(filteredProviders)
+    });
+  };
+  
   addLayerToMap = typeId => {
     this.map.addLayer({
       id: typeId + "filtered",
-      source: "filteredFeatures",
-      type: "symbol", 
+      source: typeId,
+      type: "symbol",
       layout: {
-          "icon-image": "cat",
-          "icon-size": 0.5
+        "icon-image": "cat",
+        "icon-size": 0.05
       }
     });
+  };
+
+  convertProvidersToGeoJSON = providers => {
+    console.log("convertProviders did run")
+    const geojsonProvs = providers.map(provider => ({
+      geometry: {
+        type: "Point",
+        coordinates: provider.coordinates
+      },
+      type: "Feature",
+      properties: provider.properties
+    }));
+    console.log(geojsonProvs);
+    return geojsonProvs;
   };
 
   componentDidMount() {
@@ -106,8 +142,15 @@ class Map extends React.Component {
           ...properties
         })
       );
-      this.addSourceToMap(this.state.providerFeatures);
-      this.addLayerToMap("educationfiltered");
+      console.log("map did load")
+      // this.addSourceToMap(this.state.providerFeatures);
+      this.props.providerTypes.forEach(type => {
+        console.log(type); 
+        this.addSourceToMap(type.providers); 
+        // this.addSourceToMap(this.convertProvidersToGeoJSON(providers));
+        this.addLayerToMap(type.id);
+      });
+      // this.addLayerToMap("educationfiltered");
       this.props.initializeProviders(providers);
 
       // hide map icons at first (the default is for icons to show)
@@ -172,6 +215,100 @@ export default connect(
             "id": "point",
             "source": "single-point",
             "type": "circle",
+            "paint": {
+                "circle-radius": 10,
+                "circle-color": "#007cbf"
+            }
+        });
+
+        geocoder.on('result', function (ev) {
+            map.removeLayer('circle-outline');
+            map.removeLayer('circle-outline-two');
+            map.removeLayer('circle-outline-three');
+            map.removeLayer('circle-outline-four');
+            map.getSource('single-point').setData(ev.result.geometry);
+            var center = {
+                "type": "Feature",
+                "properties": {
+                    "marker-color": "#0f0"
+                },
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": ev.result.geometry.coordinates
+                }
+            };
+            var radius = .5;
+            var options = {
+                steps: 100,
+                units: 'miles'
+            };
+            var circle = MapboxGeocoder.turf.circle(center, radius, options);
+            map.addLayer({
+                "id": "circle-outline",
+                "type": "line",
+                "source": {
+                    "type": "geojson",
+                    "data": circle
+                },
+                "paint": {
+                    "line-color": "#046328",
+                    "line-opacity": 0.8,
+                    "line-width": 10,
+                    "line-offset": 5
+                },
+                "layout": {}
+            });
+            var radiusTwo = 1;
+            var circleTwo = MapboxGeocoder.turf.circle(center, radiusTwo, options);
+            map.addLayer({
+                "id": "circle-outline-two",
+                "type": "line",
+                "source": {
+                    "type": "geojson",
+                    "data": circleTwo
+                },
+                "paint": {
+                    "line-color": "#00AA46",
+                    "line-opacity": 0.8,
+                    "line-width": 10,
+                    "line-offset": 5
+                },
+                "layout": {}
+            });
+            var radiusThree = 3;
+            var circleThree = MapboxGeocoder.turf.circle(center, radiusThree, options);
+            map.addLayer({
+                "id": "circle-outline-three",
+                "type": "line",
+                "source": {
+                    "type": "geojson",
+                    "data": circleThree
+                },
+                "paint": {
+                    "line-color": "#71C780",
+                    "line-opacity": 0.8,
+                    "line-width": 10,
+                    "line-offset": 5
+                },
+                "layout": {}
+            });
+            var radiusFour = 5;
+            var circleFour = MapboxGeocoder.turf.circle(center, radiusFour, options);
+            map.addLayer({
+                "id": "circle-outline-four",
+                "type": "line",
+                "source": {
+                    "type": "geojson",
+                    "data": circleFour
+                },
+                "paint": {
+                    "line-color": "#D5EDDB",
+                    "line-opacity": 0.8,
+                    "line-width": 10,
+                    "line-offset": 5
+                },
+                "layout": {}
+            });
             "paint": {
                 "circle-radius": 10,
                 "circle-color": "#007cbf"

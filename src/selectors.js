@@ -9,7 +9,7 @@ export default function getProvidersByDistance( providers, distance ) {
       return {
         provider: provider,
         distance: turf.distance(
-          turf.point(provider.geometry.coordinates),
+          turf.point(provider.coordinates),
           turf.point(searchCenter)
         )
       };
