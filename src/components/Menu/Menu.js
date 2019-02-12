@@ -5,18 +5,24 @@ import DropdownMenu from "./DropdownMenu";
 import DropdownMenuItem from "./DropdownMenuItem";
 import DistanceFilter from "./DistanceFilter";
 import { toggleProviderVisibility } from '../../actions';
+import getProvidersByDistance from '../../selectors';
 
 import './side-menu.css';
 
-export function Menu({ providerTypes, toggleProviderVisibility }) {
+export function Menu({ providerTypes, filterProviders, toggleProviderVisibility }) {
+  const searchCenter = [-71.066954, 42.359947];
   return (
     <div className="side-menu">
       <div className="service-providers">
         <h3>Service Providers</h3>
         <DistanceFilter/>
-        {providerTypes.map(serviceType => (
-          <DropdownMenu key={serviceType.id} id={serviceType.id} text={serviceType.name} expanded={serviceType.visible} onToggle={toggleProviderVisibility}>
-            {serviceType.providers.sort((a,b) => a.name.localeCompare(b.name)).map((provider, i) => (
+        {providerTypes.map(serviceType => {
+          let providers = serviceType.providers;
+          if (filterProviders.distance && serviceType.providers) {
+            providers = getProvidersByDistance(searchCenter, serviceType.providers, filterProviders.distance);
+          }
+          return <DropdownMenu key={serviceType.id} id={serviceType.id} text={serviceType.name} expanded={serviceType.visible} onToggle={toggleProviderVisibility}>
+            {providers.sort((a,b) => a.name.localeCompare(b.name)).map((provider, i) => (
               <DropdownMenuItem
                 key={i}
                 text={provider.name}
@@ -25,10 +31,10 @@ export function Menu({ providerTypes, toggleProviderVisibility }) {
               />
             ))}
           </DropdownMenu>
-        ))}
+        })}
       </div>
     </div>
   );
 }
 
-export default connect(({ providerTypes }) => ({ providerTypes }), { toggleProviderVisibility })(Menu);
+export default connect(({ providerTypes, filterProviders }) => ({ providerTypes, filterProviders }), { toggleProviderVisibility })(Menu);
