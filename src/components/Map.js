@@ -28,7 +28,8 @@ class Map extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      providerFeatures: []
+      providerFeatures: [], 
+      searchCenter: [-71.066954, 42.359947]
     };
     this.map = "";
   }
@@ -41,7 +42,7 @@ class Map extends React.Component {
       // distance filter has a non-null value
       this.updateSource(
         type.id,
-        getProvidersByDistance(type.providers, distance)
+        getProvidersByDistance(this.state.searchCenter, type.providers, distance)
       ); // type.providers, distance) )
       this.map.setLayoutProperty(type.id, 'visibility', 'none');
       this.map.setLayoutProperty(type.id+"filtered", "visibility", "visible");
@@ -120,6 +121,14 @@ class Map extends React.Component {
       accessToken: mapboxgl.accessToken
     });
     map.addControl(geocoder);
+
+    geocoder.on("result", ev => {
+        console.log(ev.result.geometry.coordinates);
+        this.setState({searchCenter: ev.result.geometry.coordinates});
+    }
+); 
+
+
     map.loadImage(
       "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Cat_silhouette.svg/400px-Cat_silhouette.svg.png",
       function(error, image) {

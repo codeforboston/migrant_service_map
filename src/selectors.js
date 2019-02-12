@@ -2,9 +2,9 @@ import mapboxgl from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import * as turf from "@turf/turf";
 
-export default function getProvidersByDistance( providers, distance ) {
-
-    const searchCenter = [-71.066954, 42.359947];
+export default function getProvidersByDistance( searchCenter, providers, distance ) {
+    searchCenter = searchCenter || [-71.066954, 42.359947];
+    
     const distances = providers.map(provider => {
       return {
         provider: provider,
