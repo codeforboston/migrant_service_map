@@ -10,7 +10,6 @@ import getProvidersByDistance from '../../selectors';
 import './side-menu.css';
 
 export function Menu({ providerTypes, filterProviders, toggleProviderVisibility }) {
-  const searchCenter = [-71.066954, 42.359947];
   return (
     <div className="side-menu">
       <div className="service-providers">
@@ -19,7 +18,7 @@ export function Menu({ providerTypes, filterProviders, toggleProviderVisibility 
         {providerTypes.map(serviceType => {
           let providers = serviceType.providers;
           if (filterProviders.distance && serviceType.providers) {
-            providers = getProvidersByDistance(searchCenter, serviceType.providers, filterProviders.distance);
+            providers = getProvidersByDistance(filterProviders.searchCenter, serviceType.providers, filterProviders.distance);
           }
           return <DropdownMenu key={serviceType.id} id={serviceType.id} text={serviceType.name} expanded={serviceType.visible} onToggle={toggleProviderVisibility}>
             {providers.sort((a,b) => a.name.localeCompare(b.name)).map((provider, i) => (

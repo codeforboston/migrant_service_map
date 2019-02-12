@@ -1,6 +1,6 @@
 import dotProp from 'dot-prop-immutable';
 
-import { INITIALIZE_PROVIDERS, TOGGLE_TYPE, CLEAR_DISTANCE, CHANGE_DISTANCE } from './actions';
+import { INITIALIZE_PROVIDERS, TOGGLE_TYPE, CLEAR_DISTANCE, CHANGE_DISTANCE, SET_SEARCH_CENTER } from './actions';
 
 export function providerTypes(state = [], action) {
   switch (action.type) {
@@ -36,6 +36,8 @@ export function filterProviders(state = [], action) {
       return { ...state, distance: null }
     case CHANGE_DISTANCE:
       return { ...state, distance: action.distance }
+    case SET_SEARCH_CENTER:
+      return { ...state, searchCenter: action.coordinates }
     default:
       return state;
   }
