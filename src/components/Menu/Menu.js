@@ -15,11 +15,11 @@ export function Menu({ providerTypes, toggleProviderVisibility }) {
         <h3>Service Providers</h3>
         <DistanceFilter/>
         {providerTypes.map(serviceType => (
-          <DropdownMenu key={serviceType.id} id={serviceType.id} text={serviceType.name} expanded={serviceType.visible} onToggle={toggleProviderVisibility}>
-            {serviceType.providers.sort((a,b) => a.name.localeCompare(b.name)).map((provider, i) => (
+          <DropdownMenu key={serviceType.id} id={serviceType.id} text={serviceType["Organization Name"]} expanded={serviceType.visible} onToggle={toggleProviderVisibility}>
+            {serviceType.providers.sort((a,b) => a["Organization Name"].localeCompare(b["Organization Name"])).map((provider, i) => (
               <DropdownMenuItem
                 key={i}
-                text={provider.name}
+                text={provider["Organization Name"]}
                 item={provider}
                 // clickHandler={this.props.handleMenuItemClick}
               />

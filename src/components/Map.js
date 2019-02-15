@@ -41,30 +41,42 @@ class Map extends React.Component {
     if ( type.visible && distance) {
       // distance filter has a non-null value
       this.updateSource(
-        type.id,
+        type["Type of Service"],
         getProvidersByDistance(this.state.searchCenter, type.providers, distance)
       ); // type.providers, distance) )
-      this.map.setLayoutProperty(type.id, 'visibility', 'none');
-      this.map.setLayoutProperty(type.id+"filtered", "visibility", "visible");
+      this.map.setLayoutProperty(type["Type of Service"], 'visibility', 'none');
+      this.map.setLayoutProperty(type["Type of Service"]+"filtered", "visibility", "visible");
         
       //   this.map.getSource("filteredFeatures").setData({
       //     type: "FeatureCollection",
       //     features: this.props.filteredProviders // getProvidersByDistance(type.providers, distance)
       //   });
     } else {
-      this.map.setLayoutProperty(type.id, "visibility", visibility);
-      if (this.map.getLayer(type.id+"filtered")) {
-        this.map.setLayoutProperty(type.id+"filtered", "visibility", visibility);
+      this.map.setLayoutProperty(type["Type of Service"], "visibility", visibility);
+      if (this.map.getLayer(type["Type of Service"]+"filtered")) {
+        this.map.setLayoutProperty(type["Type of Service"]+"filtered", "visibility", visibility);
       }
     }
   };
 
-  addSourceToMap = (typeId ) => {
+  addSourceToMap = ( typeId ) => {
     this.map.addSource(typeId, {
       type: "geojson",
       data: {
         type: "FeatureCollection",
         features: []
+      }
+    });
+  };
+
+  addLayerToMap = typeId => {
+    this.map.addLayer({
+      id: typeId + "filtered",
+      source: typeId,
+      type: "symbol",
+      layout: {
+        "icon-image": "cat",
+        "icon-size": 0.05
       }
     });
   };
@@ -81,17 +93,6 @@ class Map extends React.Component {
     });
   };
   
-  addLayerToMap = typeId => {
-    this.map.addLayer({
-      id: typeId + "filtered",
-      source: typeId,
-      type: "symbol",
-      layout: {
-        "icon-image": "cat",
-        "icon-size": 0.05
-      }
-    });
-  };
 
   convertProvidersToGeoJSON = providers => {
     console.log("convertProviders did run")
@@ -136,11 +137,12 @@ class Map extends React.Component {
         map.addImage("cat", image);
       }
     );
+    
     map.on("load", () => {
       // get service providers info from mapbox
+      console.log(map.getStyle().layers)
       const providerFeatures = map.querySourceFeatures("composite", {
-        sourceLayer: "refugees-services"
-      });
+        sourceLayer: "Migrant_Services_-_MSM_Final_1" })
 
       this.setState({ providerFeatures: providerFeatures });
 
@@ -152,12 +154,16 @@ class Map extends React.Component {
         })
       );
       console.log("map did load")
+      console.log(providers[0])
       // this.addSourceToMap(this.state.providerFeatures);
-      this.props.providerTypes.forEach(type => {
+      // this.props.providerTypes.forEach(type => {
+      providers.forEach(type => {
+        debugger
         console.log(type); 
-        this.addSourceToMap(type.providers); 
+        this.addSourceToMap(type["Type of Service"]); 
+        // this.addSourceToMap(type.providers); 
         // this.addSourceToMap(this.convertProvidersToGeoJSON(providers));
-        this.addLayerToMap(type.id);
+        this.addLayerToMap(type["Type of Service"]);
       });
       // this.addLayerToMap("educationfiltered");
       this.props.initializeProviders(providers);

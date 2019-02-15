@@ -20,7 +20,7 @@ function groupProvidersByType(providers) {
     if (type) {
       type.providers.push(provider);
     } else {
-      let id = provider.type.toLowerCase().split(' ').join('-');
+      let id = provider["Type of Service"].toLowerCase().split(' ').join('-');
       if (id === 'community-center') { // special case
         id = 'community-centers';
       }
