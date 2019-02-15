@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import mapboxgl from "mapbox-gl";
-import { initializeProviders, toggleProviderVisibility } from "../actions";
+import { initializeProviders, toggleProviderVisibility, setSearchCenter } from "../actions";
 import getProvidersByDistance from "../selectors";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 // import { insertPopup, Popup } from "./PopUp.js";
@@ -29,7 +29,6 @@ class Map extends React.Component {
     super(props);
     this.state = {
       providerFeatures: [], 
-      searchCenter: [-71.066954, 42.359947]
     };
     this.map = "";
   }
@@ -41,8 +40,13 @@ class Map extends React.Component {
     if ( type.visible && distance) {
       // distance filter has a non-null value
       this.updateSource(
+<<<<<<< HEAD
         type["Type of Service"],
         getProvidersByDistance(this.state.searchCenter, type.providers, distance)
+=======
+        type.id,
+        getProvidersByDistance(this.props.filterProviders.searchCenter, type.providers, distance)
+>>>>>>> byron/distance-filter-redux
       ); // type.providers, distance) )
       this.map.setLayoutProperty(type["Type of Service"], 'visibility', 'none');
       this.map.setLayoutProperty(type["Type of Service"]+"filtered", "visibility", "visible");
@@ -125,7 +129,8 @@ class Map extends React.Component {
 
     geocoder.on("result", ev => {
         console.log(ev.result.geometry.coordinates);
-        this.setState({searchCenter: ev.result.geometry.coordinates});
+        // this.setState({searchCenter: ev.result.geometry.coordinates});
+        this.props.setSearchCenter(ev.result.geometry.coordinates);
     }
 ); 
 
@@ -216,7 +221,7 @@ class Map extends React.Component {
 
 export default connect(
   ({ providerTypes, filterProviders }) => ({ providerTypes, filterProviders }),
-  { initializeProviders, toggleProviderVisibility }
+  { initializeProviders, toggleProviderVisibility, setSearchCenter }
 )(Map);
 
 /* map.addSource('single-point', {
