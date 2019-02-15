@@ -40,13 +40,8 @@ class Map extends React.Component {
     if ( type.visible && distance) {
       // distance filter has a non-null value
       this.updateSource(
-<<<<<<< HEAD
-        type["Type of Service"],
-        getProvidersByDistance(this.state.searchCenter, type.providers, distance)
-=======
         type.id,
         getProvidersByDistance(this.props.filterProviders.searchCenter, type.providers, distance)
->>>>>>> byron/distance-filter-redux
       ); // type.providers, distance) )
       this.map.setLayoutProperty(type["Type of Service"], 'visibility', 'none');
       this.map.setLayoutProperty(type["Type of Service"]+"filtered", "visibility", "visible");
