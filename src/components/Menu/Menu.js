@@ -13,7 +13,7 @@ export function Menu({ providerTypes, filterProviders, toggleProviderVisibility 
   return (
     <div className="side-menu">
       <div className="service-providers">
-        <h3>Service Providers</h3>
+        <h3>Service Providers</h3>  
         <DistanceFilter/>
         {providerTypes.map(serviceType => {
           let providers = serviceType.providers;
