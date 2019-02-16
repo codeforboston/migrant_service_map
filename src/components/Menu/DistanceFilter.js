@@ -8,12 +8,6 @@ import {
 import getProvidersByDistance from "../../selectors";
 
 class DistanceFilter extends Component {
-  // componentWillMount {
-  constructor(props) {
-    super(props);
-    this.props.clearDistanceFilter();
-  }
-
   render() {
     const distances = [1, 2, 5];
     return (
@@ -29,30 +23,11 @@ class DistanceFilter extends Component {
                 value={el}
                 onChange={e => {
                   this.props.changeDistanceFilter(el);
-                  let providers = [];
-                  this.props.providerTypes.map(serviceType => {
-                    const providersOfType = getProvidersByDistance(
-                      this.props.filterProviders.searchCenter,
-                      serviceType.providers,
-                      this.props.filterProviders.distance
-                    );
-                    let type = {};
-                    type.id = serviceType.id;
-                    type.name = serviceType.name;
-                    type.providers = providersOfType;
-                    console.log("type", type);
-                    providers.push(type);
-                    console.log("providers inside", providers);
-                    // }
-                  });
-                  console.log("providers outside", providers);
-                  this.props.setFilteredProviders(providers);
                 }}
-                // e.target.value ends up as a string
+          
                 checked={this.props.filterProviders.distance === el}
-              />
-              <label htmlFor={el}>
-                {el} mile{el > 1 ? "s" : ""}
+              />  
+              <label htmlFor={el}>{el} mile{el > 1 ? "s" : ""}
               </label>
             </div>
           </li>
