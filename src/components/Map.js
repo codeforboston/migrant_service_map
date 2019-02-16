@@ -11,6 +11,7 @@ import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "../map.css";
 import * as turf from "@turf/turf";
 import { insertPopup } from "./PopUp.js";
+import DistanceFilter from "./Menu/DistanceFilter";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw";
@@ -37,15 +38,13 @@ class Map extends React.Component {
     this.map = "";
   }
 
-  reflectProviderVisibility = type => {
-    console.log("reflectviz", type);
+  reflectLayerVisibility = type => {
     this.updateSource(type);
     const visibility = type.visible ? "visible" : "none";
     this.map.setLayoutProperty(type.id, "visibility", visibility);
   };
 
   addSourceToMap = typeId => {
-    console.log("adding source: " + typeId);
     this.map.addSource(typeId, {
       type: "geojson",
       data: {
@@ -56,7 +55,6 @@ class Map extends React.Component {
   };
 
   addLayerToMap = typeId => {
-    console.log("adding layer " + typeId);
     this.map.addLayer({
       id: typeId,
       source: typeId,
@@ -71,17 +69,22 @@ class Map extends React.Component {
   };
 
   updateSource = type => {
+    let { distance, searchCenter } = this.props.filterProviders;
+
     if (!this.map.getSource(type.id)) {
       this.addSourceToMap(type.id);
     }
     if (!this.map.getLayer(type.id)) {
       this.addLayerToMap(type.id);
     }
-
-    this.map.getSource(type.id).setData({
-      type: "FeatureCollection",
-      features: this.convertProvidersToGeoJSON(type.providers)
-    });
+    if (type.providers && distance) {
+      this.map.getSource(type.id).setData({
+        type: "FeatureCollection",
+        features: this.convertProvidersToGeoJSON(
+          getProvidersByDistance(searchCenter, type.providers, distance)
+        )
+      });
+    }
   };
 
   convertProvidersToGeoJSON = providers => {
@@ -110,8 +113,6 @@ class Map extends React.Component {
     });
 
     geocoder.on("result", function(ev) {
-      console.log(ev.result.geometry.coordinates);
-
       this.props.setSearchCenter(ev.result.geometry.coordinates);
 
       if (map.getLayer("circle-outline")) {
@@ -335,10 +336,7 @@ class Map extends React.Component {
   }
 
   componentDidUpdate() {
-    console.log(this.props.providerTypes);
-    this.props.providerTypes.forEach(type =>
-      this.reflectProviderVisibility(type)
-    );
+    this.props.providerTypes.forEach(type => this.reflectLayerVisibility(type));
   }
 
   componentWillUnmount() {

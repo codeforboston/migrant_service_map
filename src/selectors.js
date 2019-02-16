@@ -21,10 +21,6 @@ export default function getProvidersByDistance( searchCenter, providers, distanc
 
     console.log(closePlaces.length, "of", providers.length, "within", distance, "miles");
 
-  // clearFilter = () => {
-  //   let { filterDistance, providers } = this.props;
-  //   filterDistance(providers);
-  // };
 
   return closePlaces;
 }

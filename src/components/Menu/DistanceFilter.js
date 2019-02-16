@@ -1,13 +1,17 @@
 import React, { Component } from "react";
-import { connect } from 'react-redux';
-import { clearDistanceFilter, changeDistanceFilter } from '../../actions'
+import { connect } from "react-redux";
+import {
+  clearDistanceFilter,
+  changeDistanceFilter,
+  setFilteredProviders
+} from "../../actions";
+import getProvidersByDistance from "../../selectors";
 
 class DistanceFilter extends Component {
-
   // componentWillMount {
   constructor(props) {
-    super(props)
-    this.props.clearDistanceFilter()
+    super(props);
+    this.props.clearDistanceFilter();
   }
 
   render() {
@@ -23,10 +27,33 @@ class DistanceFilter extends Component {
                 name={"distance"}
                 id={el}
                 value={el}
-                onChange={e => this.props.changeDistanceFilter(el)} // e.target.value ends up as a string
+                onChange={e => {
+                  this.props.changeDistanceFilter(el);
+                  let providers = [];
+                  this.props.providerTypes.map(serviceType => {
+                    const providersOfType = getProvidersByDistance(
+                      this.props.filterProviders.searchCenter,
+                      serviceType.providers,
+                      this.props.filterProviders.distance
+                    );
+                    let type = {};
+                    type.id = serviceType.id;
+                    type.name = serviceType.name;
+                    type.providers = providersOfType;
+                    console.log("type", type);
+                    providers.push(type);
+                    console.log("providers inside", providers);
+                    // }
+                  });
+                  console.log("providers outside", providers);
+                  this.props.setFilteredProviders(providers);
+                }}
+                // e.target.value ends up as a string
                 checked={this.props.filterProviders.distance === el}
               />
-            <label htmlFor={el}>{el} mile{el > 1 ? "s" : ""}</label>
+              <label htmlFor={el}>
+                {el} mile{el > 1 ? "s" : ""}
+              </label>
             </div>
           </li>
         ))}
@@ -37,6 +64,6 @@ class DistanceFilter extends Component {
 }
 
 export default connect(
-  ({filterProviders}) => ({filterProviders}),
-  { clearDistanceFilter, changeDistanceFilter }
-)(DistanceFilter)
+  ({ providerTypes, filterProviders }) => ({ providerTypes, filterProviders }),
+  { clearDistanceFilter, changeDistanceFilter, setFilteredProviders }
+)(DistanceFilter);
