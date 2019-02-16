@@ -4,7 +4,8 @@ import mapboxgl from "mapbox-gl";
 import {
   initializeProviders,
   toggleProviderVisibility,
-  setSearchCenter, clearDistanceFilter
+  setSearchCenter,
+  clearDistanceFilter
 } from "../actions";
 import getProvidersByDistance from "../selectors";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
@@ -83,15 +84,14 @@ class Map extends React.Component {
         features: this.convertProvidersToGeoJSON(
           getProvidersByDistance(searchCenter, type.providers, distance)
         )
-      })
+      });
     } else {
       this.map.getSource(type.id).setData({
         type: "FeatureCollection",
         features: this.convertProvidersToGeoJSON(type.providers)
-      })
-    };
+      });
     }
-
+  };
 
   convertProvidersToGeoJSON = providers => {
     return providers.map(provider => ({
@@ -118,8 +118,8 @@ class Map extends React.Component {
       accessToken: mapboxgl.accessToken
     });
 
-    geocoder.on("result", function(ev) {
-      setSearchCenter(ev.result.geometry.coordinates);
+    geocoder.on("result", (ev) => {
+      this.props.setSearchCenter(ev.result.geometry.coordinates);
 
       if (map.getLayer("circle-outline")) {
         map.removeLayer("circle-outline");

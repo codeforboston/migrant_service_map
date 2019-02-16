@@ -9,10 +9,10 @@ import getProvidersByDistance from "../../selectors";
 
 class DistanceFilter extends Component {
   // componentWillMount {
-  constructor(props) {
-    super(props);
-    this.props.clearDistanceFilter();
-  }
+  // constructor(props) {
+  //   super(props);
+    // this.props.clearDistanceFilter();
+  // }
 
   render() {
     const distances = [1, 2, 5];
@@ -42,10 +42,8 @@ class DistanceFilter extends Component {
                     type.providers = providersOfType;
                     console.log("type", type);
                     providers.push(type);
-                    console.log("providers inside", providers);
                     // }
                   });
-                  console.log("providers outside", providers);
                   this.props.setFilteredProviders(providers);
                 }}
                 // e.target.value ends up as a string
