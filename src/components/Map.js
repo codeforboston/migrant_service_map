@@ -1,12 +1,16 @@
 import React from "react";
 import { connect } from "react-redux";
 import mapboxgl from "mapbox-gl";
-import { initializeProviders, toggleProviderVisibility, setSearchCenter } from "../actions";
+import {
+  initializeProviders,
+  toggleProviderVisibility,
+  setSearchCenter
+} from "../actions";
 import getProvidersByDistance from "../selectors";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
-// import { insertPopup, Popup } from "./PopUp.js";
-
 import "../map.css";
+import * as turf from "@turf/turf";
+import { insertPopup } from "./PopUp.js";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw";
@@ -28,37 +32,20 @@ class Map extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      providerFeatures: [], 
+      providerFeatures: []
     };
     this.map = "";
   }
 
   reflectProviderVisibility = type => {
-    const distance = this.props.filterProviders.distance;
+    console.log("reflectviz", type);
+    this.updateSource(type);
     const visibility = type.visible ? "visible" : "none";
-
-    if ( type.visible && distance) {
-      // distance filter has a non-null value
-      this.updateSource(
-        type.id,
-        getProvidersByDistance(this.props.filterProviders.searchCenter, type.providers, distance)
-      ); // type.providers, distance) )
-      this.map.setLayoutProperty(type["Type of Service"], 'visibility', 'none');
-      this.map.setLayoutProperty(type["Type of Service"]+"filtered", "visibility", "visible");
-        
-      //   this.map.getSource("filteredFeatures").setData({
-      //     type: "FeatureCollection",
-      //     features: this.props.filteredProviders // getProvidersByDistance(type.providers, distance)
-      //   });
-    } else {
-      this.map.setLayoutProperty(type["Type of Service"], "visibility", visibility);
-      if (this.map.getLayer(type["Type of Service"]+"filtered")) {
-        this.map.setLayoutProperty(type["Type of Service"]+"filtered", "visibility", visibility);
-      }
-    }
+    this.map.setLayoutProperty(type.id, "visibility", visibility);
   };
 
-  addSourceToMap = ( typeId ) => {
+  addSourceToMap = typeId => {
+    console.log("adding source: " + typeId);
     this.map.addSource(typeId, {
       type: "geojson",
       data: {
@@ -69,42 +56,43 @@ class Map extends React.Component {
   };
 
   addLayerToMap = typeId => {
+    console.log("adding layer " + typeId);
     this.map.addLayer({
-      id: typeId + "filtered",
+      id: typeId,
       source: typeId,
       type: "symbol",
       layout: {
-        "icon-image": "cat",
-        "icon-size": 0.05
+        "icon-image": typeId + "icon",
+        "icon-size": 0.03,
+        visibility: "visible"
       }
     });
+    this.map.on("click", typeId, e => this.handleMapClick(e));
   };
 
-  updateSource = (typeId, filteredProviders) => {
-    console.log("newsymbollayer with", filteredProviders);
-    if ( !this.map.getSource(typeId) ) {
-      this.addSourceToMap( typeId )
-      this.addLayerToMap( typeId )
+  updateSource = type => {
+    if (!this.map.getSource(type.id)) {
+      this.addSourceToMap(type.id);
     }
-    this.map.getSource(typeId).setData({
+    if (!this.map.getLayer(type.id)) {
+      this.addLayerToMap(type.id);
+    }
+
+    this.map.getSource(type.id).setData({
       type: "FeatureCollection",
-      features: this.convertProvidersToGeoJSON(filteredProviders)
+      features: this.convertProvidersToGeoJSON(type.providers)
     });
   };
-  
 
   convertProvidersToGeoJSON = providers => {
-    console.log("convertProviders did run")
-    const geojsonProvs = providers.map(provider => ({
+    return providers.map(provider => ({
+      type: "Feature",
       geometry: {
         type: "Point",
         coordinates: provider.coordinates
       },
-      type: "Feature",
-      properties: provider.properties
+      properties: provider
     }));
-    console.log(geojsonProvs);
-    return geojsonProvs;
   };
 
   componentDidMount() {
@@ -120,32 +108,212 @@ class Map extends React.Component {
     var geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken
     });
+
+    geocoder.on("result", function(ev) {
+      console.log(ev.result.geometry.coordinates);
+
+      this.props.setSearchCenter(ev.result.geometry.coordinates);
+
+      if (map.getLayer("circle-outline")) {
+        map.removeLayer("circle-outline");
+        map.removeSource("circle-outline");
+      }
+      if (map.getLayer("circle-outline-two")) {
+        map.removeLayer("circle-outline-two");
+        map.removeSource("circle-outline-two");
+      }
+      if (map.getLayer("circle-outline-three")) {
+        map.removeLayer("circle-outline-three");
+        map.removeSource("circle-outline-three");
+      }
+      if (map.getLayer("circle-outline-four")) {
+        map.removeLayer("circle-outline-four");
+        map.removeSource("circle-outline-four");
+      }
+      if (!map.getSource("single-point")) {
+        map.addSource("single-point", {
+          type: "geojson",
+          data: {
+            type: "FeatureCollection",
+            features: []
+          }
+        });
+        map.addLayer({
+          id: "point",
+          source: "single-point",
+          type: "circle",
+          paint: {
+            "circle-radius": 10,
+            "circle-color": "#007cbf"
+          }
+        });
+      }
+
+      map.getSource("single-point").setData(ev.result.geometry);
+
+      var center = {
+        type: "Feature",
+        properties: {
+          "marker-color": "#0f0"
+        },
+        geometry: {
+          type: "Point",
+          coordinates: ev.result.geometry.coordinates
+        }
+      };
+      var radius = 0.5;
+      var options = {
+        steps: 100,
+        units: "miles"
+      };
+
+      let circle = turf.circle(center, radius, options);
+
+      map.addLayer({
+        id: "circle-outline",
+        type: "line",
+        source: {
+          type: "geojson",
+          data: circle
+        },
+        paint: {
+          "line-color": "#046328",
+          "line-opacity": 0.8,
+          "line-width": 10,
+          "line-offset": 5
+        },
+        layout: {}
+      });
+      var radiusTwo = 1;
+      var circleTwo = turf.circle(center, radiusTwo, options);
+      map.addLayer({
+        id: "circle-outline-two",
+        type: "line",
+        source: {
+          type: "geojson",
+          data: circleTwo
+        },
+        paint: {
+          "line-color": "#00AA46",
+          "line-opacity": 0.8,
+          "line-width": 10,
+          "line-offset": 5
+        },
+        layout: {}
+      });
+      var radiusThree = 3;
+      var circleThree = turf.circle(center, radiusThree, options);
+      map.addLayer({
+        id: "circle-outline-three",
+        type: "line",
+        source: {
+          type: "geojson",
+          data: circleThree
+        },
+        paint: {
+          "line-color": "#71C780",
+          "line-opacity": 0.8,
+          "line-width": 10,
+          "line-offset": 5
+        },
+        layout: {}
+      });
+      var radiusFour = 5;
+      var circleFour = turf.circle(center, radiusFour, options);
+      map.addLayer({
+        id: "circle-outline-four",
+        type: "line",
+        source: {
+          type: "geojson",
+          data: circleFour
+        },
+        paint: {
+          "line-color": "#D5EDDB",
+          "line-opacity": 0.8,
+          "line-width": 10,
+          "line-offset": 5
+        },
+        layout: {}
+      });
+    });
+
     map.addControl(geocoder);
-
-    geocoder.on("result", ev => {
-        console.log(ev.result.geometry.coordinates);
-        // this.setState({searchCenter: ev.result.geometry.coordinates});
-        this.props.setSearchCenter(ev.result.geometry.coordinates);
-    }
-); 
-
 
     map.loadImage(
       "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Cat_silhouette.svg/400px-Cat_silhouette.svg.png",
       function(error, image) {
         if (error) throw error;
-        map.addImage("cat", image);
+        map.addImage("community-centersicon", image);
       }
     );
-    
+
+    map.loadImage(
+      "https://upload.wikimedia.org/wikipedia/commons/b/b4/Webdings_x005f.png",
+      function(error, image) {
+        if (error) throw error;
+        map.addImage("educationicon", image);
+      }
+    );
+    map.loadImage(
+      "https://upload.wikimedia.org/wikipedia/commons/1/17/Webdings_x0042.png",
+      function(error, image) {
+        if (error) throw error;
+        map.addImage("housingicon", image);
+      }
+    );
+
+    map.loadImage(
+      "https://upload.wikimedia.org/wikipedia/commons/b/b4/Webdings_x005f.png",
+      function(error, image) {
+        if (error) throw error;
+        map.addImage("healthicon", image);
+      }
+    );
+    map.loadImage(
+      "https://upload.wikimedia.org/wikipedia/commons/b/b4/Webdings_x005f.png",
+      function(error, image) {
+        if (error) throw error;
+        map.addImage("mental-healthicon", image);
+      }
+    );
+
+    map.loadImage(
+      "https://upload.wikimedia.org/wikipedia/commons/b/b4/Webdings_x005f.png",
+      function(error, image) {
+        if (error) throw error;
+        map.addImage("legalicon", image);
+      }
+    );
+
+    map.loadImage(
+      "https://upload.wikimedia.org/wikipedia/commons/b/b4/Webdings_x005f.png",
+      function(error, image) {
+        if (error) throw error;
+        map.addImage("job-placementicon", image);
+      }
+    );
+
+    map.loadImage(
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Cat_silhouette.svg/400px-Cat_silhouette.svg.png",
+      function(error, image) {
+        if (error) throw error;
+        map.addImage("resettlementicon", image);
+      }
+    );
+
     map.on("load", () => {
-      // get service providers info from mapbox
-      console.log(map.getStyle().layers)
+      // remove data layers created by mapbox
+      const layers = map.getStyle().layers;
+      for (let i = 100; i < 110; i++) {
+        map.removeLayer(layers[i].id);
+      }
+
+      // get service providers info from mapbox from the new data
       const providerFeatures = map.querySourceFeatures("composite", {
-        sourceLayer: "Migrant_Services_-_MSM_Final_1" })
+        sourceLayer: "Migrant_Services_-_MSM_Final_1"
+      });
 
-      this.setState({ providerFeatures: providerFeatures });
-
+      // prep map query result for redux
       const providers = Array.from(providerFeatures).map(
         ({ id, geometry: { coordinates }, properties }) => ({
           id,
@@ -153,59 +321,27 @@ class Map extends React.Component {
           ...properties
         })
       );
-      console.log("map did load")
-      console.log(providers[0])
-      // this.addSourceToMap(this.state.providerFeatures);
-      // this.props.providerTypes.forEach(type => {
-      providers.forEach(type => {
-        debugger
-        console.log(type); 
-        this.addSourceToMap(type["Type of Service"]); 
-        // this.addSourceToMap(type.providers); 
-        // this.addSourceToMap(this.convertProvidersToGeoJSON(providers));
-        this.addLayerToMap(type["Type of Service"]);
-      });
-      // this.addLayerToMap("educationfiltered");
+      // commit map query result to redux
       this.props.initializeProviders(providers);
-
-      // hide map icons at first (the default is for icons to show)
-      //   layerNames.map(layer =>
-      //     map.setLayoutProperty(layer, "visibility", "none")
-      //   );
     });
   }
 
-  componentDidUpdate() {
-    this.props.providerTypes.forEach(this.reflectProviderVisibility);
+  handleMapClick(e) {
+    let coordinates = e.features[0].geometry.coordinates.slice();
+    while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+      coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+    }
+    insertPopup(this.map, coordinates, e.features[0].properties);
   }
 
-  //   setFilter = e => {
-  //     const distance = e.target.value;
-  //     const distances = this.state.providers.map(provider => {
-  //       return {
-  //         provider: provider,
-  //         distance: turf.distance(
-  //           turf.point(provider.geometry.coordinates),
-  //           turf.point(this.state.mapCenter)
-  //         )
-  //       };
-  //     });
-
-  //     const closePlaces = distances
-  //       .filter(el => el.distance < distance)
-  //       .map(el => el.provider);
-
-  //     this.setState((state) => { return {
-  //       filteredProviders: closePlaces,
-  //       distanceVisible: distance
-  //     }}, this.newSymbolLayer);
-
-  //     console.log("filteredProviders " + this.state.filteredProviders.length)
-  //     // this.newSymbolLayer();
-  //   };
+  componentDidUpdate() {
+    console.log(this.props.providerTypes);
+    this.props.providerTypes.forEach(type =>
+      this.reflectProviderVisibility(type)
+    );
+  }
 
   componentWillUnmount() {
-    // this.newSymbolLayer();
     this.map.remove();
   }
 
@@ -218,204 +354,3 @@ export default connect(
   ({ providerTypes, filterProviders }) => ({ providerTypes, filterProviders }),
   { initializeProviders, toggleProviderVisibility, setSearchCenter }
 )(Map);
-
-/* map.addSource('single-point', {
-            "type": "geojson",
-            "data": {
-                "type": "FeatureCollection",
-                "features": []
-            }
-        });
-        map.addLayer({
-            "id": "point",
-            "source": "single-point",
-            "type": "circle",
-            "paint": {
-                "circle-radius": 10,
-                "circle-color": "#007cbf"
-            }
-        });
-
-        geocoder.on('result', function (ev) {
-            map.removeLayer('circle-outline');
-            map.removeLayer('circle-outline-two');
-            map.removeLayer('circle-outline-three');
-            map.removeLayer('circle-outline-four');
-            map.getSource('single-point').setData(ev.result.geometry);
-            var center = {
-                "type": "Feature",
-                "properties": {
-                    "marker-color": "#0f0"
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": ev.result.geometry.coordinates
-                }
-            };
-            var radius = .5;
-            var options = {
-                steps: 100,
-                units: 'miles'
-            };
-            var circle = MapboxGeocoder.turf.circle(center, radius, options);
-            map.addLayer({
-                "id": "circle-outline",
-                "type": "line",
-                "source": {
-                    "type": "geojson",
-                    "data": circle
-                },
-                "paint": {
-                    "line-color": "#046328",
-                    "line-opacity": 0.8,
-                    "line-width": 10,
-                    "line-offset": 5
-                },
-                "layout": {}
-            });
-            var radiusTwo = 1;
-            var circleTwo = MapboxGeocoder.turf.circle(center, radiusTwo, options);
-            map.addLayer({
-                "id": "circle-outline-two",
-                "type": "line",
-                "source": {
-                    "type": "geojson",
-                    "data": circleTwo
-                },
-                "paint": {
-                    "line-color": "#00AA46",
-                    "line-opacity": 0.8,
-                    "line-width": 10,
-                    "line-offset": 5
-                },
-                "layout": {}
-            });
-            var radiusThree = 3;
-            var circleThree = MapboxGeocoder.turf.circle(center, radiusThree, options);
-            map.addLayer({
-                "id": "circle-outline-three",
-                "type": "line",
-                "source": {
-                    "type": "geojson",
-                    "data": circleThree
-                },
-                "paint": {
-                    "line-color": "#71C780",
-                    "line-opacity": 0.8,
-                    "line-width": 10,
-                    "line-offset": 5
-                },
-                "layout": {}
-            });
-            var radiusFour = 5;
-            var circleFour = MapboxGeocoder.turf.circle(center, radiusFour, options);
-            map.addLayer({
-                "id": "circle-outline-four",
-                "type": "line",
-                "source": {
-                    "type": "geojson",
-                    "data": circleFour
-                },
-                "paint": {
-                    "line-color": "#D5EDDB",
-                    "line-opacity": 0.8,
-                    "line-width": 10,
-                    "line-offset": 5
-                },
-                "layout": {}
-            });
-            "paint": {
-                "circle-radius": 10,
-                "circle-color": "#007cbf"
-            }
-        });
-
-        geocoder.on('result', function (ev) {
-            map.removeLayer('circle-outline');
-            map.removeLayer('circle-outline-two');
-            map.removeLayer('circle-outline-three');
-            map.removeLayer('circle-outline-four');
-            map.getSource('single-point').setData(ev.result.geometry);
-            var center = {
-                "type": "Feature",
-                "properties": {
-                    "marker-color": "#0f0"
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": ev.result.geometry.coordinates
-                }
-            };
-            var radius = .5;
-            var options = {
-                steps: 100,
-                units: 'miles'
-            };
-            var circle = MapboxGeocoder.turf.circle(center, radius, options);
-            map.addLayer({
-                "id": "circle-outline",
-                "type": "line",
-                "source": {
-                    "type": "geojson",
-                    "data": circle
-                },
-                "paint": {
-                    "line-color": "#046328",
-                    "line-opacity": 0.8,
-                    "line-width": 10,
-                    "line-offset": 5
-                },
-                "layout": {}
-            });
-            var radiusTwo = 1;
-            var circleTwo = MapboxGeocoder.turf.circle(center, radiusTwo, options);
-            map.addLayer({
-                "id": "circle-outline-two",
-                "type": "line",
-                "source": {
-                    "type": "geojson",
-                    "data": circleTwo
-                },
-                "paint": {
-                    "line-color": "#00AA46",
-                    "line-opacity": 0.8,
-                    "line-width": 10,
-                    "line-offset": 5
-                },
-                "layout": {}
-            });
-            var radiusThree = 3;
-            var circleThree = MapboxGeocoder.turf.circle(center, radiusThree, options);
-            map.addLayer({
-                "id": "circle-outline-three",
-                "type": "line",
-                "source": {
-                    "type": "geojson",
-                    "data": circleThree
-                },
-                "paint": {
-                    "line-color": "#71C780",
-                    "line-opacity": 0.8,
-                    "line-width": 10,
-                    "line-offset": 5
-                },
-                "layout": {}
-            });
-            var radiusFour = 5;
-            var circleFour = MapboxGeocoder.turf.circle(center, radiusFour, options);
-            map.addLayer({
-                "id": "circle-outline-four",
-                "type": "line",
-                "source": {
-                    "type": "geojson",
-                    "data": circleFour
-                },
-                "paint": {
-                    "line-color": "#D5EDDB",
-                    "line-opacity": 0.8,
-                    "line-width": 10,
-                    "line-offset": 5
-                },
-                "layout": {}
-            });
-*/

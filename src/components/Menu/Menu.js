@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-
 import DropdownMenu from "./DropdownMenu";
 import DropdownMenuItem from "./DropdownMenuItem";
 import DistanceFilter from "./DistanceFilter";
@@ -21,7 +20,7 @@ export function Menu({ providerTypes, filterProviders, toggleProviderVisibility 
             providers = getProvidersByDistance(filterProviders.searchCenter, serviceType.providers, filterProviders.distance);
           }
           return <DropdownMenu key={serviceType.id} id={serviceType.id} text={serviceType.name} expanded={serviceType.visible} onToggle={toggleProviderVisibility}>
-            {providers.sort((a,b) => a.name.localeCompare(b.name)).map((provider, i) => (
+            {providers.sort((a,b) => a["Organization Name"].localeCompare(b["Organization Name"])).map((provider, i) => (
               <DropdownMenuItem
                 key={i}
                 text={provider["Organization Name"]}
