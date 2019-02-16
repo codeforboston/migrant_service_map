@@ -4,31 +4,16 @@ import mapboxgl from "mapbox-gl";
 import {
   initializeProviders,
   toggleProviderVisibility,
-  setSearchCenter,
-  clearDistanceFilter
+  setSearchCenter
 } from "../actions";
 import getProvidersByDistance from "../selectors";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "../map.css";
 import * as turf from "@turf/turf";
 import { insertPopup } from "./PopUp.js";
-import DistanceFilter from "./Menu/DistanceFilter";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw";
-
-// TODO
-// make source function
-// make layer function
-// turn providers back into features to inject in the map
-
-// Steps
-// create all sources
-// create all layers
-// to change things .setData on the sources
-
-// Future dreams
-// user can see their provider saves on a separate layer
 
 class Map extends React.Component {
   constructor(props) {
@@ -104,6 +89,20 @@ class Map extends React.Component {
     }));
   };
 
+  removeBufferCircles = layerName => {
+    if (this.map.getLayer(layerName)) {
+      this.map.removeLayer(layerName);
+      this.map.removeSource(layerName);
+    }
+  };
+
+  loadProviderTypeImage = (providerType, iconURL) => {
+    this.map.loadImage(iconURL, (error, image) => {
+      if (error) throw error;
+      this.map.addImage(providerType + "icon", image);
+    });
+  };
+
   componentDidMount() {
     const map = new mapboxgl.Map({
       container: "map", // container id
@@ -118,25 +117,14 @@ class Map extends React.Component {
       accessToken: mapboxgl.accessToken
     });
 
-    geocoder.on("result", (ev) => {
+    geocoder.on("result", ev => {
       this.props.setSearchCenter(ev.result.geometry.coordinates);
 
-      if (map.getLayer("circle-outline")) {
-        map.removeLayer("circle-outline");
-        map.removeSource("circle-outline");
-      }
-      if (map.getLayer("circle-outline-two")) {
-        map.removeLayer("circle-outline-two");
-        map.removeSource("circle-outline-two");
-      }
-      if (map.getLayer("circle-outline-three")) {
-        map.removeLayer("circle-outline-three");
-        map.removeSource("circle-outline-three");
-      }
-      if (map.getLayer("circle-outline-four")) {
-        map.removeLayer("circle-outline-four");
-        map.removeSource("circle-outline-four");
-      }
+      this.removeBufferCircles("circle-outline");
+      this.removeBufferCircles("circle-outline-two");
+      this.removeBufferCircles("circle-outline-three");
+      this.removeBufferCircles("circle-outline-four");
+
       if (!map.getSource("single-point")) {
         map.addSource("single-point", {
           type: "geojson",
@@ -246,66 +234,54 @@ class Map extends React.Component {
 
     map.addControl(geocoder);
 
-    map.loadImage(
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Cat_silhouette.svg/400px-Cat_silhouette.svg.png",
-      function(error, image) {
-        if (error) throw error;
-        map.addImage("community-centersicon", image);
-      }
+    this.loadProviderTypeImage(
+      "community-centers",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Cat_silhouette.svg/400px-Cat_silhouette.svg.png"
     );
 
-    map.loadImage(
-      "https://upload.wikimedia.org/wikipedia/commons/b/b4/Webdings_x005f.png",
-      function(error, image) {
-        if (error) throw error;
-        map.addImage("educationicon", image);
-      }
-    );
-    map.loadImage(
-      "https://upload.wikimedia.org/wikipedia/commons/1/17/Webdings_x0042.png",
-      function(error, image) {
-        if (error) throw error;
-        map.addImage("housingicon", image);
-      }
+    this.loadProviderTypeImage(
+      "community-centers",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Cat_silhouette.svg/400px-Cat_silhouette.svg.png"
     );
 
-    map.loadImage(
-      "https://upload.wikimedia.org/wikipedia/commons/b/b4/Webdings_x005f.png",
-      function(error, image) {
-        if (error) throw error;
-        map.addImage("healthicon", image);
-      }
-    );
-    map.loadImage(
-      "https://upload.wikimedia.org/wikipedia/commons/b/b4/Webdings_x005f.png",
-      function(error, image) {
-        if (error) throw error;
-        map.addImage("mental-healthicon", image);
-      }
+    this.loadProviderTypeImage(
+      "cash/food-assistance",
+      "https://upload.wikimedia.org/wikipedia/commons/b/b4/Webdings_x005f.png"
     );
 
-    map.loadImage(
-      "https://upload.wikimedia.org/wikipedia/commons/b/b4/Webdings_x005f.png",
-      function(error, image) {
-        if (error) throw error;
-        map.addImage("legalicon", image);
-      }
+    this.loadProviderTypeImage(
+      "education",
+      "https://upload.wikimedia.org/wikipedia/commons/b/b4/Webdings_x005f.png"
     );
 
-    map.loadImage(
-      "https://upload.wikimedia.org/wikipedia/commons/b/b4/Webdings_x005f.png",
-      function(error, image) {
-        if (error) throw error;
-        map.addImage("job-placementicon", image);
-      }
+    this.loadProviderTypeImage(
+      "housing",
+      "https://upload.wikimedia.org/wikipedia/commons/1/17/Webdings_x0042.png"
     );
 
-    map.loadImage(
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Cat_silhouette.svg/400px-Cat_silhouette.svg.png",
-      function(error, image) {
-        if (error) throw error;
-        map.addImage("resettlementicon", image);
-      }
+    this.loadProviderTypeImage(
+      "health",
+      "https://upload.wikimedia.org/wikipedia/commons/b/b4/Webdings_x005f.png"
+    );
+
+    this.loadProviderTypeImage(
+      "mental-health",
+      "https://upload.wikimedia.org/wikipedia/commons/b/b4/Webdings_x005f.png"
+    );
+
+    this.loadProviderTypeImage(
+      "legal",
+      "https://upload.wikimedia.org/wikipedia/commons/b/b4/Webdings_x005f.png"
+    );
+
+    this.loadProviderTypeImage(
+      "job-placement",
+      "https://upload.wikimedia.org/wikipedia/commons/b/b4/Webdings_x005f.png"
+    );
+
+    this.loadProviderTypeImage(
+      "resettlement",
+      "https://upload.wikimedia.org/wikipedia/commons/b/b4/Webdings_x005f.png"
     );
 
     map.on("load", () => {

@@ -1,6 +1,6 @@
 import dotProp from 'dot-prop-immutable';
 
-import { INITIALIZE_PROVIDERS, TOGGLE_TYPE, CLEAR_DISTANCE, CHANGE_DISTANCE, SET_SEARCH_CENTER, FILTER_PROVIDERS } from './actions';
+import { INITIALIZE_PROVIDERS, TOGGLE_TYPE, CLEAR_DISTANCE, CHANGE_DISTANCE, SET_SEARCH_CENTER } from './actions';
 
 export function providerTypes(state = [], action) {
   switch (action.type) {
