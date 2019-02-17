@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import mapboxgl from "mapbox-gl";
 import ReactDOM from "react-dom";
+import { connect } from "react-redux";
 
 export const insertPopup = (map, coordinates, props) => {
   const DOMInsert = document.createElement("div");
@@ -19,28 +20,26 @@ export class Popup extends Component {
   }
 
   render() {
-    let { name, website, bio, telephone, address } = this.props.provider;
-
     return (
       <div className="popup">
-        <div className="popup-title">{name}</div>
+        <div className="popup-title">{this.props.provider["Organization Name"]}</div>
         <div>
           <span className="popup-info">
             <img alt="phone icon" src="https://icon.now.sh/perm_phone_msg" />
-            {telephone}
+            {this.props.provider["Telephone:"]}
           </span>
           <span className="popup-info">
             <img alt="web icon" src="https://icon.now.sh/language" />
-            {website}
+            <a href={this.props.provider["Website"]}> {this.props.provider["Website"]}</a>
           </span>
           <span className="popup-info">
             <img alt="home icon" src="https://icon.now.sh/home" />
-            {address || "address"}
+              {this.props.provider["Address (#, Street Name, District/city, State, Zip Code)"] || "address"}
           </span>
         </div>
-        <div className="popup-text">{bio}</div>
+        <div className="popup-text">{this.props.provider["Mission:"]}</div>
         <div className="bottom-button-bar">
-          <AcceptingNewClients />
+          {/* <AcceptingNewClients /> */}
           <SaveButton />
         </div>
       </div>
@@ -163,3 +162,5 @@ export const IndicatorCheck = props => {
     </div>
   );
 };
+
+export default connect(({ providerTypes, filterProviders }) => ({ providerTypes, filterProviders }), {  })(Popup);
