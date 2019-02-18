@@ -1,11 +1,9 @@
-import mapboxgl from "mapbox-gl";
-import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import * as turf from "@turf/turf";
 
-export default function getProvidersByDistance( searchCenter, providers, distance ) {
+export default function getProvidersByDistance( searchCenter, providers, distance = null ) {
     searchCenter = searchCenter || [-71.066954, 42.359947];
     
-    const distances = providers.map(provider => {
+    var distances = providers.map(provider => {
       return {
         provider: provider,
         distance: turf.distance(
@@ -15,8 +13,10 @@ export default function getProvidersByDistance( searchCenter, providers, distanc
       };
     });
 
+    if (distance) { distances = distances.filter(el => el.distance < distance) }
+
     const closePlaces = distances
-      .filter(el => el.distance < distance)
+      .sort( (ela,elb) => ela.distance - elb.distance )
       .map(el => el.provider);
 
     console.log(closePlaces.length, "of", providers.length, "within", distance, "miles");
