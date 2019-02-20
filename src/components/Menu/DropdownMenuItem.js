@@ -1,35 +1,17 @@
-import React, { Component } from "react";
-import { setPopUp } from '../PopUp.js'; 
+import React from "react";
+// import { setPopUp } from '../PopUp.js';
 
-export default class DropdownMenuItem extends Component {
-  onItemClick = (item, event) => {
+export default function DropdownMenuItem({ text, item, clickHandler }) {
+  const onItemClick = (event) => {
     event.preventDefault(); // Keeps the browser from reloading
-    // setPopUp(item.properties);   
+    // setPopUp(item.properties);
   };
-  
-  render() {
-    let { text, item, clickHandler } = this.props;
-    
-    return (
-      <>
-        <a href="#target" 
-          className="list-item" 
-          onClick={() => clickHandler(item)}>  
-          {text}
-        </a>  
-      </>
-    );
-  }
+
+  return (
+    <div className="list-item">
+      <a href="#target" onClick={onItemClick}>
+        {text}
+      </a>
+    </div>
+  );
 }
-
-
-
-// {items.map((item, index) => 
-//   <a href="#target" 
-//       className="list-item" 
-//       key={index} 
-//       onClick={this.onItemClick}
-//   >
-//     {item.properties.name}
-//   </a>)
-// }
