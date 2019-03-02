@@ -11,6 +11,8 @@ import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "../map.css";
 import * as turf from "@turf/turf";
 import { insertPopup } from "./PopUp.js";
+import { featureCollection } from "@turf/turf";
+import { __esModule } from "react-redux/lib/components/Context";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw";
@@ -117,14 +119,30 @@ class Map extends React.Component {
       accessToken: mapboxgl.accessToken
     });
 
-    geocoder.on("result", ev => {
-      this.props.setSearchCenterCoordinates(ev.result.geometry.coordinates);
+    //TODO: make this input from the distance filter
+    const distanceFilterDistances = [0.1, 1, 2, 3];
 
-      this.removeBufferCircles("circle-outline");
-      this.removeBufferCircles("circle-outline-two");
-      this.removeBufferCircles("circle-outline-three");
-      this.removeBufferCircles("circle-outline-four");
-
+    geocoder.on("result", function(ev) {
+      if(!map.getSource("distance-indicator-source")){
+      map.addSource("distance-indicator-source", {
+        type: "geojson",
+        data: {
+          type: "FeatureCollection",
+          features: []
+        }
+      });
+      map.addLayer({
+        id: "distance-indicator",
+        type: "line",
+        source: "distance-indicator-source",
+        paint: {
+          "line-color": ["get", "color"],
+          "line-opacity": 0.8,
+          "line-width": ["*", distanceFilterDistances[2], 3],
+          "line-offset": 5
+        }
+      });
+      }
       if (!map.getSource("single-point")) {
         map.addSource("single-point", {
           type: "geojson",
@@ -143,93 +161,32 @@ class Map extends React.Component {
           }
         });
       }
+      const colors = ["#007cbf", "#00AA46", "#71C780", "#D5EDDB"];
+    
 
-      map.getSource("single-point").setData(ev.result.geometry);
-
-      var center = {
-        type: "Feature",
-        properties: {
-          "marker-color": "#0f0"
-        },
-        geometry: {
-          type: "Point",
-          coordinates: ev.result.geometry.coordinates
+      const center = (color) => {
+        return {
+          type: "Feature", 
+          properties: {
+            "marker-color": "#0f0", 
+            color: color
+          },
+          geometry: {
+            type: "Point", 
+            coordinates: ev.result.geometry.coordinates
+          }
         }
       };
-      var radius = 0.5;
-      var options = {
-        steps: 100,
-        units: "miles"
-      };
 
-      let circle = turf.circle(center, radius, options);
+      const options = { steps: 100, units: "miles" };
+      const circles = distanceFilterDistances.map((radius, i) =>
+        turf.circle(center(colors[i]), radius, options)
+      );
+    
 
-      map.addLayer({
-        id: "circle-outline",
-        type: "line",
-        source: {
-          type: "geojson",
-          data: circle
-        },
-        paint: {
-          "line-color": "#046328",
-          "line-opacity": 0.8,
-          "line-width": 10,
-          "line-offset": 5
-        },
-        layout: {}
-      });
-      var radiusTwo = 1;
-      var circleTwo = turf.circle(center, radiusTwo, options);
-      map.addLayer({
-        id: "circle-outline-two",
-        type: "line",
-        source: {
-          type: "geojson",
-          data: circleTwo
-        },
-        paint: {
-          "line-color": "#00AA46",
-          "line-opacity": 0.8,
-          "line-width": 10,
-          "line-offset": 5
-        },
-        layout: {}
-      });
-      var radiusThree = 3;
-      var circleThree = turf.circle(center, radiusThree, options);
-      map.addLayer({
-        id: "circle-outline-three",
-        type: "line",
-        source: {
-          type: "geojson",
-          data: circleThree
-        },
-        paint: {
-          "line-color": "#71C780",
-          "line-opacity": 0.8,
-          "line-width": 10,
-          "line-offset": 5
-        },
-        layout: {}
-      });
-      var radiusFour = 5;
-      var circleFour = turf.circle(center, radiusFour, options);
-      map.addLayer({
-        id: "circle-outline-four",
-        type: "line",
-        source: {
-          type: "geojson",
-          data: circleFour
-        },
-        paint: {
-          "line-color": "#D5EDDB",
-          "line-opacity": 0.8,
-          "line-width": 10,
-          "line-offset": 5
-        },
-        layout: {}
-      });
+      map.getSource("single-point").setData(ev.result.geometry);
+      map.getSource("distance-indicator-source").setData({type: "FeatureCollection", features: circles});
+
     });
 
     map.addControl(geocoder);
@@ -299,7 +256,6 @@ class Map extends React.Component {
           website: properties.Website,
         })
       );
-      // commit map query result to redux
       this.props.initializeProviders(providers);
     });
   }
