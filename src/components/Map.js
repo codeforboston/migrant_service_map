@@ -4,7 +4,7 @@ import mapboxgl from "mapbox-gl";
 import {
   initializeProviders,
   toggleProviderVisibility,
-  setSearchCenter
+  setSearchCenterCoordinates
 } from "../actions";
 import getProvidersByDistance from "../selectors";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
@@ -55,7 +55,7 @@ class Map extends React.Component {
   };
 
   updateSource = type => {
-    let { distance, searchCenter } = this.props.filterProviders;
+    let { filters, search } = this.props; 
 
     if (!this.map.getSource(type.id)) {
       this.addSourceToMap(type.id);
@@ -63,11 +63,11 @@ class Map extends React.Component {
     if (!this.map.getLayer(type.id)) {
       this.addLayerToMap(type.id);
     }
-    if (type.providers && distance) {
+    if (type.providers && filters.distance) {
       this.map.getSource(type.id).setData({
         type: "FeatureCollection",
         features: this.convertProvidersToGeoJSON(
-          getProvidersByDistance(searchCenter, type.providers, distance)
+          getProvidersByDistance(search.coordinates, type.providers, filters.distance)
         )
       });
     } else {
@@ -118,7 +118,7 @@ class Map extends React.Component {
     });
 
     geocoder.on("result", ev => {
-      this.props.setSearchCenter(ev.result.geometry.coordinates);
+      this.props.setSearchCenterCoordinates(ev.result.geometry.coordinates);
 
       this.removeBufferCircles("circle-outline");
       this.removeBufferCircles("circle-outline-two");
@@ -240,11 +240,6 @@ class Map extends React.Component {
     );
 
     this.loadProviderTypeImage(
-      "community-centers",
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Cat_silhouette.svg/400px-Cat_silhouette.svg.png"
-    );
-
-    this.loadProviderTypeImage(
       "cash/food-assistance",
       "https://upload.wikimedia.org/wikipedia/commons/b/b4/Webdings_x005f.png"
     );
@@ -274,16 +269,6 @@ class Map extends React.Component {
       "https://upload.wikimedia.org/wikipedia/commons/b/b4/Webdings_x005f.png"
     );
 
-    this.loadProviderTypeImage(
-      "job-placement",
-      "https://upload.wikimedia.org/wikipedia/commons/b/b4/Webdings_x005f.png"
-    );
-
-    this.loadProviderTypeImage(
-      "resettlement",
-      "https://upload.wikimedia.org/wikipedia/commons/b/b4/Webdings_x005f.png"
-    );
-
     map.on("load", () => {
       // remove data layers created by mapbox
       const layers = map.getStyle().layers;
@@ -301,7 +286,17 @@ class Map extends React.Component {
         ({ id, geometry: { coordinates }, properties }) => ({
           id,
           coordinates,
-          ...properties
+          address: properties["Address (#, Street Name, District/city, State, Zip Code)"],
+          email: properties["Email:"],
+          mission: properties["Mission:"],
+          name: properties["Organization Name"],
+          telephone: properties["Telephone:"],
+          timestamp: properties.Timestamp,
+          // Type of Service
+          category: properties["Type of Service"], // better name to map to?
+          "Type of Service": properties["Type of Service"], // as referenced in reducer helper function
+          // Validated By
+          website: properties.Website,
         })
       );
       // commit map query result to redux
@@ -331,6 +326,6 @@ class Map extends React.Component {
 }
 
 export default connect(
-  ({ providerTypes, filterProviders }) => ({ providerTypes, filterProviders }),
-  { initializeProviders, toggleProviderVisibility, setSearchCenter }
+  ({ providerTypes, filters, search }) => ({ providerTypes, filters, search }),
+  { initializeProviders, toggleProviderVisibility, setSearchCenterCoordinates }
 )(Map);

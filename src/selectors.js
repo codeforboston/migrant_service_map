@@ -1,14 +1,14 @@
 import * as turf from "@turf/turf";
 
-export default function getProvidersByDistance( searchCenter, providers, distance = null ) {
-    searchCenter = searchCenter || [-71.066954, 42.359947];
+export default function getProvidersByDistance( refLocation, providers, distance = null ) {
+    refLocation = refLocation || [-71.066954, 42.359947];
     
     var distances = providers.map(provider => {
       return {
         provider: provider,
         distance: turf.distance(
           turf.point(provider.coordinates),
-          turf.point(searchCenter)
+          turf.point(refLocation)
         )
       };
     });

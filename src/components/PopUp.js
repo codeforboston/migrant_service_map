@@ -22,22 +22,22 @@ export class Popup extends Component {
   render() {
     return (
       <div className="popup">
-        <div className="popup-title">{this.props.provider["Organization Name"]}</div>
+        <div className="popup-title">{this.props.provider.name}</div>
         <div>
           <span className="popup-info">
             <img alt="phone icon" src="https://icon.now.sh/perm_phone_msg" />
-            {this.props.provider["Telephone:"]}
+            {this.props.provider.telephone}
           </span>
           <span className="popup-info">
             <img alt="web icon" src="https://icon.now.sh/language" />
-            <a href={this.props.provider["Website"]}> {this.props.provider["Website"]}</a>
+            <a href={this.props.provider.website}> {this.props.provider.website}</a>
           </span>
           <span className="popup-info">
             <img alt="home icon" src="https://icon.now.sh/home" />
-              {this.props.provider["Address (#, Street Name, District/city, State, Zip Code)"] || "address"}
+              {this.props.provider.address || "address"}
           </span>
         </div>
-        <div className="popup-text">{this.props.provider["Mission:"]}</div>
+        <div className="popup-text">{this.props.provider.mission}</div>
         <div className="bottom-button-bar">
           {/* <AcceptingNewClients /> */}
           <SaveButton />
@@ -163,4 +163,4 @@ export const IndicatorCheck = props => {
   );
 };
 
-export default connect(({ providerTypes, filterProviders }) => ({ providerTypes, filterProviders }), {  })(Popup);
+export default connect(({ providerTypes, filters }) => ({ providerTypes, filters }), {  })(Popup);
