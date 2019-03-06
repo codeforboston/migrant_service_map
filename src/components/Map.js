@@ -6,7 +6,7 @@ import {
   toggleProviderVisibility,
   setSearchCenterCoordinates
 } from "../actions";
-import getProvidersByDistance from "../selectors";
+import { getProvidersByDistance, getProvidersByName } from "../selectors";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "../map.css";
 import * as turf from "@turf/turf";
@@ -63,11 +63,11 @@ class Map extends React.Component {
     if (!this.map.getLayer(type.id)) {
       this.addLayerToMap(type.id);
     }
-    if (type.providers && filters.distance) {
+    if (type.providers && (filters.distance || filters.name)) {
       this.map.getSource(type.id).setData({
         type: "FeatureCollection",
         features: this.convertProvidersToGeoJSON(
-          getProvidersByDistance(search.coordinates, type.providers, filters.distance)
+          this.getFilteredProviders(type)
         )
       });
     } else {
@@ -77,6 +77,20 @@ class Map extends React.Component {
       });
     }
   };
+
+  
+  getFilteredProviders = (type) => {
+    let { filters, search } = this.props;
+    let providers = type.providers;
+    if (filters.distance) {
+      providers = getProvidersByDistance(search.coordinates, providers, filters.distance);
+    }
+    if (filters.name) {
+      providers = getProvidersByName(providers, filters.name);
+    } 
+    return providers;
+  }
+  
 
   convertProvidersToGeoJSON = providers => {
     return providers.map(provider => ({

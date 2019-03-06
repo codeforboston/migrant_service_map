@@ -1,6 +1,6 @@
 import * as turf from "@turf/turf";
 
-export default function getProvidersByDistance( refLocation, providers, distance = null ) {
+export function getProvidersByDistance( refLocation, providers, distance = null ) {
     refLocation = refLocation || [-71.066954, 42.359947];
     
     var distances = providers.map(provider => {
@@ -24,3 +24,13 @@ export default function getProvidersByDistance( refLocation, providers, distance
 
   return closePlaces;
 }
+
+
+  
+export function getProvidersByName(providers, name) {
+   if (name && name.length) {
+        providers = providers.filter(
+            provider => provider.name.startsWith(name));
+   }
+   return providers;
+ }
