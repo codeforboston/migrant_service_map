@@ -124,6 +124,8 @@ class Map extends React.Component {
 
     geocoder.on("result", function(ev) {
       const centerCoordinates = ev.result.geometry.coordinates;
+      const distanceMarkers = Array.from(document.getElementsByClassName("distanceMarker")); 
+      distanceMarkers.map(marker => marker.remove()); 
       if(!map.getSource("distance-indicator-source")){
       map.addSource("distance-indicator-source", {
         type: "geojson",
@@ -179,8 +181,6 @@ class Map extends React.Component {
           }
         }
       };
-
-          
   
     
     const createDistanceMarker = (distance, color) => {
