@@ -11,7 +11,7 @@ import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "../map.css";
 import * as turf from "@turf/turf";
 import { insertPopup } from "./PopUp.js";
-import { featureCollection } from "@turf/turf";
+import { featureCollection, point, transformTranslate } from "@turf/turf";
 import { __esModule } from "react-redux/lib/components/Context";
 
 mapboxgl.accessToken =
@@ -120,9 +120,10 @@ class Map extends React.Component {
     });
 
     //TODO: make this input from the distance filter
-    const distanceFilterDistances = [0.1, 1, 2, 3];
+    const distanceFilterDistances = [0.5, 1, 2, 3];
 
     geocoder.on("result", function(ev) {
+      const centerCoordinates = ev.result.geometry.coordinates;
       if(!map.getSource("distance-indicator-source")){
       map.addSource("distance-indicator-source", {
         type: "geojson",
@@ -142,7 +143,8 @@ class Map extends React.Component {
           "line-offset": 5
         }
       });
-      }
+    };
+
       if (!map.getSource("single-point")) {
         map.addSource("single-point", {
           type: "geojson",
@@ -178,12 +180,37 @@ class Map extends React.Component {
         }
       };
 
+          
+  
+    
+    const createDistanceMarker = (distance, color) => {
+      const markerElement = document.createElement("div");
+      markerElement.className = "distanceMarker"; 
+      markerElement.id = "marker-" + distance + "-miles"; 
+      markerElement.style.display = "block";
+      markerElement.innerText = distance + " miles";
+      markerElement.style.backgroundColor = color;
+      
+
+    return new mapboxgl.Marker({
+      element: markerElement
+    })
+  }
+   
       const options = { steps: 100, units: "miles" };
       const circles = distanceFilterDistances.map((radius, i) =>
         turf.circle(center(colors[i]), radius, options)
       );
-    
-
+      
+      const labels = distanceFilterDistances.map((radius, i) => {
+        const centerPoint = turf.point(centerCoordinates); 
+        console.log(centerCoordinates, centerPoint);
+        const radiusOffset = turf.transformTranslate(centerPoint, radius, 90, {units: "miles"});
+        const marker = createDistanceMarker(radius, colors[i]); 
+        return marker.setLngLat(radiusOffset.geometry.coordinates).addTo(map); 
+      });
+      
+      
       map.getSource("single-point").setData(ev.result.geometry);
       map.getSource("distance-indicator-source").setData({type: "FeatureCollection", features: circles});
 
