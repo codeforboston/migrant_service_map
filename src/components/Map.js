@@ -1,34 +1,25 @@
-import React from "react";
+import React, { Component } from "react";
 import { connect } from "react-redux";
 import mapboxgl from "mapbox-gl";
 import {
   initializeProviders,
-  toggleProviderVisibility,
   setSearchCenterCoordinates
-} from "../actions";
-import getProvidersByDistance from "../selectors";
+} from "../redux/actions";
+import getProvidersByDistance from "../redux/selectors";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "../map.css";
 import * as turf from "@turf/turf";
 import { insertPopup } from "./PopUp.js";
+import typeImages from "../assets/images";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw";
 
-class Map extends React.Component {
+class Map extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      providerFeatures: []
-    };
-    this.map = "";
+    this.map = null;
   }
-
-  reflectLayerVisibility = type => {
-    this.updateSource(type);
-    const visibility = type.visible ? "visible" : "none";
-    this.map.setLayoutProperty(type.id, "visibility", visibility);
-  };
 
   addSourceToMap = typeId => {
     this.map.addSource(typeId, {
@@ -54,38 +45,45 @@ class Map extends React.Component {
     this.map.on("click", typeId, e => this.handleMapClick(e));
   };
 
-  updateSource = type => {
-    let { filters, search } = this.props; 
-
-    if (!this.map.getSource(type.id)) {
-      this.addSourceToMap(type.id);
+  updateSource = id => {
+    let { filters, search, providerTypes } = this.props;
+    if (!this.map.getSource(id)) {
+      this.addSourceToMap(id);
     }
-    if (!this.map.getLayer(type.id)) {
-      this.addLayerToMap(type.id);
+    if (!this.map.getLayer(id)) {
+      this.addLayerToMap(id);
     }
-    if (type.providers && filters.distance) {
-      this.map.getSource(type.id).setData({
+    //TODO DELETE IF AFTER FINISHING getProvidersSorted SELECTOR
+    if (providerTypes && filters.distance) {
+      this.map.getSource(id).setData({
         type: "FeatureCollection",
         features: this.convertProvidersToGeoJSON(
-          getProvidersByDistance(search.coordinates, type.providers, filters.distance)
+          getProvidersByDistance(
+            search.coordinates,
+            providerTypes.byId[id].providers,
+            filters.distance
+          )
         )
       });
     } else {
-      this.map.getSource(type.id).setData({
+      this.map.getSource(id).setData({
         type: "FeatureCollection",
-        features: this.convertProvidersToGeoJSON(type.providers)
+        features: this.convertProvidersToGeoJSON(
+          providerTypes.byId[id].providers
+        )
       });
     }
   };
 
-  convertProvidersToGeoJSON = providers => {
-    return providers.map(provider => ({
+  convertProvidersToGeoJSON = providersTypesIds => {
+    const { providers } = this.props;
+    return providersTypesIds.map(id => ({
       type: "Feature",
       geometry: {
         type: "Point",
-        coordinates: provider.coordinates
+        coordinates: providers.byId[id].coordinates
       },
-      properties: provider
+      properties: providers.byId[id]
     }));
   };
 
@@ -96,22 +94,45 @@ class Map extends React.Component {
     }
   };
 
-  loadProviderTypeImage = (providerType, iconURL) => {
-    this.map.loadImage(iconURL, (error, image) => {
-      if (error) throw error;
-      this.map.addImage(providerType + "icon", image);
+  loadProviderTypeImage = images => {
+    images.map(typeImage =>
+      this.map.loadImage(typeImage.url, (error, image) => {
+        if (error) throw error;
+        this.map.addImage(`${typeImage.type}icon`, image);
+      })
+    );
+  };
+
+  addGeocoderLayers = (id, color, center, radius) => {
+    const options = {
+      steps: 100,
+      units: "miles"
+    };
+    let circle = turf.circle(center, radius, options);
+    this.map.addLayer({
+      id: id,
+      type: "line",
+      source: {
+        type: "geojson",
+        data: circle
+      },
+      paint: {
+        "line-color": color,
+        "line-opacity": 0.8,
+        "line-width": 10,
+        "line-offset": 5
+      },
+      layout: {}
     });
   };
 
   componentDidMount() {
-    const map = new mapboxgl.Map({
+    this.map = new mapboxgl.Map({
       container: "map", // container id
       style: "mapbox://styles/refugeeswelcome/cjh9k11zz15ds2spbs4ld6y9o", // stylesheet location
       center: [-71.066954, 42.359947], // starting position [lng, lat]
       zoom: 11 // starting zoom
     });
-
-    this.map = map; // for passing map instance to click handlers
 
     var geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken
@@ -125,15 +146,15 @@ class Map extends React.Component {
       this.removeBufferCircles("circle-outline-three");
       this.removeBufferCircles("circle-outline-four");
 
-      if (!map.getSource("single-point")) {
-        map.addSource("single-point", {
+      if (!this.map.getSource("single-point")) {
+        this.map.addSource("single-point", {
           type: "geojson",
           data: {
             type: "FeatureCollection",
             features: []
           }
         });
-        map.addLayer({
+        this.map.addLayer({
           id: "point",
           source: "single-point",
           type: "circle",
@@ -144,7 +165,7 @@ class Map extends React.Component {
         });
       }
 
-      map.getSource("single-point").setData(ev.result.geometry);
+      this.map.getSource("single-point").setData(ev.result.geometry);
 
       var center = {
         type: "Feature",
@@ -156,137 +177,73 @@ class Map extends React.Component {
           coordinates: ev.result.geometry.coordinates
         }
       };
-      var radius = 0.5;
-      var options = {
-        steps: 100,
-        units: "miles"
-      };
 
-      let circle = turf.circle(center, radius, options);
-
-      map.addLayer({
-        id: "circle-outline",
-        type: "line",
-        source: {
-          type: "geojson",
-          data: circle
-        },
-        paint: {
-          "line-color": "#046328",
-          "line-opacity": 0.8,
-          "line-width": 10,
-          "line-offset": 5
-        },
-        layout: {}
-      });
-      var radiusTwo = 1;
-      var circleTwo = turf.circle(center, radiusTwo, options);
-      map.addLayer({
-        id: "circle-outline-two",
-        type: "line",
-        source: {
-          type: "geojson",
-          data: circleTwo
-        },
-        paint: {
-          "line-color": "#00AA46",
-          "line-opacity": 0.8,
-          "line-width": 10,
-          "line-offset": 5
-        },
-        layout: {}
-      });
-      var radiusThree = 3;
-      var circleThree = turf.circle(center, radiusThree, options);
-      map.addLayer({
-        id: "circle-outline-three",
-        type: "line",
-        source: {
-          type: "geojson",
-          data: circleThree
-        },
-        paint: {
-          "line-color": "#71C780",
-          "line-opacity": 0.8,
-          "line-width": 10,
-          "line-offset": 5
-        },
-        layout: {}
-      });
-      var radiusFour = 5;
-      var circleFour = turf.circle(center, radiusFour, options);
-      map.addLayer({
-        id: "circle-outline-four",
-        type: "line",
-        source: {
-          type: "geojson",
-          data: circleFour
-        },
-        paint: {
-          "line-color": "#D5EDDB",
-          "line-opacity": 0.8,
-          "line-width": 10,
-          "line-offset": 5
-        },
-        layout: {}
-      });
+      this.addGeocoderLayers("circle-outline", "#046328", center, 0.5);
+      this.addGeocoderLayers("circle-outline-two", "#00AA46", center, 1);
+      this.addGeocoderLayers("circle-outline-three", "#71C780", center, 3);
+      this.addGeocoderLayers("circle-outline-four", "#D5EDDB", center, 5);
     });
 
-    map.addControl(geocoder);
+    this.map.addControl(geocoder);
 
-    this.loadProviderTypeImage(
-      "community-centers",
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Cat_silhouette.svg/400px-Cat_silhouette.svg.png"
-    );
+    this.loadProviderTypeImage(typeImages);
 
-    this.loadProviderTypeImage(
-      "cash/food-assistance",
-      "https://upload.wikimedia.org/wikipedia/commons/b/b4/Webdings_x005f.png"
-    );
-
-    this.loadProviderTypeImage(
-      "education",
-      "https://upload.wikimedia.org/wikipedia/commons/b/b4/Webdings_x005f.png"
-    );
-
-    this.loadProviderTypeImage(
-      "housing",
-      "https://upload.wikimedia.org/wikipedia/commons/1/17/Webdings_x0042.png"
-    );
-
-    this.loadProviderTypeImage(
-      "health",
-      "https://upload.wikimedia.org/wikipedia/commons/b/b4/Webdings_x005f.png"
-    );
-
-    this.loadProviderTypeImage(
-      "mental-health",
-      "https://upload.wikimedia.org/wikipedia/commons/b/b4/Webdings_x005f.png"
-    );
-
-    this.loadProviderTypeImage(
-      "legal",
-      "https://upload.wikimedia.org/wikipedia/commons/b/b4/Webdings_x005f.png"
-    );
-
-    map.on("load", () => {
+    this.map.on("load", () => {
       // remove data layers created by mapbox
-      const layers = map.getStyle().layers;
+      const layers = this.map.getStyle().layers;
       for (let i = 100; i < 110; i++) {
-        map.removeLayer(layers[i].id);
+        this.map.removeLayer(layers[i].id);
       }
 
       // get service providers info from mapbox from the new data
-      const providerFeatures = map.querySourceFeatures("composite", {
+      const providerFeatures = this.map.querySourceFeatures("composite", {
         sourceLayer: "Migrant_Services_-_MSM_Final_1"
       });
 
-      // prep map query result for redux
-      const providers = Array.from(providerFeatures).map(
-        ({ id, geometry: { coordinates }, properties }) => ({
+      const normalizedProviders = this.normalizeProviders(providerFeatures);
+      this.props.initializeProviders(normalizedProviders);
+    });
+  }
+
+  normalizeProviders = providerFeatures => {
+    const providerTypes = { byId: {}, allIds: [] };
+    const providers = { byId: {}, allIds: [] };
+    Array.from(providerFeatures).map(
+      ({ id, geometry: { coordinates }, properties }) => {
+        let formattedTypeId = properties["Type of Service"]
+          .toLowerCase()
+          .split(" ")
+          .join("-");
+        const typeExists = providerTypes.allIds.includes(formattedTypeId);
+        if (formattedTypeId === "community-center") {
+          // special case
+          formattedTypeId = "community-centers";
+        }
+        if (typeExists) {
+          providerTypes.byId[formattedTypeId] = {
+            ...providerTypes.byId[formattedTypeId],
+            id: formattedTypeId,
+            name: properties["Type of Service"],
+            providers: [...providerTypes.byId[formattedTypeId].providers, id]
+          };
+        } else {
+          if (!providerTypes.allIds.includes(formattedTypeId)) {
+            providerTypes.allIds.push(formattedTypeId);
+          }
+          providerTypes.byId[formattedTypeId] = {
+            id: formattedTypeId,
+            name: properties["Type of Service"],
+            providers: [id]
+          };
+        }
+
+        providers.byId[id] = {
           id,
           coordinates,
-          address: properties["Address (#, Street Name, District/city, State, Zip Code)"],
+          address:
+            properties[
+              "Address (#, Street Name, District/city, State, Zip Code)"
+            ],
           email: properties["Email:"],
           mission: properties["Mission:"],
           name: properties["Organization Name"],
@@ -296,13 +253,21 @@ class Map extends React.Component {
           category: properties["Type of Service"], // better name to map to?
           "Type of Service": properties["Type of Service"], // as referenced in reducer helper function
           // Validated By
-          website: properties.Website,
-        })
+          website: properties.Website
+        };
+        providers.allIds.push(id);
+      }
+    );
+    // sorted by name
+    providerTypes.allIds.map(id => {
+      const providersByType = providerTypes.byId[id].providers;
+      return providersByType.sort((a, b) =>
+        providers.byId[a].name.localeCompare(providers.byId[b].name)
       );
-      // commit map query result to redux
-      this.props.initializeProviders(providers);
     });
-  }
+    // commit map query result to redux
+    return { providerTypes, providers };
+  };
 
   handleMapClick(e) {
     let coordinates = e.features[0].geometry.coordinates.slice();
@@ -312,8 +277,19 @@ class Map extends React.Component {
     insertPopup(this.map, coordinates, e.features[0].properties);
   }
 
-  componentDidUpdate() {
-    this.props.providerTypes.forEach(type => this.reflectLayerVisibility(type));
+  reflectLayerVisibility = providerTypes => {
+    providerTypes.allIds.forEach(id => {
+      this.updateSource(id);
+      const isVisible = providerTypes.visible.includes(id) ? "visible" : "none";
+      return this.map.setLayoutProperty(id, "visibility", isVisible);
+    });
+  };
+
+  componentDidUpdate(prevProps) {
+    const { providerTypes } = this.props;
+    if (prevProps.providerTypes.visible !== providerTypes.visible) {
+      this.reflectLayerVisibility(providerTypes);
+    }
   }
 
   componentWillUnmount() {
@@ -326,6 +302,11 @@ class Map extends React.Component {
 }
 
 export default connect(
-  ({ providerTypes, filters, search }) => ({ providerTypes, filters, search }),
-  { initializeProviders, toggleProviderVisibility, setSearchCenterCoordinates }
+  ({ providerTypes, providers, filters, search }) => ({
+    providerTypes,
+    providers,
+    filters,
+    search
+  }),
+  { initializeProviders, setSearchCenterCoordinates }
 )(Map);
