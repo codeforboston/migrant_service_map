@@ -6,11 +6,16 @@ import {
   toggleProviderVisibility,
   setSearchCenterCoordinates
 } from "../actions";
-import getProvidersByDistance from "../selectors";
+import { getProvidersByDistance, getProvidersByName } from "../selectors";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "../map.css";
 import * as turf from "@turf/turf";
 import { insertPopup } from "./PopUp.js";
+import { featureCollection, point, transformTranslate } from "@turf/turf";
+
+//Fix this later
+const longitude = -71.066954
+const latitude = 42.359947
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw";
@@ -63,11 +68,11 @@ class Map extends React.Component {
     if (!this.map.getLayer(type.id)) {
       this.addLayerToMap(type.id);
     }
-    if (type.providers && filters.distance) {
+    if (type.providers && (filters.distance || filters.name)) {
       this.map.getSource(type.id).setData({
         type: "FeatureCollection",
         features: this.convertProvidersToGeoJSON(
-          getProvidersByDistance(search.coordinates, type.providers, filters.distance)
+          this.getFilteredProviders(type)
         )
       });
     } else {
@@ -77,6 +82,20 @@ class Map extends React.Component {
       });
     }
   };
+
+  
+  getFilteredProviders = (type) => {
+    let { filters, search } = this.props;
+    let providers = type.providers;
+    if (filters.distance) {
+      providers = getProvidersByDistance(search.coordinates, providers, filters.distance);
+    }
+    if (filters.name) {
+      providers = getProvidersByName(providers, filters.name);
+    } 
+    return providers;
+  }
+  
 
   convertProvidersToGeoJSON = providers => {
     return providers.map(provider => ({
@@ -114,16 +133,37 @@ class Map extends React.Component {
     this.map = map; // for passing map instance to click handlers
 
     var geocoder = new MapboxGeocoder({
-      accessToken: mapboxgl.accessToken
+      accessToken: mapboxgl.accessToken,
+      proximity: {longitude, latitude}
     });
 
-    geocoder.on("result", ev => {
-      this.props.setSearchCenterCoordinates(ev.result.geometry.coordinates);
+    //TODO: make this input from the distance filter
+    const distanceFilterDistances = [0.5, 1, 2, 3];
 
-      this.removeBufferCircles("circle-outline");
-      this.removeBufferCircles("circle-outline-two");
-      this.removeBufferCircles("circle-outline-three");
-      this.removeBufferCircles("circle-outline-four");
+    geocoder.on("result", function(ev) {
+      const centerCoordinates = ev.result.geometry.coordinates;
+      const distanceMarkers = Array.from(document.getElementsByClassName("distanceMarker")); 
+      distanceMarkers.map(marker => marker.remove()); 
+      if(!map.getSource("distance-indicator-source")){
+      map.addSource("distance-indicator-source", {
+        type: "geojson",
+        data: {
+          type: "FeatureCollection",
+          features: []
+        }
+      });
+      map.addLayer({
+        id: "distance-indicator",
+        type: "line",
+        source: "distance-indicator-source",
+        paint: {
+          "line-color": ["get", "color"],
+          "line-opacity": 0.8,
+          "line-width": ["*", distanceFilterDistances[2], 3],
+          "line-offset": 5
+        }
+      });
+    };
 
       if (!map.getSource("single-point")) {
         map.addSource("single-point", {
@@ -143,93 +183,55 @@ class Map extends React.Component {
           }
         });
       }
+      const colors = ["#007cbf", "#00AA46", "#71C780", "#D5EDDB"];
+    
 
-      map.getSource("single-point").setData(ev.result.geometry);
-
-      var center = {
-        type: "Feature",
-        properties: {
-          "marker-color": "#0f0"
-        },
-        geometry: {
-          type: "Point",
-          coordinates: ev.result.geometry.coordinates
+      const center = (color) => {
+        return {
+          type: "Feature", 
+          properties: {
+            "marker-color": "#0f0", 
+            color: color
+          },
+          geometry: {
+            type: "Point", 
+            coordinates: ev.result.geometry.coordinates
+          }
         }
       };
-      var radius = 0.5;
-      var options = {
-        steps: 100,
-        units: "miles"
-      };
+  
+    
+    const createDistanceMarker = (distance, color) => {
+      const markerElement = document.createElement("div");
+      markerElement.className = "distanceMarker"; 
+      markerElement.id = "marker-" + distance + "-miles"; 
+      markerElement.style.display = "block";
+      markerElement.innerText = distance + " miles";
+      markerElement.style.backgroundColor = color;
+      
 
-      let circle = turf.circle(center, radius, options);
+    return new mapboxgl.Marker({
+      element: markerElement
+    })
+  }
+   
+      const options = { steps: 100, units: "miles" };
+      const circles = distanceFilterDistances.map((radius, i) =>
+        turf.circle(center(colors[i]), radius, options)
+      );
+      
+      const labels = distanceFilterDistances.map((radius, i) => {
+        const centerPoint = turf.point(centerCoordinates); 
+        console.log(centerCoordinates, centerPoint);
+        const radiusOffset = turf.transformTranslate(centerPoint, radius, 90, {units: "miles"});
+        const marker = createDistanceMarker(radius, colors[i]); 
+        return marker.setLngLat(radiusOffset.geometry.coordinates).addTo(map); 
+      });
+      
+      
+      map.getSource("single-point").setData(ev.result.geometry);
+      map.getSource("distance-indicator-source").setData({type: "FeatureCollection", features: circles});
 
-      map.addLayer({
-        id: "circle-outline",
-        type: "line",
-        source: {
-          type: "geojson",
-          data: circle
-        },
-        paint: {
-          "line-color": "#046328",
-          "line-opacity": 0.8,
-          "line-width": 10,
-          "line-offset": 5
-        },
-        layout: {}
-      });
-      var radiusTwo = 1;
-      var circleTwo = turf.circle(center, radiusTwo, options);
-      map.addLayer({
-        id: "circle-outline-two",
-        type: "line",
-        source: {
-          type: "geojson",
-          data: circleTwo
-        },
-        paint: {
-          "line-color": "#00AA46",
-          "line-opacity": 0.8,
-          "line-width": 10,
-          "line-offset": 5
-        },
-        layout: {}
-      });
-      var radiusThree = 3;
-      var circleThree = turf.circle(center, radiusThree, options);
-      map.addLayer({
-        id: "circle-outline-three",
-        type: "line",
-        source: {
-          type: "geojson",
-          data: circleThree
-        },
-        paint: {
-          "line-color": "#71C780",
-          "line-opacity": 0.8,
-          "line-width": 10,
-          "line-offset": 5
-        },
-        layout: {}
-      });
-      var radiusFour = 5;
-      var circleFour = turf.circle(center, radiusFour, options);
-      map.addLayer({
-        id: "circle-outline-four",
-        type: "line",
-        source: {
-          type: "geojson",
-          data: circleFour
-        },
-        paint: {
-          "line-color": "#D5EDDB",
-          "line-opacity": 0.8,
-          "line-width": 10,
-          "line-offset": 5
-        },
-        layout: {}
-      });
     });
 
     map.addControl(geocoder);
@@ -299,7 +301,6 @@ class Map extends React.Component {
           website: properties.Website,
         })
       );
-      // commit map query result to redux
       this.props.initializeProviders(providers);
     });
   }
