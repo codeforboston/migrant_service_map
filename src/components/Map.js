@@ -1,19 +1,30 @@
 import React from "react";
 import { connect } from "react-redux";
 import mapboxgl from "mapbox-gl";
+import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
+import * as turf from "@turf/turf";
+
 import {
   initializeProviders,
   toggleProviderVisibility,
-  setSearchCenterCoordinates
+  setSearchCenterCoordinates,
+  displayProviderInformation,
 } from "../actions";
 import getProvidersByDistance from "../selectors";
-import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
-import "../map.css";
-import * as turf from "@turf/turf";
-import { insertPopup } from "./PopUp.js";
+
+import '../map.css';
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw";
+
+function providerToCategory({ type }) {
+  const category = type.toLowerCase().split(' ').join('-');
+  return category;
+}
+
+function featureToProvider({ id, geometry: { coordinates }, properties }) {
+  return { id, coordinates, ...properties };
+}
 
 class Map extends React.Component {
   constructor(props) {
@@ -51,11 +62,11 @@ class Map extends React.Component {
         visibility: "visible"
       }
     });
-    this.map.on("click", typeId, e => this.handleMapClick(e));
+    this.map.on("click", typeId, e => this.props.displayProviderInformation(featureToProvider(e.features[0])));
   };
 
   updateSource = type => {
-    let { filters, search } = this.props; 
+    let { filters, search } = this.props;
 
     if (!this.map.getSource(type.id)) {
       this.addSourceToMap(type.id);
@@ -304,14 +315,6 @@ class Map extends React.Component {
     });
   }
 
-  handleMapClick(e) {
-    let coordinates = e.features[0].geometry.coordinates.slice();
-    while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-      coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-    }
-    insertPopup(this.map, coordinates, e.features[0].properties);
-  }
-
   componentDidUpdate() {
     this.props.providerTypes.forEach(type => this.reflectLayerVisibility(type));
   }
@@ -327,5 +330,5 @@ class Map extends React.Component {
 
 export default connect(
   ({ providerTypes, filters, search }) => ({ providerTypes, filters, search }),
-  { initializeProviders, toggleProviderVisibility, setSearchCenterCoordinates }
+  { initializeProviders, toggleProviderVisibility, setSearchCenterCoordinates, displayProviderInformation }
 )(Map);

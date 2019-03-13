@@ -1,15 +1,36 @@
 import dotProp from 'dot-prop-immutable';
 
-import { INITIALIZE_PROVIDERS, TOGGLE_TYPE, CLEAR_DISTANCE, CHANGE_DISTANCE, SET_SEARCH_COORDINATES } from './actions';
+import {
+  INITIALIZE_PROVIDERS,
+  TOGGLE_TYPE,
+  CLEAR_DISTANCE,
+  CHANGE_DISTANCE,
+  SET_SEARCH_COORDINATES,
+  HIGHLIGHT_PROVIDER
+} from './actions';
 
 export function providerTypes(state = [], action) {
   switch (action.type) {
     case INITIALIZE_PROVIDERS:
       return groupProvidersByType(action.providers);
     case TOGGLE_TYPE:
-    
-    const typeIndex = state.findIndex(type => type.id === action.providerType);
+      const typeIndex = state.findIndex(type => type.id === action.providerType);
       return dotProp.toggle(state, `${typeIndex}.visible`);
+    default:
+      return state;
+  }
+}
+
+export function highlightedProviders(state = [], action) {
+  switch (action.type) {
+    case HIGHLIGHT_PROVIDER: {
+      const providerIndex = state.findIndex(provider => provider.name === action.provider.name);
+      if (providerIndex > -1) {
+        return dotProp.delete(state, providerIndex);
+      } else {
+        return [...state, action.provider];
+      }
+    }
     default:
       return state;
   }
@@ -42,7 +63,7 @@ export function filters(state = [], action) {
       return state;
     }
   }
-  
+
 // searches [{
 //   location: {
 //     searchTerm
@@ -53,11 +74,11 @@ export function filters(state = [], action) {
 
 // searchTerm searchLocation searchString searchAddress
 // search {
-//   term 
-//   coordinates 
+//   term
+//   coordinates
 
 // }
-// focusPoint referenceCoordinates centerCoordinates searchPoint epicenter searchCenter groundZero bullseye axisMundi nucleus center 
+// focusPoint referenceCoordinates centerCoordinates searchPoint epicenter searchCenter groundZero bullseye axisMundi nucleus center
 
 export function search(state = [], action) {
   switch (action.type) {
