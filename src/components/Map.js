@@ -12,7 +12,6 @@ import "../map.css";
 import * as turf from "@turf/turf";
 import { insertPopup } from "./PopUp.js";
 import { featureCollection, point, transformTranslate } from "@turf/turf";
-import { __esModule } from "react-redux/lib/components/Context";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw";
