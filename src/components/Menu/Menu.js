@@ -3,8 +3,9 @@ import { connect } from "react-redux";
 import DropdownMenu from "./DropdownMenu";
 import DropdownMenuItem from "./DropdownMenuItem";
 import DistanceFilter from "./DistanceFilter";
+import MenuSearch from "./MenuSearch";
 import { toggleProviderVisibility } from '../../actions';
-import getProvidersByDistance from '../../selectors';
+import { getProvidersByDistance, getProvidersByName } from '../../selectors';
 
 import './side-menu.css';
 
@@ -12,7 +13,8 @@ export function Menu({ providerTypes, filters, search, toggleProviderVisibility 
   return (
     <div className="side-menu">
       <div className="service-providers">
-        <h3>Service Providers</h3>  
+        <h3>Service Providers</h3> 
+        <MenuSearch /> 
         <DistanceFilter/>
         {providerTypes.map(serviceType => {
           let providers = serviceType.providers;
@@ -22,7 +24,14 @@ export function Menu({ providerTypes, filters, search, toggleProviderVisibility 
           if (filters.distance) {
             providers = getProvidersByDistance(search.coordinates, providers, filters.distance);
 
-          } else {
+          } 
+          
+          if (filters.name) {
+            providers = getProvidersByName(providers, filters.name);
+
+          }
+
+          if (!filters.distance && !filters.name) {
             providers.sort((a,b) => a.name.localeCompare(b.name))
           }
         
