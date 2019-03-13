@@ -12,6 +12,10 @@ import "../map.css";
 import * as turf from "@turf/turf";
 import { insertPopup } from "./PopUp.js";
 
+//Fix this later
+const longitude = -71.066954
+const latitude = 42.359947
+
 mapboxgl.accessToken =
   "pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw";
 
@@ -114,7 +118,8 @@ class Map extends React.Component {
     this.map = map; // for passing map instance to click handlers
 
     var geocoder = new MapboxGeocoder({
-      accessToken: mapboxgl.accessToken
+      accessToken: mapboxgl.accessToken,
+      proximity: {longitude, latitude}
     });
 
     geocoder.on("result", ev => {
