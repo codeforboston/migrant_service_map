@@ -1,9 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import {
-  clearDistanceFilter,
-  changeDistanceFilter
-} from "../../actions";
+import { clearDistanceFilter, changeDistanceFilter } from "../../redux/actions";
 
 class DistanceFilter extends Component {
   render() {
@@ -22,10 +19,10 @@ class DistanceFilter extends Component {
                 onChange={e => {
                   this.props.changeDistanceFilter(el);
                 }}
-          
                 checked={this.props.filters.distance === el}
-              />  
-              <label htmlFor={el}>{el} mile{el > 1 ? "s" : ""}
+              />
+              <label htmlFor={el}>
+                {el} mile{el > 1 ? "s" : ""}
               </label>
             </div>
           </li>
@@ -37,6 +34,6 @@ class DistanceFilter extends Component {
 }
 
 export default connect(
-  ({ providerTypes, filters }) => ({ providerTypes, filters }),
+  ({ filters }) => ({ filters }),
   { clearDistanceFilter, changeDistanceFilter }
 )(DistanceFilter);
