@@ -1,9 +1,9 @@
 .details-pane .provider-info {
-    border: solid 1px #c2a7db;
+    border: solid 1px #e2d5ed;
     margin: 5px 0;
     overflow: hidden;
     padding: 5px 0;
-    background-color: #e9e4f3;
+    background-color: #f0ebfb;
 }
 .popup-info,
 .popup-text {

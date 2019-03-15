@@ -95,7 +95,7 @@ export class AcceptingNewClients extends Component {
 export class SaveButton extends Component {
 
   render() {
-    let { isSaved } = this.props.isSaved;
+    let { isSaved } = this.props;
     let text = isSaved ? "saved" : "save";
     return (
       <IndicatorCheck
