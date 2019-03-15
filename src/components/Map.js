@@ -147,30 +147,30 @@ class Map extends Component {
     //TODO: make this input from the distance filter
     const distanceFilterDistances = [0.5, 1, 2, 3];
 
-    geocoder.on("result", function(ev) {
+    geocoder.on("result", (ev) => {
       const centerCoordinates = ev.result.geometry.coordinates;
       const distanceMarkers = Array.from(document.getElementsByClassName("distanceMarker")); 
       distanceMarkers.map(marker => marker.remove()); 
       if(!this.map.getSource("distance-indicator-source")){
-      this.map.addSource("distance-indicator-source", {
-        type: "geojson",
-        data: {
-          type: "FeatureCollection",
-          features: []
-        }
-      });
-      this.map.addLayer({
-        id: "distance-indicator",
-        type: "line",
-        source: "distance-indicator-source",
-        paint: {
-          "line-color": ["get", "color"],
-          "line-opacity": 0.8,
-          "line-width": ["*", distanceFilterDistances[2], 3],
-          "line-offset": 5
-        }
-      });
-    };
+        this.map.addSource("distance-indicator-source", {
+          type: "geojson",
+          data: {
+            type: "FeatureCollection",
+            features: []
+          }
+        });
+        this.map.addLayer({
+          id: "distance-indicator",
+          type: "line",
+          source: "distance-indicator-source",
+          paint: {
+            "line-color": ["get", "color"],
+            "line-opacity": 0.8,
+            "line-width": ["*", distanceFilterDistances[2], 3],
+            "line-offset": 5
+          }
+        });
+      };
 
       if (!this.map.getSource("single-point")) {
         this.map.addSource("single-point", {
@@ -208,19 +208,19 @@ class Map extends Component {
       };
   
     
-    const createDistanceMarker = (distance, color) => {
-      const markerElement = document.createElement("div");
-      markerElement.className = "distanceMarker"; 
-      markerElement.id = "marker-" + distance + "-miles"; 
-      markerElement.style.display = "block";
-      markerElement.innerText = distance + " miles";
-      markerElement.style.backgroundColor = color;
+      const createDistanceMarker = (distance, color) => {
+        const markerElement = document.createElement("div");
+        markerElement.className = "distanceMarker"; 
+        markerElement.id = "marker-" + distance + "-miles"; 
+        markerElement.style.display = "block";
+        markerElement.innerText = distance + " miles";
+        markerElement.style.backgroundColor = color;
+        
       
-
-    return new mapboxgl.Marker({
-      element: markerElement
-    })
-  }
+        return new mapboxgl.Marker({
+          element: markerElement
+        })
+      }
    
       const options = { steps: 100, units: "miles" };
       const circles = distanceFilterDistances.map((radius, i) =>
