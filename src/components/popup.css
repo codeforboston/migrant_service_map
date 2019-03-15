@@ -1,0 +1,19 @@
+.details-pane .provider-info {
+    border: solid 1px #c2a7db;
+    margin: 5px 0;
+    overflow: hidden;
+    padding: 5px 0;
+    background-color: #e9e4f3;
+}
+.popup-info,
+.popup-text {
+    padding-left: 5px;
+}
+.details-pane .popup-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.details-pane .bottom-button-bar {
+    flex-direction: row-reverse;
+}

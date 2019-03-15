@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import mapboxgl from "mapbox-gl";
 import ReactDOM from "react-dom";
-import { connect } from "react-redux";
+
+import "./popup.css";
 
 export const insertPopup = (map, coordinates, props) => {
   const DOMInsert = document.createElement("div");
@@ -22,30 +23,49 @@ export class Popup extends Component {
   render() {
     return (
       <div className="popup">
-        <div className="popup-title">{this.props.provider.name}</div>
-        <div>
-          <span className="popup-info">
-            <img alt="phone icon" src="https://icon.now.sh/perm_phone_msg" />
-            {this.props.provider.telephone}
-          </span>
-          <span className="popup-info">
-            <img alt="web icon" src="https://icon.now.sh/language" />
-            <a href={this.props.provider.website}> {this.props.provider.website}</a>
-          </span>
-          <span className="popup-info">
-            <img alt="home icon" src="https://icon.now.sh/home" />
-              {this.props.provider.address || "address"}
-          </span>
-        </div>
-        <div className="popup-text">{this.props.provider.mission}</div>
+        <div className="popup-title">{this.props.provider.name} (id: {this.props.provider.id})</div>
+        <ProviderInfo provider={this.props.provider} />
         <div className="bottom-button-bar">
           {/* <AcceptingNewClients /> */}
-          <SaveButton />
+          <SaveButton
+            isSaved={true} 
+            handleClick={this.props.handleClick}
+          />
         </div>
       </div>
     );
   }
 }
+
+export const DetailsPane = ({ provider, isSaved, toggleSaved }) => (
+  <div className="details-pane">
+    <ProviderInfo provider={provider} />
+    <div className="bottom-button-bar">
+      {/* <AcceptingNewClients /> */}
+      <SaveButton
+        isSaved={isSaved}
+        toggleSaved={toggleSaved}
+      />
+    </div>
+  </div>
+)
+export const ProviderInfo = ({ provider, isSaved, handleClick }) => (
+      <div className="provider-info">
+        <span className="popup-info">
+          <img alt="phone icon" src="https://icon.now.sh/perm_phone_msg" />
+          {provider.telephone}
+        </span>
+        <span className="popup-info">
+          <img alt="web icon" src="https://icon.now.sh/language" />
+          <a href={provider.website}> {provider.website}</a>
+        </span>
+        <span className="popup-info">
+          <img alt="home icon" src="https://icon.now.sh/home" />
+            {provider.address || "address"}
+        </span>
+          <div className="popup-text">{provider.mission.slice(0,70)}</div>
+      </div>
+)
 
 export class AcceptingNewClients extends Component {
   constructor(props) {
@@ -73,27 +93,15 @@ export class AcceptingNewClients extends Component {
 }
 
 export class SaveButton extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isSaved: false
-    };
-  }
-
-  handleClick = () => {
-    let { isSaved } = this.state;
-    isSaved = !isSaved;
-    this.setState({ isSaved });
-  };
 
   render() {
-    let { isSaved } = this.state;
+    let { isSaved } = this.props.isSaved;
     let text = isSaved ? "saved" : "save";
     return (
       <IndicatorCheck
         shouldBeOn={isSaved}
         text={text}
-        onClick={this.handleClick}
+        toggleSaved={this.props.toggleSaved}
       />
     );
   }
@@ -134,7 +142,7 @@ export const IndicatorLight = props => {
 };
 
 export const IndicatorCheck = props => {
-  let { shouldBeOn, text, onClick, colorOn, colorOff } = props;
+  let { shouldBeOn, text, toggleSaved, colorOn, colorOff } = props;
 
   //user can choose other colors, but setting default colors here
   const thisColorOn = colorOn ? colorOn : "#2699FB";
@@ -154,7 +162,7 @@ export const IndicatorCheck = props => {
   );
 
   return (
-    <div className="statusToggles" onClick={onClick}>
+    <div className="statusToggles" onClick={toggleSaved}>
       <div alt="check" height="18px" width="18px">
         {shouldBeOn && checkMark}
       </div>
@@ -162,5 +170,3 @@ export const IndicatorCheck = props => {
     </div>
   );
 };
-
-export default connect(({ providerTypes, filters }) => ({ providerTypes, filters }), {  })(Popup);

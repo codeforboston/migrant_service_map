@@ -3,10 +3,10 @@ import { connect } from "react-redux";
 import DropdownMenu from "./DropdownMenu";
 import DropdownMenuItem from "./DropdownMenuItem";
 import DistanceFilter from "./DistanceFilter";
-import { toggleProviderVisibility } from "../../redux/actions";
 import getProvidersByDistance, {
   getProvidersSorted
 } from "../../redux/selectors";
+import { toggleProviderVisibility, saveProvider, unsaveProvider } from '../../redux/actions';
 
 import "./side-menu.css";
 
@@ -15,7 +15,10 @@ class Menu extends Component {
   render() {
     const {
       providersList,
+      savedProviders,
       visibleTypes,
+      saveProvider,
+      unsaveProvider,
       toggleProviderVisibility
     } = this.props;
     return (
@@ -55,6 +58,8 @@ class Menu extends Component {
                             key={provider.id}
                             text={provider.name}
                             item={provider}
+                            saved={savedProviders.includes(provider.id)}
+                            toggleSaved={ () => savedProviders.includes(provider.id) ? unsaveProvider(provider.id) : saveProvider(provider.id) }
                             // clickHandler={this.props.handleMenuItemClick}
                           />
                         );
@@ -78,11 +83,12 @@ class Menu extends Component {
 const mapStateToProps = state => {
   return {
     providersList: getProvidersSorted(state),
+    savedProviders: state.providers.savedProviders,
     visibleTypes: state.providerTypes.visible
   };
 };
 
 export default connect(
   mapStateToProps,
-  { toggleProviderVisibility }
+  { toggleProviderVisibility, saveProvider, unsaveProvider }
 )(Menu);
