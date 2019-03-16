@@ -1,5 +1,5 @@
 import React from "react";
-import { DetailsPane } from '../PopUp';
+import { DetailsPane, SaveButton } from '../PopUp';
 
 export default class DropdownMenuItem extends React.Component {
   constructor(props){
@@ -14,12 +14,15 @@ export default class DropdownMenuItem extends React.Component {
   };
 
   render() {
-    let { text, item, saved, toggleSaved } = this.props;
-    let details = this.state.expanded ? <DetailsPane provider={item} isSaved={saved} toggleSaved={toggleSaved} /> : null;
+    let { text, item, children } = this.props;
+    
     return (
       <div className="list-item">
         <a href="#target" onClick={this.onItemClick}>{text}</a>
-        {details}
+        { this.state.expanded ? (<>
+          <DetailsPane provider={item}/>
+          {children}
+        </>) : null }
       </div>
     );
   }

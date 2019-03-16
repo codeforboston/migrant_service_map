@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import DropdownMenu from "./DropdownMenu";
 import DropdownMenuItem from "./DropdownMenuItem";
+import { SaveButton } from "../PopUp";
 import DistanceFilter from "./DistanceFilter";
 import getProvidersByDistance, {
   getProvidersSorted
@@ -58,10 +59,14 @@ class Menu extends Component {
                             key={provider.id}
                             text={provider.name}
                             item={provider}
-                            saved={savedProviders.includes(provider.id)}
-                            toggleSaved={ () => savedProviders.includes(provider.id) ? unsaveProvider(provider.id) : saveProvider(provider.id) }
                             // clickHandler={this.props.handleMenuItemClick}
-                          />
+                          >
+                            <SaveButton
+                              saved={savedProviders.includes(provider.id)}
+                              toggleSavedStatus={ () => 
+                                savedProviders.includes(provider.id) ? unsaveProvider(provider.id) : saveProvider(provider.id) }
+                            />
+                          </DropdownMenuItem>
                         );
                       })
                     ) : (

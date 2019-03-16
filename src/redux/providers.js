@@ -12,13 +12,11 @@ export default function providers(state = INITIAL_STATE, action) {
     case INITIALIZE_PROVIDERS:
       return initialProviders(state, action.payload);
     case SAVE_PROVIDER:
-      console.log('save provider', action.id, 'to state');
       return {
         ...state,
         savedProviders: [action.id, ...state.savedProviders]
       }
     case UNSAVE_PROVIDER:
-      console.log('unsave provider', action.id, 'from list');
       return {
         ...state,
         savedProviders: state.savedProviders.filter( p => p !== action.id )

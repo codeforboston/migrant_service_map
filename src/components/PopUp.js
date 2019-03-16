@@ -24,7 +24,7 @@ export class Popup extends Component {
     return (
       <div className="popup">
         <div className="popup-title">{this.props.provider.name} (id: {this.props.provider.id})</div>
-        <ProviderInfo provider={this.props.provider} />
+        <DetailsPane provider={this.props.provider} />
         <div className="bottom-button-bar">
           {/* <AcceptingNewClients /> */}
           <SaveButton
@@ -37,19 +37,8 @@ export class Popup extends Component {
   }
 }
 
-export const DetailsPane = ({ provider, isSaved, toggleSaved }) => (
+export const DetailsPane = ({ provider }) => (
   <div className="details-pane">
-    <ProviderInfo provider={provider} />
-    <div className="bottom-button-bar">
-      {/* <AcceptingNewClients /> */}
-      <SaveButton
-        isSaved={isSaved}
-        toggleSaved={toggleSaved}
-      />
-    </div>
-  </div>
-)
-export const ProviderInfo = ({ provider, isSaved, handleClick }) => (
       <div className="provider-info">
         <span className="popup-info">
           <img alt="phone icon" src="https://icon.now.sh/perm_phone_msg" />
@@ -65,6 +54,7 @@ export const ProviderInfo = ({ provider, isSaved, handleClick }) => (
         </span>
           <div className="popup-text">{provider.mission.slice(0,70)}</div>
       </div>
+  </div>
 )
 
 export class AcceptingNewClients extends Component {
@@ -98,11 +88,13 @@ export class SaveButton extends Component {
     let { isSaved } = this.props;
     let text = isSaved ? "saved" : "save";
     return (
+      <div className="bottom-button-bar">
       <IndicatorCheck
         shouldBeOn={isSaved}
         text={text}
-        toggleSaved={this.props.toggleSaved}
+        toggleSavedStatus={this.props.toggleSavedStatus}
       />
+      </div>
     );
   }
 }
@@ -142,7 +134,7 @@ export const IndicatorLight = props => {
 };
 
 export const IndicatorCheck = props => {
-  let { shouldBeOn, text, toggleSaved, colorOn, colorOff } = props;
+  let { shouldBeOn, text, toggleSavedStatus, colorOn, colorOff } = props;
 
   //user can choose other colors, but setting default colors here
   const thisColorOn = colorOn ? colorOn : "#2699FB";
@@ -162,7 +154,7 @@ export const IndicatorCheck = props => {
   );
 
   return (
-    <div className="statusToggles" onClick={toggleSaved}>
+    <div className="statusToggles" onClick={toggleSavedStatus}>
       <div alt="check" height="18px" width="18px">
         {shouldBeOn && checkMark}
       </div>
