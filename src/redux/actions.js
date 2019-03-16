@@ -7,6 +7,7 @@ export const FILTER_PROVIDERS = 'FILTER_PROVIDERS';
 export const FILTER_NAME = 'FILTER_NAME';
 export const SAVE_PROVIDER = 'SAVE_PROVIDER';
 export const UNSAVE_PROVIDER = 'UNSAVE_PROVIDER';
+export const HIGHLIGHT_PROVIDER = 'HIGHLIGHT_PROVIDER';
 
 export function initializeProviders(providers) {
   return {
@@ -19,6 +20,13 @@ export function toggleProviderVisibility(providerType) {
   return {
     type: TOGGLE_TYPE,
     payload: providerType
+  };
+}
+
+export function displayProviderInformation(providerId) {
+  return {
+    type: HIGHLIGHT_PROVIDER,
+    id: providerId
   };
 }
 

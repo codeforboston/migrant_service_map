@@ -28,7 +28,6 @@ export default function getProvidersByDistance(
   providers,
   distance = null
 ) {
-  debugger;
   refLocation = refLocation || [-71.066954, 42.359947];
 
   var distances = providers.map(provider => {

@@ -12,7 +12,6 @@ import { toggleProviderVisibility, saveProvider, unsaveProvider } from '../../re
 import "./side-menu.css";
 
 class Menu extends Component {
-  debugger;
   render() {
     const {
       providersList,
