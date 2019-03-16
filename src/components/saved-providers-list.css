@@ -22,3 +22,12 @@
     font-weight: bold;
     margin: 7px 2px;
 }
+
+.remove-button {
+    color: #333;
+    display: flex;
+    flex-direction: row-reverse;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+}

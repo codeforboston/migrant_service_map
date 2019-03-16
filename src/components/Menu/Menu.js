@@ -62,7 +62,7 @@ class Menu extends Component {
                             // clickHandler={this.props.handleMenuItemClick}
                           >
                             <SaveButton
-                              saved={savedProviders.includes(provider.id)}
+                              isSaved={savedProviders.includes(provider.id)}
                               toggleSavedStatus={ () => 
                                 savedProviders.includes(provider.id) ? unsaveProvider(provider.id) : saveProvider(provider.id) }
                             />
