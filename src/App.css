@@ -115,11 +115,13 @@
   text-transform: uppercase;
 }
 
+.popup .popup-info {
+  width: 320px;
+  font-size: 16px;
+}
 .popup-info {
   display: flex;
   align-items: center;
-  width: 320px;
-  font-size: 16px;
   font-weight: 500;
   color: #5d5d5d;
 }
@@ -139,16 +141,19 @@
 .bottom-button-bar {
   flex: 1;
   display: flex;
-  flex-direction: row;
+  flex-direction: row-reverse;
   align-self: flex-end;
-  width: 320px;
   justify-content: space-between;
   color: #2699fb;
   text-transform: uppercase;
   font-weight: bolder;
   background-color: white;
 }
+.popup .bottom-button-bar {
+  width: 320px;
+}
 
 .statusToggles {
+  cursor: pointer;
   display: flex;
 }

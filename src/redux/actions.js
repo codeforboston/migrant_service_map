@@ -5,6 +5,9 @@ export const CLEAR_DISTANCE = 'CLEAR_DISTANCE';
 export const SET_SEARCH_COORDINATES = 'SET_SEARCH_COORDINATES';
 export const FILTER_PROVIDERS = 'FILTER_PROVIDERS';
 export const FILTER_NAME = 'FILTER_NAME';
+export const SAVE_PROVIDER = 'SAVE_PROVIDER';
+export const UNSAVE_PROVIDER = 'UNSAVE_PROVIDER';
+export const HIGHLIGHT_PROVIDER = 'HIGHLIGHT_PROVIDER';
 
 export function initializeProviders(providers) {
   return {
@@ -17,6 +20,13 @@ export function toggleProviderVisibility(providerType) {
   return {
     type: TOGGLE_TYPE,
     payload: providerType
+  };
+}
+
+export function displayProviderInformation(providerId) {
+  return {
+    type: HIGHLIGHT_PROVIDER,
+    id: providerId
   };
 }
 
@@ -51,5 +61,19 @@ export function filterByName(name){
   return {
     type: FILTER_NAME, 
     name
+  }
+}
+
+export function saveProvider(id) {
+  return {
+    type: SAVE_PROVIDER,
+    id
+  }
+}
+
+export function unsaveProvider(id) {
+  return {
+    type: UNSAVE_PROVIDER,
+    id
   }
 }
