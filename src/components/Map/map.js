@@ -1,21 +1,14 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 import mapboxgl from "mapbox-gl";
-import {
-  initializeProviders,
-  setSearchCenterCoordinates
-} from "../redux/actions";
-import getProvidersByDistance from "../redux/selectors";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
-import "../map.css";
 import * as turf from "@turf/turf";
-import { insertPopup } from "./PopUp.js";
-import typeImages from "../assets/images";
-import { featureCollection, point, transformTranslate } from "@turf/turf";
+import { insertPopup } from "../PopUp.js";
+import typeImages from "../../assets/images";
+import "./map.css";
 
 //Fix this later
-const longitude = -71.066954
-const latitude = 42.359947
+const longitude = -71.066954;
+const latitude = 42.359947;
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw";
@@ -51,7 +44,7 @@ class Map extends Component {
   };
 
   updateSource = id => {
-    let { filters, search, providerTypes } = this.props;
+    let { providerTypes } = this.props;
     if (!this.map.getSource(id)) {
       this.addSourceToMap(id);
     }
@@ -59,7 +52,7 @@ class Map extends Component {
       this.addLayerToMap(id);
     }
     //TODO DELETE IF AFTER FINISHING getProvidersSorted SELECTOR
-    if (providerTypes && filters.distance) {
+    /*if (providerTypes && filters.distance) {
       this.map.getSource(id).setData({
         type: "FeatureCollection",
         features: this.convertProvidersToGeoJSON(
@@ -70,14 +63,12 @@ class Map extends Component {
           )
         )
       });
-    } else {
-      this.map.getSource(id).setData({
-        type: "FeatureCollection",
-        features: this.convertProvidersToGeoJSON(
-          providerTypes.byId[id].providers
-        )
-      });
-    }
+    } else {*/
+    this.map.getSource(id).setData({
+      type: "FeatureCollection",
+      features: this.convertProvidersToGeoJSON(providerTypes.byId[id].providers)
+    });
+    //}
   };
 
   convertProvidersToGeoJSON = providersTypesIds => {
@@ -141,17 +132,19 @@ class Map extends Component {
 
     var geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
-      proximity: {longitude, latitude}
+      proximity: { longitude, latitude }
     });
 
-    //TODO: make this input from the distance filter
+    // TODO: make this input from the distance filter
     const distanceFilterDistances = [0.5, 1, 2, 3];
 
-    geocoder.on("result", (ev) => {
+    geocoder.on("result", ev => {
       const centerCoordinates = ev.result.geometry.coordinates;
-      const distanceMarkers = Array.from(document.getElementsByClassName("distanceMarker")); 
-      distanceMarkers.map(marker => marker.remove()); 
-      if(!this.map.getSource("distance-indicator-source")){
+      const distanceMarkers = Array.from(
+        document.getElementsByClassName("distanceMarker")
+      );
+      distanceMarkers.map(marker => marker.remove());
+      if (!this.map.getSource("distance-indicator-source")) {
         this.map.addSource("distance-indicator-source", {
           type: "geojson",
           data: {
@@ -170,7 +163,7 @@ class Map extends Component {
             "line-offset": 5
           }
         });
-      };
+      }
 
       if (!this.map.getSource("single-point")) {
         this.map.addSource("single-point", {
@@ -191,54 +184,55 @@ class Map extends Component {
         });
       }
       const colors = ["#007cbf", "#00AA46", "#71C780", "#D5EDDB"];
-    
 
-      const center = (color) => {
+      const center = color => {
         return {
-          type: "Feature", 
+          type: "Feature",
           properties: {
-            "marker-color": "#0f0", 
+            "marker-color": "#0f0",
             color: color
           },
           geometry: {
-            type: "Point", 
+            type: "Point",
             coordinates: ev.result.geometry.coordinates
           }
-        }
+        };
       };
-  
-    
+
       const createDistanceMarker = (distance, color) => {
         const markerElement = document.createElement("div");
-        markerElement.className = "distanceMarker"; 
-        markerElement.id = "marker-" + distance + "-miles"; 
+        markerElement.className = "distanceMarker";
+        markerElement.id = "marker-" + distance + "-miles";
         markerElement.style.display = "block";
         markerElement.innerText = distance + " miles";
         markerElement.style.backgroundColor = color;
-        
-      
+
         return new mapboxgl.Marker({
           element: markerElement
-        })
-      }
-   
+        });
+      };
+
       const options = { steps: 100, units: "miles" };
       const circles = distanceFilterDistances.map((radius, i) =>
         turf.circle(center(colors[i]), radius, options)
       );
-      
-      const labels = distanceFilterDistances.map((radius, i) => {
-        const centerPoint = turf.point(centerCoordinates); 
-        console.log(centerCoordinates, centerPoint);
-        const radiusOffset = turf.transformTranslate(centerPoint, radius, 90, {units: "miles"});
-        const marker = createDistanceMarker(radius, colors[i]); 
-        return marker.setLngLat(radiusOffset.geometry.coordinates).addTo(this.map); 
-      });
-      
-      
-      this.map.getSource("single-point").setData(ev.result.geometry);
-      this.map.getSource("distance-indicator-source").setData({type: "FeatureCollection", features: circles});
 
+      const labels = distanceFilterDistances.map((radius, i) => {
+        const centerPoint = turf.point(centerCoordinates);
+        console.log(centerCoordinates, centerPoint);
+        const radiusOffset = turf.transformTranslate(centerPoint, radius, 90, {
+          units: "miles"
+        });
+        const marker = createDistanceMarker(radius, colors[i]);
+        return marker
+          .setLngLat(radiusOffset.geometry.coordinates)
+          .addTo(this.map);
+      });
+
+      this.map.getSource("single-point").setData(ev.result.geometry);
+      this.map
+        .getSource("distance-indicator-source")
+        .setData({ type: "FeatureCollection", features: circles });
     });
 
     this.map.addControl(geocoder);
@@ -358,12 +352,4 @@ class Map extends Component {
   }
 }
 
-export default connect(
-  ({ providerTypes, providers, filters, search }) => ({
-    providerTypes,
-    providers,
-    filters,
-    search
-  }),
-  { initializeProviders, setSearchCenterCoordinates }
-)(Map);
+export default Map;

@@ -1,26 +1,21 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
-import DropdownMenu from "./DropdownMenu";
-import DropdownMenuItem from "./DropdownMenuItem";
 import { SaveButton } from "../PopUp";
-import DistanceFilter from "./DistanceFilter";
-import getProvidersByDistance, {
-  getProvidersSorted
-} from "../../redux/selectors";
-import { toggleProviderVisibility, saveProvider, unsaveProvider } from '../../redux/actions';
+import { MenuDistanceFilter, MenuDropdown, MenuDropdownItem } from "..";
 
-import "./side-menu.css";
+import "./menu.css";
 
 class Menu extends Component {
-  debugger;
   render() {
     const {
       providersList,
       savedProviders,
       visibleTypes,
       saveProvider,
+      filters,
       unsaveProvider,
-      toggleProviderVisibility
+      toggleProviderVisibility,
+      clearDistanceFilter,
+      changeDistanceFilter
     } = this.props;
     return (
       <div className="side-menu">
@@ -29,7 +24,11 @@ class Menu extends Component {
           {!!providersList.length && (
             <>
               <h3>Service Providers</h3>
-              <DistanceFilter />
+              <MenuDistanceFilter
+                filters={filters}
+                clearDistanceFilter={clearDistanceFilter}
+                changeDistanceFilter={changeDistanceFilter}
+              />
               {providersList.map(providerType => {
                 //let providerTypeId = providerTypes.byId[id];
 
@@ -45,7 +44,7 @@ class Menu extends Component {
                      }
                      */
                 return (
-                  <DropdownMenu
+                  <MenuDropdown
                     key={providerType.id}
                     id={providerType.id}
                     text={providerType.name}
@@ -53,28 +52,29 @@ class Menu extends Component {
                     onToggle={toggleProviderVisibility}
                   >
                     {providerType.providers.length ? (
-                      providerType.providers.map(provider => {
-                        return (
-                          <DropdownMenuItem
-                            key={provider.id}
-                            text={provider.name}
-                            item={provider}
-                            // clickHandler={this.props.handleMenuItemClick}
-                          >
-                            <SaveButton
-                              isSaved={savedProviders.includes(provider.id)}
-                              toggleSavedStatus={ () => 
-                                savedProviders.includes(provider.id) ? unsaveProvider(provider.id) : saveProvider(provider.id) }
-                            />
-                          </DropdownMenuItem>
-                        );
-                      })
+                      providerType.providers.map(provider => (
+                        <MenuDropdownItem
+                          key={provider.id}
+                          text={provider.name}
+                          item={provider}
+                          // clickHandler={this.props.handleMenuItemClick}
+                        >
+                          <SaveButton
+                            isSaved={savedProviders.includes(provider.id)}
+                            toggleSavedStatus={() =>
+                              savedProviders.includes(provider.id)
+                                ? unsaveProvider(provider.id)
+                                : saveProvider(provider.id)
+                            }
+                          />
+                        </MenuDropdownItem>
+                      ))
                     ) : (
                       <div className="list-item">
                         <i>no matching providers</i>
                       </div>
                     )}
-                  </DropdownMenu>
+                  </MenuDropdown>
                 );
               })}
             </>
@@ -85,15 +85,4 @@ class Menu extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    providersList: getProvidersSorted(state),
-    savedProviders: state.providers.savedProviders,
-    visibleTypes: state.providerTypes.visible
-  };
-};
-
-export default connect(
-  mapStateToProps,
-  { toggleProviderVisibility, saveProvider, unsaveProvider }
-)(Menu);
+export default Menu;

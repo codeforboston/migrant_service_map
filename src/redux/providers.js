@@ -1,5 +1,8 @@
-import { INITIALIZE_PROVIDERS, SAVE_PROVIDER, UNSAVE_PROVIDER } from "./actions";
-import { stat } from "fs";
+import {
+  INITIALIZE_PROVIDERS,
+  SAVE_PROVIDER,
+  UNSAVE_PROVIDER
+} from "./actions";
 
 const INITIAL_STATE = {
   allIds: [],
@@ -15,11 +18,11 @@ export default function providers(state = INITIAL_STATE, action) {
       return {
         ...state,
         savedProviders: [action.id, ...state.savedProviders]
-      }
+      };
     case UNSAVE_PROVIDER:
       return {
         ...state,
-        savedProviders: state.savedProviders.filter( p => p !== action.id )
+        savedProviders: state.savedProviders.filter(p => p !== action.id)
       };
     default:
       return state;
