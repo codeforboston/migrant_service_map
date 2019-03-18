@@ -1,4 +1,4 @@
-import * as turf from "@turf/turf";
+import { distance, point } from "@turf/turf";
 import { createSelector } from "reselect";
 
 const getProviderTypesIds = state => state.providerTypes.allIds;
@@ -11,6 +11,16 @@ export const getProvidersSorted = createSelector(
   [getProviderTypesIds, getProviderTypesById, getProvidersById, getDistance],
   (providerTypesIds, providerTypesById, providersById, distance) => {
     if (distance) {
+      const options = { units: "miles" };
+      const refLocation = [-71.066954, 42.359947]; // HARDCODED, SHOULD BE STORED IN REDUX?
+      return sortedByDistance(
+        providerTypesIds,
+        providerTypesById,
+        providersById,
+        distance,
+        refLocation,
+        options
+      );
     } else {
       const providersList = providerTypesIds.map(typeId => ({
         id: typeId,
@@ -30,38 +40,40 @@ export const getSavedProviders = createSelector(
     savedProvidersIds.map(id => providersById[id])
 );
 
-export default function getProvidersByDistance(
+function sortedByDistance(
+  providerTypesIds,
+  providerTypesById,
+  providersById,
+  filterDistance,
   refLocation,
-  providers,
-  distance = null
+  options
 ) {
-  refLocation = refLocation || [-71.066954, 42.359947];
-
-  var distances = providers.map(provider => {
-    return {
-      provider: provider,
-      distance: turf.distance(
-        turf.point(provider.coordinates),
-        turf.point(refLocation)
-      )
-    };
+  let providersList = [];
+  providerTypesIds.map(typeId => {
+    let providerArray = [];
+    providerTypesById[typeId].providers.forEach(provId => {
+      const provDistance = distance(
+        point(providersById[provId].coordinates),
+        point(refLocation),
+        options
+      );
+      if (provDistance < filterDistance) {
+        providerArray.push({
+          // New object with the distance attached
+          ...providersById[provId],
+          distance: provDistance
+        });
+      }
+    });
+    // Sort the list by distance
+    const sortedProviders = providerArray.sort(
+      (a, b) => a.distance - b.distance
+    );
+    providersList.push({
+      id: typeId,
+      name: providerTypesById[typeId].name,
+      providers: sortedProviders
+    });
   });
-
-  if (distance) {
-    distances = distances.filter(el => el.distance < distance);
-  }
-
-  const closePlaces = distances
-    .sort((ela, elb) => ela.distance - elb.distance)
-    .map(el => el.provider); //WHY?
-  console.log(
-    closePlaces.length,
-    "of",
-    providers.length,
-    "within",
-    distance,
-    "miles"
-  );
-
-  return closePlaces;
+  return providersList;
 }

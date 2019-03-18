@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { SaveButton } from "../PopUp";
 import { MenuDistanceFilter, MenuDropdown, MenuDropdownItem } from "..";
 
@@ -29,30 +29,17 @@ class Menu extends Component {
                 clearDistanceFilter={clearDistanceFilter}
                 changeDistanceFilter={changeDistanceFilter}
               />
-              {providersList.map(providerType => {
-                //let providerTypeId = providerTypes.byId[id];
-
-                // if search center is set, sort by closest, otherwise alphabetical
-                /*if (filters.distance) {
-                       providerTypeId = providerTypeId.providers.map(providerId =>
-                         getProvidersByDistance(
-                           search.coordinates,
-                           providers.byId[providerId],
-                           filters.distance
-                         )
-                       );
-                     }
-                     */
-                return (
-                  <MenuDropdown
-                    key={providerType.id}
-                    id={providerType.id}
-                    text={providerType.name}
-                    expanded={visibleTypes.includes(providerType.id)}
-                    onToggle={toggleProviderVisibility}
-                  >
-                    {providerType.providers.length ? (
-                      providerType.providers.map(provider => (
+              {providersList.map(providerType => (
+                <Fragment key={providerType.id}>
+                  {!!providerType.providers.length && ( //if there is not providers MenuDropdown is not shown
+                    <MenuDropdown
+                      key={providerType.id}
+                      id={providerType.id}
+                      text={providerType.name}
+                      expanded={visibleTypes.includes(providerType.id)}
+                      onToggle={toggleProviderVisibility}
+                    >
+                      {providerType.providers.map(provider => (
                         <MenuDropdownItem
                           key={provider.id}
                           text={provider.name}
@@ -68,15 +55,11 @@ class Menu extends Component {
                             }
                           />
                         </MenuDropdownItem>
-                      ))
-                    ) : (
-                      <div className="list-item">
-                        <i>no matching providers</i>
-                      </div>
-                    )}
-                  </MenuDropdown>
-                );
-              })}
+                      ))}
+                    </MenuDropdown>
+                  )}
+                </Fragment>
+              ))}
             </>
           )}
         </div>
