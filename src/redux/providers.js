@@ -1,13 +1,16 @@
 import {
+  HIGHLIGHT_PROVIDER,
   INITIALIZE_PROVIDERS,
   SAVE_PROVIDER,
   UNSAVE_PROVIDER
 } from "./actions";
+import dotProp from "dot-prop-immutable";
 
 const INITIAL_STATE = {
   allIds: [],
   byId: {},
-  savedProviders: []
+  savedProviders: [],
+  highlightedProviders: [],
 };
 
 export default function providers(state = INITIAL_STATE, action) {

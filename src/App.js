@@ -13,12 +13,7 @@ export default function App() {
         <TopNav />
         <div className="map-container">
           <Menu />
-          {
-            /*
             <ProviderDetailList />
-            */
-          }
-          
           <Map />
           <SavedProvidersList />
         </div>

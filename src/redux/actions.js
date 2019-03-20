@@ -22,7 +22,7 @@ export const initializeProviders = providers => {
 export function displayProviderInformation(providerId) {
   return {
     type: HIGHLIGHT_PROVIDER,
-    id: providerId
+    providerId
   };
  }
 
