@@ -6,10 +6,14 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  box-sizing: border-box;
 }
 
-html, body, div#root {
+html,
+body,
+div#root {
   height: 100%;
+  overflow: hidden;
 }
 
 code {
@@ -32,7 +36,15 @@ ul {
   padding-left: 0;
 }
 
-a, p, h1, h2, h3, h4, h5, h6, i {
+a,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+i {
   color: #8c45cf;
   text-decoration: none;
 }
@@ -41,7 +53,6 @@ h2 {
   font-size: 1rem;
   font-weight: 500;
   padding: 0.2rem;
-
 }
 
 nav {
