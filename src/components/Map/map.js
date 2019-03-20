@@ -13,6 +13,10 @@ const latitude = 42.359947;
 mapboxgl.accessToken =
   "pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw";
 
+function featureToProvider({ id, geometry: { coordinates }, properties }) {
+  return { id, coordinates, ...properties };
+}
+
 class Map extends Component {
   constructor(props) {
     super(props);
@@ -40,7 +44,11 @@ class Map extends Component {
         visibility: "visible"
       }
     });
-    this.map.on("click", typeId, e => this.handleMapClick(e));
+    this.map.on(
+      "click",
+      typeId,
+      e => { let provider = featureToProvider(e.features[0]); this.props.displayProviderInformation(provider.id) }
+    );
   };
 
   updateSource = id => {
