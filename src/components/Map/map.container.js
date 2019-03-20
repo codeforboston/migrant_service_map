@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { initializeProviders } from "../../redux/actions";
+import { initializeProviders, displayProviderInformation } from "../../redux/actions";
 import Map from "./map";
 
 const MapContainer = props => {
@@ -20,6 +20,9 @@ const mapDispatchToProps = dispatch => {
   return {
     initializeProviders: providers => {
       dispatch(initializeProviders(providers));
+    },
+    displayProviderInformation: id => {
+      dispatch(displayProviderInformation(id));
     }
   };
 };

@@ -6,6 +6,7 @@ const getProviderTypesById = state => state.providerTypes.byId;
 const getProvidersById = state => state.providers.byId;
 const getDistance = state => state.filters.distance;
 const getSavedProvidersIds = state => state.providers.savedProviders;
+const getHighlightedProvidersList = state => state.highlightedProviders
 
 export const getProvidersSorted = createSelector(
   [getProviderTypesIds, getProviderTypesById, getProvidersById, getDistance],
@@ -39,6 +40,13 @@ export const getSavedProviders = createSelector(
   (savedProvidersIds, providersById) =>
     savedProvidersIds.map(id => providersById[id])
 );
+
+export const getHighlightedProviders = createSelector(
+  [getProvidersById, getHighlightedProvidersList],
+  (providersById, highlightedProvidersList) => {
+    return highlightedProvidersList.map(id => (providersById[id]))
+  }
+)
 
 function sortedByDistance(
   providerTypesIds,
