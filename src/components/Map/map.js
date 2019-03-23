@@ -268,7 +268,8 @@ class Map extends Component {
     const providerTypes = { byId: {}, allIds: [] };
     const providers = { byId: {}, allIds: [] };
     Array.from(providerFeatures).map(
-      ({ id, geometry: { coordinates }, properties }) => {
+      ({ id, geometry: { coordinates }, properties }, index) => {
+        id = index;
         let formattedTypeId = properties["Type of Service"]
           .toLowerCase()
           .split(" ")
