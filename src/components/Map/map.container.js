@@ -1,6 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
-import { initializeProviders, displayProviderInformation } from "../../redux/actions";
+import {
+  initializeProviders,
+  displayProviderInformation
+} from "../../redux/actions";
 import Map from "./map";
 
 const MapContainer = props => {

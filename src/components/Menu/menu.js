@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import { SaveButton } from "../PopUp";
 import { MenuDistanceFilter, MenuDropdown, MenuDropdownItem } from "..";
 
-import "./menu.css"; 
+import "./menu.css";
 
 class Menu extends Component {
   render() {

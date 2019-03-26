@@ -1,3 +1,3 @@
-import ProviderDetailList from './provider-detail-list.container'
+import ProviderDetailList from "./provider-detail-list.container";
 
-export default ProviderDetailList
+export default ProviderDetailList;

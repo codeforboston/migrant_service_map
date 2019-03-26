@@ -44,11 +44,10 @@ class Map extends Component {
         visibility: "visible"
       }
     });
-    this.map.on(
-      "click",
-      typeId,
-      e => { let provider = featureToProvider(e.features[0]); this.props.displayProviderInformation(provider.id) }
-    );
+    this.map.on("click", typeId, e => {
+      let provider = featureToProvider(e.features[0]);
+      this.props.displayProviderInformation(provider.id);
+    });
   };
 
   updateSource = id => {
