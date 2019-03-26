@@ -59,24 +59,10 @@ class Map extends Component {
     if (!this.map.getLayer(id)) {
       this.addLayerToMap(id);
     }
-    //TODO DELETE IF AFTER FINISHING getProvidersSorted SELECTOR
-    /*if (providerTypes && filters.distance) {
-      this.map.getSource(id).setData({
-        type: "FeatureCollection",
-        features: this.convertProvidersToGeoJSON(
-          getProvidersByDistance(
-            search.coordinates,
-            providerTypes.byId[id].providers,
-            filters.distance
-          )
-        )
-      });
-    } else {*/
     this.map.getSource(id).setData({
       type: "FeatureCollection",
       features: this.convertProvidersToGeoJSON(providerTypes.byId[id].providers)
     });
-    //}
   };
 
   convertProvidersToGeoJSON = providersTypesIds => {

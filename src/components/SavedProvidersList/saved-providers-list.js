@@ -2,11 +2,12 @@ import React from "react";
 import { MenuDropdownItem } from "..";
 import "./saved-providers-list.css";
 
-const SavedProvidersList = ({ savedProviders, unsaveProvider }) => (
+const SavedProvidersList = ({ highlightedProviders, savedProviders, unsaveProvider }) => (
   <div className="saved-list">
     <h3>Saved Providers</h3>
     {savedProviders.map(provider => (
-      <MenuDropdownItem key={provider.id} text={provider.name} item={provider}>
+      <MenuDropdownItem key={provider.id} text={provider.name} item={provider}
+        expanded={highlightedProviders.includes(provider.id)}>
         <RemoveButton
           className="remove-button"
           color="#FB3322"

@@ -17,6 +17,7 @@ const MenuContainer = props => {
 const mapStateToProps = state => {
   return {
     providersList: getProvidersSorted(state),
+    highlightedProviders: state.highlightedProviders,
     savedProviders: state.providers.savedProviders,
     visibleTypes: state.providerTypes.visible,
     filters: state.filters
