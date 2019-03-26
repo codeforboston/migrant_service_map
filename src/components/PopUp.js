@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import mapboxgl from "mapbox-gl";
 import ReactDOM from "react-dom";
-import { connect } from "react-redux";
+import { DetailsPane } from "../components/";
+import "./popup.css";
 
 export const insertPopup = (map, coordinates, props) => {
   const DOMInsert = document.createElement("div");
@@ -22,25 +23,13 @@ export class Popup extends Component {
   render() {
     return (
       <div className="popup">
-        <div className="popup-title">{this.props.provider.name}</div>
-        <div>
-          <span className="popup-info">
-            <img alt="phone icon" src="https://icon.now.sh/perm_phone_msg" />
-            {this.props.provider.telephone}
-          </span>
-          <span className="popup-info">
-            <img alt="web icon" src="https://icon.now.sh/language" />
-            <a href={this.props.provider.website}> {this.props.provider.website}</a>
-          </span>
-          <span className="popup-info">
-            <img alt="home icon" src="https://icon.now.sh/home" />
-              {this.props.provider.address || "address"}
-          </span>
+        <div className="popup-title">
+          {this.props.provider.name} (id: {this.props.provider.id})
         </div>
-        <div className="popup-text">{this.props.provider.mission}</div>
+        <DetailsPane provider={this.props.provider} />
         <div className="bottom-button-bar">
           {/* <AcceptingNewClients /> */}
-          <SaveButton />
+          <SaveButton isSaved={true} handleClick={this.props.handleClick} />
         </div>
       </div>
     );
@@ -73,28 +62,17 @@ export class AcceptingNewClients extends Component {
 }
 
 export class SaveButton extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isSaved: false
-    };
-  }
-
-  handleClick = () => {
-    let { isSaved } = this.state;
-    isSaved = !isSaved;
-    this.setState({ isSaved });
-  };
-
   render() {
-    let { isSaved } = this.state;
+    let { isSaved } = this.props;
     let text = isSaved ? "saved" : "save";
     return (
-      <IndicatorCheck
-        shouldBeOn={isSaved}
-        text={text}
-        onClick={this.handleClick}
-      />
+      <div className="bottom-button-bar">
+        <IndicatorCheck
+          shouldBeOn={isSaved}
+          text={text}
+          toggleSavedStatus={this.props.toggleSavedStatus}
+        />
+      </div>
     );
   }
 }
@@ -103,8 +81,8 @@ export const IndicatorLight = props => {
   let { shouldBeOn, text, onClick, colorOn, colorOff } = props;
 
   //user can choose other colors, but setting default colors here
-  const thisColorOn = colorOn ? colorOn : "green"; 
-  const thisColorOff = colorOff ? colorOff : "#BCBCBC"; 
+  const thisColorOn = colorOn ? colorOn : "green";
+  const thisColorOff = colorOff ? colorOff : "#BCBCBC";
 
   const fillCircle = (
     <svg height="22px" width="22px">
@@ -133,8 +111,8 @@ export const IndicatorLight = props => {
   );
 };
 
-export const IndicatorCheck = props => {
-  let { shouldBeOn, text, onClick, colorOn, colorOff } = props;
+const IndicatorCheck = props => {
+  let { shouldBeOn, text, toggleSavedStatus, colorOn, colorOff } = props;
 
   //user can choose other colors, but setting default colors here
   const thisColorOn = colorOn ? colorOn : "#2699FB";
@@ -154,7 +132,7 @@ export const IndicatorCheck = props => {
   );
 
   return (
-    <div className="statusToggles" onClick={onClick}>
+    <div className="statusToggles" onClick={toggleSavedStatus}>
       <div alt="check" height="18px" width="18px">
         {shouldBeOn && checkMark}
       </div>
@@ -162,5 +140,3 @@ export const IndicatorCheck = props => {
     </div>
   );
 };
-
-export default connect(({ providerTypes, filters }) => ({ providerTypes, filters }), {  })(Popup);

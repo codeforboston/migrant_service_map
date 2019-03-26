@@ -1,11 +1,8 @@
 import React from "react";
-import { Provider } from 'react-redux';
-import { Column, Row } from "simple-flexbox";
-import TopNav from "./components/TopNav";
-import Menu from './components/Menu/Menu';
-import Map from "./components/Map";
+import { Provider } from "react-redux";
+import { Map, Menu, TopNav, ProviderDetailList, SavedProvidersList } from "./components";
 
-import store from './store';
+import store from "./redux/store";
 
 import "./App.css";
 
@@ -16,7 +13,9 @@ export default function App() {
         <TopNav />
         <div className="map-container">
           <Menu />
+            <ProviderDetailList />
           <Map />
+          <SavedProvidersList />
         </div>
       </div>
     </Provider>

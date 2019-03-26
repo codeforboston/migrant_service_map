@@ -1,1 +1,0 @@
-export const providerToLayerName = (provider) => provider.properties["Type of Service"].toLowerCase().split(" ").join("-");

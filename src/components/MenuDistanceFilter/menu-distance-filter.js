@@ -1,9 +1,5 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
-import {
-  clearDistanceFilter,
-  changeDistanceFilter
-} from "../../actions";
+import "./menu-distance-filter.css";
 
 class DistanceFilter extends Component {
   render() {
@@ -16,16 +12,16 @@ class DistanceFilter extends Component {
             <div>
               <input
                 type="radio"
-                name={"distance"}
+                name="distance"
                 id={el}
                 value={el}
-                onChange={e => {
+                onChange={() => {
                   this.props.changeDistanceFilter(el);
                 }}
-          
                 checked={this.props.filters.distance === el}
-              />  
-              <label htmlFor={el}>{el} mile{el > 1 ? "s" : ""}
+              />
+              <label htmlFor={el}>
+                {el} mile{el > 1 ? "s" : ""}
               </label>
             </div>
           </li>
@@ -36,7 +32,4 @@ class DistanceFilter extends Component {
   }
 }
 
-export default connect(
-  ({ providerTypes, filters }) => ({ providerTypes, filters }),
-  { clearDistanceFilter, changeDistanceFilter }
-)(DistanceFilter);
+export default DistanceFilter;
