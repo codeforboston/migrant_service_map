@@ -44,7 +44,6 @@ class Menu extends Component {
                           key={provider.id}
                           text={provider.name}
                           item={provider}
-                          // clickHandler={this.props.handleMenuItemClick}
                         >
                           <SaveButton
                             isSaved={savedProviders.includes(provider.id)}
