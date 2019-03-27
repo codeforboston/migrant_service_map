@@ -1,0 +1,142 @@
+/* .details-pane .provider-info {
+  border: solid 1px #e2d5ed;
+  margin: 5px 0;
+  overflow: hidden;
+  padding: 5px 0;
+  background-color: #f0ebfb;
+}
+.popup-info,
+.popup-text {
+  padding-left: 5px;
+}
+.details-pane .popup-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+*/
+.provider-card {
+  display: flex;
+  width: 100%;
+  flex-flow: column nowrap;
+  background-color: #f5fbff;
+  padding: 10px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+.provider-card .card-container {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 80px;
+}
+
+.card-header {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+}
+
+.card-header h5 {
+  margin: 0 0 5px 0;
+  font-size: 16px;
+  color: #000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.wrapped-info {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.prov-type {
+  height: 30px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: #538200;
+}
+
+.prov-type.wrapped {
+  width: 100px;
+}
+.prov-type.expanded {
+  width: 180px;
+}
+
+.prov-type p {
+  font-size: 10px;
+  margin: 5px 0;
+  text-transform: uppercase;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wrapped-info svg:first-of-type {
+  margin-right: 5px;
+}
+.wrapped-info .wrapped-icons svg {
+  font-size: 12px;
+  margin: 3px;
+}
+
+.wrapped-info:last-child {
+  min-width: 60px;
+  font-size: 12px;
+  color: #7e7e7e;
+}
+
+.wrapped-icons {
+  color: #7e7e7e;
+}
+
+.save-button-container {
+  position: absolute;
+  top: 5px;
+  right: 0;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  width: 70px;
+  border: 0;
+  cursor: pointer;
+  outline: none;
+}
+
+.button.saved {
+  background-color: transparent;
+  flex-direction: column;
+  color: #af1d09;
+}
+
+.button.unsaved {
+  background-color: #2699fb;
+  border-radius: 5px;
+  color: #fff;
+}
+
+.button > svg {
+  font-size: 25px;
+}
+
+.button.unsaved > svg {
+  margin-right: 5px;
+}
+
+.button.saved > svg {
+  margin-bottom: 5px;
+}

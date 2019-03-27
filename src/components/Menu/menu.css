@@ -1,7 +1,7 @@
 .side-menu {
   position: absolute;
   z-index: 1;
-  width: 315px;
+  width: 400px;
   height: calc(100vh - 2em); /* TODO this should be flex box column */
 }
 
@@ -28,10 +28,9 @@
   color: #8c45cf;
 }
 
-
 /* .side-menu {
   /* text-align: left; */
-  /* display: flex;
+/* display: flex;
   flex-direction: column;
   flex: 1;
   max-height: 700px;
