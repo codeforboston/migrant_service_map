@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import {
   toggleProviderVisibility,
   saveProvider,
-  unsaveProvider,
   clearDistanceFilter,
   changeDistanceFilter
 } from "../../redux/actions";
@@ -30,9 +29,6 @@ const mapDispatchToProps = dispatch => {
     },
     saveProvider: id => {
       dispatch(saveProvider(id));
-    },
-    unsaveProvider: id => {
-      dispatch(unsaveProvider(id));
     },
     clearDistanceFilter: () => {
       dispatch(clearDistanceFilter());
