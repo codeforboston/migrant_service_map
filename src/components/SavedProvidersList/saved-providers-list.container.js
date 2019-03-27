@@ -10,7 +10,8 @@ const SavedProvidersListContainer = props => {
 
 const mapStateToProps = state => {
   return {
-    savedProviders: getSavedProviders(state)
+    savedProviders: getSavedProviders(state),
+    highlightedProviders: state.highlightedProviders
   };
 };
 
