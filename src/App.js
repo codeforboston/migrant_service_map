@@ -1,6 +1,6 @@
 import React from "react";
 import { Provider } from "react-redux";
-import { Map, Menu, TopNav, ProviderDetailList, SavedProvidersList } from "./components";
+import { Map, Menu, TopNav, SavedProvidersList } from "./components";
 
 import store from "./redux/store";
 
@@ -13,7 +13,6 @@ export default function App() {
         <TopNav />
         <div className="map-container">
           <Menu />
-            <ProviderDetailList />
           <Map />
           <SavedProvidersList />
         </div>

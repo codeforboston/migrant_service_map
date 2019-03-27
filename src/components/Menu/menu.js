@@ -15,7 +15,8 @@ class Menu extends Component {
       unsaveProvider,
       toggleProviderVisibility,
       clearDistanceFilter,
-      changeDistanceFilter
+      changeDistanceFilter, 
+      highlightedProviders,
     } = this.props;
     return (
       <div className="side-menu">
@@ -44,6 +45,7 @@ class Menu extends Component {
                           key={provider.id}
                           text={provider.name}
                           item={provider}
+                          expanded={highlightedProviders.includes(provider.id)}
                         >
                           <SaveButton
                             isSaved={savedProviders.includes(provider.id)}
