@@ -5,7 +5,6 @@ import MenuDistanceFilter from "./MenuDistanceFilter";
 import MenuVisaFilter from "./MenuVisaFilter";
 import MenuDropdown from "./MenuDropdown";
 import MenuDropdownItem from "./MenuDropdownItem";
-import ProviderDetailList from "./ProviderDetailList";
 import SavedProvidersList from "./SavedProvidersList";
 import TopNav from "./TopNav";
 
@@ -17,7 +16,6 @@ export {
   MenuVisaFilter,
   MenuDropdown,
   MenuDropdownItem,
-  ProviderDetailList,
   SavedProvidersList,
   TopNav
 };

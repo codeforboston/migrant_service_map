@@ -20,6 +20,11 @@ const typeImages = [
       "https://upload.wikimedia.org/wikipedia/commons/b/b4/Webdings_x005f.png"
   },
   {
+    type: "resettlement",
+    url:
+      "https://upload.wikimedia.org/wikipedia/commons/1/17/Webdings_x0042.png"
+  },
+  {
     type: "housing",
     url:
       "https://upload.wikimedia.org/wikipedia/commons/1/17/Webdings_x0042.png"

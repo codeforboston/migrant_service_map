@@ -1,23 +1,18 @@
 import React from "react";
+import { connect } from "react-redux";
 import { DetailsPane } from "..";
+import { displayProviderInformation } from "../../redux/actions";
 
-export default class DropdownMenuItem extends React.Component {
-  state = { expanded: false };
-
-  onItemClick = () => {
-    this.setState({ expanded: !this.state.expanded });
-    // setPopUp(item.properties);
-  };
-
+class DropdownMenuItem extends React.Component {
   render() {
-    let { text, item, children } = this.props;
+    let { text, item, children, expanded } = this.props;
 
     return (
       <div className="list-item">
-        <a href="#target" onClick={this.onItemClick}>
+        <a href="#target" onClick={() => this.props.onItemClick(item.id)}>
           {text}
         </a>
-        {this.state.expanded ? (
+        {expanded ? (
           <>
             <DetailsPane provider={item} />
             {children}
@@ -27,3 +22,20 @@ export default class DropdownMenuItem extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {};
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onItemClick: id => {
+      dispatch(displayProviderInformation(id));
+    }
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DropdownMenuItem);

@@ -16,6 +16,7 @@ class Menu extends Component {
       toggleProviderVisibility,
       clearDistanceFilter,
       changeDistanceFilter,
+      highlightedProviders,
       clearVisaFilter,
       changeVisaFilter
     } = this.props;
@@ -51,7 +52,7 @@ class Menu extends Component {
                           key={provider.id}
                           text={provider.name}
                           item={provider}
-                          // clickHandler={this.props.handleMenuItemClick}
+                          expanded={highlightedProviders.includes(provider.id)}
                         >
                           <SaveButton
                             isSaved={savedProviders.includes(provider.id)}
