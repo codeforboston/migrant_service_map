@@ -7,13 +7,14 @@ const getProvidersById = state => state.providers.byId;
 const getDistance = state => state.filters.distance;
 const getSavedProvidersIds = state => state.providers.savedProviders;
 const getHighlightedProvidersList = state => state.highlightedProviders
+const getSearchCoordinates = state => state.search.coordinates; 
 
 export const getProvidersSorted = createSelector(
-  [getProviderTypesIds, getProviderTypesById, getProvidersById, getDistance],
-  (providerTypesIds, providerTypesById, providersById, distance) => {
+  [getProviderTypesIds, getProviderTypesById, getProvidersById, getDistance, getSearchCoordinates],
+  (providerTypesIds, providerTypesById, providersById, distance, searchCoordinates) => {
     if (distance) {
       const options = { units: "miles" };
-      const refLocation = [-71.066954, 42.359947]; // HARDCODED, SHOULD BE STORED IN REDUX?
+      const refLocation = searchCoordinates;
       return sortedByDistance(
         providerTypesIds,
         providerTypesById,
@@ -34,7 +35,7 @@ export const getProvidersSorted = createSelector(
     }
   }
 );
-
+ 
 export const getSavedProviders = createSelector(
   [getSavedProvidersIds, getProvidersById],
   (savedProvidersIds, providersById) =>
