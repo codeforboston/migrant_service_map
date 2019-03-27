@@ -64,7 +64,6 @@ class Map extends Component {
 
   convertProvidersToGeoJSON = providersTypesIds => {
     const { providers } = this.props;
-    console.log(providers);
     return providersTypesIds.map(id => ({
       type: "Feature",
       geometry: {
@@ -208,11 +207,12 @@ class Map extends Component {
   normalizeProviders = providerFeatures => {
     const providerTypes = { byId: {}, allIds: [] };
     const providers = { byId: {}, allIds: [] };
-    Array.from(providerFeatures).map(({ id, geometry: { coordinates }, properties }) => {
+    Array.from(providerFeatures).map(({ id, geometry: { coordinates }, properties }, index) => {
       let formattedTypeId = properties["Type of Service"]
         .toLowerCase()
         .split(" ")
         .join("-");
+      id = index;
       const typeExists = providerTypes.allIds.includes(formattedTypeId);
       if (formattedTypeId === "community-center") {
         // special case

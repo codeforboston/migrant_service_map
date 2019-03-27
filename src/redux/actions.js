@@ -9,7 +9,6 @@ export const SET_SEARCH_COORDINATES = "SET_SEARCH_COORDINATES";
 export const FILTER_PROVIDERS = "FILTER_PROVIDERS";
 export const FILTER_NAME = "FILTER_NAME";
 export const SAVE_PROVIDER = "SAVE_PROVIDER";
-export const UNSAVE_PROVIDER = "UNSAVE_PROVIDER";
 
 export const initializeProviders = providers => {
   // TODO WHEN ASYNC async dispatch => {
@@ -26,7 +25,7 @@ export function displayProviderInformation(providerId) {
     type: HIGHLIGHT_PROVIDER,
     providerId
   };
- }
+}
 
 export function toggleProviderVisibility(providerType) {
   return {
@@ -85,13 +84,6 @@ export function filterByName(name) {
 export function saveProvider(id) {
   return {
     type: SAVE_PROVIDER,
-    id
-  };
-}
-
-export function unsaveProvider(id) {
-  return {
-    type: UNSAVE_PROVIDER,
     id
   };
 }

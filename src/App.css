@@ -60,10 +60,6 @@
   color: white;
 }
 
-.list-item {
-  margin: 0.5rem;
-}
-
 .map-container {
   position: relative;
   /* display: flex;

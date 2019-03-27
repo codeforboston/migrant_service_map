@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import {
   toggleProviderVisibility,
   saveProvider,
-  unsaveProvider,
   clearDistanceFilter,
   changeDistanceFilter,
   changeVisaFilter,
@@ -21,7 +20,6 @@ const MenuContainer = props => {
 const mapStateToProps = state => {
   return {
     providersList: getProvidersSorted(state),
-    highlightedProviders: state.highlightedProviders,
     savedProviders: state.providers.savedProviders,
     visaTypes: VISA_TYPES,
     visibleTypes: state.providerTypes.visible,
@@ -36,9 +34,6 @@ const mapDispatchToProps = dispatch => {
     },
     saveProvider: id => {
       dispatch(saveProvider(id));
-    },
-    unsaveProvider: id => {
-      dispatch(unsaveProvider(id));
     },
     clearDistanceFilter: () => {
       dispatch(clearDistanceFilter());
