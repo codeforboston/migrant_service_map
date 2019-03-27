@@ -1,8 +1,8 @@
 import React, { Component, Fragment } from "react";
 import { SaveButton } from "../PopUp";
-import { MenuDistanceFilter, MenuDropdown, MenuDropdownItem } from "..";
+import { MenuDistanceFilter, MenuVisaFilter, MenuDropdown, MenuDropdownItem } from "..";
 
-import "./menu.css"; 
+import "./menu.css";
 
 class Menu extends Component {
   render() {
@@ -15,8 +15,10 @@ class Menu extends Component {
       unsaveProvider,
       toggleProviderVisibility,
       clearDistanceFilter,
-      changeDistanceFilter, 
+      changeDistanceFilter,
       highlightedProviders,
+      clearVisaFilter,
+      changeVisaFilter
     } = this.props;
     return (
       <div className="side-menu">
@@ -29,6 +31,11 @@ class Menu extends Component {
                 filters={filters}
                 clearDistanceFilter={clearDistanceFilter}
                 changeDistanceFilter={changeDistanceFilter}
+              />
+              <MenuVisaFilter
+                filters={filters}
+                clearVisaFilter={clearVisaFilter}
+                changeVisaFilter={changeVisaFilter}
               />
               {providersList.map(providerType => (
                 <Fragment key={providerType.id}>
