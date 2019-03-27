@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { MenuDistanceFilter, MenuDropdown, MenuDropdownItem } from "..";
+import { MenuDistanceFilter, MenuVisaFilter, MenuDropdown, MenuDropdownItem } from "..";
 
 import "./menu.css";
 
@@ -13,7 +13,9 @@ class Menu extends Component {
       filters,
       toggleProviderVisibility,
       clearDistanceFilter,
-      changeDistanceFilter
+      changeDistanceFilter,
+      clearVisaFilter,
+      changeVisaFilter
     } = this.props;
     return (
       <div className="side-menu">
@@ -26,6 +28,11 @@ class Menu extends Component {
                 filters={filters}
                 clearDistanceFilter={clearDistanceFilter}
                 changeDistanceFilter={changeDistanceFilter}
+              />
+              <MenuVisaFilter
+                filters={filters}
+                clearVisaFilter={clearVisaFilter}
+                changeVisaFilter={changeVisaFilter}
               />
               {providersList.map(providerType => (
                 <ul key={providerType.id}>
