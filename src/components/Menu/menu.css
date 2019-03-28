@@ -1,3 +1,133 @@
+h2 {
+  margin: 2px 2px 0 0; 
+  font-weight: 900; 
+  text-transform: uppercase; 
+  letter-spacing: 0.4px; 
+}
+
+p {
+  margin: 2px 0 6px 2px; 
+  font-size: 14px; 
+  line-height: 12px;
+  font-weight: bold;
+  color: gray;  
+  transition: all 0.1s ease; 
+}
+
+label {
+  margin-left: 10px; 
+}
+
+.dropdown-list-container.expanded p {
+  color: white; 
+}
+
+.top-nav {
+  /* display: flex; */
+  overflow: visible;
+  height: 10%;
+  background-color: white; 
+  z-index: 8;  
+}
+
+.nav-search {
+  margin-top: 5px;
+}
+
+.upper-bar {
+  position: absolute; 
+  z-index: 20;
+  background-color: white;
+  border-bottom: 1px solid #8c45cf;  
+  height: 10vh; 
+  width: 100%;
+}
+
+.dropdown-row {
+  display: flex;
+  width: 100%;
+  padding: 0 15px; 
+}
+
+.dropdown-list-container {
+  flex: 1; 
+  /* width: 4vh;  */
+  height: 0%;
+  margin: 0 8px;
+  cursor: pointer;
+  z-index: 10;
+  background-color: white;
+  border: 1px solid #8c45cf; 
+  box-shadow: 2px 1px 2px #8c45cf;
+}
+
+.placeholder {
+  box-shadow: none; 
+  border: none; 
+}
+
+.dropdown-list {
+  display: flex; 
+  flex-direction: column;
+  height: 0; 
+  /* max-height: 100%; */
+  /* width: 100%; */
+  padding-top: 0px; 
+  text-align: left;
+  opacity: 0;
+  background-color: white;
+  transition: all 0.1s ease-out;
+}
+
+.dropdown-list-container.expanded .dropdown-list {
+  padding-top: 6px; 
+  height: 100%; 
+  opacity: 1; 
+}
+
+.dropdown-list-item { 
+  height: 0px; 
+  padding: 0px 5px;
+  color: black; 
+  transition: all 0.1s ease-out;
+}
+.dropdown-list-container.expanded .dropdown-list-item {
+  height: 30px; 
+  padding: 2px 5px; 
+}
+
+.dropdown-list-header {
+  width: 100%;
+  padding: 0 5px;
+  color: #8c45cf;
+  background-color: white; 
+  transition: all 0.1s ease-out;
+}
+
+.dropdown-list-container.expanded .dropdown-list-header {
+  background-color: #8c45cf;
+}
+.dropdown-list-container.expanded .dropdown-list-header h2 {
+  color: white;
+}
+
+.dropdown-button {
+  height: 0; 
+  /* max-height: 100%;  */
+  width: 100%; 
+  margin: 0 24px;
+  padding: 0 10px; 
+  border-radius: 0; 
+  transition: all 0.1s ease-out; 
+}
+
+.dropdown-list-container.expanded .dropdown-button {
+  border: 1px solid #8c45cf; 
+  height: 100%;
+  margin: 12px 24px; 
+  padding: 10px; 
+}
+
 .dropdown-menu {
   cursor: pointer;
   color: gray;

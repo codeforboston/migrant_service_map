@@ -11,10 +11,10 @@ export default function App() {
     <Provider store={store}>
       <div>
         <TopNav />
-        <div className="map-container">
+        {/* <div className="map-container"> */}
           <TabbedMenu/>
           <Map />
-        </div>
+        {/* </div> */}
       </div>
     </Provider>
   );
