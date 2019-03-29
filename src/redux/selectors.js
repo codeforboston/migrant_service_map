@@ -7,7 +7,7 @@ const getProvidersById = state => state.providers.byId;
 const getDistance = state => state.filters.distance;
 const getSavedProvidersIds = state => state.providers.savedProviders;
 const getHighlightedProvidersList = state => state.highlightedProviders;
-const getSearchCoordinates = state => state.search.coordinates;
+const getSearchCoordinates = state => state.search.history[state.search.currentLocation].coordinates;
 
 export const getProvidersSorted = createSelector(
   [

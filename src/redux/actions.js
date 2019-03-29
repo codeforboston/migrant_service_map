@@ -60,10 +60,12 @@ export function clearVisaFilter() {
   };
 }
 
-export function setSearchCenterCoordinates(coordinates) {
+export function setSearchCenterCoordinates(coordinates, mapboxId, text) {
   return {
     type: SET_SEARCH_COORDINATES,
-    coordinates
+    coordinates,
+    mapboxId,
+    text
   };
 }
 
