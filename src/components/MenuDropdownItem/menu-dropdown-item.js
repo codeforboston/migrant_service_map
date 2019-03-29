@@ -54,7 +54,7 @@ export default class DropdownMenuItem extends React.Component {
                 </div>
               )}
               <div>
-                <p> {/* TODO Distance */}3.4 mi away</p>
+                <p>{Math.round(provider.distance*10)/10} mi away</p>
               </div>
             </div>
           </div>
