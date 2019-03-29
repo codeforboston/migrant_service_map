@@ -10,6 +10,7 @@ const SavedProvidersListContainer = props => {
 
 const mapStateToProps = state => {
   return {
+    searchCenter: state.search.history[state.search.currentLocation].searchText,
     savedProviders: getSavedProviders(state),
     highlightedProviders: state.highlightedProviders
   };

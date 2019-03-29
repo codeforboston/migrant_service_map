@@ -49,9 +49,20 @@ export const getProvidersSorted = createSelector(
 );
 
 export const getSavedProviders = createSelector(
-  [getSavedProvidersIds, getProvidersById],
-  (savedProvidersIds, providersById) =>
-    savedProvidersIds.map(id => providersById[id])
+  [getSavedProvidersIds, getProvidersById, getSearchCoordinates],
+  (savedProvidersIds, providersById, searchCoordinates) =>
+    savedProvidersIds.map(id => {
+      const provDistance = distance(
+        // TODO use coordinates from search history when provider was saved
+        point(providersById[id].coordinates),
+        point(searchCoordinates),
+        { units: "miles" }
+      )
+      return {
+        ...providersById[id],
+        distance: provDistance
+      }
+    })
 );
 
 export const getHighlightedProviders = createSelector(

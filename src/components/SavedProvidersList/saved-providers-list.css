@@ -15,7 +15,10 @@
 
   overflow-y: scroll;
 }
-
+.search-center {
+    color:#7e7e7e;
+    font-size:12px;
+}
 .saved-list h3 {
   color: gray;
   color: #8c45cf;
