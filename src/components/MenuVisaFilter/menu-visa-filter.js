@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 class MenuVisaFilter extends Component {
   render() {
-    const VISA_TYPES = ['visa1', 'visa2', 'visa3'];
+    const VISA_TYPES = ["visa1", "visa2", "visa3"];
 
     return (
       <ul>
@@ -18,9 +18,7 @@ class MenuVisaFilter extends Component {
                 onChange={() => this.props.changeVisaFilter(visa)}
                 checked={this.props.filters.visa === visa}
               />
-              <label htmlFor={visa}>
-                {visa}
-              </label>
+              <label htmlFor={visa}>{visa}</label>
             </div>
           </li>
         ))}

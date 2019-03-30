@@ -84,11 +84,11 @@ class Map extends Component {
   };
 
   componentDidMount() {
-    const { mapCenter, coordinates } = this.props.search; 
+    const { mapCenter, coordinates } = this.props.search;
     const map = new mapboxgl.Map({
       container: "map", // container id
       style: "mapbox://styles/refugeeswelcome/cjh9k11zz15ds2spbs4ld6y9o", // stylesheet location
-      center: mapCenter, 
+      center: mapCenter,
       zoom: 11 // starting zoom
     });
 
@@ -104,10 +104,11 @@ class Map extends Component {
     this.map = map;
     this.loadProviderTypeImage(typeImages);
 
-    const coordinateObject = { // initiating geocoder requires this as an object
-      longitude: coordinates[0], 
+    const coordinateObject = {
+      // initiating geocoder requires this as an object
+      longitude: coordinates[0],
       latitude: coordinates[1]
-    }
+    };
 
     const geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
@@ -122,12 +123,11 @@ class Map extends Component {
     });
   }
 
-
   addDistanceIndicator = () => {
     //TODO: make this input from the distance filter
     const distanceFilterDistances = [0.5, 1, 1.5];
     const { search } = this.props;
-    
+
     this.removeDistanceMarkers();
     if (!this.map.getSource("distance-indicator-source")) {
       this.map.addSource("distance-indicator-source", {
@@ -153,20 +153,28 @@ class Map extends Component {
     const center = this.createCenterMarker().setLngLat(search.coordinates);
     const options = { steps: 100, units: "miles" };
     const circles = distanceFilterDistances.map((radius, i) =>
-      circle(search.coordinates, radius, { ...options, properties: { color: colors[i], "stroke-width": radius } })
+      circle(search.coordinates, radius, {
+        ...options,
+        properties: { color: colors[i], "stroke-width": radius }
+      })
     );
     const labels = distanceFilterDistances.map((radius, i) => {
-      const radiusOffset = transformTranslate(point(search.coordinates), radius, 90, { units: "miles" });
+      const radiusOffset = transformTranslate(
+        point(search.coordinates),
+        radius,
+        90,
+        { units: "miles" }
+      );
       const marker = this.createDistanceMarker(radius, colors[i]);
       return marker.setLngLat(radiusOffset.geometry.coordinates);
     });
 
     labels.map(label => label.addTo(this.map));
     center.addTo(this.map);
-    this.map.getSource("distance-indicator-source").setData({ type: "FeatureCollection", features: circles });
+    this.map
+      .getSource("distance-indicator-source")
+      .setData({ type: "FeatureCollection", features: circles });
   };
-
-  
 
   createDistanceMarker = (distance, color) => {
     const markerElement = document.createElement("div");
@@ -181,7 +189,9 @@ class Map extends Component {
   };
 
   removeDistanceMarkers = () => {
-    const distanceMarkers = Array.from(document.getElementsByClassName("distanceMarker"));
+    const distanceMarkers = Array.from(
+      document.getElementsByClassName("distanceMarker")
+    );
     return distanceMarkers.map(marker => marker.remove());
   };
 
@@ -207,55 +217,62 @@ class Map extends Component {
   normalizeProviders = providerFeatures => {
     const providerTypes = { byId: {}, allIds: [] };
     const providers = { byId: {}, allIds: [] };
-    Array.from(providerFeatures).map(({ id, geometry: { coordinates }, properties }, index) => {
-      let formattedTypeId = properties["Type of Service"]
-        .toLowerCase()
-        .split(" ")
-        .join("-");
-      id = index;
-      const typeExists = providerTypes.allIds.includes(formattedTypeId);
-      if (formattedTypeId === "community-center") {
-        // special case
-        formattedTypeId = "community-centers";
-      }
-      if (typeExists) {
-        providerTypes.byId[formattedTypeId] = {
-          ...providerTypes.byId[formattedTypeId],
-          id: formattedTypeId,
-          name: properties["Type of Service"],
-          providers: [...providerTypes.byId[formattedTypeId].providers, id]
-        };
-      } else {
-        if (!providerTypes.allIds.includes(formattedTypeId)) {
-          providerTypes.allIds.push(formattedTypeId);
+    Array.from(providerFeatures).map(
+      ({ id, geometry: { coordinates }, properties }, index) => {
+        let formattedTypeId = properties["Type of Service"]
+          .toLowerCase()
+          .split(" ")
+          .join("-");
+        id = index;
+        const typeExists = providerTypes.allIds.includes(formattedTypeId);
+        if (formattedTypeId === "community-center") {
+          // special case
+          formattedTypeId = "community-centers";
         }
-        providerTypes.byId[formattedTypeId] = {
-          id: formattedTypeId,
-          name: properties["Type of Service"],
-          providers: [id]
-        };
-      }
+        if (typeExists) {
+          providerTypes.byId[formattedTypeId] = {
+            ...providerTypes.byId[formattedTypeId],
+            id: formattedTypeId,
+            name: properties["Type of Service"],
+            providers: [...providerTypes.byId[formattedTypeId].providers, id]
+          };
+        } else {
+          if (!providerTypes.allIds.includes(formattedTypeId)) {
+            providerTypes.allIds.push(formattedTypeId);
+          }
+          providerTypes.byId[formattedTypeId] = {
+            id: formattedTypeId,
+            name: properties["Type of Service"],
+            providers: [id]
+          };
+        }
 
-      return (providers.byId[id] = {
-        id,
-        coordinates,
-        address: properties["Address (#, Street Name, District/city, State, Zip Code)"],
-        email: properties["Email:"],
-        mission: properties["Mission:"],
-        name: properties["Organization Name"],
-        telephone: properties["Telephone:"],
-        timestamp: properties.Timestamp,
-        // Type of Service
-        category: properties["Type of Service"], // better name to map to?
-        "Type of Service": properties["Type of Service"], // as referenced in reducer helper function
-        // Validated By
-        website: properties.Website
-      });
-    });
+        return (providers.byId[id] = {
+          id,
+          coordinates,
+          address:
+            properties[
+              "Address (#, Street Name, District/city, State, Zip Code)"
+            ],
+          email: properties["Email:"],
+          mission: properties["Mission:"],
+          name: properties["Organization Name"],
+          telephone: properties["Telephone:"],
+          timestamp: properties.Timestamp,
+          // Type of Service
+          category: properties["Type of Service"], // better name to map to?
+          "Type of Service": properties["Type of Service"], // as referenced in reducer helper function
+          // Validated By
+          website: properties.Website
+        });
+      }
+    );
     // sorted by name
     providerTypes.allIds.map(id => {
       const providersByType = providerTypes.byId[id].providers;
-      return providersByType.sort((a, b) => providers.byId[a].name.localeCompare(providers.byId[b].name));
+      return providersByType.sort((a, b) =>
+        providers.byId[a].name.localeCompare(providers.byId[b].name)
+      );
     });
     // commit map query result to redux
     return { providerTypes, providers };
