@@ -111,21 +111,6 @@
   text-transform: uppercase;
 }
 
-.popup .popup-info {
-  width: 320px;
-  font-size: 16px;
-}
-.popup-info {
-  display: flex;
-  align-items: center;
-  font-weight: 500;
-  color: #5d5d5d;
-}
-
-.popup-info img {
-  margin-right: 0.5em;
-}
-
 .popup-text {
   font-size: 16px;
   font-weight: 400;
