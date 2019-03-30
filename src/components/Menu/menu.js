@@ -20,7 +20,9 @@ class Menu extends Component {
       clearDistanceFilter,
       changeDistanceFilter,
       clearVisaFilter,
-      changeVisaFilter
+      changeVisaFilter,
+      highlightedProviders,
+      displayProviderInformation
     } = this.props;
     return (
       <div className="">
@@ -33,11 +35,7 @@ class Menu extends Component {
                 clearDistanceFilter={clearDistanceFilter}
                 changeDistanceFilter={changeDistanceFilter}
               />
-              <MenuVisaFilter
-                filters={filters}
-                clearVisaFilter={clearVisaFilter}
-                changeVisaFilter={changeVisaFilter}
-              />
+              <MenuVisaFilter filters={filters} clearVisaFilter={clearVisaFilter} changeVisaFilter={changeVisaFilter} />
               {providersList.map(providerType => (
                 <ul key={providerType.id}>
                   {!!providerType.providers.length && ( //if there is not providers MenuDropdown is not shown
@@ -49,16 +47,13 @@ class Menu extends Component {
                       onToggle={toggleProviderVisibility}
                     >
                       {providerType.providers.map(provider => (
-                        <li key={provider.id}>
+                        <li key={provider.id} onClick={() => displayProviderInformation(provider.id)}>
                           <MenuDropdownItem
                             key={provider.id}
                             provider={provider}
                             providerTypeName={providerType.name}
-                            isSaved={
-                              savedProviders.includes(provider.id)
-                                ? "saved"
-                                : "unsaved"
-                            }
+                            isHighlighted={highlightedProviders.includes(provider.id)}
+                            isSaved={savedProviders.includes(provider.id) ? "saved" : "unsaved"}
                             toggleSavedStatus={() => saveProvider(provider.id)}
                           />
                         </li>
