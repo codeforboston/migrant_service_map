@@ -4,7 +4,6 @@ import {
   Map,
   Menu,
   TopNav,
-  ProviderDetailList,
   SavedProvidersList
 } from "./components";
 
@@ -19,7 +18,6 @@ export default function App() {
         <TopNav />
         <div className="map-container">
           <Menu />
-          <ProviderDetailList />
           <Map />
           <SavedProvidersList />
         </div>

@@ -1,6 +1,5 @@
-import React, { Component, Fragment } from "react";
-import { SaveButton } from "../PopUp";
-import { MenuDistanceFilter, MenuDropdown, MenuDropdownItem } from "..";
+import React, { Component } from "react";
+import { MenuDistanceFilter, MenuVisaFilter, MenuDropdown, MenuDropdownItem } from "..";
 
 import "./menu.css";
 
@@ -12,10 +11,11 @@ class Menu extends Component {
       visibleTypes,
       saveProvider,
       filters,
-      unsaveProvider,
       toggleProviderVisibility,
       clearDistanceFilter,
-      changeDistanceFilter
+      changeDistanceFilter,
+      clearVisaFilter,
+      changeVisaFilter
     } = this.props;
     return (
       <div className="side-menu">
@@ -29,8 +29,13 @@ class Menu extends Component {
                 clearDistanceFilter={clearDistanceFilter}
                 changeDistanceFilter={changeDistanceFilter}
               />
+              <MenuVisaFilter
+                filters={filters}
+                clearVisaFilter={clearVisaFilter}
+                changeVisaFilter={changeVisaFilter}
+              />
               {providersList.map(providerType => (
-                <Fragment key={providerType.id}>
+                <ul key={providerType.id}>
                   {!!providerType.providers.length && ( //if there is not providers MenuDropdown is not shown
                     <MenuDropdown
                       key={providerType.id}
@@ -40,25 +45,23 @@ class Menu extends Component {
                       onToggle={toggleProviderVisibility}
                     >
                       {providerType.providers.map(provider => (
-                        <MenuDropdownItem
-                          key={provider.id}
-                          text={provider.name}
-                          item={provider}
-                          // clickHandler={this.props.handleMenuItemClick}
-                        >
-                          <SaveButton
-                            isSaved={savedProviders.includes(provider.id)}
-                            toggleSavedStatus={() =>
+                        <li key={provider.id}>
+                          <MenuDropdownItem
+                            key={provider.id}
+                            provider={provider}
+                            providerTypeName={providerType.name}
+                            isSaved={
                               savedProviders.includes(provider.id)
-                                ? unsaveProvider(provider.id)
-                                : saveProvider(provider.id)
+                                ? "saved"
+                                : "unsaved"
                             }
+                            toggleSavedStatus={() => saveProvider(provider.id)}
                           />
-                        </MenuDropdownItem>
+                        </li>
                       ))}
                     </MenuDropdown>
                   )}
-                </Fragment>
+                </ul>
               ))}
             </>
           )}

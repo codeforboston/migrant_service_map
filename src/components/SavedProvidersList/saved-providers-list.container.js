@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { unsaveProvider } from "../../redux/actions";
+import { saveProvider } from "../../redux/actions";
 import { getSavedProviders } from "../../redux/selectors.js";
 import SavedProvidersList from "./saved-providers-list";
 
@@ -10,14 +10,15 @@ const SavedProvidersListContainer = props => {
 
 const mapStateToProps = state => {
   return {
-    savedProviders: getSavedProviders(state)
+    savedProviders: getSavedProviders(state),
+    highlightedProviders: state.highlightedProviders
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    unsaveProvider: id => {
-      dispatch(unsaveProvider(id));
+    saveProvider: id => {
+      dispatch(saveProvider(id));
     }
   };
 };
