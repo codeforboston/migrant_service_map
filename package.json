@@ -12,14 +12,15 @@
     "dot-prop-immutable": "^1.5.0",
     "mapbox": "^1.0.0-beta10",
     "mapbox-gl": "^0.51.0",
+    "npm": "^6.9.0",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "react-redux": "^6.0.0",
     "react-scripts": "^2.1.8",
+    "react-tabs": "^3.0.0",
     "redux": "^4.0.1",
     "reselect": "^4.0.0",
-    "simple-flexbox": "^1.2.0",
-    "react-tabs": "^3.0.0"
+    "simple-flexbox": "^1.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
