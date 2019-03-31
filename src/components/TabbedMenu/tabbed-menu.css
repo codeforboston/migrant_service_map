@@ -27,7 +27,7 @@
 /* .panels */
 .side-menu > div {
   margin-top: -10px; /* counter react-tabs styling */
-  padding: 4px 4px 4px 16px;
+  padding: 4px 16px;
 
   max-height: 100%;
 
