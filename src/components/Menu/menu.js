@@ -18,12 +18,11 @@ class Menu extends Component {
       changeVisaFilter
     } = this.props;
     return (
-      <div className="side-menu">
+      <div className="">
         <div className="service-providers">
           {!providersList.length && <h3>LOADING ...</h3>}
           {!!providersList.length && (
             <>
-              <h3>Service Providers</h3>
               <MenuDistanceFilter
                 filters={filters}
                 clearDistanceFilter={clearDistanceFilter}
