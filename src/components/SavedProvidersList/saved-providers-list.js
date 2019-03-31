@@ -3,8 +3,7 @@ import { MenuDropdownItem } from "..";
 import "./saved-providers-list.css";
 
 const SavedProvidersList = ({ savedProviders, saveProvider }) => (
-  <div className="saved-list">
-    <h3>Saved Providers</h3>
+  <div className="">
     {savedProviders.map(provider => (
       <MenuDropdownItem
         key={provider.id}
