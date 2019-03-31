@@ -11,7 +11,7 @@ import {
 import { getProvidersSorted } from "../../redux/selectors.js";
 import Menu from "./menu";
 
-const VISA_TYPES = ['visa1', 'visa2', 'visa3'];
+const VISA_TYPES = ["visa1", "visa2", "visa3"];
 
 const MenuContainer = props => {
   return <Menu {...props} />;

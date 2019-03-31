@@ -1,33 +1,33 @@
 .saved-list {
-    position: absolute;
-    z-index: 1;
-    width: 250px;
-    right: 0;
-    bottom: 3em;
+  position: absolute;
+  z-index: 1;
+  width: 250px;
+  right: 0;
+  bottom: 3em;
 
-    margin: 15px;
-    padding: 4px;
-  
-    max-height: 100%;
-  
-    background-color: white;
-    filter: drop-shadow(0 3px 3px gray);
-  
-    overflow-y: scroll;
+  margin: 15px;
+  padding: 4px;
+
+  max-height: 100%;
+
+  background-color: white;
+  filter: drop-shadow(0 3px 3px gray);
+
+  overflow-y: scroll;
 }
-  
+
 .saved-list h3 {
-    color: gray;
-    color: #8c45cf;
-    font-weight: bold;
-    margin: 7px 2px;
+  color: gray;
+  color: #8c45cf;
+  font-weight: bold;
+  margin: 7px 2px;
 }
 
 .remove-button {
-    color: #333;
-    display: flex;
-    flex-direction: row-reverse;
-    font-weight: bold;
-    cursor: pointer;
-    text-transform: uppercase;
+  color: #333;
+  display: flex;
+  flex-direction: row-reverse;
+  font-weight: bold;
+  cursor: pointer;
+  text-transform: uppercase;
 }

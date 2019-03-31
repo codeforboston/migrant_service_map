@@ -1,3 +1,3 @@
-import MenuVisaFilter from './menu-visa-filter';
+import MenuVisaFilter from "./menu-visa-filter";
 
 export default MenuVisaFilter;

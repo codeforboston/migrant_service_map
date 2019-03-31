@@ -1,24 +1,33 @@
 import React from "react";
+import { Row } from "simple-flexbox";
 import "./details-pane.css";
+import ProviderDetailsInfo from "./provider-details-info";
 
-const DetailsPane = ({ provider }) => (
-  <div className="details-pane">
-    <div className="provider-info">
-      <span className="popup-info">
-        <img alt="phone icon" src="https://icon.now.sh/perm_phone_msg" />
-        {provider.telephone}
-      </span>
-      <span className="popup-info">
-        <img alt="web icon" src="https://icon.now.sh/language" />
-        <a href={provider.website}> {provider.website}</a>
-      </span>
-      <span className="popup-info">
-        <img alt="home icon" src="https://icon.now.sh/home" />
-        {provider.address || "address"}
-      </span>
-      <div className="popup-text">{provider.mission.slice(0, 70)}</div>
-    </div>
-  </div>
-);
-
-export default DetailsPane;
+export default class DetailsPane extends React.Component {
+  render() {
+    const {
+      provider: { email, address, website, telephone, mission }
+    } = this.props;
+    return (
+      <div className="details-pane provider-info">
+        <Row>
+          <ProviderDetailsInfo icon="email" label="email">
+            {email}
+          </ProviderDetailsInfo>
+          <ProviderDetailsInfo icon="language" label="website">
+            <a href={website}> {website}</a>
+          </ProviderDetailsInfo>
+        </Row>
+        <Row>
+          <ProviderDetailsInfo icon="perm_phone_msg" label="phone">
+            {telephone}
+          </ProviderDetailsInfo>
+          <ProviderDetailsInfo icon="home" label="address">
+            {address || "address"}
+          </ProviderDetailsInfo>
+        </Row>
+        <div className="popup-text">{mission}</div>
+      </div>
+    );
+  }
+}

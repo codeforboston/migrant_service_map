@@ -1,5 +1,10 @@
 import React, { Component } from "react";
-import { MenuDistanceFilter, MenuVisaFilter, MenuDropdown, MenuDropdownItem } from "..";
+import {
+  MenuDistanceFilter,
+  MenuVisaFilter,
+  MenuDropdown,
+  MenuDropdownItem
+} from "..";
 
 import "./menu.css";
 

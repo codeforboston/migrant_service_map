@@ -6,12 +6,24 @@ const getProviderTypesById = state => state.providerTypes.byId;
 const getProvidersById = state => state.providers.byId;
 const getDistance = state => state.filters.distance;
 const getSavedProvidersIds = state => state.providers.savedProviders;
-const getHighlightedProvidersList = state => state.highlightedProviders
-const getSearchCoordinates = state => state.search.coordinates; 
+const getHighlightedProvidersList = state => state.highlightedProviders;
+const getSearchCoordinates = state => state.search.coordinates;
 
 export const getProvidersSorted = createSelector(
-  [getProviderTypesIds, getProviderTypesById, getProvidersById, getDistance, getSearchCoordinates],
-  (providerTypesIds, providerTypesById, providersById, distance, searchCoordinates) => {
+  [
+    getProviderTypesIds,
+    getProviderTypesById,
+    getProvidersById,
+    getDistance,
+    getSearchCoordinates
+  ],
+  (
+    providerTypesIds,
+    providerTypesById,
+    providersById,
+    distance,
+    searchCoordinates
+  ) => {
     if (distance) {
       const options = { units: "miles" };
       const refLocation = searchCoordinates;
@@ -35,7 +47,7 @@ export const getProvidersSorted = createSelector(
     }
   }
 );
- 
+
 export const getSavedProviders = createSelector(
   [getSavedProvidersIds, getProvidersById],
   (savedProvidersIds, providersById) =>
@@ -45,9 +57,9 @@ export const getSavedProviders = createSelector(
 export const getHighlightedProviders = createSelector(
   [getProvidersById, getHighlightedProvidersList],
   (providersById, highlightedProvidersList) => {
-    return highlightedProvidersList.map(id => (providersById[id]))
+    return highlightedProvidersList.map(id => providersById[id]);
   }
-)
+);
 
 function sortedByDistance(
   providerTypesIds,

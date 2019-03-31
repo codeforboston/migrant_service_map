@@ -1,16 +1,29 @@
 .details-pane .provider-info {
-  border: solid 1px #e2d5ed;
-  margin: 5px 0;
+  margin: 0 0 10px 0;
   overflow: hidden;
   padding: 5px 0;
-  background-color: #f0ebfb;
 }
-.popup-info,
-.popup-text {
+
+.details-pane .provider-details-info,
+.details-pane .popup-text {
   padding-left: 5px;
 }
+
 .details-pane .popup-text {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-size: 15px;
+  max-height: 45px;
+}
+
+.details-pane .provider-details-info {
+  display: flex;
+  font-size: 10px;
+  flex: 1;
+  margin: 5px;
+}
+
+.details-pane .provider-details-info img {
+  margin-right: 0.5em;
 }

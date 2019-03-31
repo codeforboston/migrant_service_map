@@ -1,7 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
-import { initializeProviders, setSearchCenterCoordinates, displayProviderInformation } from "../../redux/actions";
-import { getProvidersSorted } from "../../redux/selectors"; 
+import {
+  initializeProviders,
+  setSearchCenterCoordinates,
+  displayProviderInformation
+} from "../../redux/actions";
+import { getProvidersSorted } from "../../redux/selectors";
 import Map from "./map";
 
 const MapContainer = props => {
@@ -25,7 +29,7 @@ const mapDispatchToProps = dispatch => {
     },
     displayProviderInformation: id => {
       dispatch(displayProviderInformation(id));
-    }, 
+    },
     setSearchCenterCoordinates: coordinates => {
       dispatch(setSearchCenterCoordinates(coordinates));
     }
