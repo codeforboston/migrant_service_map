@@ -1,0 +1,30 @@
+.provider-details-info {
+    display: flex;
+    font-size: 10px;
+    min-width: 0px;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 50%;
+    margin: 5px;
+}
+
+.provider-details-info .ellipsis {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.provider-details-info .provider-details-icon {
+    margin-right: 0.5em;
+}
+
+.provider-details-info .providers-detail-content {
+    color: royalblue;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+
+.provider-details-info .providers-detail-content a:link {
+    color: royalblue;
+}
