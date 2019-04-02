@@ -6,7 +6,8 @@ import {
   clearDistanceFilter,
   changeDistanceFilter,
   changeVisaFilter,
-  clearVisaFilter
+  clearVisaFilter,
+  displayProviderInformation
 } from "../../redux/actions";
 import { getProvidersSorted } from "../../redux/selectors.js";
 import Menu from "./menu";
@@ -22,6 +23,7 @@ const mapStateToProps = state => {
     providersList: getProvidersSorted(state),
     savedProviders: state.providers.savedProviders,
     visaTypes: VISA_TYPES,
+    highlightedProviders: state.highlightedProviders, 
     visibleTypes: state.providerTypes.visible,
     filters: state.filters
   };
@@ -46,7 +48,10 @@ const mapDispatchToProps = dispatch => {
     },
     changeVisaFilter: visa => {
       dispatch(changeVisaFilter(visa));
-    }
+    },
+    displayProviderInformation: id => {
+      dispatch(displayProviderInformation(id));
+    } 
   };
 };
 

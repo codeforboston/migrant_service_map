@@ -3,8 +3,7 @@ import { INITIALIZE_PROVIDERS, SAVE_PROVIDER } from "./actions";
 const INITIAL_STATE = {
   allIds: [],
   byId: {},
-  savedProviders: [],
-  highlightedProviders: []
+  savedProviders: []
 };
 
 export default function providers(state = INITIAL_STATE, action) {

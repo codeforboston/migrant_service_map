@@ -27,20 +27,21 @@ export default class DropdownMenuItem extends React.Component {
       provider,
       providerTypeName,
       isSaved,
-      toggleSavedStatus
+      toggleSavedStatus,
+      isHighlighted
     } = this.props;
     const { expand, more } = this.state;
     return (
       <div className="provider-card">
         <div className="card-container">
           <div className="card-header">
-            <h5 onClick={this.onItemClick}>{provider.name}</h5>
+            <h5 /*onClick={this.onItemClick}*/>{provider.name}</h5>
             <div className="wrapped-info">
               <div className={`prov-type ${expand}`}>
                 <FontAwesomeIcon icon={faUsers} />
                 <p>{providerTypeName}</p>
               </div>
-              {expand === "wrapped" && (
+              {!isHighlighted && (
                 <div className="wrapped-icons">
                   {provider.email && (
                     <FontAwesomeIcon icon={faEnvelopeOpenText} />
@@ -73,7 +74,7 @@ export default class DropdownMenuItem extends React.Component {
             </button>
           </div>
         </div>
-        {expand === "expanded" && (
+        {isHighlighted && (
           <DetailsPane provider={provider} />
         )}
       </div>
