@@ -136,7 +136,7 @@ class Map extends Component {
       proximity: coordinateObject
     });
 
-    map.addControl(geocoder);
+    document.getElementById('nav-search').appendChild(geocoder.onAdd(map));
 
     geocoder.on("result", ev => {
       this.props.setSearchCenterCoordinates(ev.result.geometry.coordinates);
