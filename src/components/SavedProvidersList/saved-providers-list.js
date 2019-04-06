@@ -1,9 +1,41 @@
 import React from "react";
 import { MenuDropdownItem } from "..";
+import { printJSX } from "../../util/printJSX";
 import "./saved-providers-list.css";
+
+function printableSavedProvider(provider) {
+  const {
+    id,
+    address,
+    email,
+    mission,
+    name,
+    telephone,
+    category,
+    "Type of Service": type,
+    website
+  } = provider;
+  return (
+    <div className="printedProvider" key={id}>
+      <div className="name">{name}</div>
+      <div className="address">{address}</div>
+      <div className="email">{email}</div>
+      <div className="telephone">{telephone}</div>
+      <div className="website">{website}</div>
+      <div className="type">{type}</div>
+      <div className="category">{category}</div>
+      <div className="mission">{mission}</div>
+    </div>
+  );
+}
 
 const SavedProvidersList = ({ savedProviders, saveProvider }) => (
   <div className="">
+    <input
+      type="button"
+      value="Print"
+      onClick={() => printJSX(savedProviders.map(printableSavedProvider))}
+    />
     {savedProviders.map(provider => (
       <MenuDropdownItem
         key={provider.id}
