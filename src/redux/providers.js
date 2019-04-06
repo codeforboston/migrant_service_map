@@ -1,4 +1,8 @@
-import { INITIALIZE_PROVIDERS, SAVE_PROVIDER } from "./actions";
+import {
+  INITIALIZE_PROVIDERS,
+  SAVE_PROVIDER,
+  REORDER_SAVED_PROVIDERS
+} from "./actions";
 
 const INITIAL_STATE = {
   allIds: [],
@@ -12,6 +16,11 @@ export default function providers(state = INITIAL_STATE, action) {
       return initialProviders(state, action.payload);
     case SAVE_PROVIDER:
       return saveProvider(state, action.id);
+    case REORDER_SAVED_PROVIDERS:
+      return {
+        ...state,
+        savedProviders: action.ids
+      };
     default:
       return state;
   }
