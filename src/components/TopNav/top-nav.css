@@ -1,7 +1,7 @@
 .top-nav {
   /* display: flex; */
   /* align-items: center; */
-  overflow: visible; 
+  overflow: visible;
 }
 /* 
 .top-nav a {
@@ -31,17 +31,15 @@
   color: white;
 } */
 
-
 .dropdown-row {
-  display: flex; 
-  margin-top: 0;  
+  display: flex;
+  margin-top: 0;
 }
-
 
 .nav-search {
   margin-top: 5px;
 }
 .dropdown-row ul {
-  display: flex; 
+  display: flex;
   flex-direction: row;
 }

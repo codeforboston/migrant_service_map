@@ -40,9 +40,8 @@ class Map extends Component {
     });
   };
 
-
-  updatePointSource = ( sourceName, idArray ) => {
-    const { providers } = this.props; 
+  updatePointSource = (sourceName, idArray) => {
+    const { providers } = this.props;
     if (!this.map.getSource(sourceName)) {
       addPointSourceToMap(sourceName, this.map);
     }
@@ -57,7 +56,7 @@ class Map extends Component {
   };
 
   addProviderTypeLayerToMap = (typeId, map) => {
-    let { displayProviderInformation } = this.props; 
+    let { displayProviderInformation } = this.props;
     map.addLayer({
       id: typeId,
       source: typeId,
@@ -69,7 +68,7 @@ class Map extends Component {
       }
     });
     map.on("click", typeId, e => {
-      displayProviderInformation(e.features[0].properties.id); 
+      displayProviderInformation(e.features[0].properties.id);
     });
   };
 
@@ -111,15 +110,22 @@ class Map extends Component {
       });
       const normalizedProviders = this.normalizeProviders(providerFeatures);
       this.props.initializeProviders(normalizedProviders);
-      let { displayProviderInformation } = this.props; 
+      let { displayProviderInformation } = this.props;
       providerTypes.allIds.forEach(typeId => {
         addSourceToMap(typeId);
-        this.addProviderTypeLayerToMap(typeId, this.map, displayProviderInformation);
-      })
+        this.addProviderTypeLayerToMap(
+          typeId,
+          this.map,
+          displayProviderInformation
+        );
+      });
       addPointSourceToMap("highlightedProviders", this.map);
-      addCircleLayerToMap("highlightedProviders", "highlightedProviders", this.map)
+      addCircleLayerToMap(
+        "highlightedProviders",
+        "highlightedProviders",
+        this.map
+      );
     });
-
 
     this.map = map;
     this.loadProviderTypeImage(typeImages);
@@ -135,7 +141,7 @@ class Map extends Component {
       proximity: coordinateObject
     });
 
-    document.getElementById('nav-search').appendChild(geocoder.onAdd(map));
+    document.getElementById("nav-search").appendChild(geocoder.onAdd(map));
 
     geocoder.on("result", ev => {
       this.props.setSearchCenterCoordinates(ev.result.geometry.coordinates);
@@ -151,7 +157,9 @@ class Map extends Component {
     addDistanceFilterLayer(distanceFilterDistances, this.map);
 
     const colors = ["#007cbf", "#00AA46", "#71C780", "#D5EDDB"];
-    const center = this.createMarker(centerMarker).setLngLat(search.coordinates);
+    const center = this.createMarker(centerMarker).setLngLat(
+      search.coordinates
+    );
     const options = { steps: 100, units: "miles" };
     const circles = distanceFilterDistances.map((radius, i) =>
       circle(search.coordinates, radius, {
@@ -160,7 +168,12 @@ class Map extends Component {
       })
     );
     const labels = distanceFilterDistances.map((radius, i) => {
-      const radiusOffset = transformTranslate(point(search.coordinates), radius, 90, { units: "miles" });
+      const radiusOffset = transformTranslate(
+        point(search.coordinates),
+        radius,
+        90,
+        { units: "miles" }
+      );
       const marker = this.createMarker(createDistanceMarker(radius, colors[i]));
       return marker.setLngLat(radiusOffset.geometry.coordinates);
     });

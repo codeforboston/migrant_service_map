@@ -1,16 +1,14 @@
-
-import React from 'react';
 import "./map.css";
 
-const centerMarker = document.createElement("div"); 
+const centerMarker = document.createElement("div");
 const centerMarkerContainer = document.createElement("div");
 const mapPin = document.createElement("div");
 const pinHole = document.createElement("div");
 mapPin.className = "map-pin";
-pinHole.className = "pin-hole"; 
+pinHole.className = "pin-hole";
 centerMarkerContainer.className = "map-pin-container";
 centerMarkerContainer.appendChild(mapPin);
-centerMarkerContainer.appendChild(pinHole); 
+centerMarkerContainer.appendChild(pinHole);
 centerMarker.appendChild(centerMarkerContainer);
 
 const createDistanceMarker = (distance, color) => {
@@ -28,7 +26,9 @@ const createDistanceMarker = (distance, color) => {
 };
 
 const removeDistanceMarkers = () => {
-  const distanceMarkers = Array.from(document.getElementsByClassName("distanceMarker"));
+  const distanceMarkers = Array.from(
+    document.getElementsByClassName("distanceMarker")
+  );
   return distanceMarkers.map(marker => marker.remove());
 };
 

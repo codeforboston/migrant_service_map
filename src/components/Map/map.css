@@ -5,7 +5,7 @@
 }
 
 .map-pin-container {
-  transform-origin: center bottom; 
+  transform-origin: center bottom;
   transform: translateY(-45%);
 }
 .map-pin {
@@ -18,9 +18,8 @@
 
 .pin-hole {
   background-color: white;
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    transform: translate(18px, -32px);
-
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  transform: translate(18px, -32px);
 }

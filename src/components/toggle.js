@@ -2,7 +2,6 @@ import React from "react";
 
 class Toggle extends React.Component {
   render() {
-
     const cxDistance = this.props.toggleOn ? 45 : 15;
     const bgColor = this.props.toggleOn ? "#8c45cf" : "white";
     const fgColor = this.props.toggleOn ? "white" : "#8c45cf";
@@ -30,18 +29,25 @@ class Toggle extends React.Component {
       margin: "0 0 8px 0"
     };
 
-
     return (
-        <div style={{flex: 1}} onClick={this.props.handleClick}>
-          <svg viewport="150 150" height={20} width={60} className="toggle svg" style={svgStyle}>
-            <rect style={rectStyle} className="toggle toggle-well" />
-            <circle id="toggle" style={circleStyle} className="toggle toggle-off" />
-          </svg>
-        </div>
-      
+      <div style={{ flex: 1 }} onClick={this.props.handleClick}>
+        <svg
+          viewport="150 150"
+          height={20}
+          width={60}
+          className="toggle svg"
+          style={svgStyle}
+        >
+          <rect style={rectStyle} className="toggle toggle-well" />
+          <circle
+            id="toggle"
+            style={circleStyle}
+            className="toggle toggle-off"
+          />
+        </svg>
+      </div>
     );
   }
 }
 
 export default Toggle;
-

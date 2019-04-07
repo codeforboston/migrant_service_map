@@ -12,8 +12,8 @@ export default function App() {
       <div>
         <TopNav />
         {/* <div className="map-container"> */}
-          <TabbedMenu/>
-          <Map />
+        <TabbedMenu />
+        <Map />
         {/* </div> */}
       </div>
     </Provider>

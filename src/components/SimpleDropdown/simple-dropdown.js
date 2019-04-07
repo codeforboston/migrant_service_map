@@ -2,9 +2,16 @@ import React from "react";
 import "../Menu/menu.css";
 
 const SimpleDropdown = props => {
-  let { items, heading, subHead, handleChange, incomingState , handleClick } = props;
+  let {
+    items,
+    heading,
+    subHead,
+    handleChange,
+    incomingState,
+    handleClick
+  } = props;
 
-  console.log(items, Array.from(items)[0])
+  console.log(items, Array.from(items)[0]);
   return (
     <li className="dropdown-list-container" onClick={handleClick}>
       <div className="dropdown-list-header">
@@ -14,17 +21,18 @@ const SimpleDropdown = props => {
       <div className="dropdown-list">
         {items.map((item, i) => {
           return (
-          <div className="dropdown-list-item" key={i}>
-            <input 
-            type="checkBox" 
-            onChange={() => handleChange(item)}
-            checked={incomingState.includes(item)}
-            /> 
-            <label>{item}</label>
-          </div>
-        )})}
+            <div className="dropdown-list-item" key={i}>
+              <input
+                type="checkBox"
+                onChange={() => handleChange(item)}
+                checked={incomingState.includes(item)}
+              />
+              <label>{item}</label>
+            </div>
+          );
+        })}
       </div>
-      </li>
+    </li>
   );
 };
 

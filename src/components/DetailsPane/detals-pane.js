@@ -6,8 +6,8 @@ import ProviderDetailsInfo from "./provider-details-info";
 export default class DetailsPane extends React.Component {
   state = { isMissionTextExpanded: false };
 
-  onMissionTextExpanderClicked = (e) => {
-    e.stopPropagation()
+  onMissionTextExpanderClicked = e => {
+    e.stopPropagation();
     const { isMissionTextExpanded } = this.state;
 
     this.setState({ isMissionTextExpanded: !isMissionTextExpanded });
@@ -36,8 +36,15 @@ export default class DetailsPane extends React.Component {
             {telephone}
           </ProviderDetailsInfo>
         </Row>
-        <div className={"missions" + (isMissionTextExpanded ? " expanded" : "")}>{mission}</div>
-        <div className="missions-expander" onClick={(e) => this.onMissionTextExpanderClicked(e)}>
+        <div
+          className={"missions" + (isMissionTextExpanded ? " expanded" : "")}
+        >
+          {mission}
+        </div>
+        <div
+          className="missions-expander"
+          onClick={e => this.onMissionTextExpanderClicked(e)}
+        >
           SHOW {isMissionTextExpanded ? "LESS" : "MORE"}
         </div>
       </div>

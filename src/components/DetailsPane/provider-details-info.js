@@ -7,7 +7,11 @@ export default class ProviderDetailsInfo extends React.Component {
     const { label, icon, ellipsis } = this.props;
     return (
       <span className="provider-details-info">
-        <img className="provider-details-icon" alt={icon + " icon"} src={"https://icon.now.sh/" + icon} />
+        <img
+          className="provider-details-icon"
+          alt={icon + " icon"}
+          src={"https://icon.now.sh/" + icon}
+        />
         <Column className={ellipsis ? "ellipsis" : ""} justifyContent="center">
           <div className="provider-details-content-label">
             {label.toUpperCase()}

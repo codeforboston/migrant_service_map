@@ -4,26 +4,28 @@
   width: 400px;
   height: calc(100vh - 2em); /* TODO this should be flex box column */
   margin: 15px;
-  margin-top: 100px; 
+  margin-top: 100px;
   filter: drop-shadow(0 3px 3px gray);
 }
 
 .react-tabs__tab {
-    border: none;
-    background: #aaa;
-    color: white;
-    border-radius: 15px 15px 0 0;
+  border: none;
+  background: #aaa;
+  color: white;
+  border-radius: 15px 15px 0 0;
 }
 .react-tabs__tab--selected {
-    background: white;
-    border: none;
+  background: white;
+  border: none;
 }
 .react-tabs__tab h3 {
-    margin: 8px 20px;
-    text-transform: uppercase;
-    color: white;
+  margin: 8px 20px;
+  text-transform: uppercase;
+  color: white;
 }
-.react-tabs__tab--selected h3 { color: #8c45cf; }
+.react-tabs__tab--selected h3 {
+  color: #8c45cf;
+}
 
 /* .panels */
 .side-menu > div {
