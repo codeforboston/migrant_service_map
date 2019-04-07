@@ -30,12 +30,12 @@ class Menu extends Component {
           {!providersList.length && <h3>LOADING ...</h3>}
           {!!providersList.length && (
             <>
-              <MenuDistanceFilter
+              {/* <MenuDistanceFilter
                 filters={filters}
                 clearDistanceFilter={clearDistanceFilter}
                 changeDistanceFilter={changeDistanceFilter}
               />
-              <MenuVisaFilter filters={filters} clearVisaFilter={clearVisaFilter} changeVisaFilter={changeVisaFilter} />
+              <MenuVisaFilter filters={filters} clearVisaFilter={clearVisaFilter} changeVisaFilter={changeVisaFilter} /> */}
               {providersList.map(providerType => (
                 <ul key={providerType.id}>
                   {!!providerType.providers.length && ( //if there is not providers MenuDropdown is not shown
