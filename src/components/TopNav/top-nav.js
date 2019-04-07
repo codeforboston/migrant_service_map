@@ -14,9 +14,6 @@ class TopNav extends Component {
       : myDiv.classList.add("expanded");
   };
 
-  // expanded={visibleTypes.includes(providerType.id)}
-  //                     onToggle={toggleProviderVisibility}
-
   render() {
     const {
       filters,

@@ -147,7 +147,6 @@ class Map extends Component {
     //TODO: make this input from the distance filter
     const distanceFilterDistances = [0.5, 1, 1.5];
     const { search } = this.props;
-
     removeDistanceMarkers();
     addDistanceFilterLayer(distanceFilterDistances, this.map);
 

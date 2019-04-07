@@ -1,11 +1,17 @@
-const centerMarker = document.createElement("div");
-centerMarker.className = "searchCenterMarker";
-centerMarker.id = "searchCenterMarker";
-centerMarker.style.display = "block";
-centerMarker.style.height = "20px";
-centerMarker.style.width = "20px";
-centerMarker.style.borderRadius = "10px";
-centerMarker.style.backgroundColor = "#0f0";
+
+import React from 'react';
+import "./map.css";
+
+const centerMarker = document.createElement("div"); 
+const centerMarkerContainer = document.createElement("div");
+const mapPin = document.createElement("div");
+const pinHole = document.createElement("div");
+mapPin.className = "map-pin";
+pinHole.className = "pin-hole"; 
+centerMarkerContainer.className = "map-pin-container";
+centerMarkerContainer.appendChild(mapPin);
+centerMarkerContainer.appendChild(pinHole); 
+centerMarker.appendChild(centerMarkerContainer);
 
 const createDistanceMarker = (distance, color) => {
   const markerElement = document.createElement("div");
@@ -14,6 +20,10 @@ const createDistanceMarker = (distance, color) => {
   markerElement.style.display = "block";
   markerElement.innerText = distance + (distance > 1 ? " miles" : " mile");
   markerElement.style.backgroundColor = color;
+  markerElement.style.height = "12px";
+  markerElement.style.width = "12px";
+  markerElement.style.borderRadius = "100%";
+  markerElement.style.transform = "rotate(90)";
   return markerElement;
 };
 
@@ -64,7 +74,7 @@ const addCircleLayerToMap = (name, source, map) => {
         "circle-radius": 30,
         "circle-color": "rgba(140,69,207, 0.5)",
         "circle-stroke-color": "rgba(140,69,207, 1)",
-        "circle-stroke-width": 3 
+        "circle-stroke-width": 3
       }
     });
   }
