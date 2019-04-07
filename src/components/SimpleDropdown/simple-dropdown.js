@@ -11,7 +11,6 @@ const SimpleDropdown = props => {
     handleClick
   } = props;
 
-  console.log(items, Array.from(items)[0]);
   return (
     <div onClick={handleClick}>
       <div className="dropdown-list-header">

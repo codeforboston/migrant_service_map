@@ -50,7 +50,6 @@ label {
 
 .dropdown-list-container {
   flex: 1;
-  /* width: 4vh;  */
   margin: 0 8px;
   cursor: pointer;
   z-index: 10;

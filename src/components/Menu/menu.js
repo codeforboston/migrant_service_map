@@ -1,8 +1,5 @@
 import React, { Component } from "react";
-import {
-  MenuDropdown,
-  MenuDropdownItem
-} from "..";
+import { MenuDropdown, MenuDropdownItem } from "..";
 
 import "./menu.css";
 
