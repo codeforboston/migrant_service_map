@@ -69,8 +69,7 @@ function sortedByDistance(
   refLocation,
   options
 ) {
-  let providersList = [];
-  providerTypesIds.map(typeId => {
+  let providersList = providerTypesIds.map(typeId => {
     let providerArray = [];
     providerTypesById[typeId].providers.forEach(provId => {
       const provDistance = distance(
@@ -90,11 +89,11 @@ function sortedByDistance(
     const sortedProviders = providerArray.sort(
       (a, b) => a.distance - b.distance
     );
-    providersList.push({
+    return {
       id: typeId,
       name: providerTypesById[typeId].name,
       providers: sortedProviders
-    });
+    };
   });
   return providersList;
 }

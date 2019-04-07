@@ -1,8 +1,9 @@
 .top-nav {
-  display: flex;
-  align-items: center;
+  /* display: flex; */
+  /* align-items: center; */
+  overflow: visible; 
 }
-
+/* 
 .top-nav a {
   flex: 1;
   padding: 0.2rem 1rem;
@@ -10,9 +11,9 @@
   border-radius: 3px;
   border: 1px solid #8c45cf;
   color: white;
-}
+} */
 
-.header-title a {
+/* .header-title a {
   display: flex;
   flex: 1;
   align-items: center;
@@ -28,8 +29,19 @@
 
 .header-title h1 {
   color: white;
+} */
+
+
+.dropdown-row {
+  display: flex; 
+  margin-top: 0;  
 }
+
 
 .nav-search {
   margin-top: 5px;
+}
+.dropdown-row ul {
+  display: flex; 
+  flex-direction: row;
 }

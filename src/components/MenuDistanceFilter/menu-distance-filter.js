@@ -1,14 +1,18 @@
 import React, { Component } from "react";
-import "./menu-distance-filter.css";
+import "../Menu/menu.css";
 
 class DistanceFilter extends Component {
   render() {
     const distances = [1, 2, 5];
     return (
-      <ul>
-        within:
+        <li className="dropdown-list-container"  onClick={this.props.handleClick}>
+        <div className="dropdown-list-header" >
+          <h2>Distance Filter</h2>
+        <p id="menuDistanceStatus" >Current distance</p>
+          </div>
+      <ul className="dropdown-list" >
         {distances.map((el, i) => (
-          <li key={i}>
+          <li className="dropdown-list-item" key={i}>
             <div>
               <input
                 type="radio"
@@ -26,8 +30,9 @@ class DistanceFilter extends Component {
             </div>
           </li>
         ))}
-        <button onClick={this.props.clearDistanceFilter}>Clear filter</button>
+        <button className="dropdown-button" onClick={this.props.clearDistanceFilter}>Clear filter</button>
       </ul>
+      </li>
     );
   }
 }

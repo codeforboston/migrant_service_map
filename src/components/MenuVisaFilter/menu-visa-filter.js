@@ -1,14 +1,20 @@
 import React, { Component } from "react";
+import "../Menu/menu.css";
+
 
 class MenuVisaFilter extends Component {
   render() {
     const VISA_TYPES = ["visa1", "visa2", "visa3"];
 
     return (
-      <ul>
-        visa filters:
+      <li className="dropdown-list-container"  onClick={this.props.handleClick} >
+      <div className="dropdown-list-header">
+        <h2>Visa Status</h2>
+        <p id="currentVisaStatus" >Current Visa Status</p>
+        </div>
+      <ul className="dropdown-list" >
         {VISA_TYPES.map((visa, i) => (
-          <li key={i}>
+          <li className="dropdown-list-item" key={i}>
             <div>
               <input
                 type="radio"
@@ -22,8 +28,9 @@ class MenuVisaFilter extends Component {
             </div>
           </li>
         ))}
-        <button onClick={this.props.clearVisaFilter}>Clear visa filter</button>
+        <button className="dropdown-button" onClick={this.props.clearVisaFilter}>Clear visa filter</button>
       </ul>
+      </li> 
     );
   }
 }
