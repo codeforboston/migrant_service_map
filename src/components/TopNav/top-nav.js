@@ -23,7 +23,7 @@ const TopNav = () => {
           Top Nav
         </a>
       </div>
-      <div id="nav-search" class="nav-search"></div>
+      <div id="nav-search" className="nav-search"></div>
     </nav>
   );
 };

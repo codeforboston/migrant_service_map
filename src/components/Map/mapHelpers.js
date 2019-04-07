@@ -22,11 +22,6 @@ const removeDistanceMarkers = () => {
   return distanceMarkers.map(marker => marker.remove());
 };
 
-
-const createSelectionMarker = () => {
-  
-}
-
 const addSourceToMap = (typeId, map) => {
   if (!map.getSource(typeId)) {
     map.addSource(typeId, {

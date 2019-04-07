@@ -58,7 +58,6 @@ class Map extends Component {
 
   addProviderTypeLayerToMap = (typeId, map) => {
     let { displayProviderInformation } = this.props; 
-    console.log(typeId);
     map.addLayer({
       id: typeId,
       source: typeId,

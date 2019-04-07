@@ -30,12 +30,12 @@ export default class DropdownMenuItem extends React.Component {
       toggleSavedStatus,
       isHighlighted
     } = this.props;
-    const { expand, more } = this.state;
+    const { expand } = this.state;
     return (
       <div className="provider-card">
         <div className="card-container">
           <div className="card-header">
-            <h5 /*onClick={this.onItemClick}*/>{provider.name}</h5>
+            <h5>{provider.name}</h5>
             <div className="wrapped-info">
               <div className={`prov-type ${expand}`}>
                 <FontAwesomeIcon icon={faUsers} />
@@ -74,9 +74,7 @@ export default class DropdownMenuItem extends React.Component {
             </button>
           </div>
         </div>
-        {isHighlighted && (
-          <DetailsPane provider={provider} />
-        )}
+        {isHighlighted && <DetailsPane provider={provider} />}
       </div>
     );
   }
