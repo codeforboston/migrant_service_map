@@ -13,7 +13,7 @@ const SimpleDropdown = props => {
 
   console.log(items, Array.from(items)[0]);
   return (
-    <li className="dropdown-list-container" onClick={handleClick}>
+    <div onClick={handleClick}>
       <div className="dropdown-list-header">
         <h2>{heading}</h2>
         <p>{subHead}</p>
@@ -32,7 +32,7 @@ const SimpleDropdown = props => {
           );
         })}
       </div>
-    </li>
+    </div>
   );
 };
 

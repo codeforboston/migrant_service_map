@@ -6,7 +6,7 @@ class MenuVisaFilter extends Component {
     const VISA_TYPES = ["visa1", "visa2", "visa3"];
 
     return (
-      <li className="dropdown-list-container" onClick={this.props.handleClick}>
+      <div onClick={this.props.handleClick}>
         <div className="dropdown-list-header">
           <h2>Visa Status</h2>
           <p id="currentVisaStatus">Current Visa Status</p>
@@ -34,7 +34,7 @@ class MenuVisaFilter extends Component {
             Clear visa filter
           </button>
         </ul>
-      </li>
+      </div>
     );
   }
 }

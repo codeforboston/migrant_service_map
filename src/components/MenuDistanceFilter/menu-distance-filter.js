@@ -5,7 +5,7 @@ class DistanceFilter extends Component {
   render() {
     const distances = [1, 2, 5];
     return (
-      <li className="dropdown-list-container" onClick={this.props.handleClick}>
+      <div onClick={this.props.handleClick}>
         <div className="dropdown-list-header">
           <h2>Distance Filter</h2>
           <p id="menuDistanceStatus">Current distance</p>
@@ -37,7 +37,7 @@ class DistanceFilter extends Component {
             Clear filter
           </button>
         </ul>
-      </li>
+      </div>
     );
   }
 }

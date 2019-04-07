@@ -39,7 +39,6 @@ label {
   z-index: 20;
   background-color: white;
   border-bottom: 1px solid #8c45cf;
-  height: 10vh;
   width: 100%;
 }
 
@@ -52,7 +51,6 @@ label {
 .dropdown-list-container {
   flex: 1;
   /* width: 4vh;  */
-  height: 0%;
   margin: 0 8px;
   cursor: pointer;
   z-index: 10;
