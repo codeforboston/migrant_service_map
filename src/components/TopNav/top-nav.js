@@ -3,7 +3,7 @@ import "../Menu/menu.css";
 import AcceptingNewFilter from "../MenuAcceptingNewFilter/menu-accepting-new-filter.js";
 import { MenuDistanceFilter, MenuVisaFilter } from "..";
 import SimpleDropdown from "../SimpleDropdown/simple-dropdown";
-import { toggleProviderVisibility } from "../../redux/actions";
+import { Row } from "simple-flexbox";
 
 class TopNav extends Component {
   toggle = (name, event) => {
@@ -34,33 +34,42 @@ class TopNav extends Component {
         />
         <div className="upper-bar">
           <ul className="dropdown-row">
-            <MenuVisaFilter
-              handleClick={this.toggle.bind(this, this.props.name)}
-              filters={filters}
-              clearVisaFilter={clearVisaFilter}
-              changeVisaFilter={changeVisaFilter}
-            />
-            <SimpleDropdown
-              handleClick={this.toggle.bind(this, this.props.name)}
-              heading={"Provider Type"}
-              subHead={"Currently selected providers"}
-              incomingState={visibleTypes}
-              handleChange={toggleProviderVisibility}
-              items={providerTypes.allIds}
-            />
-
-            <li className="dropdown-list-container">
+            <Row className="dropdown-list-container">
+              <MenuVisaFilter
+                handleClick={this.toggle.bind(this, this.props.name)}
+                filters={filters}
+                clearVisaFilter={clearVisaFilter}
+                changeVisaFilter={changeVisaFilter}
+              />
+            </Row>
+            <Row className="dropdown-list-container">
+              <SimpleDropdown
+                handleClick={this.toggle.bind(this, this.props.name)}
+                heading={"Provider Type"}
+                subHead={"Currently selected providers"}
+                incomingState={visibleTypes}
+                handleChange={toggleProviderVisibility}
+                items={providerTypes.allIds}
+              />
+            </Row>
+            <Row className="dropdown-list-container">
               <AcceptingNewFilter />
-            </li>
-            <li className="dropdown-list-container">
-              <div id="nav-search" className="nav-search" style={{ flex: 0.5 }} />
-            </li>
-            <MenuDistanceFilter
-              handleClick={this.toggle.bind(this, this.props.name)}
-              filters={filters}
-              clearDistanceFilter={clearDistanceFilter}
-              changeDistanceFilter={changeDistanceFilter}
-            />
+            </Row>
+            <Row className="dropdown-list-container">
+              <div
+                id="nav-search"
+                className="nav-search"
+                style={{ flex: 0.5 }}
+              />
+            </Row>
+            <Row className="dropdown-list-container">
+              <MenuDistanceFilter
+                handleClick={this.toggle.bind(this, this.props.name)}
+                filters={filters}
+                clearDistanceFilter={clearDistanceFilter}
+                changeDistanceFilter={changeDistanceFilter}
+              />
+            </Row>
           </ul>
         </div>
       </nav>

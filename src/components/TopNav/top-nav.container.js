@@ -23,9 +23,9 @@ const mapStateToProps = state => {
     providersList: getProvidersSorted(state),
     savedProviders: state.providers.savedProviders,
     visaTypes: VISA_TYPES,
-    highlightedProviders: state.highlightedProviders, 
+    highlightedProviders: state.highlightedProviders,
     visibleTypes: state.providerTypes.visible,
-    filters: state.filters, 
+    filters: state.filters,
     providerTypes: state.providerTypes
   };
 };
@@ -52,7 +52,7 @@ const mapDispatchToProps = dispatch => {
     },
     displayProviderInformation: id => {
       dispatch(displayProviderInformation(id));
-    } 
+    }
   };
 };
 

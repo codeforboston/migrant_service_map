@@ -18,41 +18,36 @@ class AcceptingNewFilter extends Component {
     const backerColor = this.state.toggleOn ? "#8c45cf" : "white";
     const backerSecondaryColor = this.state.toggleOn ? "white" : "gray";
     return (
-      <div 
-      style={{
-        display: "flex", 
-        height: "6vh"
-      }}>
       <div
         style={{
-          flex: 1, 
+          flex: 1,
           padding: "4px 10px",
-          height: "100%", 
+          height: "100%",
           display: "flex",
           flexDirection: "row",
-          alignItems: "center", 
+          alignItems: "center",
           justifyContent: "center"
         }}
       >
         <p
           style={{
-            flex: 1, 
+            flex: 1,
             color: backerSecondaryColor,
-            backgroundColor: backerColor, 
+            backgroundColor: backerColor,
             borderRadius: "10%",
             padding: "6px",
-            margin: "0 4px", 
+            margin: "0 4px",
             textAlign: "center",
-            border: "1px solid " +  backerSecondaryColor
+            border: "1px solid " + backerSecondaryColor
           }}
         >
           NEW
         </p>
-        <h2 style={{flex: 1}}>Accepting&nbsp;New&nbsp;Clients</h2>
-        <Toggle 
+        <h2 style={{ flex: 1 }}>Accepting&nbsp;New&nbsp;Clients</h2>
+        <Toggle
           toggleOn={this.state.toggleOn}
-          handleClick={this.toggleToggle}/>
-      </div>
+          handleClick={this.toggleToggle}
+        />
       </div>
     );
   }

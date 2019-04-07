@@ -11,7 +11,7 @@ import {
 } from "../../redux/actions";
 import { getProvidersSorted } from "../../redux/selectors.js";
 import Menu from "./menu";
-import TopNav from "../TopNav/top-nav.js"
+import TopNav from "../TopNav/top-nav.js";
 
 const VISA_TYPES = ["visa1", "visa2", "visa3"];
 
@@ -24,9 +24,9 @@ const mapStateToProps = state => {
     providersList: getProvidersSorted(state),
     savedProviders: state.providers.savedProviders,
     visaTypes: VISA_TYPES,
-    highlightedProviders: state.highlightedProviders, 
+    highlightedProviders: state.highlightedProviders,
     visibleTypes: state.providerTypes.visible,
-    filters: state.filters, 
+    filters: state.filters,
     providerTypes: state.providerTypes.allIds
   };
 };
@@ -53,11 +53,11 @@ const mapDispatchToProps = dispatch => {
     },
     displayProviderInformation: id => {
       dispatch(displayProviderInformation(id));
-    } 
+    }
   };
 };
 
-export { TopNav }
+export { TopNav };
 
 export default connect(
   mapStateToProps,
