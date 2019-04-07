@@ -3,3 +3,24 @@
   height: 100vh;
   z-index: 0;
 }
+
+.map-pin-container {
+  transform-origin: center bottom; 
+  transform: translateY(-45%);
+}
+.map-pin {
+  background-color: #8c45cf;
+  height: 50px;
+  width: 50px;
+  border-radius: 20% 50% 100% 50%;
+  transform: scale(0.8, 1) rotate(225deg);
+}
+
+.pin-hole {
+  background-color: white;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    transform: translate(18px, -32px);
+
+}
