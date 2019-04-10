@@ -118,9 +118,9 @@
 }
 
 .button.saved {
-  background-color: transparent;
-  flex-direction: column;
-  color: #af1d09;
+  background-color: #70B5EE;
+  border-radius: 5px;
+  color: #fff;
 }
 
 .button.unsaved {

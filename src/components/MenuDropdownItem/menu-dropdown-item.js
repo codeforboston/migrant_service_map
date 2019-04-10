@@ -2,6 +2,7 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFolderPlus,
+  faFolderOpen,
   faUsers,
   faEnvelopeOpenText,
   faGlobeEurope,
@@ -62,8 +63,8 @@ export default class DropdownMenuItem extends React.Component {
             <button className={`button ${isSaved}`} onClick={toggleSavedStatus}>
               {isSaved === "saved" ? (
                 <>
-                  <FontAwesomeIcon icon={faTrashAlt} />
-                  REMOVE
+                  <FontAwesomeIcon icon={faFolderOpen} />
+                  SAVED
                 </>
               ) : (
                 <>
