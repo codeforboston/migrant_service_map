@@ -33,7 +33,7 @@ export default class DropdownMenuItem extends React.Component {
     } = this.props;
     const { expand } = this.state;
     return (
-      <div className="provider-card">
+      <div className="provider-card" id={`provider-${provider.id}`}>
         <div className="card-container">
           <div className="card-header">
             <h5>{provider.name}</h5>
