@@ -7,7 +7,8 @@ const getProvidersById = state => state.providers.byId;
 const getDistance = state => state.filters.distance;
 const getSavedProvidersIds = state => state.providers.savedProviders;
 const getHighlightedProvidersList = state => state.highlightedProviders;
-const getSearchCoordinates = state => state.search.history[state.search.currentLocation].coordinates;
+// const getSearchCoordinates = state => state.search.history[state.search.currentLocation];
+const getSearchCoordinates = state => state.search.currentLocation ? state.search.history[state.search.currentLocation] : null; // TODO: separate coordinates and searched location
 
 export const getProvidersSorted = createSelector(
   [
@@ -25,9 +26,9 @@ export const getProvidersSorted = createSelector(
     searchCoordinates
   ) => {
     const sortBy = "DISTANCE"; // TODO: remove after implementing alphabetical sort and tracking sort method in state
-    if (sortBy === "DISTANCE") {
+    if (sortBy === "DISTANCE" && searchCoordinates) {
       const options = { units: "miles" };
-      const refLocation = searchCoordinates;
+      const refLocation = searchCoordinates.coordinates;
       const providersList = providerTypesIds.map(typeId => ({
         id: typeId,
         name: providerTypesById[typeId].name,
@@ -54,12 +55,16 @@ export const getProvidersSorted = createSelector(
 
 export const getSavedProviders = createSelector(
   [getSavedProvidersIds, getProvidersById, getSearchCoordinates],
-  (savedProvidersIds, providersById, searchCoordinates) =>
-    savedProvidersIds.map(id => {
+  (savedProvidersIds, providersById, searchCoordinates) => {
+    if (!searchCoordinates) {
+      // no distance information included
+      return savedProvidersIds.map(id => providersById[id])
+    }
+    return savedProvidersIds.map(id => {
       const provDistance = distance(
         // TODO use coordinates from search history when provider was saved
         point(providersById[id].coordinates),
-        point(searchCoordinates),
+        point(searchCoordinates.coordinates),
         { units: "miles" }
       )
       return {
@@ -67,6 +72,7 @@ export const getSavedProviders = createSelector(
         distance: provDistance
       }
     })
+  }
 );
 
 export const getHighlightedProviders = createSelector(
