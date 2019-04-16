@@ -1,7 +1,7 @@
 import DetailsPane from "./DetailsPane";
 import Map from "./Map";
 import TabbedMenu from "./TabbedMenu";
-import Menu from "./Menu";
+import ProviderList from "./ProviderList";
 import MenuDistanceFilter from "./MenuDistanceFilter";
 import MenuVisaFilter from "./MenuVisaFilter";
 import MenuDropdown from "./MenuDropdown";
@@ -13,7 +13,7 @@ export {
   DetailsPane,
   Map,
   TabbedMenu,
-  Menu,
+  ProviderList,
   MenuDistanceFilter,
   MenuVisaFilter,
   MenuDropdown,

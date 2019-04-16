@@ -1,6 +1,6 @@
 import React from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import { Menu, SavedProvidersList } from "..";
+import { ProviderList, SavedProvidersList } from "..";
 
 import "react-tabs/style/react-tabs.css";
 import "./tabbed-menu.css";
@@ -18,7 +18,7 @@ const TabbedMenu = () => (
 
     <div className="panels">
       <TabPanel>
-        <Menu />
+        <ProviderList />
       </TabPanel>
       <TabPanel>
         <SavedProvidersList />

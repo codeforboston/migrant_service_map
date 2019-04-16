@@ -9,13 +9,9 @@ import "./App.css";
 export default function App() {
   return (
     <Provider store={store}>
-      <div>
-        <TopNav />
-        {/* <div className="map-container"> */}
-        <TabbedMenu />
-        <Map />
-        {/* </div> */}
-      </div>
+      <TopNav />
+      <TabbedMenu />
+      <Map />
     </Provider>
   );
 }

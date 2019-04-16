@@ -8,15 +8,14 @@ import {
   changeVisaFilter,
   clearVisaFilter,
   displayProviderInformation
-} from "../../redux/actions";
-import { getProvidersSorted } from "../../redux/selectors.js";
-import Menu from "./menu";
-import TopNav from "../TopNav/top-nav.js";
+} from "redux/actions";
+import { getProvidersSorted } from "redux/selectors.js";
+import ProviderList from "./provider-list";
 
 const VISA_TYPES = ["visa1", "visa2", "visa3"];
 
-const MenuContainer = props => {
-  return <Menu {...props} />;
+const ProviderListContainer = props => {
+  return <ProviderList {...props} />;
 };
 
 const mapStateToProps = state => {
@@ -57,9 +56,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export { TopNav };
-
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(MenuContainer);
+)(ProviderListContainer);

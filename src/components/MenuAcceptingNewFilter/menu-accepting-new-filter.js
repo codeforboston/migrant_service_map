@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "../Menu/menu.css";
+import "../ProviderList/provider-list.css";
 import Toggle from "../toggle.js";
 class AcceptingNewFilter extends Component {
   constructor(props) {

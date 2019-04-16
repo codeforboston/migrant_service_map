@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "../Menu/menu.css";
+import "../ProviderList/provider-list.css";
 import AcceptingNewFilter from "../MenuAcceptingNewFilter/menu-accepting-new-filter.js";
 import { MenuDistanceFilter, MenuVisaFilter } from "..";
 import SimpleDropdown from "../SimpleDropdown/simple-dropdown";
