@@ -11,7 +11,7 @@ import {
   faTrashAlt
 } from "@fortawesome/free-solid-svg-icons";
 import "./menu-dropdown-item.css";
-import DetailsPane from "../DetailsPane";
+import DetailsPane from "components/DetailsPane";
 
 export default class DropdownMenuItem extends React.Component {
   state = { expand: "wrapped", more: false };

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { MenuDropdown, MenuDropdownItem } from "..";
 
-import "./providers.css";
+import "./provider-list.css";
 
 class ProviderList extends Component {
   render() {

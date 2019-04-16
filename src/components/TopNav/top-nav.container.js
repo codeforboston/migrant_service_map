@@ -8,8 +8,8 @@ import {
   changeVisaFilter,
   clearVisaFilter,
   displayProviderInformation
-} from "../../redux/actions";
-import { getProvidersSorted } from "../../redux/selectors";
+} from "redux/actions";
+import { getProvidersSorted } from "redux/selectors";
 import TopNav from "./top-nav";
 
 const VISA_TYPES = ["visa1", "visa2", "visa3"];

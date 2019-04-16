@@ -1,6 +1,6 @@
 import React from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import { ProviderList, SavedProvidersList } from "..";
+import { ProviderList, SavedProvidersList } from "components";
 
 import "react-tabs/style/react-tabs.css";
 import "./tabbed-menu.css";

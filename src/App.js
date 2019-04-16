@@ -1,8 +1,8 @@
 import React from "react";
 import { Provider } from "react-redux";
-import { Map, TopNav, TabbedMenu } from "./components";
+import { Map, TopNav, TabbedMenu } from "components";
 
-import store from "./redux/store";
+import store from "redux/store";
 
 import "./App.css";
 

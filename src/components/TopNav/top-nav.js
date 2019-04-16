@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import "../ProviderList/provider-list.css";
-import AcceptingNewFilter from "../MenuAcceptingNewFilter/menu-accepting-new-filter.js";
-import { MenuDistanceFilter, MenuVisaFilter } from "..";
-import SimpleDropdown from "../SimpleDropdown/simple-dropdown";
+import "components/ProviderList/provider-list.css";
+import AcceptingNewFilter from "components/MenuAcceptingNewFilter/menu-accepting-new-filter.js";
+import { MenuDistanceFilter, MenuVisaFilter } from "components";
+import SimpleDropdown from "components/SimpleDropdown/simple-dropdown";
 import { Row } from "simple-flexbox";
 
 class TopNav extends Component {
