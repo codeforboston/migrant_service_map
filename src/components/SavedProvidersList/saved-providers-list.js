@@ -29,13 +29,19 @@ function printableSavedProvider(provider) {
   );
 }
 
-const SavedProvidersList = ({ savedProviders, saveProvider }) => (
-  <div className="">
+const SavedProvidersList = ({ savedProviders, saveProvider, searchCenter }) => (
+// const SavedProvidersList = ({ savedProviders, saveProvider }) => (
+  <div className="saved-list">
+    <header>
+    <h3>Saved Providers</h3>
     <input
       type="button"
       value="Print"
       onClick={() => printJSX(savedProviders.map(printableSavedProvider))}
     />
+    </header>
+    <div className="search-center">Showing proximity to {searchCenter}</div>
+    
     {savedProviders.map(provider => (
       <MenuDropdownItem
         key={provider.id}

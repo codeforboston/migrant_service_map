@@ -144,7 +144,9 @@ class Map extends Component {
     document.getElementById("nav-search").appendChild(geocoder.onAdd(map));
 
     geocoder.on("result", ev => {
-      this.props.setSearchCenterCoordinates(ev.result.geometry.coordinates);
+      // ev.result contains id, place_name, text
+      let { geometry, id, text } = ev.result;
+      this.props.setSearchCenterCoordinates(geometry.coordinates, id, text);
       this.addDistanceIndicator();
     });
   }
