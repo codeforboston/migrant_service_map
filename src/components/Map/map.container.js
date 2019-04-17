@@ -30,9 +30,9 @@ const mapDispatchToProps = dispatch => {
     },
     displayProviderInformation: id => {
       dispatch(displayProviderInformation(id));
-    },
-    setSearchCenterCoordinates: coordinates => {
-      dispatch(setSearchCenterCoordinates(coordinates));
+    }, 
+    setSearchCenterCoordinates: ( coordinates, mapboxId, text ) => {
+      dispatch(setSearchCenterCoordinates(coordinates, mapboxId, text));
     }
   };
 };

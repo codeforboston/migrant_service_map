@@ -2,6 +2,7 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFolderPlus,
+  faFolderOpen,
   faUsers,
   faEnvelopeOpenText,
   faGlobeEurope,
@@ -32,7 +33,7 @@ export default class DropdownMenuItem extends React.Component {
     } = this.props;
     const { expand } = this.state;
     return (
-      <div className="provider-card">
+      <div className="provider-card" id={`provider-${provider.id}`}>
         <div className="card-container">
           <div className="card-header">
             <h5>{provider.name}</h5>
@@ -54,7 +55,7 @@ export default class DropdownMenuItem extends React.Component {
                 </div>
               )}
               <div>
-                <p> {/* TODO Distance */}3.4 mi away</p>
+                { provider.distance ? <p>{Math.round(provider.distance*10)/10} mi away</p> : null }
               </div>
             </div>
           </div>
@@ -62,8 +63,8 @@ export default class DropdownMenuItem extends React.Component {
             <button className={`button ${isSaved}`} onClick={toggleSavedStatus}>
               {isSaved === "saved" ? (
                 <>
-                  <FontAwesomeIcon icon={faTrashAlt} />
-                  REMOVE
+                  <FontAwesomeIcon icon={faFolderOpen} />
+                  SAVED
                 </>
               ) : (
                 <>

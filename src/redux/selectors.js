@@ -7,7 +7,8 @@ const getProvidersById = state => state.providers.byId;
 const getDistance = state => state.filters.distance;
 const getSavedProvidersIds = state => state.providers.savedProviders;
 const getHighlightedProvidersList = state => state.highlightedProviders;
-const getSearchCoordinates = state => state.search.coordinates;
+// const getSearchCoordinates = state => state.search.history[state.search.currentLocation];
+const getSearchCoordinates = state => state.search.currentLocation ? state.search.history[state.search.currentLocation] : null; // TODO: separate coordinates and searched location
 
 export const getProvidersSorted = createSelector(
   [
@@ -24,17 +25,21 @@ export const getProvidersSorted = createSelector(
     distance,
     searchCoordinates
   ) => {
-    if (distance) {
+    const sortBy = "DISTANCE"; // TODO: remove after implementing alphabetical sort and tracking sort method in state
+    if (sortBy === "DISTANCE" && searchCoordinates) {
       const options = { units: "miles" };
-      const refLocation = searchCoordinates;
-      return sortedByDistance(
-        providerTypesIds,
-        providerTypesById,
-        providersById,
-        distance,
-        refLocation,
-        options
-      );
+      const refLocation = searchCoordinates.coordinates;
+      const providersList = providerTypesIds.map(typeId => ({
+        id: typeId,
+        name: providerTypesById[typeId].name,
+        providers: getProvidersWithDistance(
+          providerTypesById[typeId].providers, // array of id's
+          providersById,
+          refLocation,
+          options
+        )
+      }));
+      return providersList;
     } else {
       const providersList = providerTypesIds.map(typeId => ({
         id: typeId,
@@ -49,9 +54,25 @@ export const getProvidersSorted = createSelector(
 );
 
 export const getSavedProviders = createSelector(
-  [getSavedProvidersIds, getProvidersById],
-  (savedProvidersIds, providersById) =>
-    savedProvidersIds.map(id => providersById[id])
+  [getSavedProvidersIds, getProvidersById, getSearchCoordinates],
+  (savedProvidersIds, providersById, searchCoordinates) => {
+    if (!searchCoordinates) {
+      // no distance information included
+      return savedProvidersIds.map(id => providersById[id])
+    }
+    return savedProvidersIds.map(id => {
+      const provDistance = distance(
+        // TODO use coordinates from search history when provider was saved
+        point(providersById[id].coordinates),
+        point(searchCoordinates.coordinates),
+        { units: "miles" }
+      )
+      return {
+        ...providersById[id],
+        distance: provDistance
+      }
+    })
+  }
 );
 
 export const getHighlightedProviders = createSelector(
@@ -61,39 +82,27 @@ export const getHighlightedProviders = createSelector(
   }
 );
 
-function sortedByDistance(
-  providerTypesIds,
-  providerTypesById,
+function getProvidersWithDistance(
+  providersArray,
   providersById,
-  filterDistance,
   refLocation,
   options
 ) {
-  let providersList = providerTypesIds.map(typeId => {
-    let providerArray = [];
-    providerTypesById[typeId].providers.forEach(provId => {
-      const provDistance = distance(
-        point(providersById[provId].coordinates),
-        point(refLocation),
-        options
-      );
-      if (provDistance < filterDistance) {
-        providerArray.push({
-          // New object with the distance attached
-          ...providersById[provId],
-          distance: provDistance
-        });
-      }
-    });
+  var referencePoint = point(refLocation);
+  var providers = providersArray.map( providerId => {
+    let provider = providersById[providerId];
+    // New object with the distance attached
+    return {
+      ...provider,
+      distance: distance(point(provider.coordinates), referencePoint, options)
+    }
+  })
+  return sortByDistance(providers)
+}
+
+function sortByDistance(providerArray) {
     // Sort the list by distance
-    const sortedProviders = providerArray.sort(
+    return providerArray.sort(
       (a, b) => a.distance - b.distance
     );
-    return {
-      id: typeId,
-      name: providerTypesById[typeId].name,
-      providers: sortedProviders
-    };
-  });
-  return providersList;
 }
