@@ -17,7 +17,7 @@ export default function search(state = INITIAL_STATE, action) {
   switch (action.type) {
     case SELECT_TAB:
       return { ...state, selectedTabIndex: action.index };
-    case SET_SEARCH_COORDINATES:git
+    case SET_SEARCH_COORDINATES:
       return {
         ...state,
         coordinates: action.coordinates,
