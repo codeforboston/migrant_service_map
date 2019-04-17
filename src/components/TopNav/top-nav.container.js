@@ -7,7 +7,8 @@ import {
   changeDistanceFilter,
   changeVisaFilter,
   clearVisaFilter,
-  displayProviderInformation
+  displayProviderInformation,
+  selectTab
 } from "../../redux/actions";
 import { getProvidersSorted } from "../../redux/selectors";
 import TopNav from "./top-nav";
@@ -52,6 +53,9 @@ const mapDispatchToProps = dispatch => {
     },
     displayProviderInformation: id => {
       dispatch(displayProviderInformation(id));
+    },
+    selectTab: index => {
+      dispatch(selectTab(index));
     }
   };
 };

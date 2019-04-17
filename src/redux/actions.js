@@ -9,6 +9,7 @@ export const SET_SEARCH_COORDINATES = "SET_SEARCH_COORDINATES";
 export const FILTER_PROVIDERS = "FILTER_PROVIDERS";
 export const FILTER_NAME = "FILTER_NAME";
 export const SAVE_PROVIDER = "SAVE_PROVIDER";
+export const SELECT_TAB = "SELECT_TAB";
 
 export const initializeProviders = providers => {
   // TODO WHEN ASYNC async dispatch => {
@@ -86,4 +87,11 @@ export function saveProvider(id) {
     type: SAVE_PROVIDER,
     id
   };
+}
+
+export function selectTab(index) {
+  return {
+    type: SELECT_TAB,
+    index
+  }
 }

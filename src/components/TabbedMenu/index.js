@@ -1,3 +1,3 @@
-import TabbedMenu from "./tabbed-menu";
+import TabbedMenu from "./tabbed-menu.container";
 
 export default TabbedMenu;

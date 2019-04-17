@@ -5,8 +5,13 @@ import { Menu, SavedProvidersList } from "..";
 import "react-tabs/style/react-tabs.css";
 import "./tabbed-menu.css";
 
-const TabbedMenu = () => (
-  <Tabs className="side-menu">
+const TabbedMenu = ({selectedTabIndex, selectTab}) => {
+  return (
+  <Tabs
+    className="side-menu"
+    selectedIndex={selectedTabIndex}
+    onSelect={index => selectTab(index)}
+  >
     <TabList>
       <Tab>
         <h3>Service Providers</h3>
@@ -24,7 +29,8 @@ const TabbedMenu = () => (
         <SavedProvidersList />
       </TabPanel>
     </div>
+
   </Tabs>
-);
+)};
 
 export default TabbedMenu;
