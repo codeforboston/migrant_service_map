@@ -8,9 +8,6 @@ export default function highlightedProviders(state = [], action) {
       if (providerIndex > -1) {
         return dotProp.delete(state, providerIndex);
       } else {
-        const offsetTop = document.getElementById(`provider-${action.providerId}`).offsetTop;
-        const cardOffset = 50;
-        document.getElementsByClassName('panels')[0].scrollTop = offsetTop - cardOffset;
         return [action.providerId, ...state];
       }
     }
