@@ -12,6 +12,11 @@ import DistanceDropdown from "./distance-dropdown";
 import "./top-bar.css";
 
 class TopBar extends Component {
+  onSearchInputClick = () => {
+    const { selectTab } = this.props;
+    selectTab(0);
+  }
+
   render() {
     const {
       filters,
@@ -22,7 +27,6 @@ class TopBar extends Component {
       visibleTypes,
       providerTypes,
       toggleProviderVisibility,
-      selectTab
     } = this.props;
     const topBarItemClass = "top-bar-item";
     return (
@@ -30,7 +34,7 @@ class TopBar extends Component {
         <VisaStatusDropdown className={topBarItemClass} />
         <ProviderTypeDropdown className={topBarItemClass} />
         <AcceptingNewFilter className={topBarItemClass} />
-        <Search />
+        <Search onSearchInputClick={this.onSearchInputClick}/>
         <DistanceDropdown className={topBarItemClass} />
       </div>
     );

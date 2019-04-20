@@ -2,7 +2,7 @@ import React from "react";
 
 export default class Search extends React.Component {
   render() {
-    const { className } = this.props;
+    const { className, onSearchInputClick } = this.props;
     return (
       <>
         <link
@@ -10,7 +10,12 @@ export default class Search extends React.Component {
           href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v3.1.6/mapbox-gl-geocoder.css"
           type="text/css"
         />
-        <div className={className} id="nav-search" style={{flex: 1}}/>
+        <div
+          className={className}
+          id="nav-search"
+          style={{ flex: 1 }}
+          onClick={onSearchInputClick}
+        />
       </>
     );
   }
