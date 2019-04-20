@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { saveProvider } from "../../redux/actions";
+import { displayProviderInformation, saveProvider } from "../../redux/actions";
 import { getSavedProviders } from "../../redux/selectors.js";
 import SavedProvidersList from "./saved-providers-list";
 
@@ -20,6 +20,9 @@ const mapDispatchToProps = dispatch => {
   return {
     saveProvider: id => {
       dispatch(saveProvider(id));
+    },
+    displayProviderInformation: id => {
+      dispatch(displayProviderInformation(id));
     }
   };
 };
