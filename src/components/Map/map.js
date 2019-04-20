@@ -3,7 +3,7 @@ import mapboxgl from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "./map.css";
 import { point, transformTranslate, circle } from "@turf/turf";
-import typeImages from "../../assets/images";
+import typeImages from "assets/images";
 import {
   centerMarker,
   createDistanceMarker,

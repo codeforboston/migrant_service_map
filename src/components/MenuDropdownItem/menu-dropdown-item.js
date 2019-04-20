@@ -10,7 +10,7 @@ import {
   faPhone
 } from "@fortawesome/free-solid-svg-icons";
 import "./menu-dropdown-item.css";
-import DetailsPane from "../DetailsPane";
+import DetailsPane from "components/DetailsPane";
 
 const isPresent = value => value && value !== "n/a";
 

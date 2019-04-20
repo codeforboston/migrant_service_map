@@ -1,0 +1,43 @@
+.expandable-container {
+    width: 100%;
+    color: #8c45cf;
+    background-color: white;
+    overflow: visible;
+    position: relative;
+    z-index: 100;
+}
+
+.expandable-container .expanded {
+    transition: all 1s ease-out;
+}
+
+.expandable-container .expandable-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+}
+
+.expandable-container .expandable-content-wrapper.expanded {
+    height: auto;
+}
+
+
+.expandable-container .expandable-header {
+    padding: 0 5px;
+    height: 100%;
+}
+
+.expandable-container .expanded-content {
+    padding-top: 6px;
+    height: 0px;
+    opacity: 0;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+.expandable-container .expanded-content.expanded {
+    height: auto;
+    max-height: 300px;
+    opacity: 1;
+}

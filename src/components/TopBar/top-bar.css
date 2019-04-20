@@ -1,8 +1,30 @@
-.top-nav {
-  /* display: flex; */
-  /* align-items: center; */
+.top-bar {
   overflow: visible;
+  z-index: 8;
+  border-bottom: 1px solid #8c45cf;
+  width: 100%;
+  display: flex;
+  padding: 10px;
+  justify-content: stretch;
+  height: 70px;
 }
+
+.top-bar .top-bar-item,
+#nav-search > * {
+  flex: 1;
+  background-color: white;
+  border: 1px solid #8c45cf;
+  box-shadow: 2px 1px 2px #8c45cf;
+  margin: 0 8px;
+  cursor: pointer;
+  height: 100%;
+}
+
+.mapboxgl-ctrl-geocoder {
+  height: 100%;
+  border-radius: 0px;
+}
+
 /* 
 .top-nav a {
   flex: 1;

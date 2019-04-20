@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "../Menu/menu.css";
+import "../ProviderList/provider-list.css";
 import Toggle from "../toggle.js";
 class AcceptingNewFilter extends Component {
   constructor(props) {
@@ -19,6 +19,7 @@ class AcceptingNewFilter extends Component {
     const backerSecondaryColor = this.state.toggleOn ? "white" : "gray";
     return (
       <div
+        className={this.props.className}
         style={{
           flex: 1,
           padding: "4px 10px",

@@ -1,6 +1,6 @@
 import React from "react";
 import { MenuDropdownItem } from "..";
-import { printJSX } from "../../util/printJSX";
+import { printJSX } from "util/printJSX";
 import "./saved-providers-list.css";
 
 function printableSavedProvider(provider) {
