@@ -68,6 +68,25 @@ class Map extends Component {
       }
     });
     map.on("click", typeId, e => {
+      const offsetTop = document.getElementById(`provider-${e.features[0].properties.id}`).offsetTop;
+      const cardOffset = 50;
+      
+      const panel = document.getElementsByClassName('panels')[0];
+      const toScrollTo = offsetTop - cardOffset;
+      const steps = 15;
+      const scrollStep = (toScrollTo - panel.scrollTop) / steps;
+      let stepCount = 0;
+      
+      const scrollInterval = setInterval(function(){
+        if (stepCount < steps) {
+          panel.scrollBy(0, scrollStep);
+          stepCount++;
+        } else {
+          panel.scrollTop = toScrollTo;
+          clearInterval(scrollInterval);
+        }  
+      },15);
+      
       displayProviderInformation(e.features[0].properties.id);
     });
   };

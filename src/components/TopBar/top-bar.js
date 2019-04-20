@@ -21,7 +21,8 @@ class TopBar extends Component {
       changeVisaFilter,
       visibleTypes,
       providerTypes,
-      toggleProviderVisibility
+      toggleProviderVisibility,
+      selectTab
     } = this.props;
     const topBarItemClass = "top-bar-item";
     return (

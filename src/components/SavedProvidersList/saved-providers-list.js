@@ -29,7 +29,7 @@ function printableSavedProvider(provider) {
   );
 }
 
-const SavedProvidersList = ({ savedProviders, saveProvider, searchCenter }) => (
+const SavedProvidersList = ({ savedProviders, saveProvider, searchCenter, highlightedProviders, displayProviderInformation }) => (
 // const SavedProvidersList = ({ savedProviders, saveProvider }) => (
   <div className="saved-list">
     <header>
@@ -49,6 +49,8 @@ const SavedProvidersList = ({ savedProviders, saveProvider, searchCenter }) => (
         providerTypeName={provider["Type of Service"]}
         isSaved="saved"
         toggleSavedStatus={() => saveProvider(provider.id)}
+        isHighlighted={highlightedProviders.includes(provider.id)}
+        toggleHighlight={() => displayProviderInformation(provider.id)}
       />
     ))}
   </div>

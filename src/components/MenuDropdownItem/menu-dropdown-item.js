@@ -7,11 +7,12 @@ import {
   faEnvelopeOpenText,
   faGlobeEurope,
   faMapMarkedAlt,
-  faPhone,
-  faTrashAlt
+  faPhone
 } from "@fortawesome/free-solid-svg-icons";
 import "./menu-dropdown-item.css";
 import DetailsPane from "components/DetailsPane";
+
+const isPresent = value => value && value !== "n/a";
 
 export default class DropdownMenuItem extends React.Component {
   state = { expand: "wrapped", more: false };
@@ -29,14 +30,15 @@ export default class DropdownMenuItem extends React.Component {
       providerTypeName,
       isSaved,
       toggleSavedStatus,
-      isHighlighted
+      isHighlighted,
+      toggleHighlight
     } = this.props;
     const { expand } = this.state;
     return (
       <div className="provider-card" id={`provider-${provider.id}`}>
         <div className="card-container">
           <div className="card-header">
-            <h5>{provider.name}</h5>
+            <h5 onClick={toggleHighlight}>{provider.name}</h5>
             <div className="wrapped-info">
               <div className={`prov-type ${expand}`}>
                 <FontAwesomeIcon icon={faUsers} />
@@ -44,14 +46,22 @@ export default class DropdownMenuItem extends React.Component {
               </div>
               {!isHighlighted && (
                 <div className="wrapped-icons">
-                  {provider.email && (
-                    <FontAwesomeIcon icon={faEnvelopeOpenText} />
-                  )}
-                  {provider.website && <FontAwesomeIcon icon={faGlobeEurope} />}
-                  {!!provider.coordinates.length && (
-                    <FontAwesomeIcon icon={faMapMarkedAlt} />
-                  )}
-                  {provider.telephone && <FontAwesomeIcon icon={faPhone} />}
+                  {
+                    isPresent(provider.email)
+                    && <FontAwesomeIcon icon={faEnvelopeOpenText} />
+                  }
+                  {
+                    isPresent(provider.website)
+                    && <FontAwesomeIcon icon={faGlobeEurope} />
+                  }
+                  {
+                    !!provider.coordinates.length
+                    && <FontAwesomeIcon icon={faMapMarkedAlt} />
+                  }
+                  {
+                    isPresent(provider.telephone)
+                    && <FontAwesomeIcon icon={faPhone} />
+                  }
                 </div>
               )}
               <div>
@@ -75,7 +85,10 @@ export default class DropdownMenuItem extends React.Component {
             </button>
           </div>
         </div>
-        {isHighlighted && <DetailsPane provider={provider} />}
+        {
+          isHighlighted
+          && <DetailsPane provider={provider} />
+        }
       </div>
     );
   }
