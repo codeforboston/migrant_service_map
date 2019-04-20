@@ -12,14 +12,13 @@
 }
 
 .expandable-container .expandable-content-wrapper {
-    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: stretch;
 }
 
 .expandable-container .expandable-content-wrapper.expanded {
-    max-height: 300px !important;
+    height: auto;
 }
 
 

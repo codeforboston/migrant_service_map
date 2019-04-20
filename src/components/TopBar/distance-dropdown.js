@@ -10,8 +10,7 @@ export default class DistanceDropdown extends React.Component {
         options={[{ label: <icon type={"cat"} />, value: "item1" }, {}]}
         header={
           <>
-            <div>header1</div>
-            <div>subheader</div>
+            <h2>Distance</h2>
           </>
         }
       />

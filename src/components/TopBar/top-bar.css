@@ -17,6 +17,7 @@
   box-shadow: 2px 1px 2px #8c45cf;
   margin: 0 8px;
   cursor: pointer;
+  height: 100%;
 }
 
 .mapboxgl-ctrl-geocoder {
