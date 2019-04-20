@@ -1,8 +1,9 @@
-import { SET_SEARCH_COORDINATES } from "./actions";
+import { SET_SEARCH_COORDINATES, SELECT_TAB } from "./actions";
 
 const INITIAL_STATE = {
   mapCenter: [-71.066954, 42.359947], 
   coordinates: [-71.066954, 42.359947],
+  selectedTabIndex: 0,
   currentLocation: null, //references item in history object once user submits search string
   history: {
     "default": {
@@ -14,6 +15,8 @@ const INITIAL_STATE = {
 
 export default function search(state = INITIAL_STATE, action) {
   switch (action.type) {
+    case SELECT_TAB:
+      return { ...state, selectedTabIndex: action.index };
     case SET_SEARCH_COORDINATES:
       return {
         ...state,

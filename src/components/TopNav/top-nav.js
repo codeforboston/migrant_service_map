@@ -23,7 +23,8 @@ class TopNav extends Component {
       changeVisaFilter,
       visibleTypes,
       providerTypes,
-      toggleProviderVisibility
+      toggleProviderVisibility,
+      selectTab
     } = this.props;
     return (
       <nav className="top-nav">
@@ -60,6 +61,7 @@ class TopNav extends Component {
                 id="nav-search"
                 className="nav-search"
                 style={{ flex: 0.5 }}
+                onClick={() => selectTab(0)}
               />
             </Row>
             <Row className="dropdown-list-container">
