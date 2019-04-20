@@ -7,7 +7,7 @@ import MenuVisaFilter from "./MenuVisaFilter";
 import MenuDropdown from "./MenuDropdown";
 import MenuDropdownItem from "./MenuDropdownItem";
 import SavedProvidersList from "./SavedProvidersList";
-import TopNav from "./TopNav";
+import TopNav from "./TopBar";
 
 export {
   DetailsPane,
