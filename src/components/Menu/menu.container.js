@@ -1,7 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import {
-  toggleProviderVisibility,
   saveProvider,
   clearDistanceFilter,
   changeDistanceFilter,
@@ -25,7 +24,6 @@ const mapStateToProps = state => {
     savedProviders: state.providers.savedProviders,
     visaTypes: VISA_TYPES,
     highlightedProviders: state.highlightedProviders,
-    visibleTypes: state.providerTypes.visible,
     filters: state.filters,
     providerTypes: state.providerTypes.allIds
   };
@@ -33,9 +31,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    toggleProviderVisibility: providerType => {
-      dispatch(toggleProviderVisibility(providerType));
-    },
     saveProvider: id => {
       dispatch(saveProvider(id));
     },

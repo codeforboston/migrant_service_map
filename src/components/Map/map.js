@@ -242,7 +242,7 @@ class Map extends Component {
           telephone: properties["Telephone:"],
           timestamp: properties.Timestamp,
           // Type of Service
-          category: properties["Type of Service"], // better name to map to?
+          typeName: properties["Type of Service"], // synonym for next line
           "Type of Service": properties["Type of Service"], // as referenced in reducer helper function
           // Validated By
           website: properties.Website
