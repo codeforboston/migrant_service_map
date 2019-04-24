@@ -27,7 +27,6 @@ export default class DropdownMenuItem extends React.Component {
   render() {
     const {
       provider,
-      providerTypeName,
       isSaved,
       toggleSavedStatus,
       isHighlighted,
@@ -42,7 +41,7 @@ export default class DropdownMenuItem extends React.Component {
             <div className="wrapped-info">
               <div className={`prov-type ${expand}`}>
                 <FontAwesomeIcon icon={faUsers} />
-                <p>{providerTypeName}</p>
+                <p>{provider.typeName}</p>
               </div>
               {!isHighlighted && (
                 <div className="wrapped-icons">

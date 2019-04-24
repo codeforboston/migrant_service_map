@@ -8,9 +8,7 @@ class ProviderList extends Component {
     const {
       providersList,
       savedProviders,
-      visibleTypes,
       saveProvider,
-      toggleProviderVisibility,
       highlightedProviders,
       displayProviderInformation
     } = this.props;
@@ -26,8 +24,6 @@ class ProviderList extends Component {
                     key={providerType.id}
                     id={providerType.id}
                     text={providerType.name}
-                    expanded={visibleTypes.includes(providerType.id)}
-                    onToggle={toggleProviderVisibility}
                   >
                     {providerType.providers.map(provider => (
                       <li
@@ -37,7 +33,6 @@ class ProviderList extends Component {
                         <MenuDropdownItem
                           key={provider.id}
                           provider={provider}
-                          providerTypeName={providerType.name}
                           isHighlighted={highlightedProviders.includes(
                             provider.id
                           )}

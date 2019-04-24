@@ -4,7 +4,7 @@ const INITIAL_STATE = {
   mapCenter: [-71.066954, 42.359947], 
   coordinates: [-71.066954, 42.359947],
   selectedTabIndex: 0,
-  currentLocation: null, //references item in history object once user submits search string
+  currentLocation: "default", //references item in history object once user submits search string
   history: {
     "default": {
       coordinates: [-71.066954, 42.359947],
