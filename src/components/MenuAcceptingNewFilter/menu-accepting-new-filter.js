@@ -19,6 +19,7 @@ class AcceptingNewFilter extends Component {
     const backerSecondaryColor = this.state.toggleOn ? "white" : "gray";
     return (
       <div
+        onClick={this.toggleToggle}
         className={this.props.className}
         style={{
           flex: 1,
