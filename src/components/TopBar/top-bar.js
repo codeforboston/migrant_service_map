@@ -16,7 +16,14 @@ class TopBar extends Component {
     const { selectTab } = this.props;
     selectTab(0);
   }
-
+  toggle = (name, event) => {
+    const myDiv = event.currentTarget;
+    console.log(myDiv);
+    Array.from(myDiv.classList).includes("expanded")
+      ? myDiv.classList.remove("expanded")
+      : myDiv.classList.add("expanded");
+  };
+  
   render() {
     const {
       filters,
@@ -32,7 +39,15 @@ class TopBar extends Component {
     return (
       <div className="top-bar">
         <VisaStatusDropdown className={topBarItemClass} />
-        <ProviderTypeDropdown className={topBarItemClass} />
+        {/* <ProviderTypeDropdown className={topBarItemClass} /> */}
+        <SimpleDropdown 
+              handleClick={this.toggle.bind(this, this.props.name)}
+              heading={"Provider Type"}
+              subHead={"Currently selected providers"}
+              incomingState={visibleTypes}
+              handleChange={toggleProviderVisibility}
+              items={providerTypes.allIds} 
+              />
         <AcceptingNewFilter className={topBarItemClass} />
         <Search onSearchInputClick={this.onSearchInputClick}/>
         <DistanceDropdown className={topBarItemClass} />
