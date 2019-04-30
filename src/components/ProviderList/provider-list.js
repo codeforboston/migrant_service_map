@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { MenuDropdown, MenuDropdownItem } from "..";
+import SimpleDropdown from "../SimpleDropdown/simple-dropdown"
 
 import "./provider-list.css";
 
@@ -17,6 +18,16 @@ class ProviderList extends Component {
         {!providersList.length && <h3>LOADING ...</h3>}
         {!!providersList.length && (
           <>
+            <SimpleDropdown
+              items={["Distance", "Name", "Provider Type"]}
+              heading="Sort order"
+              subHead="choose"
+              handleClick={(event)=> event.currentTarget.classList.toggle("expanded")}
+              handleChange={(item) => console.log(item)}
+              incomingState={[]}
+              inputType="radio"
+              inputGroup="sort"
+            />
             {providersList.map(providerType => (
               <ul key={providerType.id}>
                 {!!providerType.providers.length && ( //if there is not providers MenuDropdown is not shown
