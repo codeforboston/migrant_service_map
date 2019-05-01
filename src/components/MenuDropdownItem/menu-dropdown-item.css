@@ -19,9 +19,16 @@ text-overflow: ellipsis;
   display: flex;
   width: 100%;
   flex-flow: column nowrap;
-  background-color: #f5fbff;
   padding: 10px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+.provider-card.savedHighlighted {
+  background-color: #faf7fe;
+}
+
+.provider-card.unchanged {
+  background-color: #f5fbff;
 }
 
 .provider-card .card-container {
@@ -117,7 +124,7 @@ text-overflow: ellipsis;
   outline: none;
 }
 
-.WHAT {
+.remoteButton {
   border: none;
   outline: none;
   display: flex;
@@ -127,13 +134,13 @@ text-overflow: ellipsis;
   height: 40px;
   width: 70px;
   cursor: pointer;
-  color: red;
   background-color: transparent;
   font-size: 12px;
   font-weight: bold;
+  color: red;
 }
 
-.WHAT > svg {
+.remoteButton > svg {
   font-size: 20px;
 }
 
