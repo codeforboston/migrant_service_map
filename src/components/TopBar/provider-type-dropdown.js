@@ -3,18 +3,20 @@ import CheckBoxDropdown from "./checkbox-dropdown";
 
 export default class ProviderTypeDropdown extends React.Component {
   render() {
-    const { className, onChange = () => {} } = this.props;
+    const { className, providerTypes, handleChange = () => {} } = this.props;
     return (
       <CheckBoxDropdown
         className={className}
-        options={[{ label: <icon type={"cat"} />, value: "item1" }, {}]}
+        options={ providerTypes.allIds } 
+        handleChange={ handleChange }
+        visibleTypes={providerTypes.visible}
         header={
           <>
             <h2>PROVIDER TYPE</h2>
             <p>Not Selected</p>
           </>
         }
-      />
+      />  
     );
   }
 }
