@@ -1,4 +1,5 @@
 import React from "react";
+import { Fragment } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFolderPlus,
@@ -7,7 +8,8 @@ import {
   faEnvelopeOpenText,
   faGlobeEurope,
   faMapMarkedAlt,
-  faPhone
+  faPhone,
+  faTrashAlt
 } from "@fortawesome/free-solid-svg-icons";
 import "./menu-dropdown-item.css";
 import DetailsPane from "components/DetailsPane";
@@ -30,7 +32,8 @@ export default class DropdownMenuItem extends React.Component {
       isSaved,
       toggleSavedStatus,
       isHighlighted,
-      toggleHighlight
+      toggleHighlight,
+      inSavedMenu,
     } = this.props;
     const { expand } = this.state;
     return (
@@ -69,19 +72,26 @@ export default class DropdownMenuItem extends React.Component {
             </div>
           </div>
           <div className="save-button-container">
-            <button className={`button ${isSaved}`} onClick={toggleSavedStatus}>
-              {isSaved === "saved" ? (
-                <>
-                  <FontAwesomeIcon icon={faFolderOpen} />
-                  SAVED
-                </>
-              ) : (
-                <>
-                  <FontAwesomeIcon icon={faFolderPlus} />
-                  SAVE
-                </>
-              )}
+          {inSavedMenu ? (
+            <button className={`WHAT`} onClick={toggleSavedStatus}>
+              <FontAwesomeIcon icon={faTrashAlt} />
+              Remove
             </button>
+          ) : (
+            <button className={`button ${isSaved}`} onClick={toggleSavedStatus}>
+            {isSaved === "saved" ? (
+              <Fragment>
+                <FontAwesomeIcon icon={faFolderOpen} />
+                SAVED
+              </Fragment>
+            ) : (
+              <>
+              <FontAwesomeIcon icon={faFolderPlus} />
+              SAVE
+              </>
+            )}
+            </button>
+          )}
           </div>
         </div>
         {

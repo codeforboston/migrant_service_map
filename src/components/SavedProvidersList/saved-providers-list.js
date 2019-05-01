@@ -85,6 +85,7 @@ const SavedProvidersList = ({ savedProviders, saveProvider, searchCenter, highli
                       toggleSavedStatus={() => saveProvider(provider.id)}
                       isHighlighted={highlightedProviders.includes(provider.id)}
                       toggleHighlight={() => displayProviderInformation(provider.id)}
+                      inSavedMenu={true}
                     />
                     </div>
                   )}
