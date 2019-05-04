@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { MenuDropdown, MenuDropdownItem } from "..";
-import SimpleDropdown from "../SimpleDropdown/simple-dropdown"
+import SortDropdown from "../SortDropdown"
 
 import "./provider-list.css";
 
@@ -18,15 +18,14 @@ class ProviderList extends Component {
         {!providersList.length && <h3>LOADING ...</h3>}
         {!!providersList.length && (
           <>
-            <SimpleDropdown
-              items={["Distance", "Name", "Provider Type"]}
-              heading="Sort order"
-              subHead="choose"
-              handleClick={(event)=> event.currentTarget.classList.toggle("expanded")}
-              handleChange={(item) => console.log(item)}
-              incomingState={[]}
-              inputType="radio"
-              inputGroup="sort"
+            <SortDropdown
+              className="something"
+              options={["Distance", "Name", "Provider Type"]}
+              header="Sort order"
+              handleChange={(id) =>
+                console.log('id',id)
+              }
+              group="sort"
             />
             {providersList.map(providerType => (
               <ul key={providerType.id}>
