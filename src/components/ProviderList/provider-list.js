@@ -10,6 +10,7 @@ class ProviderList extends Component {
       providersList,
       savedProviders,
       saveProvider,
+      changeSortOrder,
       highlightedProviders,
       displayProviderInformation
     } = this.props;
@@ -22,9 +23,7 @@ class ProviderList extends Component {
               className="something"
               options={["Distance", "Name", "Provider Type"]}
               header="Sort order"
-              handleChange={(id) =>
-                console.log('id',id)
-              }
+              handleChange={(id) => changeSortOrder(id)}
               group="sort"
             />
             {providersList.map(providerType => (

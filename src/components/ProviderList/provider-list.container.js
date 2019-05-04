@@ -2,11 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import {
   saveProvider,
-  clearDistanceFilter,
-  changeDistanceFilter,
-  changeVisaFilter,
-  clearVisaFilter,
-  displayProviderInformation
+  changeSortOrder
 } from "redux/actions";
 import { getProvidersSorted } from "redux/selectors.js";
 import ProviderList from "./provider-list";
@@ -33,20 +29,8 @@ const mapDispatchToProps = dispatch => {
     saveProvider: id => {
       dispatch(saveProvider(id));
     },
-    clearDistanceFilter: () => {
-      dispatch(clearDistanceFilter());
-    },
-    changeDistanceFilter: distance => {
-      dispatch(changeDistanceFilter(distance));
-    },
-    clearVisaFilter: () => {
-      dispatch(clearVisaFilter());
-    },
-    changeVisaFilter: visa => {
-      dispatch(changeVisaFilter(visa));
-    },
-    displayProviderInformation: id => {
-      dispatch(displayProviderInformation(id));
+    changeSortOrder: value => {
+      dispatch(changeSortOrder(value))
     }
   };
 };
