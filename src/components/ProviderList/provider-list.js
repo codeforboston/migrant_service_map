@@ -10,21 +10,23 @@ class ProviderList extends Component {
       providersList,
       savedProviders,
       saveProvider,
+      incomingState,
       changeSortOrder,
       highlightedProviders,
       displayProviderInformation
     } = this.props;
     return (
       <div className="service-providers">
-        {!providersList.length && <h3>LOADING ...</h3>}
+        {!providersList.length && <><h4>NO MATCHING RESULTS</h4><p>Set search criteria with the filters at the top</p></>}
         {!!providersList.length && (
           <>
             <SortDropdown
-              className="something"
+              className="sort-by"
               options={["Distance", "Name", "Provider Type"]}
-              header="Sort order"
+              header="Sort By"
               handleChange={(id) => changeSortOrder(id)}
               group="sort"
+              incomingState={incomingState}
             />
             {providersList.map(providerType => (
               <ul key={providerType.id}>

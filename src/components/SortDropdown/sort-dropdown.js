@@ -3,17 +3,18 @@ import Expandable from "../TopBar/expandable";
 
 import "./sort-dropdown.css"
 
-const SortDropdown = ({ className, options, group, header, handleChange }) => {
+const SortDropdown = ({ className, options, group, incomingState, header, handleChange }) => {
     let inputDiv = options.map((option, index) =>
         <div
-            className="checkbox-container"
+            className={`radio-container ${option === incomingState ? "selected" : null}`}
             key={index}
-            >
+        >
             <input
                 id={option}
                 type="radio"
                 name={group}
                 value={option}
+                checked={option === incomingState}
                 onClick={() => handleChange(option)}
             />
             <label className="expandable-label" htmlFor={option} >
@@ -21,13 +22,17 @@ const SortDropdown = ({ className, options, group, header, handleChange }) => {
             </label>
         </div>
     );
+    let wrappedHeader = <h4>{header}</h4>
 
     return (
-    <Expandable
-        className={className}
-        header={header}
-        content={inputDiv}
-    />
+        <div className="sort-container">
+            <Expandable
+                className={className}
+                header={wrappedHeader}
+                content={inputDiv}
+            />
+            <img src="/sort-numeric-down.svg" alt={`current sort method: ${incomingState}`} />
+        </div>
     )
 }
 

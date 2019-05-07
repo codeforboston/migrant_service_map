@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import {
   saveProvider,
+  displayProviderInformation,
   changeSortOrder
 } from "redux/actions";
 import { getProvidersSorted } from "redux/selectors.js";
@@ -17,6 +18,7 @@ const mapStateToProps = state => {
   return {
     providersList: getProvidersSorted(state),
     savedProviders: state.providers.savedProviders,
+    incomingState: state.providers.sortMethod,
     visaTypes: VISA_TYPES,
     highlightedProviders: state.highlightedProviders,
     filters: state.filters,
@@ -28,6 +30,9 @@ const mapDispatchToProps = dispatch => {
   return {
     saveProvider: id => {
       dispatch(saveProvider(id));
+    },
+    displayProviderInformation: id => {
+      dispatch(displayProviderInformation(id))
     },
     changeSortOrder: value => {
       dispatch(changeSortOrder(value))
