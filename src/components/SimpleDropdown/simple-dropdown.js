@@ -16,14 +16,14 @@ const SimpleDropdown = props => {
         {items.map((item, i) => {
           return (
           <div className="dropdown-list-item" key={i}>
-            <input 
+            <input
             id={`${item}_${i}`}
             type={inputType || "checkBox"}
             name={inputGroup || item}
             value={item}
             onChange={() => handleChange(item)}
             checked={incomingState.includes(item)}
-            /> 
+            />
             <label htmlFor={`${item}_${i}`}>{item}</label>
           </div>
         )})}

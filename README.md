@@ -21,9 +21,9 @@ Thanks for choosing to support our initiative to support and strengthen migrant 
 - Mall Wood mal.wood@mapbox.com,
 - Joe Clark joe.clark@mapbox.com,
 
-### Code4Boston Support:
+### Code for Boston Support:
 
-- Thad Kerosky <thadknull@gmail.com>
+- Liam Morley liam@codeforboston.org
 - Matt mattz@codeforboston.org
 
 ## Project Materials and Communications
