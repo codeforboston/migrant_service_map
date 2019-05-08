@@ -1,4 +1,5 @@
 import React from "react";
+import { Fragment } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFolderPlus,
@@ -7,7 +8,8 @@ import {
   faEnvelopeOpenText,
   faGlobeEurope,
   faMapMarkedAlt,
-  faPhone
+  faPhone,
+  faTrashAlt
 } from "@fortawesome/free-solid-svg-icons";
 import "./menu-dropdown-item.css";
 import DetailsPane from "components/DetailsPane";
@@ -30,11 +32,13 @@ export default class DropdownMenuItem extends React.Component {
       isSaved,
       toggleSavedStatus,
       isHighlighted,
-      toggleHighlight
+      toggleHighlight,
     } = this.props;
+    const inSavedMenu = this.props.inSavedMenu ? this.props.inSavedMenu : false;
+    const savedMenuHighlightedProviderCard = (inSavedMenu && isHighlighted) ? 'savedHighlighted' : 'unchanged'
     const { expand } = this.state;
     return (
-      <div className="provider-card" id={`provider-${provider.id}`}>
+      <div className={`provider-card ${savedMenuHighlightedProviderCard}`} id={`provider-${provider.id}`}>
         <div className="card-container">
           <div className="card-header">
             <h5 onClick={toggleHighlight}>{provider.name}</h5>
@@ -69,19 +73,26 @@ export default class DropdownMenuItem extends React.Component {
             </div>
           </div>
           <div className="save-button-container">
-            <button className={`button ${isSaved}`} onClick={toggleSavedStatus}>
-              {isSaved === "saved" ? (
-                <>
-                  <FontAwesomeIcon icon={faFolderOpen} />
-                  SAVED
-                </>
-              ) : (
-                <>
-                  <FontAwesomeIcon icon={faFolderPlus} />
-                  SAVE
-                </>
-              )}
+          {inSavedMenu ? (
+            <button className={`remoteButton`} onClick={toggleSavedStatus}>
+              <FontAwesomeIcon icon={faTrashAlt} />
+              Remove
             </button>
+          ) : (
+            <button className={`button ${isSaved}`} onClick={toggleSavedStatus}>
+            {isSaved === "saved" ? (
+              <Fragment>
+                <FontAwesomeIcon icon={faFolderOpen} />
+                SAVED
+              </Fragment>
+            ) : (
+              <>
+              <FontAwesomeIcon icon={faFolderPlus} />
+              SAVE
+              </>
+            )}
+            </button>
+          )}
           </div>
         </div>
         {
