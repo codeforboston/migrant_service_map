@@ -41,11 +41,13 @@
     background-color: white;
     display: flex;
     flex-direction: column;
+    pointer-events: none;
 }
 
 .expandable-container .expanded-content.expanded {
     height: auto;
     max-height: 300px;
     opacity: 1;
+    pointer-events: auto;
 }
 
