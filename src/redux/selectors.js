@@ -10,6 +10,7 @@ const getSavedProvidersIds = state => state.providers.savedProviders;
 const getHighlightedProvidersList = state => state.highlightedProviders;
 const getSearchCoordinates = state => state.search.history[state.search.currentLocation];
 // const getSearchCoordinates = state => state.search.currentLocation ? state.search.history[state.search.currentLocation] : null; // TODO: separate coordinates and searched location
+const getSortMethod = state => state.providers.sortMethod;
 
 export const getProvidersSorted = createSelector(
   [
@@ -17,19 +18,19 @@ export const getProvidersSorted = createSelector(
     getVisibleProviderTypes,
     getProvidersById,
     getDistance,
-    getSearchCoordinates
+    getSearchCoordinates,
     // visa status,
     // accepting new clients,
-    // sort criterion
+    getSortMethod
   ],
   (
     providerTypesById,
     visibleProviderTypes,
     providersById,
     distance,
-    searchCoordinates
+    searchCoordinates,
+    sortMethod
   ) => {
-    const sortMethod = "DISTANCE"; // TODO: remove after implementing alphabetical sort and tracking sort method in state
 
     // for each provider type that is active, get providers belonging to it that are near the search location
     // TODO: limit based on new client status and visa type
@@ -51,17 +52,24 @@ export const getProvidersSorted = createSelector(
 
     // sort and return an array of grouped providers
     // (for distance and alphabetical, it's a single-object array)
+    var flatList = groupedByProviderType.reduce(
+      (result, type) => result.concat(type.providers),
+      [] // result needs to be initialized to empty array
+    )
     switch (sortMethod) {
-      case "DISTANCE":
-        let flattenedProviders = groupedByProviderType.reduce( (result, type) => result.concat(type.providers), [] )
-        let sortedByDistance = sortProvidersByDistance(flattenedProviders)
+      case "Distance":
         return [{
           id: "distance-sort",
           name: "Closest to farthest",
-          providers: sortedByDistance
+          providers: sortProvidersByDistance(flatList)
         }]
-      case "NAME": // TODO
-      case "PROVIDER_TYPE":
+      case "Name":
+        return [{
+          id: "alphabetical",
+          name: "By name",
+          providers: sortProvidersByName(flatList)
+        }]
+      case "Provider Type":
       default:
         return groupedByProviderType;
     }
@@ -126,4 +134,10 @@ function sortProvidersByDistance(providerArray) {
     return providerArray.sort(
       (a, b) => a.distance - b.distance
     );
+}
+
+function sortProvidersByName(providerArray) {
+  return providerArray.sort(
+    (a, b) => a.name > b.name
+  )
 }

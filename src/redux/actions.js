@@ -11,6 +11,7 @@ export const FILTER_NAME = "FILTER_NAME";
 export const SAVE_PROVIDER = "SAVE_PROVIDER";
 export const SELECT_TAB = "SELECT_TAB";
 export const REORDER_SAVED_PROVIDERS = "REORDER_SAVED_PROVIDERS";
+export const CHANGE_SORT_ORDER = "CHANGE_SORT_ORDER";
 
 export const initializeProviders = providers => {
   // TODO WHEN ASYNC async dispatch => {
@@ -104,4 +105,11 @@ export function reorderSavedProviders(ids) {
     type: REORDER_SAVED_PROVIDERS,
     ids
   };
+}
+
+export function changeSortOrder(id) {
+  return {
+    type: CHANGE_SORT_ORDER,
+    id
+  }
 }

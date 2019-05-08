@@ -3,7 +3,7 @@ import "../TopBar/top-bar.css";
 import "../../App.css";
 
 const SimpleDropdown = props => {
-  let { items, heading, subHead, handleChange, incomingState , handleClick } = props;
+  let { items, heading, subHead, handleChange, incomingState , handleClick, inputType, inputGroup } = props;
 
   console.log(items, Array.from(items)[0])
   return (
@@ -18,7 +18,9 @@ const SimpleDropdown = props => {
           <div className="dropdown-list-item" key={i}>
             <input
             id={`${item}_${i}`}
-            type="checkBox"
+            type={inputType || "checkBox"}
+            name={inputGroup || item}
+            value={item}
             onChange={() => handleChange(item)}
             checked={incomingState.includes(item)}
             />

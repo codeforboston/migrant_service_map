@@ -39,15 +39,11 @@ class TopBar extends Component {
     return (
       <div className="top-bar">
         <VisaStatusDropdown className={topBarItemClass} />
-        {/* <ProviderTypeDropdown className={topBarItemClass} /> */}
-        <SimpleDropdown 
-              handleClick={this.toggle.bind(this, this.props.name)}
-              heading={"Provider Type"}
-              subHead={"Currently selected providers"}
-              incomingState={visibleTypes}
-              handleChange={toggleProviderVisibility}
-              items={providerTypes.allIds} 
-              />
+        <ProviderTypeDropdown 
+          className={topBarItemClass} 
+          providerTypes={providerTypes} 
+          handleChange={toggleProviderVisibility}
+          />
         <AcceptingNewFilter className={topBarItemClass} />
         <Search onSearchInputClick={this.onSearchInputClick}/>
         <DistanceDropdown className={topBarItemClass} />
