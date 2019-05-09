@@ -17,7 +17,7 @@ class ProviderList extends Component {
     } = this.props;
     return (
       <div className="service-providers">
-        {!providersList.length && <><h4>NO MATCHING RESULTS</h4><p>Set search criteria with the filters at the top</p></>}
+        {!providersList.length && <><h4>NO MATCHING RESULTS</h4><p>Use the filters in the top bar to adjust the number of results</p></>}
         {!!providersList.length && (
           <>
             <SortDropdown
