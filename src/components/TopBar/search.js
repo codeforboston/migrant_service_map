@@ -13,7 +13,6 @@ export default class Search extends React.Component {
         <div
           className={className}
           id="nav-search"
-          style={{ flex: 1 }}
           onClick={onSearchInputClick}
         />
       </>
