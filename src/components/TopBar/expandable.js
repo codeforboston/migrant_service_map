@@ -14,12 +14,13 @@ export default class Expandable extends React.Component {
     const { className, content, header } = this.props;
 
     return (
-      <div
-        onClick={this.toggleExpanded}
-        className={`expandable-container`}
-      >
-        <div className={`expandable-content-wrapper ${className} ${expanded ? "expanded" : ""}`}>
-          <div className="expandable-header">
+      <div className={`expandable-container`}>
+        <div
+          className={`expandable-content-wrapper ${className} ${
+            expanded ? "expanded" : ""
+          }`}
+        >
+          <div onClick={this.toggleExpanded} className="expandable-header">
             {header}
           </div>
           <div className={`expanded-content ${expanded ? "expanded" : ""}`}>
