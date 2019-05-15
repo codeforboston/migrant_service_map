@@ -1,9 +1,5 @@
 import React, { Component } from "react";
 import "components/ProviderList/provider-list.css";
-import AcceptingNewFilter from "components/MenuAcceptingNewFilter/menu-accepting-new-filter.js";
-import { MenuDistanceFilter, MenuVisaFilter } from "components";
-import SimpleDropdown from "components/SimpleDropdown/simple-dropdown";
-import { Row } from "simple-flexbox";
 import VisaStatusDropdown from "./visa-status-dropdown";
 import ProviderTypeDropdown from "./provider-type-dropdown";
 import Search from "./search";
@@ -26,12 +22,6 @@ class TopBar extends Component {
   
   render() {
     const {
-      filters,
-      clearDistanceFilter,
-      changeDistanceFilter,
-      clearVisaFilter,
-      changeVisaFilter,
-      visibleTypes,
       providerTypes,
       toggleProviderVisibility,
     } = this.props;
@@ -44,7 +34,6 @@ class TopBar extends Component {
           providerTypes={providerTypes} 
           handleChange={toggleProviderVisibility}
           />
-        <AcceptingNewFilter className={topBarItemClass} />
         <Search onSearchInputClick={this.onSearchInputClick}/>
         <DistanceDropdown className={topBarItemClass} />
       </div>
