@@ -15,7 +15,7 @@ const SortDropdown = ({ className, options, group, incomingState, header, handle
                 name={group}
                 value={option}
                 checked={option === incomingState}
-                onClick={() => handleChange(option)}
+                onChange={() => handleChange(option)}
             />
             <label className="expandable-label" htmlFor={option} >
                 {option.toString()}
