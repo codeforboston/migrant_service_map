@@ -34,7 +34,7 @@ class TopBar extends Component {
           providerTypes={providerTypes} 
           onChange={toggleProviderVisibility}
           />
-        <Search onSearchInputClick={this.onSearchInputClick}/>
+        <Search className={topBarItemClass} onSearchInputClick={this.onSearchInputClick}/>
         <DistanceDropdown className={topBarItemClass} />
       </div>
     );

@@ -160,7 +160,9 @@ class Map extends Component {
       proximity: coordinateObject
     });
 
-    document.getElementById("nav-search").appendChild(geocoder.onAdd(map));
+    const searchBox = geocoder.onAdd(map);
+    searchBox.className += " msm-map-search-box";
+    document.getElementById("nav-search").appendChild(searchBox);
 
     geocoder.on("result", ev => {
       // ev.result contains id, place_name, text
