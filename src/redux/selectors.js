@@ -46,7 +46,7 @@ export const getProvidersSorted = createSelector(
       let nearbyProviders = distance ? getProvidersWithinDistance( providersWithDistances, distance ) : providersWithDistances;
       return {
         ...providerType,
-        providers: nearbyProviders
+        providers: sortProvidersByDistance(nearbyProviders)
       }
     });
 
