@@ -63,7 +63,7 @@ class Map extends Component {
       type: "symbol",
       layout: {
         "icon-image": typeId + "icon",
-        "icon-size": 0.1,
+        "icon-size": 1,
         visibility: "visible"
       }
     });
@@ -105,7 +105,7 @@ class Map extends Component {
 
   loadProviderTypeImage = images => {
     images.map(typeImage =>
-      this.map.loadImage(typeImage.url, (error, image) => {
+      this.map.loadImage(typeImage.image, (error, image) => {
         if (error) throw error;
         this.map.addImage(`${typeImage.type}icon`, image);
       })
