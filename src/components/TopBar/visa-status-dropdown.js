@@ -5,7 +5,7 @@ const defaultSubheaderText = "Current Visa Status";
 export default class VisaStatusDropdown extends React.Component {
   state = { subheaderText: defaultSubheaderText };
 
-  onCheckboxChanged = selectedValues => {
+  onCheckboxChanged = (option, selectedValues) => {
     if (selectedValues.length === 0) {
       this.setState({ subheaderText: defaultSubheaderText });
     } else if (selectedValues.length === 1) {
