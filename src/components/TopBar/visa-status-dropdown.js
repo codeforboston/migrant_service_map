@@ -1,23 +1,23 @@
 import React from "react";
 import CheckBoxDropdown from "./checkbox-dropdown";
 
-const defaultVisaStatusValue = "Current Visa Status";
+const defaultSubheaderText = "Current Visa Status";
 export default class VisaStatusDropdown extends React.Component {
-  state = { visaStatusValue: defaultVisaStatusValue };
+  state = { subheaderText: defaultSubheaderText };
 
   onCheckboxChanged = selectedValues => {
     if (selectedValues.length === 0) {
-      this.setState({ visaStatusValue: defaultVisaStatusValue });
+      this.setState({ subheaderText: defaultSubheaderText });
     } else if (selectedValues.length === 1) {
-      this.setState({ visaStatusValue: selectedValues[0] });
+      this.setState({ subheaderText: selectedValues[0] });
     } else {
-      this.setState({ visaStatusValue: selectedValues.length + " Selected" });
+      this.setState({ subheaderText: selectedValues.length + " Selected" });
     }
   };
 
   render() {
     const { className, onChange = () => {} } = this.props;
-    const { visaStatusValue } = this.state;
+    const { subheaderText } = this.state;
     return (
       <CheckBoxDropdown
         className={className}
@@ -26,7 +26,7 @@ export default class VisaStatusDropdown extends React.Component {
         header={
           <>
             <h2>VISA STATUS</h2>
-            <p>{visaStatusValue}</p>
+            <p>{subheaderText}</p>
           </>
         }
       />
