@@ -18,25 +18,25 @@ export default class CheckBoxDropdown extends React.Component {
       //visibleTypes
       onChange = () => {}
     } = this.props;
-    const inputDiv = options.map((value, index) => {
+    const inputDiv = options.map((option, index) => {
       // content={options.map(({ label, value }, index) => (
       // const isChecked = visibleTypes.indexOf(value) > -1 ;
       return (
-        <div className="checkbox-container" key={index}>
+        <div className="dropdown-input-wrapper" key={index}>
           <input
-            id={value}
+            id={option}
             // checked={ visibleTypes.indexOf(value) > -1 }
             type="checkbox"
-            value={value}
+            value={option}
             onChange={({ target: { checked } }) => {
-              this.optionsMappings[value] = checked;
+              this.optionsMappings[option] = checked;
               onChange(
-                options.filter(option => this.optionsMappings[option])
+                option, options.filter(option => this.optionsMappings[option])
               );
             }}
           />
-          <label className="expandable-label" htmlFor={value}>
-            {value.toString()}
+          <label className="expandable-label" htmlFor={option}>
+            {option.toString()}
           </label>
         </div>
       );

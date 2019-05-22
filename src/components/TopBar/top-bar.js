@@ -32,7 +32,7 @@ class TopBar extends Component {
         <ProviderTypeDropdown 
           className={topBarItemClass} 
           providerTypes={providerTypes} 
-          handleChange={toggleProviderVisibility}
+          onChange={toggleProviderVisibility}
           />
         <Search onSearchInputClick={this.onSearchInputClick}/>
         <DistanceDropdown className={topBarItemClass} />

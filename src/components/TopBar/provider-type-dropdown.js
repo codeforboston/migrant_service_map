@@ -5,7 +5,9 @@ const defaultSubheaderText = "Not Selected";
 export default class ProviderTypeDropdown extends React.Component {
   state = { subheaderText: defaultSubheaderText };
 
-  onCheckboxChanged = selectedValues => {
+  onCheckboxChanged = (changedOption, selectedValues) => {
+    const { onChange } = this.props;
+    onChange(changedOption);
     if (selectedValues.length === 0) {
       this.setState({ subheaderText: defaultSubheaderText });
     } else if (selectedValues.length === 1) {
