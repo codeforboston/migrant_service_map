@@ -31,7 +31,8 @@ export default class CheckBoxDropdown extends React.Component {
             onChange={({ target: { checked } }) => {
               this.optionsMappings[option] = checked;
               onChange(
-                option, options.filter(option => this.optionsMappings[option])
+                option,
+                options.filter(option => this.optionsMappings[option])
               );
             }}
           />

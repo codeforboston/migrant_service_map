@@ -6,7 +6,7 @@ export default class DistanceDropdown extends React.Component {
   state = { distance: defaultDistance };
 
   onRadioButtonChanged = (miles, text) => {
-    const {onChange = () => {}} = this.props;
+    const { onChange = () => {} } = this.props;
     onChange(miles);
     this.setState({ distance: text });
   };

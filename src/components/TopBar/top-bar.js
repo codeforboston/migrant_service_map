@@ -11,7 +11,7 @@ class TopBar extends Component {
   onSearchInputClick = () => {
     const { selectTab } = this.props;
     selectTab(0);
-  }
+  };
   toggle = (name, event) => {
     const myDiv = event.currentTarget;
     console.log(myDiv);
@@ -19,22 +19,22 @@ class TopBar extends Component {
       ? myDiv.classList.remove("expanded")
       : myDiv.classList.add("expanded");
   };
-  
+
   render() {
-    const {
-      providerTypes,
-      toggleProviderVisibility,
-    } = this.props;
+    const { providerTypes, toggleProviderVisibility } = this.props;
     const topBarItemClass = "top-bar-item";
     return (
       <div className="top-bar">
         <VisaStatusDropdown className={topBarItemClass} />
-        <ProviderTypeDropdown 
-          className={topBarItemClass} 
-          providerTypes={providerTypes} 
+        <ProviderTypeDropdown
+          className={topBarItemClass}
+          providerTypes={providerTypes}
           onChange={toggleProviderVisibility}
-          />
-        <Search className={topBarItemClass} onSearchInputClick={this.onSearchInputClick}/>
+        />
+        <Search
+          className={topBarItemClass}
+          onSearchInputClick={this.onSearchInputClick}
+        />
         <DistanceDropdown className={topBarItemClass} />
       </div>
     );
