@@ -17,6 +17,7 @@ export default class VisaStatusDropdown extends React.Component {
             <p>Current Visa Status</p>
           </>
         }
+        expanded={true}
       />
     );
   }
