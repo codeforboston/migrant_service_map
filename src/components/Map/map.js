@@ -114,13 +114,14 @@ class Map extends Component {
 
   componentDidMount() {
     const { mapCenter, coordinates } = this.props.search;
-    const { providerTypes } = this.props;
+    const { providerTypes, setMapObject } = this.props;
     const map = new mapboxgl.Map({
       container: "map", // container id
       style: "mapbox://styles/refugeeswelcome/cjh9k11zz15ds2spbs4ld6y9o", // stylesheet location
       center: mapCenter,
       zoom: 11 // starting zoom
     });
+    setMapObject(map);
 
     map.on("load", () => {
       this.removeLayersFromOldDataSet();

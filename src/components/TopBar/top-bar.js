@@ -4,6 +4,9 @@ import VisaStatusDropdown from "./visa-status-dropdown";
 import ProviderTypeDropdown from "./provider-type-dropdown";
 import Search from "./search";
 import DistanceDropdown from "./distance-dropdown";
+import {
+  removeReferenceLocation
+} from "../Map/mapHelpers";
 
 import "./top-bar.css";
 
@@ -14,7 +17,6 @@ class TopBar extends Component {
   }
   toggle = (name, event) => {
     const myDiv = event.currentTarget;
-    console.log(myDiv);
     Array.from(myDiv.classList).includes("expanded")
       ? myDiv.classList.remove("expanded")
       : myDiv.classList.add("expanded");
@@ -24,6 +26,7 @@ class TopBar extends Component {
     const {
       providerTypes,
       toggleProviderVisibility,
+      mapObject,
     } = this.props;
     const topBarItemClass = "top-bar-item";
     return (
@@ -36,6 +39,7 @@ class TopBar extends Component {
           />
         <Search onSearchInputClick={this.onSearchInputClick}/>
         <DistanceDropdown className={topBarItemClass} />
+        <button onClick={() => removeReferenceLocation(mapObject)}>Clear</button>
       </div>
     );
   }
