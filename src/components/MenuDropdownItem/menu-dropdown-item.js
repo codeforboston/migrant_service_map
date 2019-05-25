@@ -4,17 +4,37 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFolderPlus,
   faFolderOpen,
-  faUsers,
   faEnvelopeOpenText,
   faGlobeEurope,
   faMapMarkedAlt,
   faPhone,
-  faTrashAlt
+  faTrashAlt,
+  faBriefcase,
+  faPlaceOfWorship,
+  faGraduationCap,
+  faMoneyBillWave,
+  faLandmark,
+  faFileContract,
+  faHospital,
+  faBed,
+  faBalanceScale,
 } from "@fortawesome/free-solid-svg-icons";
 import "./menu-dropdown-item.css";
 import DetailsPane from "components/DetailsPane";
 
 const isPresent = value => value && value !== "n/a";
+
+const cardIconMappings = {
+  "Job Placement": faBriefcase,
+  "Community Center": faPlaceOfWorship,
+  "Education": faGraduationCap,
+  "Cash/Food Assistance": faMoneyBillWave,
+  "Resettlement": faLandmark,
+  "Mental Health": faFileContract,
+  "Health": faHospital,
+  "Housing": faBed,
+  "Legal": faBalanceScale,
+}
 
 export default class DropdownMenuItem extends React.Component {
   state = { expand: "wrapped", more: false };
@@ -37,6 +57,7 @@ export default class DropdownMenuItem extends React.Component {
     const inSavedMenu = this.props.inSavedMenu ? this.props.inSavedMenu : false;
     const savedMenuHighlightedProviderCard = (inSavedMenu && isHighlighted) ? 'savedHighlighted' : 'unchanged'
     const { expand } = this.state;
+    const cardIcon = cardIconMappings[provider.typeName];
     return (
       <div className={`provider-card ${savedMenuHighlightedProviderCard}`} id={`provider-${provider.id}`}>
         <div className="card-container">
@@ -44,7 +65,7 @@ export default class DropdownMenuItem extends React.Component {
             <h5 onClick={toggleHighlight}>{provider.name}</h5>
             <div className="wrapped-info">
               <div className={`prov-type ${expand}`}>
-                <FontAwesomeIcon icon={faUsers} />
+                <FontAwesomeIcon icon={cardIcon} />
                 <p>{provider.typeName}</p>
               </div>
               {!isHighlighted && (

@@ -29,6 +29,7 @@ export default class VisaStatusDropdown extends React.Component {
             <p>{subheaderText}</p>
           </>
         }
+        expanded={true}
       />
     );
   }

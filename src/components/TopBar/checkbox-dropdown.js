@@ -15,6 +15,7 @@ export default class CheckBoxDropdown extends React.Component {
       className,
       options,
       header,
+      expanded,
       //visibleTypes
       onChange = () => {}
     } = this.props;
@@ -44,7 +45,7 @@ export default class CheckBoxDropdown extends React.Component {
     });
 
     return (
-      <Expandable className={className} header={header} content={inputDiv} />
+      <Expandable className={className} header={header} content={inputDiv} expanded={expanded} />
     );
   }
 }

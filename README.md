@@ -47,7 +47,7 @@ The types of services include, housing, work placement, english, legal assistanc
 
 ## Getting Started
 
-### Prerequesites
+### Prerequisites
 
 #### Node
 
