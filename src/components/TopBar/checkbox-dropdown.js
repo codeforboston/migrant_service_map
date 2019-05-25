@@ -45,7 +45,12 @@ export default class CheckBoxDropdown extends React.Component {
     });
 
     return (
-      <Expandable className={className} header={header} content={inputDiv} expanded={expanded} />
+      <Expandable
+        className={className}
+        header={header}
+        content={inputDiv}
+        expanded={expanded}
+      />
     );
   }
 }
