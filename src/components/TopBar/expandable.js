@@ -4,7 +4,7 @@ import "./expandable.css";
 export default class Expandable extends React.Component {
   static defaultProps = {
     expanded: false
-  }
+  };
 
   constructor(props) {
     super(props);

@@ -46,7 +46,6 @@ export default class DropdownMenuItem extends React.Component {
       : this.setState({ expand: "wrapped" });
   };
 
-
   render() {
     const {
       provider,

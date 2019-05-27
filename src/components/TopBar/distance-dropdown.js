@@ -1,16 +1,32 @@
 import React from "react";
-import CheckBoxDropdown from "./checkbox-dropdown";
+import RadioButtonDropdown from "./radio-button-dropdown";
 
+const defaultDistance = "None Selected";
 export default class DistanceDropdown extends React.Component {
+  state = { distance: defaultDistance };
+
+  onRadioButtonChanged = (miles, text) => {
+    const { onChange = () => {} } = this.props;
+    onChange(miles);
+    this.setState({ distance: text });
+  };
+
   render() {
-    const { className, onChange = () => {} } = this.props;
+    const { className } = this.props;
+    const { distance } = this.state;
     return (
-      <CheckBoxDropdown
+      <RadioButtonDropdown
         className={className}
-        options={[{ label: <icon type={"cat"} />, value: "item1" }, {}]}
+        onChange={this.onRadioButtonChanged}
+        options={[
+          { value: 1, text: "1 mile" },
+          { value: 3, text: "3 miles" },
+          { value: 5, text: "5 miles" }
+        ]}
         header={
           <>
             <h2>Distance</h2>
+            <p>{distance}</p>
           </>
         }
       />
