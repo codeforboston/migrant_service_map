@@ -63,7 +63,7 @@ class Map extends Component {
       type: "symbol",
       layout: {
         "icon-image": typeId + "icon",
-        "icon-size": 0.1,
+        "icon-size": 1,
         visibility: "visible"
       }
     });
@@ -105,7 +105,7 @@ class Map extends Component {
 
   loadProviderTypeImage = images => {
     images.map(typeImage =>
-      this.map.loadImage(typeImage.url, (error, image) => {
+      this.map.loadImage(typeImage.image, (error, image) => {
         if (error) throw error;
         this.map.addImage(`${typeImage.type}icon`, image);
       })
@@ -161,7 +161,9 @@ class Map extends Component {
       proximity: coordinateObject
     });
 
-    document.getElementById("nav-search").appendChild(geocoder.onAdd(map));
+    const searchBox = geocoder.onAdd(map);
+    searchBox.className += " msm-map-search-box";
+    document.getElementById("nav-search").appendChild(searchBox);
 
     geocoder.on("result", ev => {
       // ev.result contains id, place_name, text

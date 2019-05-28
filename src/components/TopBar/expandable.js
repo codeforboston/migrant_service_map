@@ -2,7 +2,16 @@ import React from "react";
 import "./expandable.css";
 
 export default class Expandable extends React.Component {
-  state = { expanded: false };
+  static defaultProps = {
+    expanded: false
+  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      expanded: props.expanded
+    };
+  }
 
   toggleExpanded = () => {
     const { expanded } = this.state;
