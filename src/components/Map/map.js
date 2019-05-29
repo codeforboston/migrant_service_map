@@ -63,7 +63,7 @@ class Map extends Component {
       type: "symbol",
       layout: {
         "icon-image": typeId + "icon",
-        "icon-size": 1,
+        "icon-size": 0.25,
         visibility: "visible"
       }
     });
