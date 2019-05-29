@@ -21,11 +21,21 @@ class TopBar extends Component {
   };
 
   render() {
-    const { providerTypes, toggleProviderVisibility } = this.props;
+    const {
+      changeVisaFilter,
+      providerTypes,
+      toggleProviderVisibility,
+      visaTypes
+    } = this.props;
     const topBarItemClass = "top-bar-item";
+
     return (
       <div className="top-bar">
-        <VisaStatusDropdown className={topBarItemClass} />
+        <VisaStatusDropdown
+          className={topBarItemClass}
+          onChange={changeVisaFilter}
+          visaTypes={visaTypes}
+        />
         <ProviderTypeDropdown
           className={topBarItemClass}
           providerTypes={providerTypes}
