@@ -37,9 +37,9 @@ const togglePinMarker = (show) => {
   const pinMarker = Array.from(
     document.getElementsByClassName("map-pin-container")
   );
-  
+
   pinMarker.map((marker) => {
-    show ? marker.style.visibility = '' : marker.style.visibility = 'hidden';
+     marker.style.visibility = show ? '' : 'hidden';
   });
 }
 
