@@ -63,22 +63,66 @@ class Map extends Component {
       id: typeId,
       source: typeId,
       type: "symbol",
+      filter: ["!", ["has", "point_count"]],
       layout: {
         "icon-image": typeId + "icon",
         "icon-size": 0.25,
-        visibility: "visible"
+        visibility: "visible",
+        "icon-allow-overlap": true, 
+        "icon-ignore-placement": true,
       }
     });
+    if(!map.getLayer(typeId + "-clusters")) { 
+      map.addLayer({
+        id: typeId + "-clusters",
+        type: "symbol",
+        source: typeId,
+        filter: ["has", "point_count"],
+        layout: {
+          "icon-image": typeId + "icon",
+          "icon-size": 0.4,
+          visibility: "visible", 
+          "icon-allow-overlap": true, 
+          "icon-ignore-placement": true,
+        }
+      });
+    };
+    if(!map.getLayer(typeId + "-cluster-count")){
+      map.addLayer({
+        id: typeId + "-cluster-count",
+        type: "symbol",
+        source: typeId,
+        filter: ["has", "point_count"],
+        layout: {
+          "text-field":  "{point_count_abbreviated}",
+          "text-font": ["DIN Offc Pro Bold", "Arial Unicode MS Bold"],
+          "text-size": 20,
+          "text-justify": "center", 
+          "icon-image": typeId + "icon",
+          "icon-size": 0.4,
+          "icon-allow-overlap": true, 
+          "text-allow-overlap": true, 
+          "icon-ignore-placement": true,
+          "text-ignore-placement": true,
+        },
+        paint: {
+          "text-color": "#ffffff", 
+          "text-halo-color": "rgba(240,240,240,.7)",
+          "text-halo-blur": 3, 
+        }
+      }); 
+    };
+
     map.on("click", typeId, e => {
       const offsetTop = document.getElementById(`provider-${e.features[0].properties.id}`).offsetTop;
       const cardOffset = 50;
-      
+
       const panel = document.getElementsByClassName('panels')[0];
       const toScrollTo = offsetTop - cardOffset;
       const steps = 15;
       const scrollStep = (toScrollTo - panel.scrollTop) / steps;
       let stepCount = 0;
-      
+
       const scrollInterval = setInterval(function(){
         if (stepCount < steps) {
           panel.scrollBy(0, scrollStep);
@@ -86,9 +130,9 @@ class Map extends Component {
         } else {
           panel.scrollTop = toScrollTo;
           clearInterval(scrollInterval);
-        }  
+        }
       },15);
-      
+
       displayProviderInformation(e.features[0].properties.id);
     });
   };
@@ -135,18 +179,10 @@ class Map extends Component {
       let { displayProviderInformation } = this.props;
       providerTypes.allIds.forEach(typeId => {
         addSourceToMap(typeId);
-        this.addProviderTypeLayerToMap(
-          typeId,
-          this.map,
-          displayProviderInformation
-        );
+        this.addProviderTypeLayerToMap(typeId, this.map, displayProviderInformation);
       });
-      addPointSourceToMap("highlightedProviders", this.map);
-      addCircleLayerToMap(
-        "highlightedProviders",
-        "highlightedProviders",
-        this.map
-      );
+      // addPointSourceToMap("highlightedProviders", this.map);
+      // addCircleLayerToMap("highlightedProviders", "highlightedProviders", this.map);
     });
 
     this.map = map;
@@ -178,8 +214,8 @@ class Map extends Component {
     geocoder.on("clear", ev => {
       let center = [-71.066954, 42.359947];
       removeReferenceLocation(this.map);
-      this.props.setSearchCenterCoordinates(center, 1, '');
-    })
+      this.props.setSearchCenterCoordinates(center, 1, "");
+    });
   }
 
   addDistanceIndicator = () => {
@@ -190,9 +226,7 @@ class Map extends Component {
     addDistanceFilterLayer(distanceFilterDistances, this.map);
 
     const colors = ["#007cbf", "#00AA46", "#71C780", "#D5EDDB"];
-    const center = this.createMarker(centerMarker).setLngLat(
-      search.coordinates
-    );
+    const center = this.createMarker(centerMarker).setLngLat(search.coordinates);
     const options = { steps: 100, units: "miles" };
     const circles = distanceFilterDistances.map((radius, i) =>
       circle(search.coordinates, radius, {
@@ -201,21 +235,14 @@ class Map extends Component {
       })
     );
     const labels = distanceFilterDistances.map((radius, i) => {
-      const radiusOffset = transformTranslate(
-        point(search.coordinates),
-        radius,
-        90,
-        { units: "miles" }
-      );
+      const radiusOffset = transformTranslate(point(search.coordinates), radius, 90, { units: "miles" });
       const marker = this.createMarker(createDistanceMarker(radius, colors[i]));
       return marker.setLngLat(radiusOffset.geometry.coordinates);
     });
 
     labels.map(label => label.addTo(this.map));
     center.addTo(this.map);
-    this.map
-      .getSource("distance-indicator-source")
-      .setData({ type: "FeatureCollection", features: circles });
+    this.map.getSource("distance-indicator-source").setData({ type: "FeatureCollection", features: circles });
   };
 
   createMarker = element => new mapboxgl.Marker({ element });
@@ -230,62 +257,55 @@ class Map extends Component {
   normalizeProviders = providerFeatures => {
     const providerTypes = { byId: {}, allIds: [] };
     const providers = { byId: {}, allIds: [] };
-    Array.from(providerFeatures).map(
-      ({ id, geometry: { coordinates }, properties }, index) => {
-        let formattedTypeId = properties["Type of Service"]
-          .toLowerCase()
-          .split(" ")
-          .join("-");
-        id = index;
-        const typeExists = providerTypes.allIds.includes(formattedTypeId);
-        if (formattedTypeId === "community-center") {
-          // special case
-          formattedTypeId = "community-centers";
-        }
-        if (typeExists) {
-          providerTypes.byId[formattedTypeId] = {
-            ...providerTypes.byId[formattedTypeId],
-            id: formattedTypeId,
-            name: properties["Type of Service"],
-            providers: [...providerTypes.byId[formattedTypeId].providers, id]
-          };
-        } else {
-          if (!providerTypes.allIds.includes(formattedTypeId)) {
-            providerTypes.allIds.push(formattedTypeId);
-          }
-          providerTypes.byId[formattedTypeId] = {
-            id: formattedTypeId,
-            name: properties["Type of Service"],
-            providers: [id]
-          };
-        }
-
-        return (providers.byId[id] = {
-          id,
-          coordinates,
-          address:
-            properties[
-              "Address (#, Street Name, District/city, State, Zip Code)"
-            ],
-          email: properties["Email:"],
-          mission: properties["Mission:"],
-          name: properties["Organization Name"],
-          telephone: properties["Telephone:"],
-          timestamp: properties.Timestamp,
-          // Type of Service
-          typeName: properties["Type of Service"], // synonym for next line
-          "Type of Service": properties["Type of Service"], // as referenced in reducer helper function
-          // Validated By
-          website: properties.Website
-        });
+    Array.from(providerFeatures).map(({ id, geometry: { coordinates }, properties }, index) => {
+      let formattedTypeId = properties["Type of Service"]
+        .toLowerCase()
+        .split(" ")
+        .join("-");
+      id = index;
+      const typeExists = providerTypes.allIds.includes(formattedTypeId);
+      if (formattedTypeId === "community-center") {
+        // special case
+        formattedTypeId = "community-centers";
       }
-    );
+      if (typeExists) {
+        providerTypes.byId[formattedTypeId] = {
+          ...providerTypes.byId[formattedTypeId],
+          id: formattedTypeId,
+          name: properties["Type of Service"],
+          providers: [...providerTypes.byId[formattedTypeId].providers, id]
+        };
+      } else {
+        if (!providerTypes.allIds.includes(formattedTypeId)) {
+          providerTypes.allIds.push(formattedTypeId);
+        }
+        providerTypes.byId[formattedTypeId] = {
+          id: formattedTypeId,
+          name: properties["Type of Service"],
+          providers: [id]
+        };
+      }
+
+      return (providers.byId[id] = {
+        id,
+        coordinates,
+        address: properties["Address (#, Street Name, District/city, State, Zip Code)"],
+        email: properties["Email:"],
+        mission: properties["Mission:"],
+        name: properties["Organization Name"],
+        telephone: properties["Telephone:"],
+        timestamp: properties.Timestamp,
+        // Type of Service
+        typeName: properties["Type of Service"], // synonym for next line
+        "Type of Service": properties["Type of Service"], // as referenced in reducer helper function
+        // Validated By
+        website: properties.Website
+      });
+    });
     // sorted by name
     providerTypes.allIds.map(id => {
       const providersByType = providerTypes.byId[id].providers;
-      return providersByType.sort((a, b) =>
-        providers.byId[a].name.localeCompare(providers.byId[b].name)
-      );
+      return providersByType.sort((a, b) => providers.byId[a].name.localeCompare(providers.byId[b].name));
     });
     // commit map query result to redux
     return { providerTypes, providers };
@@ -293,7 +313,8 @@ class Map extends Component {
 
   componentDidUpdate(prevProps) {
     const { highlightedProviders, providerTypes } = this.props;
-    this.updatePointSource("highlightedProviders", highlightedProviders);
+    this.updateSource("hightlightedProviders"); 
+    // this.updatePointSource("highlightedProviders", highlightedProviders);
     providerTypes.allIds.forEach(id => {
       this.updateSource(id);
     });

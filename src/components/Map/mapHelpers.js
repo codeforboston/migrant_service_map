@@ -56,8 +56,12 @@ const addSourceToMap = (typeId, map) => {
       data: {
         type: "FeatureCollection",
         features: []
-      }
+      },
+      cluster: true, 
+      clusterMaxZoom: 14, 
+      clusterRadius: 20
     });
+
   }
 };
 
