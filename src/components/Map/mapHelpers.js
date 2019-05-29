@@ -29,8 +29,25 @@ const removeDistanceMarkers = () => {
   const distanceMarkers = Array.from(
     document.getElementsByClassName("distanceMarker")
   );
+
   return distanceMarkers.map(marker => marker.remove());
 };
+
+const togglePinMarker = (show) => {
+  centerMarkerContainer.style.visibility = show ? '' : 'hidden';
+}
+
+const removeReferenceLocation = (map) => {
+  removeDistanceMarkers();
+  togglePinMarker(false);
+  map.removeLayer("distance-indicator");
+  map.removeSource("distance-indicator-source");
+
+  map.flyTo({
+    center: [-71.066954, 42.359947],
+    zoom: 12,
+  });
+}
 
 const addSourceToMap = (typeId, map) => {
   if (!map.getSource(typeId)) {
@@ -112,5 +129,7 @@ export {
   addDistanceFilterLayer,
   addSourceToMap,
   addCircleLayerToMap,
-  addPointSourceToMap
+  addPointSourceToMap,
+  removeReferenceLocation,
+  togglePinMarker
 };
