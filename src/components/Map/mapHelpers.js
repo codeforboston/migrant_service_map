@@ -34,13 +34,7 @@ const removeDistanceMarkers = () => {
 };
 
 const togglePinMarker = (show) => {
-  const pinMarker = Array.from(
-    document.getElementsByClassName("map-pin-container")
-  );
-
-  pinMarker.map((marker) => {
-     marker.style.visibility = show ? '' : 'hidden';
-  });
+  centerMarkerContainer.style.visibility = show ? '' : 'hidden';
 }
 
 const removeReferenceLocation = (map) => {
