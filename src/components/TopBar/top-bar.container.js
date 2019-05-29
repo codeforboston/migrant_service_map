@@ -13,7 +13,12 @@ import {
 import { getProvidersSorted } from "redux/selectors";
 import TopBar from "./top-bar";
 
-const VISA_TYPES = ["visa1", "visa2", "visa3"];
+const VISA_TYPES = [
+  "Temporary Agricultural Worker H-2A",
+  "H-1B",
+  "Permanent Resident Card (I-551)",
+  "Advance Parole (I-512)"
+]
 
 const TopBarContainer = props => {
   return <TopBar {...props} />;
