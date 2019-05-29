@@ -4,7 +4,6 @@ import VisaStatusDropdown from "./visa-status-dropdown";
 import ProviderTypeDropdown from "./provider-type-dropdown";
 import Search from "./search";
 import DistanceDropdown from "./distance-dropdown";
-
 import "./top-bar.css";
 
 class TopBar extends Component {
@@ -14,7 +13,6 @@ class TopBar extends Component {
   };
   toggle = (name, event) => {
     const myDiv = event.currentTarget;
-    console.log(myDiv);
     Array.from(myDiv.classList).includes("expanded")
       ? myDiv.classList.remove("expanded")
       : myDiv.classList.add("expanded");

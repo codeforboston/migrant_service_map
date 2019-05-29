@@ -32,7 +32,8 @@ const mapStateToProps = state => {
     highlightedProviders: state.highlightedProviders,
     visibleTypes: state.providerTypes.visible,
     filters: state.filters,
-    providerTypes: state.providerTypes
+    providerTypes: state.providerTypes,
+    mapObject: state.mapObject
   };
 };
 
