@@ -25,7 +25,6 @@ export const initializeProviders = providers => {
 };
 
 export function setMapObject(mapObject) {
-  console.log(mapObject, 'actions');
   return {
     type: SET_MAP_OBJECT,
     mapObject
