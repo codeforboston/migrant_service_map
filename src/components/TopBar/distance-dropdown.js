@@ -1,5 +1,6 @@
 import React from "react";
 import RadioButtonDropdown from "../Dropdowns/radio-button-dropdown";
+import distances from "assets/distances";
 
 const defaultDistance = "None Selected";
 export default class DistanceDropdown extends React.Component {
@@ -14,15 +15,14 @@ export default class DistanceDropdown extends React.Component {
   render() {
     const { className } = this.props;
     const { distance } = this.state;
+    const options = distances.map(distance => {
+      return { value: distance, text: `${distance} miles`}
+    })
     return (
       <RadioButtonDropdown
         className={className}
         onChange={this.onRadioButtonChanged}
-        options={[
-          { value: 1, text: "1 mile" },
-          { value: 3, text: "3 miles" },
-          { value: 5, text: "5 miles" }
-        ]}
+        options={options}
         header={
           <>
             <h2>Distance</h2>

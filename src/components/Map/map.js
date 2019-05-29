@@ -4,6 +4,7 @@ import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "./map.css";
 import { point, transformTranslate, circle } from "@turf/turf";
 import typeImages from "assets/images";
+import distances from "assets/distances";
 import {
   centerMarker,
   createDistanceMarker,
@@ -70,13 +71,13 @@ class Map extends Component {
     map.on("click", typeId, e => {
       const offsetTop = document.getElementById(`provider-${e.features[0].properties.id}`).offsetTop;
       const cardOffset = 50;
-      
+
       const panel = document.getElementsByClassName('panels')[0];
       const toScrollTo = offsetTop - cardOffset;
       const steps = 15;
       const scrollStep = (toScrollTo - panel.scrollTop) / steps;
       let stepCount = 0;
-      
+
       const scrollInterval = setInterval(function(){
         if (stepCount < steps) {
           panel.scrollBy(0, scrollStep);
@@ -84,9 +85,9 @@ class Map extends Component {
         } else {
           panel.scrollTop = toScrollTo;
           clearInterval(scrollInterval);
-        }  
+        }
       },15);
-      
+
       displayProviderInformation(e.features[0].properties.id);
     });
   };
@@ -174,7 +175,7 @@ class Map extends Component {
 
   addDistanceIndicator = () => {
     //TODO: make this input from the distance filter
-    const distanceFilterDistances = [0.5, 1, 1.5];
+    const distanceFilterDistances = distances;
     const { search } = this.props;
     removeDistanceMarkers();
     addDistanceFilterLayer(distanceFilterDistances, this.map);
