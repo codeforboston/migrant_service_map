@@ -1,5 +1,5 @@
 import React from 'react';
-import Expandable from "../TopBar/expandable";
+import Expandable from "../Dropdowns/expandable";
 
 import "./sort-dropdown.css"
 

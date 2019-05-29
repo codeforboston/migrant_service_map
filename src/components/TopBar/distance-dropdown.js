@@ -1,5 +1,5 @@
 import React from "react";
-import RadioButtonDropdown from "./radio-button-dropdown";
+import RadioButtonDropdown from "../Dropdowns/radio-button-dropdown";
 
 const defaultDistance = "None Selected";
 export default class DistanceDropdown extends React.Component {

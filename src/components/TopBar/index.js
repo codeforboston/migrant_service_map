@@ -1,2 +1,2 @@
-import TopNav from "./top-bar.container";
-export default TopNav;
+import TopBar from "./top-bar.container";
+export default TopBar;

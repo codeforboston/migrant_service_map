@@ -1,5 +1,5 @@
 import React from "react";
-import CheckBoxDropdown from "./checkbox-dropdown";
+import CheckBoxDropdown from "../Dropdowns/checkbox-dropdown";
 
 const defaultSubheaderText = "Current Visa Status";
 export default class VisaStatusDropdown extends React.Component {
@@ -16,7 +16,7 @@ export default class VisaStatusDropdown extends React.Component {
   };
 
   render() {
-    const { className, onChange = () => {} } = this.props;
+    const { className } = this.props;
     const { subheaderText } = this.state;
     return (
       <CheckBoxDropdown

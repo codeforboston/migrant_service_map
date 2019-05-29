@@ -1,8 +1,8 @@
 import React from "react";
+import CheckBoxDropdown from '../Dropdowns/checkbox-dropdown.js'
 
 export default class AcceptingNewFilter extends React.Component {
   render() {
-    const { className, onChange = () => {} } = this.props;
     return (
       <CheckBoxDropdown
         options={[{ label: <icon type={"cat"} />, value: "item1" }, {}]}
