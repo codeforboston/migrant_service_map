@@ -7,7 +7,6 @@ export default class RadioButtonDropdown extends React.Component {
       className,
       options,
       header,
-      //visibleTypes
       onChange = () => {}
     } = this.props;
     const inputDiv = options.map((option, index) => {

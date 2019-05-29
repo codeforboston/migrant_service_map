@@ -16,12 +16,12 @@ export default class VisaStatusDropdown extends React.Component {
   };
 
   render() {
-    const { className } = this.props;
+    const { className, visaTypes } = this.props;
     const { subheaderText } = this.state;
     return (
       <CheckBoxDropdown
         className={className}
-        options={["visa status 1", "visa status 2"]}
+        options={visaTypes}
         onChange={this.onCheckboxChanged}
         header={
           <>

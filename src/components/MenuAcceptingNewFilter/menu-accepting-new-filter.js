@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "../ProviderList/provider-list.css";
 import Toggle from "../toggle.js";
-class AcceptingNewFilter extends Component {
+class MenuAcceptingNewFilter extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -55,7 +55,7 @@ class AcceptingNewFilter extends Component {
   }
 }
 
-export default AcceptingNewFilter;
+export default MenuAcceptingNewFilter;
 
 //   <li className="dropdown-list-container"  onClick={this.props.handleClick}>
 //   <div className="dropdown-list-header" >
