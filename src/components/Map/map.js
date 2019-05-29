@@ -11,7 +11,9 @@ import {
   addDistanceFilterLayer,
   addSourceToMap,
   addCircleLayerToMap,
-  addPointSourceToMap
+  addPointSourceToMap,
+  removeReferenceLocation,
+  togglePinMarker
 } from "./mapHelpers.js";
 
 mapboxgl.accessToken =
@@ -170,7 +172,14 @@ class Map extends Component {
       let { geometry, id, text } = ev.result;
       this.props.setSearchCenterCoordinates(geometry.coordinates, id, text);
       this.addDistanceIndicator();
+      togglePinMarker(true);
     });
+
+    geocoder.on("clear", ev => {
+      let center = [-71.066954, 42.359947];
+      removeReferenceLocation(this.map);
+      this.props.setSearchCenterCoordinates(center, 1, '');
+    })
   }
 
   addDistanceIndicator = () => {
