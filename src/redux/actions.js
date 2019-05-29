@@ -12,6 +12,7 @@ export const SAVE_PROVIDER = "SAVE_PROVIDER";
 export const SELECT_TAB = "SELECT_TAB";
 export const REORDER_SAVED_PROVIDERS = "REORDER_SAVED_PROVIDERS";
 export const CHANGE_SORT_ORDER = "CHANGE_SORT_ORDER";
+export const SET_MAP_OBJECT = "SET_MAP_OBJECT";
 
 export const initializeProviders = providers => {
   // TODO WHEN ASYNC async dispatch => {
@@ -22,6 +23,13 @@ export const initializeProviders = providers => {
   };
   //});
 };
+
+export function setMapObject(mapObject) {
+  return {
+    type: SET_MAP_OBJECT,
+    mapObject
+  };
+}
 
 export function displayProviderInformation(providerId) {
   return {

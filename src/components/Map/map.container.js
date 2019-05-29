@@ -3,7 +3,8 @@ import { connect } from "react-redux";
 import {
   initializeProviders,
   setSearchCenterCoordinates,
-  displayProviderInformation
+  displayProviderInformation,
+  setMapObject,
 } from "redux/actions";
 import { getProvidersSorted } from "redux/selectors";
 import Map from "./map";
@@ -31,6 +32,9 @@ const mapDispatchToProps = dispatch => {
     displayProviderInformation: id => {
       dispatch(displayProviderInformation(id));
     }, 
+    setMapObject: mapObject => {
+      dispatch(setMapObject(mapObject));
+    },
     setSearchCenterCoordinates: ( coordinates, mapboxId, text ) => {
       dispatch(setSearchCenterCoordinates(coordinates, mapboxId, text));
     }
