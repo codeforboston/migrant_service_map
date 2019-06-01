@@ -6,12 +6,15 @@ export default class ProviderTypeDropdown extends React.Component {
   state = { subheaderText: defaultSubheaderText };
 
   onCheckboxChanged = (changedOption, selectedValues) => {
-    const { onChange } = this.props;
+    const { onChange, providerTypes } = this.props;
+    debugger;
     onChange(changedOption);
     if (selectedValues.length === 0) {
       this.setState({ subheaderText: defaultSubheaderText });
     } else if (selectedValues.length === 1) {
-      this.setState({ subheaderText: selectedValues[0] });
+      const selectedProviderType =
+        providerTypes.byId[selectedValues[0].id].name;
+      this.setState({ subheaderText: selectedProviderType });
     } else {
       this.setState({ subheaderText: selectedValues.length + " Selected" });
     }
@@ -24,7 +27,10 @@ export default class ProviderTypeDropdown extends React.Component {
     return (
       <CheckBoxDropdown
         className={className}
-        options={providerTypes.allIds}
+        options={providerTypes.allIds.map(id => ({
+          id,
+          display: providerTypes.byId[id].name
+        }))}
         onChange={this.onCheckboxChanged}
         visibleTypes={providerTypes.visible}
         header={

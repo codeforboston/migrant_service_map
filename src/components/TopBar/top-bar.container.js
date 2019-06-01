@@ -18,7 +18,7 @@ const VISA_TYPES = [
   "H-1B",
   "Permanent Resident Card (I-551)",
   "Advance Parole (I-512)"
-]
+];
 
 const TopBarContainer = props => {
   return <TopBar {...props} />;

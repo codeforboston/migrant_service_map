@@ -11,7 +11,7 @@ export default class VisaStatusDropdown extends React.Component {
     if (selectedValues.length === 0) {
       this.setState({ subheaderText: defaultSubheaderText });
     } else if (selectedValues.length === 1) {
-      this.setState({ subheaderText: selectedValues[0] });
+      this.setState({ subheaderText: selectedValues[0].display });
     } else {
       this.setState({ subheaderText: selectedValues.length + " Selected" });
     }
@@ -23,7 +23,10 @@ export default class VisaStatusDropdown extends React.Component {
     return (
       <CheckBoxDropdown
         className={className}
-        options={visaTypes}
+        options={visaTypes.map(visaType => ({
+          id: visaType,
+          display: visaType
+        }))}
         onChange={this.onCheckboxChanged}
         header={
           <>
