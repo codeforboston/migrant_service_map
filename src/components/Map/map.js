@@ -12,7 +12,9 @@ import {
   addDistanceFilterLayer,
   addSourceToMap,
   addCircleLayerToMap,
-  addPointSourceToMap
+  addPointSourceToMap,
+  removeReferenceLocation,
+  togglePinMarker
 } from "./mapHelpers.js";
 
 mapboxgl.accessToken =
@@ -64,7 +66,7 @@ class Map extends Component {
       type: "symbol",
       layout: {
         "icon-image": typeId + "icon",
-        "icon-size": 1,
+        "icon-size": 0.25,
         visibility: "visible"
       }
     });
@@ -115,13 +117,14 @@ class Map extends Component {
 
   componentDidMount() {
     const { mapCenter, coordinates } = this.props.search;
-    const { providerTypes } = this.props;
+    const { providerTypes, setMapObject } = this.props;
     const map = new mapboxgl.Map({
       container: "map", // container id
       style: "mapbox://styles/refugeeswelcome/cjh9k11zz15ds2spbs4ld6y9o", // stylesheet location
       center: mapCenter,
       zoom: 11 // starting zoom
     });
+    setMapObject(map);
 
     map.on("load", () => {
       this.removeLayersFromOldDataSet();
@@ -170,7 +173,14 @@ class Map extends Component {
       let { geometry, id, text } = ev.result;
       this.props.setSearchCenterCoordinates(geometry.coordinates, id, text);
       this.addDistanceIndicator();
+      togglePinMarker(true);
     });
+
+    geocoder.on("clear", ev => {
+      let center = [-71.066954, 42.359947];
+      removeReferenceLocation(this.map);
+      this.props.setSearchCenterCoordinates(center, 1, '');
+    })
   }
 
   addDistanceIndicator = () => {
