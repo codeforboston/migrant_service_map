@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { MenuDropdown, MenuDropdownItem } from "..";
-import SortDropdown from "../SortDropdown"
+import SortDropdown from "./sort-dropdown.js"
 
 import "./provider-list.css";
 
