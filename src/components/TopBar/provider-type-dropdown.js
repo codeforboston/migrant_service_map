@@ -1,5 +1,5 @@
 import React from "react";
-import CheckBoxDropdown from "./checkbox-dropdown";
+import CheckBoxDropdown from "../Dropdowns/checkbox-dropdown";
 
 const defaultSubheaderText = "Not Selected";
 export default class ProviderTypeDropdown extends React.Component {
