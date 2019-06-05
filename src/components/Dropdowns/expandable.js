@@ -13,6 +13,12 @@ export default class Expandable extends React.Component {
     };
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.expanded !== prevState.expanded) {
+      this.props.onToggleExpanded(this.state.expanded);
+    }
+  }
+
   toggleExpanded = () => {
     const { expanded } = this.state;
     this.setState({ expanded: !expanded });
@@ -20,7 +26,7 @@ export default class Expandable extends React.Component {
 
   render() {
     const { expanded } = this.state;
-    const { className, content, header } = this.props;
+    const { className, content, footer, header, } = this.props;
 
     return (
       <div className={`expandable-container`}>
@@ -34,6 +40,9 @@ export default class Expandable extends React.Component {
           </div>
           <div className={`expanded-content ${expanded ? "expanded" : ""}`}>
             {content}
+          </div>
+          <div className={`expandable-footer`}>
+            {footer}
           </div>
         </div>
       </div>
