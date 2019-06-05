@@ -11,15 +11,15 @@ class TopBar extends Component {
     const { selectTab } = this.props;
     selectTab(0);
   };
-  toggle = (name, event) => {
-    const myDiv = event.currentTarget;
-    Array.from(myDiv.classList).includes("expanded")
-      ? myDiv.classList.remove("expanded")
-      : myDiv.classList.add("expanded");
+
+  onDistanceSelected = distance => {
+    const { changeDistanceFilter } = this.props;
+    changeDistanceFilter(distance);
   };
 
   render() {
     const {
+      changeDistanceFilter,
       changeVisaFilter,
       providerTypes,
       toggleProviderVisibility,
@@ -43,7 +43,7 @@ class TopBar extends Component {
           className={topBarItemClass}
           onSearchInputClick={this.onSearchInputClick}
         />
-        <DistanceDropdown className={topBarItemClass} />
+        <DistanceDropdown className={topBarItemClass} onChange={this.onDistanceSelected}/>
       </div>
     );
   }
