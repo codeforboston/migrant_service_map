@@ -7,8 +7,8 @@ import typeImages from "assets/images";
 import distances from "assets/distances";
 import _ from "lodash";
 import {
-  centerMarker,
-  createDistanceMarker,
+  // centerMarker,
+  // createDistanceMarker,
   removeDistanceMarkers,
   addDistanceFilterLayer,
   addSourceToMap,
@@ -17,6 +17,14 @@ import {
   removeReferenceLocation,
   togglePinMarker
 } from "./mapHelpers.js";
+import {
+  convertProvidersToGeoJSON, 
+  createCenterMarker,
+  createDistanceMarker,
+  markerStyle,
+  normalizeProviders,
+  scrollToCard,
+} from "./utilities.js";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw";
@@ -38,7 +46,7 @@ class Map extends Component {
     }
 
     const isVisible = providerTypesById[id] ? true : false;
-    const features = isVisible ? this.convertProvidersToGeoJSON(
+    const features = isVisible ? convertProvidersToGeoJSON(
       providerTypesById[id].providers
     ) : [];
     this.map.getSource(id).setData({
@@ -75,41 +83,11 @@ class Map extends Component {
       }
     });
     map.on("click", typeId, e => {
-      const offsetTop = document.getElementById(
-        `provider-${e.features[0].properties.id}`
-      ).offsetTop;
-      const cardOffset = 50;
-
-      const panel = document.getElementsByClassName("panels")[0];
-      const toScrollTo = offsetTop - cardOffset;
-      const steps = 15;
-      const scrollStep = (toScrollTo - panel.scrollTop) / steps;
-      let stepCount = 0;
-
-      const scrollInterval = setInterval(function() {
-        if (stepCount < steps) {
-          panel.scrollBy(0, scrollStep);
-          stepCount++;
-        } else {
-          panel.scrollTop = toScrollTo;
-          clearInterval(scrollInterval);
-        }
-      }, 15);
-
+      scrollToCard(`provider-${e.features[0].properties.id}`)
       displayProviderInformation(e.features[0].properties.id);
     });
   };
 
-  convertProvidersToGeoJSON = providers => {
-    return providers.map(provider => ({
-      type: "Feature",
-      geometry: {
-        type: "Point",
-        coordinates: provider.coordinates
-      },
-      properties: provider
-    }));
-  };
 
   loadProviderTypeImage = images => {
     images.map(typeImage =>
@@ -136,7 +114,7 @@ class Map extends Component {
       const providerFeatures = map.querySourceFeatures("composite", {
         sourceLayer: "Migrant_Services_-_MSM_Final_1"
       });
-      const normalizedProviders = this.normalizeProviders(providerFeatures);
+      const normalizedProviders = normalizeProviders(providerFeatures);
       this.props.initializeProviders(normalizedProviders);
       let { displayProviderInformation } = this.props;
       providerTypes.allIds.forEach(typeId => {
@@ -193,19 +171,21 @@ class Map extends Component {
   addDistanceIndicator = () => {
     //TODO: make this input from the distance filter
     const distanceFilterDistances = distances;
+    const {
+      color,
+      options,
+     } = markerStyle;
     const { search } = this.props;
     removeDistanceMarkers();
     addDistanceFilterLayer(distanceFilterDistances, this.map);
 
-    const colors = ["#007cbf", "#00AA46", "#71C780", "#D5EDDB"];
-    const center = this.createMarker(centerMarker).setLngLat(
+    const center = this.createMarker(createCenterMarker()).setLngLat(
       search.coordinates
     );
-    const options = { steps: 100, units: "miles" };
     const circles = distanceFilterDistances.map((radius, i) =>
       circle(search.coordinates, radius, {
         ...options,
-        properties: { color: colors[i], "stroke-width": radius }
+        properties: { color: color[i], "stroke-width": radius }
       })
     );
     const labels = distanceFilterDistances.map((radius, i) => {
@@ -215,7 +195,7 @@ class Map extends Component {
         90,
         { units: "miles" }
       );
-      const marker = this.createMarker(createDistanceMarker(radius, colors[i]));
+      const marker = this.createMarker(createDistanceMarker(radius, color[i]));
       return marker.setLngLat(radiusOffset.geometry.coordinates);
     });
 
@@ -235,69 +215,7 @@ class Map extends Component {
     }
   };
 
-  normalizeProviders = providerFeatures => {
-    const providerTypes = { byId: {}, allIds: [] };
-    const providers = { byId: {}, allIds: [] };
-    Array.from(providerFeatures).map(
-      ({ id, geometry: { coordinates }, properties }, index) => {
-        let formattedTypeId = properties["Type of Service"]
-          .toLowerCase()
-          .split(" ")
-          .join("-");
-        id = index;
-        const typeExists = providerTypes.allIds.includes(formattedTypeId);
-        if (formattedTypeId === "community-center") {
-          // special case
-          formattedTypeId = "community-centers";
-        }
-        if (typeExists) {
-          providerTypes.byId[formattedTypeId] = {
-            ...providerTypes.byId[formattedTypeId],
-            id: formattedTypeId,
-            name: properties["Type of Service"],
-            providers: [...providerTypes.byId[formattedTypeId].providers, id]
-          };
-        } else {
-          if (!providerTypes.allIds.includes(formattedTypeId)) {
-            providerTypes.allIds.push(formattedTypeId);
-          }
-          providerTypes.byId[formattedTypeId] = {
-            id: formattedTypeId,
-            name: properties["Type of Service"],
-            providers: [id]
-          };
-        }
-
-        return (providers.byId[id] = {
-          id,
-          coordinates,
-          address:
-            properties[
-              "Address (#, Street Name, District/city, State, Zip Code)"
-            ],
-          email: properties["Email:"],
-          mission: properties["Mission:"],
-          name: properties["Organization Name"],
-          telephone: properties["Telephone:"],
-          timestamp: properties.Timestamp,
-          // Type of Service
-          typeName: properties["Type of Service"], // synonym for next line
-          "Type of Service": properties["Type of Service"], // as referenced in reducer helper function
-          // Validated By
-          website: properties.Website
-        });
-      }
-    );
-    // sorted by name
-    providerTypes.allIds.map(id => {
-      const providersByType = providerTypes.byId[id].providers;
-      return providersByType.sort((a, b) =>
-        providers.byId[a].name.localeCompare(providers.byId[b].name)
-      );
-    });
-    // commit map query result to redux
-    return { providerTypes, providers };
-  };
+  
 
   componentDidUpdate(prevProps) {
     const { highlightedProviders, providerTypes } = this.props;

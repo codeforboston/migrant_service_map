@@ -123,8 +123,8 @@ const addDistanceFilterLayer = (distanceFilterDistances, map) => {
 
 export {
   // featureToProvider,
-  centerMarker,
-  createDistanceMarker,
+  // centerMarker,
+  // createDistanceMarker,
   removeDistanceMarkers,
   addDistanceFilterLayer,
   addSourceToMap,
