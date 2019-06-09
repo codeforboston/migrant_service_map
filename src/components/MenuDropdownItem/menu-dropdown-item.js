@@ -62,7 +62,7 @@ export default class DropdownMenuItem extends React.Component {
       <div className={`provider-card ${savedMenuHighlightedProviderCard}`} id={`provider-${provider.id}`}>
         <div className="card-container">
           <div className="card-header">
-            <h5 onClick={toggleHighlight}>{provider.name}</h5>
+            <h5 className={expand} onClick={toggleHighlight}>{provider.name}</h5>
             <div className="wrapped-info">
               <div className={`prov-type ${expand}`}>
                 <FontAwesomeIcon icon={cardIcon} />
