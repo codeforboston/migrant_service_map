@@ -7,8 +7,6 @@ import typeImages from "assets/images";
 import distances from "assets/distances";
 import _ from "lodash";
 import {
-  // centerMarker,
-  // createDistanceMarker,
   removeDistanceMarkers,
   addDistanceFilterLayer,
   addSourceToMap,
@@ -35,59 +33,62 @@ class Map extends Component {
     this.map = null;
   }
 
-  updateSource = id => {
+
+  setSourceFeatures = (typeId, features) => {
+    let { providerTypes } = this.props; 
+    if(providerTypes.visible){
+    this.findSourceInMap(typeId, this.map);
+      this.map.getSource(typeId).setData({
+        type: "FeatureCollection",
+        features: features
+      });
+    }
+  };
+
+
+  findLayerInMap = (typeId, map) => {
     const { providersList } = this.props;
-    const providerTypesById = _.keyBy(providersList, "id");
-    if (!this.map.getSource(id)) {
-      addSourceToMap(id, this.map);
+    const providerTypesById = _.keyBy(providersList, "typeId");
+    if (!map.getLayer(typeId)) {
+      map.addLayer({
+        id: typeId,
+        source: typeId,
+        type: "symbol",
+        layout: {
+          "icon-image": typeId + "icon",
+          "icon-size": 0.4,
+          visibility: "visible"
+        }
+      });
+    //   this.addClickHandlerToMapIdLayer(typeId);
     }
-    if (!this.map.getLayer(id)) {
-      this.addProviderTypeLayerToMap(id, this.map);
-    }
-
-    const isVisible = providerTypesById[id] ? true : false;
-    const features = isVisible ? convertProvidersToGeoJSON(
-      providerTypesById[id].providers
-    ) : [];
-    this.map.getSource(id).setData({
-      type: "FeatureCollection",
-      features: features
-    });
   };
 
-  updatePointSource = (sourceName, idArray) => {
-    const { providers } = this.props;
-    if (!this.map.getSource(sourceName)) {
-      addPointSourceToMap(sourceName, this.map);
+  findSourceInMap = (typeId, map) => {
+    const { providersList } = this.props;
+    const providerTypesById = _.keyBy(providersList, "typeId");
+    if (!map.getSource(typeId)) {
+      map.addSource(typeId, {
+        type: "geojson",
+        data: {
+          type: "FeatureCollection",
+          features: []
+        }
+      });
     }
-    if (!this.map.getLayer(sourceName)) {
-      addCircleLayerToMap(sourceName, sourceName, this.map);
-    }
-    const newPoints = idArray.map(id => point(providers.byId[id].coordinates));
-    this.map.getSource(sourceName).setData({
-      type: "FeatureCollection",
-      features: newPoints
-    });
   };
 
-  addProviderTypeLayerToMap = (typeId, map) => {
-    let { displayProviderInformation } = this.props;
-    map.addLayer({
-      id: typeId,
-      source: typeId,
-      type: "symbol",
-      layout: {
-        "icon-image": typeId + "icon",
-        "icon-size": 0.25,
-        visibility: "visible"
-      }
-    });
-    map.on("click", typeId, e => {
-      scrollToCard(`provider-${e.features[0].properties.id}`)
-      displayProviderInformation(e.features[0].properties.id);
-    });
-  };
+  geoJSONFeatures = typeId => {
+    let { providerTypes, highlightedProviders, providers } = this.props;
+    if(!providerTypes.visible.includes(typeId) && typeId != "highlightedProviders"){
+      return []
+    }
+    const selectProviders =
+      typeId === "highlightedProviders" ? highlightedProviders : providerTypes.byId[typeId].providers;
 
+    const features = convertProvidersToGeoJSON(selectProviders);
+    return features;
+  };
 
   loadProviderTypeImage = images => {
     images.map(typeImage =>
@@ -100,7 +101,7 @@ class Map extends Component {
 
   componentDidMount() {
     const { mapCenter, coordinates } = this.props.search;
-    const { providerTypes, setMapObject } = this.props;
+    const { providerTypes, setMapObject, initializeProviders, displayProviderInformation } = this.props;
     const map = new mapboxgl.Map({
       container: "map", // container id
       style: "mapbox://styles/refugeeswelcome/cjh9k11zz15ds2spbs4ld6y9o", // stylesheet location
@@ -109,29 +110,22 @@ class Map extends Component {
     });
     setMapObject(map);
 
+    const allSymbolLayers = [...providerTypes.allIds, "highlightedProviders"]
+
     map.on("load", () => {
       this.removeLayersFromOldDataSet();
       const providerFeatures = map.querySourceFeatures("composite", {
         sourceLayer: "Migrant_Services_-_MSM_Final_1"
       });
       const normalizedProviders = normalizeProviders(providerFeatures);
-      this.props.initializeProviders(normalizedProviders);
-      let { displayProviderInformation } = this.props;
-      providerTypes.allIds.forEach(typeId => {
-        addSourceToMap(typeId);
-        this.addProviderTypeLayerToMap(
-          typeId,
-          this.map,
-          displayProviderInformation
-        );
-      });
-      addPointSourceToMap("highlightedProviders", this.map);
-      addCircleLayerToMap(
-        "highlightedProviders",
-        "highlightedProviders",
-        this.map
-      );
-    });
+      initializeProviders(normalizedProviders);
+
+
+      for( let typeId in allSymbolLayers){
+        this.findSourceInMap(typeId, this.map)
+        this.findLayerInMap(typeId, this.map);
+      };
+  });
 
     this.map = map;
     this.loadProviderTypeImage(typeImages);
@@ -215,13 +209,45 @@ class Map extends Component {
     }
   };
 
-  
+  addClickHandlerToMapIdLayer = typeId => {
+    let { displayProviderInformation, highlightedProviders } = this.props;
+    this.map.on("click", typeId, e => {
+      if (typeId !== "highlightedProviders") {
+        const offsetTop = document.getElementById(`provider-${e.features[0].properties.id}`).offsetTop;
+        const cardOffset = 50;
+
+        const panel = document.getElementsByClassName("panels")[0];
+        const toScrollTo = offsetTop - cardOffset;
+        const steps = 15;
+        const scrollStep = (toScrollTo - panel.scrollTop) / steps;
+        let stepCount = 0;
+
+        const scrollInterval = setInterval(function() {
+          if (stepCount < steps) {
+            panel.scrollBy(0, scrollStep);
+            stepCount++;
+          } else {
+            panel.scrollTop = toScrollTo;
+            clearInterval(scrollInterval);
+          }
+        }, 15);
+        displayProviderInformation(e.features[0].properties.id);
+      } else if (!highlightedProviders.includes(e.features[0].properties.id)) {
+        displayProviderInformation(e.features[0].properties.id);
+      }
+    });
+  };
+
 
   componentDidUpdate(prevProps) {
     const { highlightedProviders, providerTypes } = this.props;
-    this.updatePointSource("highlightedProviders", highlightedProviders);
-    providerTypes.allIds.forEach(id => {
-      this.updateSource(id);
+    const allSymbolLayers = providerTypes.allIds.concat("highlightedProviders")
+    console.log(allSymbolLayers)
+    allSymbolLayers.forEach(typeId => {
+      this.findSourceInMap(typeId, this.map)
+      this.findLayerInMap(typeId, this.map)
+      const features = this.geoJSONFeatures(typeId);
+      this.setSourceFeatures(typeId, features);
     });
   }
 

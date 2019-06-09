@@ -99,6 +99,37 @@ class Map extends Component {
     }
   };
 
+  findSourceInMap = (typeId, map) => {
+    if (!map.getSource(typeId)) {
+      map.addSource(typeId, {
+        type: "geojson",
+        data: {
+          type: "FeatureCollection",
+          features: []
+        }
+      });
+    }
+    return this.map.getSource(typeId);
+  };
+
+  findLayerInMap = (typeId, map) => {
+    if (!map.getLayer(typeId)) {
+      map.addLayer({
+        id: typeId,
+        source: typeId,
+        type: "symbol",
+        layout: {
+          "icon-image": typeId + "icon",
+          "icon-size": 0.4,
+          visibility: "visible"
+        }
+      });
+      this.addClickHandlerToMapIdLayer(typeId);
+    }
+    return map.getLayer(typeId); 
+  };
+
+  
   geoJSONFeatures = typeId => {
     let { providerTypes, highlightedProviders, providers } = this.props;
     if(!providerTypes.visible.includes(typeId) && typeId != "highlightedProviders"){
@@ -182,35 +213,6 @@ class Map extends Component {
     });
   };
 
-  findSourceInMap = (typeId, map) => {
-    if (!map.getSource(typeId)) {
-      map.addSource(typeId, {
-        type: "geojson",
-        data: {
-          type: "FeatureCollection",
-          features: []
-        }
-      });
-    }
-    return this.map.getSource(typeId);
-  };
-
-  findLayerInMap = (typeId, map) => {
-    if (!map.getLayer(typeId)) {
-      map.addLayer({
-        id: typeId,
-        source: typeId,
-        type: "symbol",
-        layout: {
-          "icon-image": typeId + "icon",
-          "icon-size": 0.4,
-          visibility: "visible"
-        }
-      });
-      this.addClickHandlerToMapIdLayer(typeId);
-    }
-    return map.getLayer(typeId); 
-  };
 
   addClickHandlerToMapIdLayer = typeId => {
     let { displayProviderInformation, highlightedProviders } = this.props;
