@@ -1,9 +1,16 @@
 import React from 'react';
-import Expandable from "../TopBar/expandable";
+import Expandable from "../Dropdowns/expandable";
 
 import "./sort-dropdown.css"
 
-const SortDropdown = ({ className, options, group, incomingState, header, handleChange }) => {
+const SortDropdown = ({
+  className,
+  handleChange,
+  header,
+  incomingState,
+  group,
+  options,
+}) => {
     let inputDiv = options.map((option, index) =>
         <div
             className={`radio-container ${option === incomingState ? "selected" : null}`}

@@ -4,6 +4,8 @@ import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "./map.css";
 import { point, transformTranslate, circle } from "@turf/turf";
 import typeImages from "assets/images";
+import distances from "assets/distances";
+import _ from "lodash";
 import {
   centerMarker,
   createDistanceMarker,
@@ -11,7 +13,9 @@ import {
   addDistanceFilterLayer,
   addSourceToMap,
   addCircleLayerToMap,
-  addPointSourceToMap
+  addPointSourceToMap,
+  removeReferenceLocation,
+  togglePinMarker
 } from "./mapHelpers.js";
 
 mapboxgl.accessToken =
@@ -24,16 +28,19 @@ class Map extends Component {
   }
 
   updateSource = id => {
-    let { providerTypes } = this.props;
+    const { providersList } = this.props;
+    const providerTypesById = _.keyBy(providersList, "id");
     if (!this.map.getSource(id)) {
       addSourceToMap(id, this.map);
     }
     if (!this.map.getLayer(id)) {
       this.addProviderTypeLayerToMap(id, this.map);
     }
-    const features = providerTypes.visible.includes(id)
-      ? this.convertProvidersToGeoJSON(providerTypes.byId[id].providers)
-      : [];
+
+    const isVisible = providerTypesById[id] ? true : false;
+    const features = isVisible ? this.convertProvidersToGeoJSON(
+      providerTypesById[id].providers
+    ) : [];
     this.map.getSource(id).setData({
       type: "FeatureCollection",
       features: features
@@ -63,43 +70,44 @@ class Map extends Component {
       type: "symbol",
       layout: {
         "icon-image": typeId + "icon",
-        "icon-size": 1,
+        "icon-size": 0.25,
         visibility: "visible"
       }
     });
     map.on("click", typeId, e => {
-      const offsetTop = document.getElementById(`provider-${e.features[0].properties.id}`).offsetTop;
+      const offsetTop = document.getElementById(
+        `provider-${e.features[0].properties.id}`
+      ).offsetTop;
       const cardOffset = 50;
-      
-      const panel = document.getElementsByClassName('panels')[0];
+
+      const panel = document.getElementsByClassName("panels")[0];
       const toScrollTo = offsetTop - cardOffset;
       const steps = 15;
       const scrollStep = (toScrollTo - panel.scrollTop) / steps;
       let stepCount = 0;
-      
-      const scrollInterval = setInterval(function(){
+
+      const scrollInterval = setInterval(function() {
         if (stepCount < steps) {
           panel.scrollBy(0, scrollStep);
           stepCount++;
         } else {
           panel.scrollTop = toScrollTo;
           clearInterval(scrollInterval);
-        }  
-      },15);
-      
+        }
+      }, 15);
+
       displayProviderInformation(e.features[0].properties.id);
     });
   };
 
-  convertProvidersToGeoJSON = providersTypesIds => {
-    const { providers } = this.props;
-    return providersTypesIds.map(id => ({
+  convertProvidersToGeoJSON = providers => {
+    return providers.map(provider => ({
       type: "Feature",
       geometry: {
         type: "Point",
-        coordinates: providers.byId[id].coordinates
+        coordinates: provider.coordinates
       },
-      properties: providers.byId[id]
+      properties: provider
     }));
   };
 
@@ -114,13 +122,14 @@ class Map extends Component {
 
   componentDidMount() {
     const { mapCenter, coordinates } = this.props.search;
-    const { providerTypes } = this.props;
+    const { providerTypes, setMapObject } = this.props;
     const map = new mapboxgl.Map({
       container: "map", // container id
       style: "mapbox://styles/refugeeswelcome/cjh9k11zz15ds2spbs4ld6y9o", // stylesheet location
       center: mapCenter,
       zoom: 11 // starting zoom
     });
+    setMapObject(map);
 
     map.on("load", () => {
       this.removeLayersFromOldDataSet();
@@ -169,12 +178,21 @@ class Map extends Component {
       let { geometry, id, text } = ev.result;
       this.props.setSearchCenterCoordinates(geometry.coordinates, id, text);
       this.addDistanceIndicator();
+      togglePinMarker(true);
     });
+
+    geocoder.on("clear", ev => {
+      let center = [-71.066954, 42.359947];
+      removeReferenceLocation(this.map);
+      this.props.setSearchCenterCoordinates(center, 1, "");
+    });
+
+    // addSourceToMap(SOURCE_ID, map);
   }
 
   addDistanceIndicator = () => {
     //TODO: make this input from the distance filter
-    const distanceFilterDistances = [0.5, 1, 1.5];
+    const distanceFilterDistances = distances;
     const { search } = this.props;
     removeDistanceMarkers();
     addDistanceFilterLayer(distanceFilterDistances, this.map);

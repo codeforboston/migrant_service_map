@@ -7,7 +7,7 @@ export default class CheckBoxDropdown extends React.Component {
   constructor(props) {
     super(props);
     const { options = [] } = props;
-    options.forEach(option => (this.optionsMappings[option] = false));
+    options.forEach(option => (this.optionsMappings[option.id] = false));
   }
 
   render() {
@@ -20,25 +20,23 @@ export default class CheckBoxDropdown extends React.Component {
       onChange = () => {}
     } = this.props;
     const inputDiv = options.map((option, index) => {
-      // content={options.map(({ label, value }, index) => (
-      // const isChecked = visibleTypes.indexOf(value) > -1 ;
+      const { display, id } = option;
       return (
         <div className="dropdown-input-wrapper" key={index}>
           <input
-            id={option}
-            // checked={ visibleTypes.indexOf(value) > -1 }
+            id={id}
             type="checkbox"
-            value={option}
+            value={display}
             onChange={({ target: { checked } }) => {
-              this.optionsMappings[option] = checked;
+              this.optionsMappings[id] = checked;
               onChange(
-                option,
-                options.filter(option => this.optionsMappings[option])
+                id,
+                options.filter(option => this.optionsMappings[option.id])
               );
             }}
           />
           <label className="expandable-label" htmlFor={option}>
-            {option.toString()}
+            {display}
           </label>
         </div>
       );
