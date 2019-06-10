@@ -45,10 +45,10 @@ class Map extends Component {
       initializeProviders(normalizedProviders);
 
       const allSymbolLayers = [...providerTypes.allIds, "highlightedProviders"];
-      for (let typeId in allSymbolLayers) {
+      allSymbolLayers.forEach(typeId => {
         this.findSourceInMap(typeId);
         this.findLayerInMap(typeId);
-      }
+      });
       this.loadProviderTypeImage(typeImages);
     });
 
@@ -181,28 +181,11 @@ class Map extends Component {
     const selectProviders =
       typeId === "highlightedProviders" ? highlightedProviders : providerTypes.byId[typeId].providers;
 
-    return convertProvidersToGeoJSON(selectProviders);
+    const features = convertProvidersToGeoJSON(selectProviders);
+    return features
 
   };
   
-  addDistanceFilterLayer = distanceFilterDistances => {
-    console.log("add distance filter layer");
-    removeDistanceMarkers();
-    this.findSourceInMap("distance-indicator-source");
-    if (!this.map.getLayer("distance-indicator")) {
-      this.map.addLayer({
-        id: "distance-indicator",
-        type: "line",
-        source: "distance-indicator-source",
-        paint: {
-          "line-color": ["get", "color"],
-          "line-opacity": 0.8,
-          "line-width": ["*", distanceFilterDistances[0], 3],
-          "line-offset": 5
-        }
-      });
-    }
-  };
 
   addDistanceIndicator = () => {
     //TODO: make this input from the distance filter
@@ -271,16 +254,14 @@ class Map extends Component {
   };
 
 
-
   componentDidUpdate(prevProps) {
     const { providerTypes } = this.props;
     const allSymbolLayers = [...providerTypes.allIds, "highlightedProviders"];
-    console.log(allSymbolLayers, this.props.highlightedProviders, providerTypes.allIds);
     allSymbolLayers.forEach(typeId => {
       this.findSourceInMap(typeId);
-      this.findLayerInMap(typeId);
       const features = this.geoJSONFeatures(typeId);
       this.setSourceFeatures(typeId, features);
+      this.findLayerInMap(typeId);
     });
   }
 
