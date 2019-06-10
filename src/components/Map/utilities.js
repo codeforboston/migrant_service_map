@@ -64,6 +64,13 @@ const markerStyle = {
 
 }
 
+const removeDistanceMarkers = () => {
+  const distanceMarkers = Array.from(
+    document.getElementsByClassName("distanceMarker")
+  );
+  return distanceMarkers.map(marker => marker.remove());
+};
+
 const normalizeProviders = providerFeatures => {
   const providerTypes = { byId: {}, allIds: [] };
   const providers = { byId: {}, allIds: [] };
@@ -135,5 +142,6 @@ export {
   createDistanceMarker,
   markerStyle,
   normalizeProviders,
+  removeDistanceMarkers,
   scrollToCard,
 }
