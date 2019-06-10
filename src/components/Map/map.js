@@ -7,12 +7,12 @@ import typeImages from "assets/images";
 import distances from "assets/distances";
 import _ from "lodash";
 import {
-  convertProvidersToGeoJSON, 
+  convertProvidersToGeoJSON,
   createCenterMarker,
   createDistanceMarker,
   markerStyle,
   normalizeProviders,
-removeDistanceMarkers,
+  removeDistanceMarkers,
   scrollToCard,
 } from "./utilities.js";
 
@@ -25,11 +25,10 @@ class Map extends Component {
     this.map = null;
   }
 
-
   setSourceFeatures = (typeId, features) => {
-    let { providerTypes } = this.props; 
-    if(providerTypes.visible.includes(typeId)){
-      this.findSourceInMap(typeId, this.map); 
+    let { providerTypes } = this.props;
+    if (providerTypes.visible.includes(typeId)) {
+      this.findSourceInMap(typeId);
       this.map.getSource(typeId).setData({
         type: "FeatureCollection",
         features: features
@@ -37,12 +36,11 @@ class Map extends Component {
     }
   };
 
-
-  findLayerInMap = (typeId, map) => {
-    const { providersList } = this.props;
-    const providerTypesById = _.keyBy(providersList, "typeId");
-    if (!map.getLayer(typeId)) {
-      map.addLayer({
+  findLayerInMap = (typeId) => {
+    // const { providersList } = this.props;
+    // // const providerTypesById = _.keyBy(providersList, "typeId");
+    if (!this.map.getLayer(typeId)) {
+      this.map.addLayer({
         id: typeId,
         source: typeId,
         type: "symbol",
@@ -56,11 +54,11 @@ class Map extends Component {
     }
   };
 
-  findSourceInMap = (typeId, map) => {
-    const { providersList } = this.props;
-    const providerTypesById = _.keyBy(providersList, "typeId");
-    if (!map.getSource(typeId)) {
-      map.addSource(typeId, {
+  findSourceInMap = (typeId) => {
+    // const { providersList } = this.props;
+    // const providerTypesById = _.keyBy(providersList, "typeId");
+    if (!this.map.getSource(typeId)) {
+      this.map.addSource(typeId, {
         type: "geojson",
         data: {
           type: "FeatureCollection",
@@ -71,15 +69,15 @@ class Map extends Component {
   };
 
   geoJSONFeatures = typeId => {
-    let { providerTypes, highlightedProviders, providers } = this.props;
-    if(!providerTypes.visible.includes(typeId) && typeId != "highlightedProviders"){
-      return []
+    let { providerTypes, highlightedProviders } = this.props;
+    if (!providerTypes.visible.includes(typeId) && typeId != "highlightedProviders") {
+      return [];
     }
     const selectProviders =
       typeId === "highlightedProviders" ? highlightedProviders : providerTypes.byId[typeId].providers;
 
-    const features = convertProvidersToGeoJSON(selectProviders);
-    return features;
+    return convertProvidersToGeoJSON(selectProviders);
+
   };
 
   loadProviderTypeImage = images => {
@@ -102,7 +100,6 @@ class Map extends Component {
     });
     // setMapObject(map);
 
-    
     map.on("load", () => {
       this.removeLayersFromOldDataSet();
       const providerFeatures = map.querySourceFeatures("composite", {
@@ -110,17 +107,16 @@ class Map extends Component {
       });
       const normalizedProviders = normalizeProviders(providerFeatures);
       initializeProviders(normalizedProviders);
-      
-      const allSymbolLayers = [...providerTypes.allIds, "highlightedProviders"]
-      for(let typeId in allSymbolLayers){
-        this.findSourceInMap(typeId, this.map)
-        this.findLayerInMap(typeId, this.map);
-      };
+
+      const allSymbolLayers = [...providerTypes.allIds, "highlightedProviders"];
+      for (let typeId in allSymbolLayers) {
+        this.findSourceInMap(typeId);
+        this.findLayerInMap(typeId);
+      }
       this.loadProviderTypeImage(typeImages);
     });
 
     this.map = map;
-
 
     const coordinateObject = {
       // initiating geocoder requires this as an object
@@ -146,16 +142,16 @@ class Map extends Component {
     });
 
     geocoder.on("clear", ev => {
-let center = [-71.066954, 42.359947];
+      let center = [-71.066954, 42.359947];
       this.removeReferenceLocation(this.map);
       this.togglePinMarker(false);
       this.props.setSearchCenterCoordinates(center, 1, "");
     });
   }
-DistanceFilterLayer = distanceFilterDistances => {
+  addDistanceFilterLayer = distanceFilterDistances => {
     console.log("add distance filter layer");
     removeDistanceMarkers();
-    this.findSourceInMap("distance-indicator-source", this.map);
+    this.findSourceInMap("distance-indicator-source");
     if (!this.map.getLayer("distance-indicator")) {
       this.map.addLayer({
         id: "distance-indicator",
@@ -173,18 +169,14 @@ DistanceFilterLayer = distanceFilterDistances => {
   addDistanceIndicator = () => {
     //TODO: make this input from the distance filter
     const distanceFilterDistances = distances;
-    const {
-      color,
-      options,
-     } = markerStyle;
+    const { color, options } = markerStyle;
     const { search } = this.props;
     removeDistanceMarkers();
     this.addDistanceFilterLayer(distanceFilterDistances, this.map);
 
+    const centerMarker = createCenterMarker();
 
-    const centerMarker = createCenterMarker()
-
-    const mapPin = new mapboxgl.Marker({centerMarker})
+    const mapPin = new mapboxgl.Marker({ centerMarker });
     mapPin.setLngLat(search.coordinates);
 
     const circles = distanceFilterDistances.map((radius, i) =>
@@ -195,62 +187,56 @@ DistanceFilterLayer = distanceFilterDistances => {
     );
     const labels = distanceFilterDistances.map((radius, i) => {
       const radiusOffset = transformTranslate(point(search.coordinates), radius, 90, { units: "miles" });
-      const distanceMarker = createDistanceMarker((radius, color[i]))
-      const marker = new mapboxgl.Marker({ distanceMarker })
+      const distanceMarker = createDistanceMarker((radius, color[i]));
+      const marker = new mapboxgl.Marker({ distanceMarker });
       return marker.setLngLat(radiusOffset.geometry.coordinates);
     });
 
     labels.map(label => label.addTo(this.map));
     mapPin.addTo(this.map);
-    this.map
-      .getSource("distance-indicator-source")
-      .setData({ type: "FeatureCollection", features: circles });
+    this.map.getSource("distance-indicator-source").setData({ type: "FeatureCollection", features: circles });
   };
 
-  togglePinMarker = (show) => {
+  togglePinMarker = show => {
     // mapPin.style.visibility = show ? '' : 'hidden';
-  }
-  
-  removeReferenceLocation = (map) => {
+  };
+
+  removeReferenceLocation = map => {
     removeDistanceMarkers();
     this.togglePinMarker(false);
     map.removeLayer("distance-indicator");
     map.removeSource("distance-indicator-source");
-  
+
     map.flyTo({
       center: [-71.066954, 42.359947],
-      zoom: 12,
+      zoom: 12
     });
-  }
+  };
   removeLayersFromOldDataSet = () => {
     const allLayers = this.map.getStyle().layers;
     for (let i = 100; i < 110; i++) {
       this.map.removeLayer(allLayers[i].id);
     }
   };
-addDistanceFilterLayer = (distanceFilterDistances, map) => {
-  removeDistanceMarkers();
-  if (!map.getSource("distance-indicator-source")) {
-    map.addSource("distance-indicator-source", {
-      type: "geojson",
-      data: {
-        type: "FeatureCollection",
-        features: []
-      }
-    });
-    map.addLayer({
-      id: "distance-indicator",
-      type: "line",
-      source: "distance-indicator-source",
-      paint: {
-        "line-color": ["get", "color"],
-        "line-opacity": 0.8,
-        "line-width": ["*", distanceFilterDistances[0], 3],
-        "line-offset": 5
-      }
-    });
-  }
-};
+  addDistanceFilterLayer = distanceFilterDistances => {
+    console.log("add distance filter layer");
+    removeDistanceMarkers();
+    this.findSourceInMap("distance-indicator-source");
+    if (!this.map.getLayer("distance-indicator")) {
+      this.map.addLayer({
+        id: "distance-indicator",
+        type: "line",
+        source: "distance-indicator-source",
+        paint: {
+          "line-color": ["get", "color"],
+          "line-opacity": 0.8,
+          "line-width": ["*", distanceFilterDistances[0], 3],
+          "line-offset": 5
+        }
+      });
+    }
+  };
+
   addClickHandlerToMapIdLayer = typeId => {
     let { displayProviderInformation, highlightedProviders } = this.props;
     this.map.on("click", typeId, e => {
@@ -280,14 +266,13 @@ addDistanceFilterLayer = (distanceFilterDistances, map) => {
     });
   };
 
-
   componentDidUpdate(prevProps) {
-    const { highlightedProviders, providerTypes } = this.props;
-    const allSymbolLayers = providerTypes.allIds.concat("highlightedProviders")
-    console.log(allSymbolLayers)
+    const { providerTypes } = this.props;
+    const allSymbolLayers = [...providerTypes.allIds, "highlightedProviders"];
+    console.log(allSymbolLayers, this.props.highlightedProviders, providerTypes.allIds);
     allSymbolLayers.forEach(typeId => {
-      this.findSourceInMap(typeId, this.map)
-      this.findLayerInMap(typeId, this.map)
+      this.findSourceInMap(typeId);
+      this.findLayerInMap(typeId);
       const features = this.geoJSONFeatures(typeId);
       this.setSourceFeatures(typeId, features);
     });
