@@ -7,7 +7,6 @@ export default class ProviderTypeDropdown extends React.Component {
 
   onCheckboxChanged = (changedOption, selectedValues) => {
     const { onChange, providerTypes } = this.props;
-    debugger;
     onChange(changedOption);
     if (selectedValues.length === 0) {
       this.setState({ subheaderText: defaultSubheaderText });
