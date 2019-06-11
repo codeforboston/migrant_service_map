@@ -15,6 +15,7 @@ const SortDropdown = ({
         <div
             className={`radio-container ${option === incomingState ? "selected" : null}`}
             key={index}
+            onClick={() => handleChange(option)}
         >
             <input
                 id={option}
@@ -22,9 +23,9 @@ const SortDropdown = ({
                 name={group}
                 value={option}
                 checked={option === incomingState}
-                onChange={() => handleChange(option)}
+                onChange={() => {}}
             />
-            <label className="expandable-label" htmlFor={option} >
+            <label className="expandable-label" htmlFor={option}>
                 {option.toString()}
             </label>
         </div>
@@ -37,6 +38,7 @@ const SortDropdown = ({
                 className={className}
                 header={wrappedHeader}
                 content={inputDiv}
+                closeOnSelect={true}
             />
             <img src="/sort-numeric-down.svg" alt={`current sort method: ${incomingState}`} />
         </div>

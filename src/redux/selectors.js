@@ -8,8 +8,7 @@ const getProvidersById = state => state.providers.byId;
 const getDistance = state => state.filters.distance;
 const getSavedProvidersIds = state => state.providers.savedProviders;
 const getHighlightedProvidersList = state => state.highlightedProviders;
-const getSearchCoordinates = state =>
-  state.search.history[state.search.currentLocation];
+const getSearchCoordinates = state => state.search.history[state.search.currentLocation];
 // const getSearchCoordinates = state => state.search.currentLocation ? state.search.history[state.search.currentLocation] : null; // TODO: separate coordinates and searched location
 const getSortMethod = state => state.providers.sortMethod;
 
@@ -32,26 +31,23 @@ export const getProvidersSorted = createSelector(
     searchCoordinates,
     sortMethod
   ) => {
+debugger;
     // for each provider type that is active, get providers belonging to it that are near the search location
     // TODO: limit based on new client status and visa type
     let groupedByProviderType = visibleProviderTypes.map(id => {
       let providerType = providerTypesById[id];
-      let providers = providerType.providers.map(
-        provId => providersById[provId]
-      );
+      let providers = providerType.providers.map(provId => providersById[provId]);
       const options = { units: "miles" };
       let providersWithDistances = calculateProviderDistances(
         providers,
         searchCoordinates,
         options
-      );
-      let nearbyProviders = distance
-        ? getProvidersWithinDistance(providersWithDistances, distance)
-        : providersWithDistances;
+      )
+      let nearbyProviders = distance ? getProvidersWithinDistance( providersWithDistances, distance ) : providersWithDistances;
       return {
         ...providerType,
         providers: sortProvidersByDistance(nearbyProviders)
-      };
+      }
     });
 
     // sort and return an array of grouped providers
@@ -59,28 +55,31 @@ export const getProvidersSorted = createSelector(
     var flatList = groupedByProviderType.reduce(
       (result, type) => result.concat(type.providers),
       [] // result needs to be initialized to empty array
-    );
+    )
     switch (sortMethod) {
+      
       case "Distance":
-        return [
-          {
-            id: "distance-sort",
-            name: "Closest to farthest",
-            providers: sortProvidersByDistance(flatList)
-          }
-        ];
+        console.log(sortProvidersByDistance(flatList), 'by distance');
+        return [{
+          id: "distance-sort",
+          name: "Closest to farthest",
+          providers: sortProvidersByDistance(flatList)
+        }]
       case "Name":
-        return [
-          {
-            id: "alphabetical",
-            name: "By name",
-            providers: sortProvidersByName(flatList)
-          }
-        ];
+        ///console.log(sortProvidersByName(flatList), 'by name');
+        return [{
+          id: "alphabetical",
+          name: "By name",
+          providers: sortProvidersByName(flatList)
+        }]
       case "Provider Type":
-      default:
+        console.log(groupedByProviderType, 'by provider type');
         return groupedByProviderType;
-    }
+      default:
+        console.log("something has gone very wrong")
+        return flatList;
+      }
+
   }
 );
 
@@ -89,7 +88,7 @@ export const getSavedProviders = createSelector(
   (savedProvidersIds, providersById, searchCoordinates) => {
     if (!searchCoordinates) {
       // no distance information included
-      return savedProvidersIds.map(id => providersById[id]);
+      return savedProvidersIds.map(id => providersById[id])
     }
     return savedProvidersIds.map(id => {
       const provDistance = distance(
@@ -97,12 +96,12 @@ export const getSavedProviders = createSelector(
         point(providersById[id].coordinates),
         point(searchCoordinates.coordinates),
         { units: "miles" }
-      );
+      )
       return {
         ...providersById[id],
         distance: provDistance
-      };
-    });
+      }
+    })
   }
 );
 
@@ -113,28 +112,44 @@ export const getHighlightedProviders = createSelector(
   }
 );
 
-function calculateProviderDistances(providers, refLocation, options) {
+function calculateProviderDistances(
+  providers,
+  refLocation,
+  options
+) {
   var referencePoint = point(refLocation.coordinates);
-  return providers.map(provider => {
+  return providers.map( provider => {
     // New object with the distance attached
     return {
       ...provider,
       distance: distance(point(provider.coordinates), referencePoint, options)
-    };
-  });
+    }
+  })
 }
 
-function getProvidersWithinDistance(providers, maxDistance) {
-  return providers.filter(
-    provider => maxDistance && provider.distance < maxDistance
-  );
+
+function getProvidersWithinDistance(
+  providers,
+  maxDistance,
+) {
+  return providers.filter( provider => maxDistance && provider.distance < maxDistance )
 }
 
 function sortProvidersByDistance(providerArray) {
-  // Sort the list by distance
-  return providerArray.sort((a, b) => a.distance - b.distance);
+    // Sort the list by distance
+    return providerArray.sort(
+      (a, b) => a.distance - b.distance
+    );
 }
 
 function sortProvidersByName(providerArray) {
-  return providerArray.sort((a, b) => a.name > b.name);
+  console.log(providerArray, 'pre sort');
+  const sorted = providerArray.slice(0).sort(
+    (a, b) => {
+      //console.log(a.name + '   ___     ', b.name, a.name > b.name);
+      return a.name > b.name
+    }
+  );
+  console.log(sorted, providerArray, 'post sorted');
+  return sorted;
 }
