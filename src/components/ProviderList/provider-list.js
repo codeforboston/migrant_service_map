@@ -24,9 +24,7 @@ class ProviderList extends Component {
               className="sort-by"
               options={["Distance", "Name", "Provider Type"]}
               header="Sort By"
-              handleChange={(id) => {
-                changeSortOrder(id);
-              }}
+              handleChange={(id) => changeSortOrder(id)}
               group="sort"
               incomingState={incomingState}
             />
