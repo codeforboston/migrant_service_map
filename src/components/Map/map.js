@@ -62,7 +62,8 @@ class Map extends Component {
 
     const geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
-      proximity: coordinateObject
+      proximity: coordinateObject,
+      placeholder: "Location"
     });
 
     const searchBox = geocoder.onAdd(map);
