@@ -132,9 +132,9 @@ function getProvidersWithinDistance(providers, maxDistance) {
 
 function sortProvidersByDistance(providerArray) {
   // Sort the list by distance
-  return providerArray.sort((a, b) => a.distance - b.distance);
+  return providerArray.sort((a, b) => (a.distance - b.distance) ? 1 : -1);
 }
 
 function sortProvidersByName(providerArray) {
-  return providerArray.sort((a, b) => a.name > b.name);
+  return providerArray.sort((a, b) => (a.name > b.name) ? 1 : -1);
 }
