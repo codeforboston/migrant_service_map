@@ -94,9 +94,9 @@ class Map extends Component {
 
   setSourceFeatures = (typeId, features) => {
     let { providerTypes } = this.props;
-    if (providerTypes.visible.includes(typeId)) {
+    if (providerTypes.visible.includes(typeId) || typeId == "highlightedProviders") {
       this.findSourceInMap(typeId);
-      this.map.getSource(typeId).setData({
+        this.map.getSource(typeId).setData({
         type: "FeatureCollection",
         features: features
       });
@@ -174,16 +174,19 @@ class Map extends Component {
   };
 
   geoJSONFeatures = typeId => {
-    let { providerTypes, highlightedProviders } = this.props;
+    let { providerTypes, highlightedProviders, providers } = this.props;
     if (!providerTypes.visible.includes(typeId) && typeId != "highlightedProviders") {
       return [];
     }
-    const selectProviders =
-      typeId === "highlightedProviders" ? highlightedProviders : providerTypes.byId[typeId].providers;
-
+    let selectProviders; 
+    if (typeId == "highlightedProviders"){
+      selectProviders = highlightedProviders.map(id => providers.byId[id])
+    }
+    if (providerTypes.allIds.includes(typeId)){
+      selectProviders = providerTypes.byId[typeId].providers.map(id => providers.byId[id])
+    }
     const features = convertProvidersToGeoJSON(selectProviders);
     return features
-
   };
   
 
