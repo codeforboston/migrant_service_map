@@ -16,6 +16,12 @@ export default class Expandable extends React.Component {
     };
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.onToggleExpanded && (this.state.expanded !== prevState.expanded)) {
+       this.props.onToggleExpanded(this.state.expanded);
+    }
+  }
+
   toggleExpanded = () => {
     const { expanded } = this.state;
     this.setState({ expanded: !expanded });
@@ -30,7 +36,7 @@ export default class Expandable extends React.Component {
 
   render() {
     const { expanded } = this.state;
-    const { className, content, header } = this.props;
+    const { className, content, footer, header, } = this.props;
 
     return (
       <ClickAwayDetector
@@ -47,6 +53,9 @@ export default class Expandable extends React.Component {
           </div>
           <div onClick={this.toggleExpandedOnSelect} className={`expanded-content ${expanded ? "expanded" : ""}`}>
             {content}
+          </div>
+          <div className={`expanded-content ${expanded ? "expanded" : ""}`}>
+            {footer}
           </div>
         </div>
       </ClickAwayDetector>
