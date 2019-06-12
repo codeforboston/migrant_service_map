@@ -7,6 +7,7 @@ export default class RadioButtonDropdown extends React.Component {
       className,
       options,
       header,
+      selected,
       onChange = () => {}
     } = this.props;
     const inputDiv = options.map((option, index) => {
@@ -19,6 +20,7 @@ export default class RadioButtonDropdown extends React.Component {
             name="distance-dropdown-button"
             value={text}
             onChange={() => onChange(value, text)}
+            checked={text === selected}
           />
           <label className="expandable-label" htmlFor={text}>
             {text}

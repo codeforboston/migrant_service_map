@@ -42,6 +42,7 @@ export default class DistanceDropdown extends React.Component {
         className={className}
         onChange={this.onRadioButtonChanged}
         options={options}
+        selected={this.state.distanceText}
         header={
           <>
             <Row alignItems="center">
