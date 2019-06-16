@@ -14,6 +14,10 @@ export default class ClickAwayDetector extends React.Component {
     }
   };
 
+  componentWillUnmount() {
+    document.removeEventListener("mousedown", this.onClick);
+  }
+
   componentDidMount = () => {
     document.addEventListener("mousedown", this.onClick);
   };
