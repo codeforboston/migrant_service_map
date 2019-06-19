@@ -48,6 +48,17 @@ class Map extends Component {
       allSymbolLayers.forEach(typeId => {
         this.findSourceInMap(typeId);
         this.findLayerInMap(typeId);
+        map.addLayer({
+          "id": "clusterNumber",
+          "type": "symbol",
+          "source": typeId,
+          "filter": ["!=", "cluster", true],
+          layout: {
+            "text-field": "{point_count_abbreviated}",
+            "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+            "text-size": 12
+            }
+          });
       });
       this.loadProviderTypeImage(typeImages);
     });
@@ -112,10 +123,25 @@ class Map extends Component {
         id: typeId,
         source: typeId,
         type: "symbol",
+        filter: ["!", ["has", "point_count"]],
         layout: {
           "icon-image": typeId + "icon",
           "icon-size": 0.4,
           visibility: "visible"
+        }
+      });
+      //Adding in cluster functionality
+      this.map.addLayer({
+        id: typeId+"-cluster",
+        source: typeId,
+        type: "symbol",
+        filter: ["has", "point_count"],
+        layout: {
+          "icon-image": typeId + "icon",
+          "icon-size": 0.8,
+          "text-field": "{point_count_abbreviated}",
+          "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+          "text-size": 18
         }
       });
       this.addClickHandlerToMapIdLayer(typeId);
@@ -131,7 +157,10 @@ class Map extends Component {
         data: {
           type: "FeatureCollection",
           features: []
-        }
+        },
+        cluster: true,
+        clusterMaxZoom: 100, // Max zoom to cluster points on
+        clusterRadius: 100 // Radius of each cluster when clustering points (defaults to 50)
       });
     }
   };
