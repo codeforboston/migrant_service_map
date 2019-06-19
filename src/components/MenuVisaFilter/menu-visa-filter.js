@@ -17,7 +17,7 @@ class MenuVisaFilter extends Component {
               <div>
                 <input
                   type="radio"
-                  name="visa"
+                  name={visa}
                   id={visa}
                   value={visa}
                   onChange={() => this.props.changeVisaFilter(visa)}

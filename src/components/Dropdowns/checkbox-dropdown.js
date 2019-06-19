@@ -29,6 +29,7 @@ export default class CheckBoxDropdown extends React.Component {
             id={id}
             type="checkbox"
             value={display}
+            name={id}
             onChange={({ target: { checked } }) => {
               this.optionsMappings[id] = checked;
               onChange(
@@ -37,7 +38,7 @@ export default class CheckBoxDropdown extends React.Component {
               );
             }}
           />
-          <label className="expandable-label" htmlFor={option}>
+          <label className="expandable-label" htmlFor={id}>
             {display}
           </label>
         </div>
