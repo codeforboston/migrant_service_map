@@ -9,7 +9,7 @@ const getDistance = state => state.filters.distance;
 const getSavedProvidersIds = state => state.providers.savedProviders;
 const getHighlightedProvidersList = state => state.highlightedProviders;
 const getSearchCoordinates = state =>
-  state.search.history[state.search.currentLocation];
+state.search.history[state.search.currentLocation];
 // const getSearchCoordinates = state => state.search.currentLocation ? state.search.history[state.search.currentLocation] : null; // TODO: separate coordinates and searched location
 const getSortMethod = state => state.providers.sortMethod;
 
@@ -22,7 +22,7 @@ export const getProvidersSorted = createSelector(
     getSearchCoordinates,
     // visa status,
     // accepting new clients,
-    getSortMethod
+    getSortMethod,
   ],
   (
     providerTypesById,
@@ -46,8 +46,8 @@ export const getProvidersSorted = createSelector(
         options
       );
       let nearbyProviders = distance
-        ? getProvidersWithinDistance(providersWithDistances, distance)
-        : providersWithDistances;
+      ? getProvidersWithinDistance(providersWithDistances, distance)
+      : providersWithDistances;
       return {
         ...providerType,
         providers: sortProvidersByDistance(nearbyProviders)
@@ -60,26 +60,27 @@ export const getProvidersSorted = createSelector(
       (result, type) => result.concat(type.providers),
       [] // result needs to be initialized to empty array
     );
+    // console.log(flatList)
     switch (sortMethod) {
       case "Distance":
-        return [
-          {
-            id: "distance-sort",
-            name: "Closest to farthest",
-            providers: sortProvidersByDistance(flatList)
-          }
-        ];
+      return [
+        {
+          id: "distance-sort",
+          name: "Closest to farthest",
+          providers: sortProvidersByDistance(flatList)
+        }
+      ];
       case "Name":
-        return [
-          {
-            id: "alphabetical",
-            name: "By name",
-            providers: sortProvidersByName(flatList)
-          }
-        ];
+      return [
+        {
+          id: "alphabetical",
+          name: "By name",
+          providers: sortProvidersByName(flatList)
+        }
+      ];
       case "Provider Type":
       default:
-        return groupedByProviderType;
+      return groupedByProviderType;
     }
   }
 );
@@ -132,7 +133,7 @@ function getProvidersWithinDistance(providers, maxDistance) {
 
 function sortProvidersByDistance(providerArray) {
   // Sort the list by distance
-  return providerArray.sort((a, b) => (a.distance - b.distance) ? 1 : -1);
+  return providerArray.sort((a, b) => (a.distance > b.distance) ? 1 : -1);
 }
 
 function sortProvidersByName(providerArray) {

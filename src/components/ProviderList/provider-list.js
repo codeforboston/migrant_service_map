@@ -25,6 +25,7 @@ class ProviderList extends Component {
               options={["Distance", "Name", "Provider Type"]}
               header="Sort By"
               handleChange={(id) => {
+                console.log(id)
                 changeSortOrder(id);
               }}
               group="sort"
