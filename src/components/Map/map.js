@@ -13,7 +13,7 @@ import {
   markerStyle,
   normalizeProviders,
   removeDistanceMarkers,
-  scrollToCard,
+  scrollToCard
 } from "./utilities.js";
 
 mapboxgl.accessToken =
@@ -101,7 +101,7 @@ class Map extends Component {
     });
   };
 
-  findLayerInMap = (typeId) => {
+  findLayerInMap = typeId => {
     if (!this.map.getLayer(typeId)) {
       this.map.addLayer({
         id: typeId,
@@ -111,24 +111,24 @@ class Map extends Component {
           "icon-image": typeId + "icon",
           "icon-size": 0.4,
           visibility: "visible"
-        }, 
-        "filter":["==", "typeId", typeId]
+        },
+        filter: ["==", "typeId", typeId]
       });
       this.addClickHandlerToMapIdLayer(typeId);
     }
   };
 
-setSingleSourceInMap = () => {
-  if (!this.map.getSource("displayData")) {
-    this.map.addSource("displayData", {
-      type: "geojson",
-      data: {
-        type: "FeatureCollection",
-        features: []
-      }
-    });
-  }
-}
+  setSingleSourceInMap = () => {
+    if (!this.map.getSource("displayData")) {
+      this.map.addSource("displayData", {
+        type: "geojson",
+        data: {
+          type: "FeatureCollection",
+          features: []
+        }
+      });
+    }
+  };
 
   loadProviderTypeImage = images => {
     images.map(typeImage =>
@@ -170,7 +170,7 @@ setSingleSourceInMap = () => {
 
   geoJSONFeatures = () => {
     let { providersList } = this.props;
- 
+
     const forGeoConvert = providersList.map(service => {
       return service.providers.map(provider => {
         provider["typeId"] = service.id; 
@@ -181,7 +181,6 @@ setSingleSourceInMap = () => {
     const features = convertProvidersToGeoJSON(flattenProviderInfo);
     return features;
   };
-  
 
   addDistanceIndicator = () => {
     //TODO: make this input from the distance filter
@@ -249,16 +248,14 @@ setSingleSourceInMap = () => {
     }
   };
 
-
   componentDidUpdate(prevProps) {
     const { providersList } = this.props;
-    this.setSingleSourceInMap(); 
+    this.setSingleSourceInMap();
     const providerTypesById = _.keyBy(providersList, "id");
     const features = this.geoJSONFeatures(providerTypesById);
     this.setSourceFeatures(features);
-    this.props.providerTypes.allIds.map(typeId => this.findLayerInMap(typeId)); 
-  };
-
+    this.props.providerTypes.allIds.map(typeId => this.findLayerInMap(typeId));
+  }
 
   componentWillUnmount() {
     this.map.remove();
