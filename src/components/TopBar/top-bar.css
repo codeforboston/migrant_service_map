@@ -9,9 +9,11 @@
   height: 70px;
 }
 
-.top-bar .top-bar-item,
-#nav-search > * {
+.top-bar > * {
   flex: 1;
+}
+
+.top-bar .top-bar-item {
   background-color: white;
   border: 1px solid #8c45cf;
   box-shadow: 2px 1px 2px #8c45cf;
@@ -61,6 +63,12 @@
 .nav-search {
   margin-top: 5px;
 }
+
+#nav-search .msm-map-search-box {
+  box-shadow: none !important;
+  width: 100% !important;
+}
+
 .dropdown-row ul {
   display: flex;
   flex-direction: row;
