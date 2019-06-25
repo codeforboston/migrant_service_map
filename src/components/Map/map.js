@@ -35,7 +35,7 @@ class Map extends Component {
       zoom: 11 // starting zoom
     });
     // setMapObject(map);
-
+    map.addControl(new mapboxgl.NavigationControl());
     map.on("load", () => {
       this.removeLayersFromOldDataSet();
       const providerFeatures = map.querySourceFeatures("composite", {
