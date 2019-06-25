@@ -13,7 +13,7 @@ import {
   markerStyle,
   normalizeProviders,
   removeDistanceMarkers,
-  scrollToCard,
+  scrollToCard
 } from "./utilities.js";
 
 mapboxgl.accessToken =
@@ -46,7 +46,7 @@ class Map extends Component {
 
       const allSymbolLayers = [...providerTypes.allIds, "highlightedProviders"];
       allSymbolLayers.forEach(typeId => {
-        this.findSourceInMap(typeId);
+        // this.findSourceInMap(typeId);
         this.findLayerInMap(typeId);
       });
       this.loadProviderTypeImage(typeImages);
@@ -93,40 +93,34 @@ class Map extends Component {
     }
   };
 
-  setSourceFeatures = (typeId, features) => {
-    let { providerTypes } = this.props;
-    if (providerTypes.visible.includes(typeId) || typeId == "highlightedProviders") {
-      this.findSourceInMap(typeId);
-        this.map.getSource(typeId).setData({
-        type: "FeatureCollection",
-        features: features
-      });
-    }
+  setSourceFeatures = features => {
+    this.setSingleSourceInMap(); // checks source exists, adds if not
+    this.map.getSource("displayData").setData({
+      type: "FeatureCollection",
+      features: features
+    });
   };
 
-  findLayerInMap = (typeId) => {
-    // const { providersList } = this.props;
-    // // const providerTypesById = _.keyBy(providersList, "typeId");
+  findLayerInMap = typeId => {
     if (!this.map.getLayer(typeId)) {
       this.map.addLayer({
         id: typeId,
-        source: typeId,
+        source: "displayData",
         type: "symbol",
         layout: {
           "icon-image": typeId + "icon",
           "icon-size": 0.4,
           visibility: "visible"
-        }
+        },
+        filter: ["==", "typeId", typeId]
       });
       this.addClickHandlerToMapIdLayer(typeId);
     }
   };
 
-  findSourceInMap = (typeId) => {
-    // const { providersList } = this.props;
-    // const providerTypesById = _.keyBy(providersList, "typeId");
-    if (!this.map.getSource(typeId)) {
-      this.map.addSource(typeId, {
+  setSingleSourceInMap = () => {
+    if (!this.map.getSource("displayData")) {
+      this.map.addSource("displayData", {
         type: "geojson",
         data: {
           type: "FeatureCollection",
@@ -174,22 +168,19 @@ class Map extends Component {
     });
   };
 
-  geoJSONFeatures = typeId => {
-    let { providerTypes, highlightedProviders, providers } = this.props;
-    if (!providerTypes.visible.includes(typeId) && typeId != "highlightedProviders") {
-      return [];
-    }
-    let selectProviders; 
-    if (typeId == "highlightedProviders"){
-      selectProviders = highlightedProviders.map(id => providers.byId[id])
-    }
-    if (providerTypes.allIds.includes(typeId)){
-      selectProviders = providerTypes.byId[typeId].providers.map(id => providers.byId[id])
-    }
-    const features = convertProvidersToGeoJSON(selectProviders);
-    return features
+  geoJSONFeatures = () => {
+    let { providersList } = this.props;
+
+    const forGeoConvert = providersList.map(service => {
+      return service.providers.map(provider => {
+        provider["typeId"] = service.id; 
+        return provider; 
+      });
+    });
+    const flattenProviderInfo = _.flatMap(forGeoConvert, entry => entry);
+    const features = convertProvidersToGeoJSON(flattenProviderInfo);
+    return features;
   };
-  
 
   addDistanceIndicator = () => {
     //TODO: make this input from the distance filter
@@ -257,16 +248,13 @@ class Map extends Component {
     }
   };
 
-
   componentDidUpdate(prevProps) {
-    const { providerTypes } = this.props;
-    const allSymbolLayers = [...providerTypes.allIds, "highlightedProviders"];
-    allSymbolLayers.forEach(typeId => {
-      this.findSourceInMap(typeId);
-      const features = this.geoJSONFeatures(typeId);
-      this.setSourceFeatures(typeId, features);
-      this.findLayerInMap(typeId);
-    });
+    const { providersList } = this.props;
+    this.setSingleSourceInMap();
+    const providerTypesById = _.keyBy(providersList, "id");
+    const features = this.geoJSONFeatures(providerTypesById);
+    this.setSourceFeatures(features);
+    this.props.providerTypes.allIds.map(typeId => this.findLayerInMap(typeId));
   }
 
   componentWillUnmount() {
