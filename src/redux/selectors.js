@@ -1,7 +1,6 @@
 import { distance, point } from "@turf/turf";
 import { createSelector } from "reselect";
 
-const getProviderTypesIds = state => state.providerTypes.allIds;
 const getProviderTypesById = state => state.providerTypes.byId;
 const getVisibleProviderTypes = state => state.providerTypes.visible;
 const getProvidersById = state => state.providers.byId;

@@ -13,7 +13,6 @@ import {
   markerStyle,
   normalizeProviders,
   removeDistanceMarkers,
-  scrollToCard
 } from "./utilities.js";
 
 mapboxgl.accessToken =
@@ -28,7 +27,7 @@ class Map extends Component {
 
   componentDidMount() {
     const { mapCenter, coordinates } = this.props.search;
-    const { providerTypes, setMapObject, initializeProviders, displayProviderInformation } = this.props;
+    const { providerTypes, initializeProviders } = this.props;
     const map = new mapboxgl.Map({
       container: "map", // container id
       style: "mapbox://styles/refugeeswelcome/cjh9k11zz15ds2spbs4ld6y9o", // stylesheet location

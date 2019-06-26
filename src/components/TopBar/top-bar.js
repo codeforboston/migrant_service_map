@@ -19,7 +19,6 @@ class TopBar extends Component {
 
   render() {
     const {
-      changeDistanceFilter,
       changeVisaFilter,
       providerTypes,
       toggleProviderVisibility,
