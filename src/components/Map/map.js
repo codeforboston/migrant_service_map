@@ -227,8 +227,6 @@ class Map extends Component {
   };
 
   addDistanceFilterLayer = distanceFilterDistances => {
-    removeDistanceMarkers();
-    this.findSourceInMap("distance-indicator-source");
     removeDistanceMarkers(this.markerList);
     if(!this.map.getSource("distance-indicator-source")){
       this.map.addSource("distance-indicator-source", {
