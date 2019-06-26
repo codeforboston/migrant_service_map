@@ -155,6 +155,7 @@ class Map extends Component {
         }
       });
       this.addClickHandlerToMapIdLayer(typeId);
+      this.addClusterClickHandlerToMapLayer(typeId);
     }
   };
 
@@ -182,6 +183,25 @@ class Map extends Component {
         this.map.addImage(`${typeImage.type}icon`, image);
       })
     );
+  };
+
+    addClusterClickHandlerToMapLayer = typeId => {
+      let clusterSelected = typeId+"-cluster";
+      this.map.on('click', clusterSelected, function (e) {
+          let mapView = this;
+          let features = mapView.queryRenderedFeatures(e.point, { layers: [ clusterSelected ] });
+
+          let clusterId = features[0].properties.cluster_id;
+          this.getSource(typeId).getClusterExpansionZoom(clusterId, function (err, zoom) {
+              if (err)
+                  return;
+
+              mapView.easeTo({
+                             center: features[0].geometry.coordinates,
+                             zoom: zoom
+                         });
+          });
+      });
   };
 
   addClickHandlerToMapIdLayer = typeId => {
