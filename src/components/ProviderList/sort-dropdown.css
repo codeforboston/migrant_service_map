@@ -17,6 +17,9 @@
     flex: 1 1 auto;
     margin-right: 1rem;
 }
+.sort-container .expandable-container .expanded {
+  transition: all 0.1s ease-out;
+}
 .side-menu .expandable-container .expanded-content {
     padding: 0;
     position: absolute;
