@@ -201,7 +201,6 @@ class Map extends Component {
                          });
           });
       });
-      // this.modifyClusterPointer();
   };
 
   addClickHandlerToMapIdLayer = typeId => {
