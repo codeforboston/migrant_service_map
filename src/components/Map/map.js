@@ -13,7 +13,7 @@ import {
   markerStyle,
   normalizeProviders,
   removeDistanceMarkers,
-  scrollToCard,
+  scrollToCard
 } from "./utilities.js";
 
 mapboxgl.accessToken =
@@ -23,6 +23,7 @@ class Map extends Component {
   constructor(props) {
     super(props);
     this.map = null;
+    this.markerList = []; //need to keep track of marker handles ourselves -- cannot be queried from map
   }
 
   componentDidMount() {
@@ -35,7 +36,7 @@ class Map extends Component {
       zoom: 11 // starting zoom
     });
     // setMapObject(map);
-
+    map.addControl(new mapboxgl.NavigationControl());
     map.on("load", () => {
       this.removeLayersFromOldDataSet();
       const providerFeatures = map.querySourceFeatures("composite", {
@@ -46,7 +47,7 @@ class Map extends Component {
 
       const allSymbolLayers = [...providerTypes.allIds, "highlightedProviders"];
       allSymbolLayers.forEach(typeId => {
-        this.findSourceInMap(typeId);
+        // this.findSourceInMap(typeId);
         this.findLayerInMap(typeId);
       });
       this.loadProviderTypeImage(typeImages);
@@ -75,13 +76,11 @@ class Map extends Component {
       let { geometry, id, text } = ev.result;
       this.props.setSearchCenterCoordinates(geometry.coordinates, id, text);
       this.addDistanceIndicator();
-      this.togglePinMarker(true);
     });
 
     geocoder.on("clear", ev => {
       let center = [-71.066954, 42.359947];
       this.removeReferenceLocation(this.map);
-      this.togglePinMarker(false);
       this.props.setSearchCenterCoordinates(center, 1, "");
     });
   }
@@ -93,40 +92,34 @@ class Map extends Component {
     }
   };
 
-  setSourceFeatures = (typeId, features) => {
-    let { providerTypes } = this.props;
-    if (providerTypes.visible.includes(typeId) || typeId == "highlightedProviders") {
-      this.findSourceInMap(typeId);
-        this.map.getSource(typeId).setData({
-        type: "FeatureCollection",
-        features: features
-      });
-    }
+  setSourceFeatures = features => {
+    this.setSingleSourceInMap(); // checks source exists, adds if not
+    this.map.getSource("displayData").setData({
+      type: "FeatureCollection",
+      features: features
+    });
   };
 
-  findLayerInMap = (typeId) => {
-    // const { providersList } = this.props;
-    // // const providerTypesById = _.keyBy(providersList, "typeId");
+  findLayerInMap = typeId => {
     if (!this.map.getLayer(typeId)) {
       this.map.addLayer({
         id: typeId,
-        source: typeId,
+        source: "displayData",
         type: "symbol",
         layout: {
           "icon-image": typeId + "icon",
           "icon-size": 0.4,
           visibility: "visible"
-        }
+        },
+        filter: ["==", "typeId", typeId]
       });
       this.addClickHandlerToMapIdLayer(typeId);
     }
   };
 
-  findSourceInMap = (typeId) => {
-    // const { providersList } = this.props;
-    // const providerTypesById = _.keyBy(providersList, "typeId");
-    if (!this.map.getSource(typeId)) {
-      this.map.addSource(typeId, {
+  setSingleSourceInMap = () => {
+    if (!this.map.getSource("displayData")) {
+      this.map.addSource("displayData", {
         type: "geojson",
         data: {
           type: "FeatureCollection",
@@ -174,34 +167,32 @@ class Map extends Component {
     });
   };
 
-  geoJSONFeatures = typeId => {
-    let { providerTypes, highlightedProviders, providers } = this.props;
-    if (!providerTypes.visible.includes(typeId) && typeId != "highlightedProviders") {
-      return [];
-    }
-    let selectProviders; 
-    if (typeId == "highlightedProviders"){
-      selectProviders = highlightedProviders.map(id => providers.byId[id])
-    }
-    if (providerTypes.allIds.includes(typeId)){
-      selectProviders = providerTypes.byId[typeId].providers.map(id => providers.byId[id])
-    }
-    const features = convertProvidersToGeoJSON(selectProviders);
-    return features
+  geoJSONFeatures = () => {
+    let { providersList } = this.props;
+
+    const forGeoConvert = providersList.map(service => {
+      return service.providers.map(provider => {
+        return provider;
+      });
+    });
+    const flattenProviderInfo = _.flatMap(forGeoConvert, entry => entry);
+    return convertProvidersToGeoJSON(flattenProviderInfo);
   };
-  
+
+ 
 
   addDistanceIndicator = () => {
     //TODO: make this input from the distance filter
     const distanceFilterDistances = distances;
     const { color, options } = markerStyle;
     const { search } = this.props;
-    removeDistanceMarkers();
+    removeDistanceMarkers(this.markerList);
     this.addDistanceFilterLayer(distanceFilterDistances, this.map);
 
     const centerMarker = createCenterMarker();
 
     const mapPin = new mapboxgl.Marker({ centerMarker });
+    this.markerList.push(mapPin); 
     mapPin.setLngLat(search.coordinates);
 
     const circles = distanceFilterDistances.map((radius, i) =>
@@ -214,6 +205,7 @@ class Map extends Component {
       const radiusOffset = transformTranslate(point(search.coordinates), radius, 90, { units: "miles" });
       const distanceMarker = createDistanceMarker((radius, color[i]));
       const marker = new mapboxgl.Marker({ distanceMarker });
+      this.markerList.push(marker); 
       return marker.setLngLat(radiusOffset.geometry.coordinates);
     });
 
@@ -222,13 +214,9 @@ class Map extends Component {
     this.map.getSource("distance-indicator-source").setData({ type: "FeatureCollection", features: circles });
   };
 
-  togglePinMarker = show => {
-    // mapPin.style.visibility = show ? '' : 'hidden';
-  };
 
   removeReferenceLocation = map => {
-    removeDistanceMarkers();
-    this.togglePinMarker(false);
+    removeDistanceMarkers(this.markerList);
     map.removeLayer("distance-indicator");
     map.removeSource("distance-indicator-source");
 
@@ -239,9 +227,16 @@ class Map extends Component {
   };
 
   addDistanceFilterLayer = distanceFilterDistances => {
-    console.log("add distance filter layer");
-    removeDistanceMarkers();
-    this.findSourceInMap("distance-indicator-source");
+    removeDistanceMarkers(this.markerList);
+    if(!this.map.getSource("distance-indicator-source")){
+      this.map.addSource("distance-indicator-source", {
+        type: "geojson",
+        data: {
+          type: "FeatureCollection",
+          features: []
+        }
+      });
+    }
     if (!this.map.getLayer("distance-indicator")) {
       this.map.addLayer({
         id: "distance-indicator",
@@ -257,16 +252,13 @@ class Map extends Component {
     }
   };
 
-
   componentDidUpdate(prevProps) {
-    const { providerTypes } = this.props;
-    const allSymbolLayers = [...providerTypes.allIds, "highlightedProviders"];
-    allSymbolLayers.forEach(typeId => {
-      this.findSourceInMap(typeId);
-      const features = this.geoJSONFeatures(typeId);
-      this.setSourceFeatures(typeId, features);
-      this.findLayerInMap(typeId);
-    });
+    const { providersList } = this.props;
+    this.setSingleSourceInMap();
+    const providerTypesById = _.keyBy(providersList, "id");
+    const features = this.geoJSONFeatures(providerTypesById);
+    this.setSourceFeatures(features);
+    this.props.providerTypes.allIds.map(typeId => this.findLayerInMap(typeId));
   }
 
   componentWillUnmount() {

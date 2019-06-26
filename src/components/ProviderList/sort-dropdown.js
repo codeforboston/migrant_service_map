@@ -20,7 +20,7 @@ const SortDropdown = ({
             <input
                 id={option}
                 type="radio"
-                name={group}
+                name={option}
                 value={option}
                 checked={option === incomingState}
                 onChange={() => {}}

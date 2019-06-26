@@ -16,7 +16,7 @@ class DistanceFilter extends Component {
               <div>
                 <input
                   type="radio"
-                  name="distance"
+                  name={el}
                   id={el}
                   value={el}
                   onChange={() => {
