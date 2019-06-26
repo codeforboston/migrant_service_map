@@ -1,2 +1,8 @@
 {
+  "files.exclude": {
+    "**/.react-playground": true,
+    "**/.vscode": true,
+    "**/.env": true,
+    "**/.sonarlint": true
+  }
 }
