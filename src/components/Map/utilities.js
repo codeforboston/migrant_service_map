@@ -109,6 +109,7 @@ const normalizeProviders = providerFeatures => {
       timestamp: properties.Timestamp,
       // Type of Service
       typeName: properties["Type of Service"], // synonym for next line
+      typeId: formattedTypeId,
       "Type of Service": properties["Type of Service"], // as referenced in reducer helper function
       // Validated By
       website: properties.Website

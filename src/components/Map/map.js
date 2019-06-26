@@ -173,13 +173,11 @@ class Map extends Component {
 
     const forGeoConvert = providersList.map(service => {
       return service.providers.map(provider => {
-        provider["typeId"] = service.id; 
-        return provider; 
+        return provider;
       });
     });
     const flattenProviderInfo = _.flatMap(forGeoConvert, entry => entry);
-    const features = convertProvidersToGeoJSON(flattenProviderInfo);
-    return features;
+    return convertProvidersToGeoJSON(flattenProviderInfo);
   };
 
   addDistanceIndicator = () => {
@@ -230,7 +228,6 @@ class Map extends Component {
   };
 
   addDistanceFilterLayer = distanceFilterDistances => {
-    console.log("add distance filter layer");
     removeDistanceMarkers();
     this.findSourceInMap("distance-indicator-source");
     if (!this.map.getLayer("distance-indicator")) {
