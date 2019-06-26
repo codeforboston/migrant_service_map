@@ -127,7 +127,7 @@ class Map extends Component {
         layout: {
           "icon-image": typeId + "icon",
           "icon-size": 0.3,
-          visibility: "visible",
+          "visibility": "visible",
           "icon-allow-overlap": true,
           "icon-ignore-placement": true
         }
@@ -145,7 +145,8 @@ class Map extends Component {
           "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
           "text-size": 36,
           "icon-allow-overlap": true,
-          "icon-ignore-placement": true
+          "icon-ignore-placement": true,
+          'visibility': 'visible'
         },
         paint: {
           "text-color": "black",
@@ -168,7 +169,7 @@ class Map extends Component {
           features: []
         },
         cluster: true,
-        clusterMaxZoom: 40, // Max zoom to cluster points on
+        clusterMaxZoom: 80, // Max zoom to cluster points on
         clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
       });
     }
