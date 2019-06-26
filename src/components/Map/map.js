@@ -126,8 +126,10 @@ class Map extends Component {
         filter: ["!", ["has", "point_count"]],
         layout: {
           "icon-image": typeId + "icon",
-          "icon-size": 0.4,
-          visibility: "visible"
+          "icon-size": 0.3,
+          visibility: "visible",
+          "icon-allow-overlap": true,
+          "icon-ignore-placement": true
         }
       });
       //Adding in cluster functionality
@@ -138,10 +140,17 @@ class Map extends Component {
         filter: ["has", "point_count"],
         layout: {
           "icon-image": typeId + "icon",
-          "icon-size": 0.8,
+          "icon-size": 0.4,
           "text-field": "{point_count_abbreviated}",
           "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-          "text-size": 18
+          "text-size": 36,
+          "icon-allow-overlap": true,
+          "icon-ignore-placement": true
+        },
+        paint: {
+          "text-color": "black",
+          "text-halo-color": "#ffffff",
+          "text-halo-width": 2
         }
       });
       this.addClickHandlerToMapIdLayer(typeId);
@@ -159,8 +168,8 @@ class Map extends Component {
           features: []
         },
         cluster: true,
-        clusterMaxZoom: 100, // Max zoom to cluster points on
-        clusterRadius: 100 // Radius of each cluster when clustering points (defaults to 50)
+        clusterMaxZoom: 40, // Max zoom to cluster points on
+        clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
       });
     }
   };
