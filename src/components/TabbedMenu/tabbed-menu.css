@@ -31,7 +31,7 @@
 /* .panels */
 .side-menu > div {
   margin-top: -10px; /* counter react-tabs styling */
-  padding: 4px 16px;
+  padding-bottom: 4px;
   height: 60vh;
   min-height: 500px;
   background-color: white;

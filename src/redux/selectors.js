@@ -60,7 +60,6 @@ export const getProvidersSorted = createSelector(
       (result, type) => result.concat(type.providers),
       [] // result needs to be initialized to empty array
     );
-    // console.log(flatList)
     switch (sortMethod) {
       case "Distance":
       return [
