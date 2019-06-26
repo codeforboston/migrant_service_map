@@ -61,9 +61,9 @@ const markerStyle = {
   options: { steps: 100, units: "miles" }
 };
 
-const removeDistanceMarkers = () => {
-  const distanceMarkers = Array.from(document.getElementsByClassName("distanceMarker"));
-  return distanceMarkers.map(marker => marker.remove());
+const removeDistanceMarkers = (markerArray) => {
+  // const distanceMarkers = Array.from(document.getElementsByClassName("distanceMarker"));
+  return markerArray.map(marker => marker.remove());
 };
 
 const normalizeProviders = providerFeatures => {

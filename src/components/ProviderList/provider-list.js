@@ -31,7 +31,7 @@ class ProviderList extends Component {
               incomingState={incomingState}
             />
             {providersList.map(providerType => (
-              <ul key={providerType.id}>
+              <ul key={providerType.id} className="providers-list">
                 {!!providerType.providers.length && ( //if there is not providers MenuDropdown is not shown
                   <MenuDropdown
                     key={providerType.id}

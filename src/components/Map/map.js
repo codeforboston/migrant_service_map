@@ -23,6 +23,7 @@ class Map extends Component {
   constructor(props) {
     super(props);
     this.map = null;
+    this.markerList = []; //need to keep track of marker handles ourselves -- cannot be queried from map
   }
 
   componentDidMount() {
@@ -35,7 +36,7 @@ class Map extends Component {
       zoom: 11 // starting zoom
     });
     // setMapObject(map);
-
+    map.addControl(new mapboxgl.NavigationControl());
     map.on("load", () => {
       this.removeLayersFromOldDataSet();
       const providerFeatures = map.querySourceFeatures("composite", {
@@ -75,13 +76,11 @@ class Map extends Component {
       let { geometry, id, text } = ev.result;
       this.props.setSearchCenterCoordinates(geometry.coordinates, id, text);
       this.addDistanceIndicator();
-      this.togglePinMarker(true);
     });
 
     geocoder.on("clear", ev => {
       let center = [-71.066954, 42.359947];
       this.removeReferenceLocation(this.map);
-      this.togglePinMarker(false);
       this.props.setSearchCenterCoordinates(center, 1, "");
     });
   }
@@ -180,17 +179,20 @@ class Map extends Component {
     return convertProvidersToGeoJSON(flattenProviderInfo);
   };
 
+ 
+
   addDistanceIndicator = () => {
     //TODO: make this input from the distance filter
     const distanceFilterDistances = distances;
     const { color, options } = markerStyle;
     const { search } = this.props;
-    removeDistanceMarkers();
+    removeDistanceMarkers(this.markerList);
     this.addDistanceFilterLayer(distanceFilterDistances, this.map);
 
     const centerMarker = createCenterMarker();
 
     const mapPin = new mapboxgl.Marker({ centerMarker });
+    this.markerList.push(mapPin); 
     mapPin.setLngLat(search.coordinates);
 
     const circles = distanceFilterDistances.map((radius, i) =>
@@ -203,6 +205,7 @@ class Map extends Component {
       const radiusOffset = transformTranslate(point(search.coordinates), radius, 90, { units: "miles" });
       const distanceMarker = createDistanceMarker((radius, color[i]));
       const marker = new mapboxgl.Marker({ distanceMarker });
+      this.markerList.push(marker); 
       return marker.setLngLat(radiusOffset.geometry.coordinates);
     });
 
@@ -211,13 +214,9 @@ class Map extends Component {
     this.map.getSource("distance-indicator-source").setData({ type: "FeatureCollection", features: circles });
   };
 
-  togglePinMarker = show => {
-    // mapPin.style.visibility = show ? '' : 'hidden';
-  };
 
   removeReferenceLocation = map => {
-    removeDistanceMarkers();
-    this.togglePinMarker(false);
+    removeDistanceMarkers(this.markerList);
     map.removeLayer("distance-indicator");
     map.removeSource("distance-indicator-source");
 
@@ -230,6 +229,16 @@ class Map extends Component {
   addDistanceFilterLayer = distanceFilterDistances => {
     removeDistanceMarkers();
     this.findSourceInMap("distance-indicator-source");
+    removeDistanceMarkers(this.markerList);
+    if(!this.map.getSource("distance-indicator-source")){
+      this.map.addSource("distance-indicator-source", {
+        type: "geojson",
+        data: {
+          type: "FeatureCollection",
+          features: []
+        }
+      });
+    }
     if (!this.map.getLayer("distance-indicator")) {
       this.map.addLayer({
         id: "distance-indicator",
