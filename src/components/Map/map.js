@@ -60,10 +60,28 @@ class Map extends Component {
       latitude: coordinates[1]
     };
 
+    let forwardGeocoder = (query) => {
+      let { providers } = this.props;
+      var matchingFeatures = [];
+      const geoJSONProviders = this.geoJSONFeatures(providers.byId);
+      for (var i = 0; i < geoJSONProviders.length; i++) {
+      var feature = geoJSONProviders[i];
+      if (feature.properties.name.toLowerCase().search(query.toLowerCase()) !== -1) {
+      feature['place_name'] = feature.properties.name;
+      feature['center'] = feature.geometry.coordinates;
+      feature['place_type'] = ['typeId'];
+      matchingFeatures.push(feature);
+      }
+      }
+      return matchingFeatures;
+      }
     const geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
       proximity: coordinateObject,
-      placeholder: "Location"
+      placeholder: "Location",
+      localGeocoder: forwardGeocoder,
+      localGeocoderOnly: false, 
+      limit: 10, 
     });
 
     const searchBox = geocoder.onAdd(map);
@@ -166,14 +184,18 @@ class Map extends Component {
     });
   };
 
-  geoJSONFeatures = () => {
-    let { providersList } = this.props;
-
-    const forGeoConvert = providersList.map(service => {
+  geoJSONFeatures = (list) => {
+    let forGeoConvert = []; 
+    if(list.incomingState == "Provider Type"){
+    forGeoConvert = list.map(service => {
       return service.providers.map(provider => {
         return provider;
       });
     });
+  } else {
+    forGeoConvert = list; 
+  }
+
     const flattenProviderInfo = _.flatMap(forGeoConvert, entry => entry);
     return convertProvidersToGeoJSON(flattenProviderInfo);
   };
@@ -255,7 +277,7 @@ class Map extends Component {
     const { providersList } = this.props;
     this.setSingleSourceInMap();
     const providerTypesById = _.keyBy(providersList, "id");
-    const features = this.geoJSONFeatures(providerTypesById);
+    const features = this.geoJSONFeatures(providersList);
     this.setSourceFeatures(features);
     this.props.providerTypes.allIds.map(typeId => this.findLayerInMap(typeId));
   }
