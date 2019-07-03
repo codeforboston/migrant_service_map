@@ -107,8 +107,11 @@ class Map extends Component {
         type: "symbol",
         layout: {
           "icon-image": typeId + "icon",
-          "icon-size": 0.4,
-          visibility: "visible"
+          "icon-size": 0.3,
+          "icon-allow-overlap": true, 
+          "icon-ignore-placement": true,
+          visibility: "visible",
+      
         },
         filter: ["==", "typeId", typeId]
       });
@@ -140,8 +143,9 @@ class Map extends Component {
   addClickHandlerToMapIdLayer = typeId => {
     let { displayProviderInformation, highlightedProviders } = this.props;
     this.map.on("click", typeId, e => {
-      if (typeId !== "highlightedProviders") {
-        const offsetTop = document.getElementById(`provider-${e.features[0].properties.id}`).offsetTop;
+      const providerElement = document.getElementById(`provider-${e.features[0].properties.id}`);
+      if (typeId !== "highlightedProviders" && providerElement) {
+        const offsetTop = providerElement.offsetTop;
         const cardOffset = 50;
 
         const panel = document.getElementsByClassName("panels")[0];
@@ -167,15 +171,17 @@ class Map extends Component {
   };
 
   geoJSONFeatures = () => {
-    let { providersList } = this.props;
+    let { providers, providersList, highlightedProviders } = this.props;
 
-    const forGeoConvert = providersList.map(service => {
-      return service.providers.map(provider => {
-        return provider;
-      });
-    });
-    const flattenProviderInfo = _.flatMap(forGeoConvert, entry => entry);
-    return convertProvidersToGeoJSON(flattenProviderInfo);
+    const highlightedProvidersList = highlightedProviders.map(hp => {
+      const providerObject = providers.byId[hp]; 
+      providerObject['typeId'] = "highlightedProviders"; 
+      providerObject['typeName'] = "highlightedProviders"; 
+      return providerObject;
+    })
+    const flattenProviderInfo = _.flatMap(providersList, entry => entry.providers);
+    const forGeoConvert = flattenProviderInfo.concat(highlightedProvidersList);
+    return convertProvidersToGeoJSON(forGeoConvert);
   };
 
  
@@ -255,9 +261,11 @@ class Map extends Component {
     const { providersList } = this.props;
     this.setSingleSourceInMap();
     const providerTypesById = _.keyBy(providersList, "id");
-    const features = this.geoJSONFeatures(providerTypesById);
+    const features = this.geoJSONFeatures();
     this.setSourceFeatures(features);
     this.props.providerTypes.allIds.map(typeId => this.findLayerInMap(typeId));
+    this.findLayerInMap("highlightedProviders");
+    
   }
 
   componentWillUnmount() {
