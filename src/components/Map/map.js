@@ -12,7 +12,7 @@ import {
   createDistanceMarker,
   markerStyle,
   normalizeProviders,
-  removeDistanceMarkers,
+  removeDistanceMarkers
 } from "./utilities.js";
 
 mapboxgl.accessToken =
@@ -108,10 +108,9 @@ class Map extends Component {
         layout: {
           "icon-image": typeId + "icon",
           "icon-size": 0.3,
-          "icon-allow-overlap": true, 
+          "icon-allow-overlap": true,
           "icon-ignore-placement": true,
-          visibility: "visible",
-      
+          visibility: "visible"
         },
         filter: ["==", "typeId", typeId]
       });
@@ -143,7 +142,9 @@ class Map extends Component {
   addClickHandlerToMapIdLayer = typeId => {
     let { displayProviderInformation, highlightedProviders } = this.props;
     this.map.on("click", typeId, e => {
-      const providerElement = document.getElementById(`provider-${e.features[0].properties.id}`);
+      const providerElement = document.getElementById(
+        `provider-${e.features[0].properties.id}`
+      );
       if (typeId !== "highlightedProviders" && providerElement) {
         const offsetTop = providerElement.offsetTop;
         const cardOffset = 50;
@@ -174,17 +175,18 @@ class Map extends Component {
     let { providers, providersList, highlightedProviders } = this.props;
 
     const highlightedProvidersList = highlightedProviders.map(hp => {
-      const providerObject = providers.byId[hp]; 
-      providerObject['typeId'] = "highlightedProviders"; 
-      providerObject['typeName'] = "highlightedProviders"; 
+      const providerObject = providers.byId[hp];
+      providerObject["typeId"] = "highlightedProviders";
+      providerObject["typeName"] = "highlightedProviders";
       return providerObject;
-    })
-    const flattenProviderInfo = _.flatMap(providersList, entry => entry.providers);
+    });
+    const flattenProviderInfo = _.flatMap(
+      providersList,
+      entry => entry.providers
+    );
     const forGeoConvert = flattenProviderInfo.concat(highlightedProvidersList);
     return convertProvidersToGeoJSON(forGeoConvert);
   };
-
- 
 
   addDistanceIndicator = () => {
     //TODO: make this input from the distance filter
@@ -197,7 +199,7 @@ class Map extends Component {
     const centerMarker = createCenterMarker();
 
     const mapPin = new mapboxgl.Marker({ centerMarker });
-    this.markerList.push(mapPin); 
+    this.markerList.push(mapPin);
     mapPin.setLngLat(search.coordinates);
 
     const circles = distanceFilterDistances.map((radius, i) =>
@@ -207,18 +209,24 @@ class Map extends Component {
       })
     );
     const labels = distanceFilterDistances.map((radius, i) => {
-      const radiusOffset = transformTranslate(point(search.coordinates), radius, 90, { units: "miles" });
+      const radiusOffset = transformTranslate(
+        point(search.coordinates),
+        radius,
+        90,
+        { units: "miles" }
+      );
       const distanceMarker = createDistanceMarker((radius, color[i]));
       const marker = new mapboxgl.Marker({ distanceMarker });
-      this.markerList.push(marker); 
+      this.markerList.push(marker);
       return marker.setLngLat(radiusOffset.geometry.coordinates);
     });
 
     labels.map(label => label.addTo(this.map));
     mapPin.addTo(this.map);
-    this.map.getSource("distance-indicator-source").setData({ type: "FeatureCollection", features: circles });
+    this.map
+      .getSource("distance-indicator-source")
+      .setData({ type: "FeatureCollection", features: circles });
   };
-
 
   removeReferenceLocation = map => {
     removeDistanceMarkers(this.markerList);
@@ -233,7 +241,7 @@ class Map extends Component {
 
   addDistanceFilterLayer = distanceFilterDistances => {
     removeDistanceMarkers(this.markerList);
-    if(!this.map.getSource("distance-indicator-source")){
+    if (!this.map.getSource("distance-indicator-source")) {
       this.map.addSource("distance-indicator-source", {
         type: "geojson",
         data: {
@@ -265,7 +273,6 @@ class Map extends Component {
     this.setSourceFeatures(features);
     this.props.providerTypes.allIds.map(typeId => this.findLayerInMap(typeId));
     this.findLayerInMap("highlightedProviders");
-    
   }
 
   componentWillUnmount() {

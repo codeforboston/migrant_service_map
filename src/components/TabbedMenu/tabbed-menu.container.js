@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { selectTab } from "../../redux/actions";
-import TabbedMenu from './tabbed-menu';
+import TabbedMenu from "./tabbed-menu";
 
 const TabbedMenuContainer = props => {
   return <TabbedMenu {...props} />;
@@ -18,7 +18,7 @@ const dispatchToProps = dispatch => {
     selectTab: index => {
       dispatch(selectTab(index));
     }
-  }
+  };
 };
 
 export default connect(

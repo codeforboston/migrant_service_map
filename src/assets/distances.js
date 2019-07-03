@@ -3,4 +3,4 @@
 // the app
 const distances = [0.5, 1, 1.5];
 
-export default distances
+export default distances;
