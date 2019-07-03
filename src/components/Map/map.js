@@ -125,8 +125,11 @@ class Map extends Component {
         type: "symbol",
         layout: {
           "icon-image": typeId + "icon",
-          "icon-size": 0.4,
-          visibility: "visible"
+          "icon-size": 0.3,
+          "icon-allow-overlap": true, 
+          "icon-ignore-placement": true,
+          visibility: "visible",
+      
         },
         filter: ["==", "typeId", typeId]
       });
@@ -158,8 +161,9 @@ class Map extends Component {
   addClickHandlerToMapIdLayer = typeId => {
     let { displayProviderInformation, highlightedProviders } = this.props;
     this.map.on("click", typeId, e => {
-      if (typeId !== "highlightedProviders") {
-        const offsetTop = document.getElementById(`provider-${e.features[0].properties.id}`).offsetTop;
+      const providerElement = document.getElementById(`provider-${e.features[0].properties.id}`);
+      if (typeId !== "highlightedProviders" && providerElement) {
+        const offsetTop = providerElement.offsetTop;
         const cardOffset = 50;
 
         const panel = document.getElementsByClassName("panels")[0];
@@ -198,6 +202,7 @@ class Map extends Component {
 
     const flattenProviderInfo = _.flatMap(forGeoConvert, entry => entry);
     return convertProvidersToGeoJSON(flattenProviderInfo);
+
   };
 
  
@@ -280,6 +285,8 @@ class Map extends Component {
     const features = this.geoJSONFeatures(providersList);
     this.setSourceFeatures(features);
     this.props.providerTypes.allIds.map(typeId => this.findLayerInMap(typeId));
+    this.findLayerInMap("highlightedProviders");
+    
   }
 
   componentWillUnmount() {
