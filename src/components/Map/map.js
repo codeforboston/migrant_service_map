@@ -140,8 +140,9 @@ class Map extends Component {
   addClickHandlerToMapIdLayer = typeId => {
     let { displayProviderInformation, highlightedProviders } = this.props;
     this.map.on("click", typeId, e => {
-      if (typeId !== "highlightedProviders") {
-        const offsetTop = document.getElementById(`provider-${e.features[0].properties.id}`).offsetTop;
+      const providerElement = document.getElementById(`provider-${e.features[0].properties.id}`);
+      if (typeId !== "highlightedProviders" && providerElement) {
+        const offsetTop = providerElement.offsetTop;
         const cardOffset = 50;
 
         const panel = document.getElementsByClassName("panels")[0];
