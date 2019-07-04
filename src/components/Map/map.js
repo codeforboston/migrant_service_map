@@ -74,7 +74,6 @@ class Map extends Component {
       // ev.result contains id, place_name, text
       let { geometry, id, text } = ev.result;
       this.props.setSearchCenterCoordinates(geometry.coordinates, id, text);
-      this.addDistanceIndicator();
     });
 
     geocoder.on("clear", ev => {
@@ -179,13 +178,23 @@ class Map extends Component {
     return convertProvidersToGeoJSON(flattenProviderInfo);
   };
 
- 
-
-  addDistanceIndicator = () => {
-    //TODO: make this input from the distance filter
-    const distanceFilterDistances = distances;
+  updatePinAndDistanceIndicator = (prevProps) => {
+    const distance = this.props.filters.distance;
+    const searchCoordinates = this.props.search.coordinates;
+    if (!distance && this.props.search.currentLocation == "default") {
+      // The map is at its initial position without a distance filter, so don't
+      // render a pin.
+      return;
+    } 
+    if (distance == prevProps.filters.distance && searchCoordinates == prevProps.search.coordinates) {
+      // The props that are used to render the pin and distance indicator have
+      // not changed.
+      return;
+    }
+    // TODO: Why did this code use an array for distances and colors if we have
+    // a distance filter? Did the filter come after this?
+    const distanceFilterDistances = distance ? [distance] : [];
     const { color, options } = markerStyle;
-    const { search } = this.props;
     removeDistanceMarkers(this.markerList);
     this.addDistanceFilterLayer(distanceFilterDistances, this.map);
 
@@ -193,23 +202,15 @@ class Map extends Component {
 
     const mapPin = new mapboxgl.Marker({ centerMarker });
     this.markerList.push(mapPin); 
-    mapPin.setLngLat(search.coordinates);
+    mapPin.setLngLat(searchCoordinates);
 
     const circles = distanceFilterDistances.map((radius, i) =>
-      circle(search.coordinates, radius, {
+      circle(searchCoordinates, radius, {
         ...options,
         properties: { color: color[i], "stroke-width": radius }
       })
     );
-    const labels = distanceFilterDistances.map((radius, i) => {
-      const radiusOffset = transformTranslate(point(search.coordinates), radius, 90, { units: "miles" });
-      const distanceMarker = createDistanceMarker((radius, color[i]));
-      const marker = new mapboxgl.Marker({ distanceMarker });
-      this.markerList.push(marker); 
-      return marker.setLngLat(radiusOffset.geometry.coordinates);
-    });
 
-    labels.map(label => label.addTo(this.map));
     mapPin.addTo(this.map);
     this.map.getSource("distance-indicator-source").setData({ type: "FeatureCollection", features: circles });
   };
@@ -259,6 +260,7 @@ class Map extends Component {
     const features = this.geoJSONFeatures(providerTypesById);
     this.setSourceFeatures(features);
     this.props.providerTypes.allIds.map(typeId => this.findLayerInMap(typeId));
+    this.updatePinAndDistanceIndicator(prevProps);
   }
 
   componentWillUnmount() {
