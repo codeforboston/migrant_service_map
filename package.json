@@ -10,6 +10,7 @@
     "@turf/turf": "^5.1.6",
     "classnames": "^2.2.6",
     "dot-prop-immutable": "^1.5.0",
+    "lodash": "^4.17.11",
     "mapbox": "^1.0.0-beta10",
     "mapbox-gl": "^0.51.0",
     "npm": "^6.9.0",

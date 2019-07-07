@@ -177,7 +177,6 @@ class Map extends Component {
     const highlightedProvidersList = highlightedProviders.map(hp => {
       const providerObject = providers.byId[hp];
       providerObject["typeId"] = "highlightedProviders";
-      providerObject["typeName"] = "highlightedProviders";
       return providerObject;
     });
     const flattenProviderInfo = _.flatMap(
