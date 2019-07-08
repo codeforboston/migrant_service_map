@@ -111,10 +111,13 @@ class Map extends Component {
           "icon-size": 0.3,
           "icon-allow-overlap": true,
           "icon-ignore-placement": true,
-          visibility: "visible"
+          visibility: "visible",
         },
         paint: {
           "icon-color": ['get', 'color'],
+          "icon-halo-color": "white",
+          "icon-halo-width": 1,
+          "icon-halo-blur": 0,
         },
         filter: ["==", "typeId", typeId]
       });

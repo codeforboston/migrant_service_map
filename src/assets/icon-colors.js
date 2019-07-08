@@ -9,7 +9,7 @@ const iconColors = {
     "mental-health": "rgb(246,128,128)",
     "legal": "rgb(194,83,14)",
     "education": "rgb(0,73,179)",
-    "community-center": "rgb(37,160,76)",
+    "community-centers": "rgb(37,160,76)",
     "cash/food-assistance": "rgb(247,159,104)",
     "housing": "rgb(63,179,199)",
 };
