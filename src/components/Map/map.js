@@ -5,6 +5,7 @@ import "./map.css";
 import {circle, point, transformTranslate} from "@turf/turf";
 import typeImages from "assets/images";
 import distances from "assets/distances";
+import iconColors from "assets/icon-colors";
 import _ from "lodash";
 import {
   convertProvidersToGeoJSON,
@@ -46,7 +47,6 @@ class Map extends Component {
 
       const allSymbolLayers = [...providerTypes.allIds, "highlightedProviders"];
       allSymbolLayers.forEach(typeId => {
-        // this.findSourceInMap(typeId);
         this.findLayerInMap(typeId);
       });
       this.loadProviderTypeImage(typeImages);
@@ -180,7 +180,7 @@ class Map extends Component {
     let forGeoConvert = [];
       providersList.forEach(typeId => {
         typeId.providers.forEach(provider => {
-          provider.color = highlightedProviders.includes(provider.id) ? "orange" : "blue";
+          provider.color = highlightedProviders.includes(provider.id) ? "rgb(255,195,26)" : iconColors[typeId.id];
             forGeoConvert.push(provider);
           })
         });
@@ -272,7 +272,6 @@ class Map extends Component {
     const features = this.geoJSONFeatures();
     this.setSourceFeatures(features);
     this.props.providerTypes.allIds.map(typeId => this.findLayerInMap(typeId));
-    // this.findLayerInMap("highlightedProviders");
   }
 
   componentWillUnmount() {

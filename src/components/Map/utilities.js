@@ -1,3 +1,5 @@
+const iconColors = require("../../assets/icon-colors.js");
+
 const scrollToCard = clickedProviderID => {
   const offsetTop = document.getElementById(clickedProviderID).offsetTop;
   const cardOffset = 50;
@@ -67,6 +69,7 @@ const removeDistanceMarkers = markerArray => {
 };
 
 const normalizeProviders = providerFeatures => {
+  console.log(iconColors.default["community-center"]);
   const providerTypes = { byId: {}, allIds: [] };
   const providers = { byId: {}, allIds: [] };
   Array.from(providerFeatures).map(
@@ -116,7 +119,8 @@ const normalizeProviders = providerFeatures => {
         typeId: formattedTypeId,
         "Type of Service": properties["Type of Service"], // as referenced in reducer helper function
         // Validated By
-        website: properties.Website
+        website: properties.Website,
+        color: iconColors.default[formattedTypeId],
       });
     }
   );
