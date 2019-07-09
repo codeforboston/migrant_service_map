@@ -6,7 +6,9 @@ printIFrame.contentWindow.document.open();
 printIFrame.contentWindow.document.write(`<div id="${printContentDivId}" />`);
 printIFrame.contentWindow.document.close();
 printIFrame.display = "none";
-const printContentDiv = printIFrame.contentWindow.document.getElementById(printContentDivId);
+const printContentDiv = printIFrame.contentWindow.document.getElementById(
+  printContentDivId
+);
 
 function printJSX(contents) {
   const { contentWindow } = printIFrame;

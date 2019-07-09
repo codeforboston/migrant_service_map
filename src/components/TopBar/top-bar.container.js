@@ -23,7 +23,7 @@ const VISA_TYPES = [
   "Demo Type 3 (D3)",
   "Demo Type 4 (D4)",
   "Demo Type 5 (D5)",
-  "Demo Type 6 (D6)",
+  "Demo Type 6 (D6)"
 ];
 
 const TopBarContainer = props => {

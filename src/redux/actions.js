@@ -105,7 +105,7 @@ export function selectTab(index) {
   return {
     type: SELECT_TAB,
     index
-  }
+  };
 }
 
 export function reorderSavedProviders(ids) {
@@ -119,5 +119,5 @@ export function changeSortOrder(id) {
   return {
     type: CHANGE_SORT_ORDER,
     id
-  }
+  };
 }
