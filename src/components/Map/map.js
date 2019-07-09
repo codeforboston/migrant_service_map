@@ -12,7 +12,7 @@ import {
   createDistanceMarker,
   markerStyle,
   normalizeProviders,
-  removeDistanceMarkers,
+  removeDistanceMarkers
 } from "./utilities.js";
 
 mapboxgl.accessToken =
@@ -106,7 +106,9 @@ class Map extends Component {
         type: "symbol",
         layout: {
           "icon-image": typeId + "icon",
-          "icon-size": 0.4,
+          "icon-size": 0.3,
+          "icon-allow-overlap": true,
+          "icon-ignore-placement": true,
           visibility: "visible"
         },
         filter: ["==", "typeId", typeId]
@@ -139,7 +141,9 @@ class Map extends Component {
   addClickHandlerToMapIdLayer = typeId => {
     let { displayProviderInformation, highlightedProviders } = this.props;
     this.map.on("click", typeId, e => {
-      const providerElement = document.getElementById(`provider-${e.features[0].properties.id}`);
+      const providerElement = document.getElementById(
+        `provider-${e.features[0].properties.id}`
+      );
       if (typeId !== "highlightedProviders" && providerElement) {
         const offsetTop = providerElement.offsetTop;
         const cardOffset = 50;
@@ -167,15 +171,20 @@ class Map extends Component {
   };
 
   geoJSONFeatures = () => {
-    let { providersList } = this.props;
+    let { providers, providersList, highlightedProviders } = this.props;
 
-    const forGeoConvert = providersList.map(service => {
-      return service.providers.map(provider => {
-        return provider;
-      });
+    const highlightedProvidersList = highlightedProviders.map(hp => {
+      const providerObject = providers.byId[hp];
+      providerObject["typeId"] = "highlightedProviders";
+      providerObject["typeName"] = "highlightedProviders";
+      return providerObject;
     });
-    const flattenProviderInfo = _.flatMap(forGeoConvert, entry => entry);
-    return convertProvidersToGeoJSON(flattenProviderInfo);
+    const flattenProviderInfo = _.flatMap(
+      providersList,
+      entry => entry.providers
+    );
+    const forGeoConvert = flattenProviderInfo.concat(highlightedProvidersList);
+    return convertProvidersToGeoJSON(forGeoConvert);
   };
 
   updatePinAndDistanceIndicator = (prevProps) => {
@@ -212,9 +221,10 @@ class Map extends Component {
     );
 
     mapPin.addTo(this.map);
-    this.map.getSource("distance-indicator-source").setData({ type: "FeatureCollection", features: circles });
+    this.map
+      .getSource("distance-indicator-source")
+      .setData({ type: "FeatureCollection", features: circles });
   };
-
 
   removeReferenceLocation = map => {
     removeDistanceMarkers(this.markerList);
@@ -229,7 +239,7 @@ class Map extends Component {
 
   addDistanceFilterLayer = distanceFilterDistances => {
     removeDistanceMarkers(this.markerList);
-    if(!this.map.getSource("distance-indicator-source")){
+    if (!this.map.getSource("distance-indicator-source")) {
       this.map.addSource("distance-indicator-source", {
         type: "geojson",
         data: {
@@ -257,9 +267,10 @@ class Map extends Component {
     const { providersList } = this.props;
     this.setSingleSourceInMap();
     const providerTypesById = _.keyBy(providersList, "id");
-    const features = this.geoJSONFeatures(providerTypesById);
+    const features = this.geoJSONFeatures();
     this.setSourceFeatures(features);
     this.props.providerTypes.allIds.map(typeId => this.findLayerInMap(typeId));
+    this.findLayerInMap("highlightedProviders");
     this.updatePinAndDistanceIndicator(prevProps);
   }
 

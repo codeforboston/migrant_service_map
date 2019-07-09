@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { MenuDropdown, MenuDropdownItem } from "..";
-import SortDropdown from "./sort-dropdown.js"
+import SortDropdown from "./sort-dropdown.js";
 
 import "./provider-list.css";
 
@@ -17,14 +17,21 @@ class ProviderList extends Component {
     } = this.props;
     return (
       <div className="service-providers">
-        {!providersList.length && <><h4>NO MATCHING RESULTS</h4><p>Use the filters in the top bar to adjust the number of results</p></>}
+        {!providersList.length && (
+          <>
+            <h4>NO MATCHING RESULTS</h4>
+            <p>
+              Use the filters in the top bar to adjust the number of results
+            </p>
+          </>
+        )}
         {!!providersList.length && (
           <>
             <SortDropdown
               className="sort-by"
               options={["Distance", "Name", "Provider Type"]}
               header="Sort By"
-              handleChange={(id) => {
+              handleChange={id => {
                 changeSortOrder(id);
               }}
               group="sort"

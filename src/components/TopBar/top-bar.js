@@ -42,7 +42,10 @@ class TopBar extends Component {
           className={topBarItemClass}
           onSearchInputClick={this.onSearchInputClick}
         />
-        <DistanceDropdown className={topBarItemClass} onChange={this.onDistanceSelected}/>
+        <DistanceDropdown
+          className={topBarItemClass}
+          onChange={this.onDistanceSelected}
+        />
       </div>
     );
   }

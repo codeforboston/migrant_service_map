@@ -30,26 +30,32 @@ function printableSavedProvider(provider) {
   );
 }
 
-const SavedProvidersList = ({ savedProviders, saveProvider, searchCenter, highlightedProviders, displayProviderInformation }) => {
+const SavedProvidersList = ({
+  savedProviders,
+  saveProvider,
+  searchCenter,
+  highlightedProviders,
+  displayProviderInformation
+}) => {
   const getItemStyle = (isDragging, draggableStyle) => ({
     // some style overrides so that draggable items don't inherit unwanted styling
     ...draggableStyle,
     userSelect: "none",
-    padding: '0 !important',
-    margin: '0 !important',
-    top: '0 !important',
-    left: '0 !important',
+    padding: "0 !important",
+    margin: "0 !important",
+    top: "0 !important",
+    left: "0 !important"
   });
 
   return (
     <div className="saved-list">
       <header>
-      <h3>Saved Providers</h3>
-      <input
-        type="button"
-        value="Print"
-        onClick={() => printJSX(savedProviders.map(printableSavedProvider))}
-      />
+        <h3>Saved Providers</h3>
+        <input
+          type="button"
+          value="Print"
+          onClick={() => printJSX(savedProviders.map(printableSavedProvider))}
+        />
       </header>
       <div className="search-center">Showing proximity to {searchCenter}</div>
 
@@ -73,20 +79,24 @@ const SavedProvidersList = ({ savedProviders, saveProvider, searchCenter, highli
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
                       style={getItemStyle(
-                         snapshot.isDragging,
-                         provided.draggableProps.style
-                       )}
+                        snapshot.isDragging,
+                        provided.draggableProps.style
+                      )}
                     >
-                    <MenuDropdownItem
-                      key={provider.id}
-                      provider={provider}
-                      providerTypeName={provider["Type of Service"]}
-                      isSaved="saved"
-                      toggleSavedStatus={() => saveProvider(provider.id)}
-                      isHighlighted={highlightedProviders.includes(provider.id)}
-                      toggleHighlight={() => displayProviderInformation(provider.id)}
-                      inSavedMenu={true}
-                    />
+                      <MenuDropdownItem
+                        key={provider.id}
+                        provider={provider}
+                        providerTypeName={provider["Type of Service"]}
+                        isSaved="saved"
+                        toggleSavedStatus={() => saveProvider(provider.id)}
+                        isHighlighted={highlightedProviders.includes(
+                          provider.id
+                        )}
+                        toggleHighlight={() =>
+                          displayProviderInformation(provider.id)
+                        }
+                        inSavedMenu={true}
+                      />
                     </div>
                   )}
                 </Draggable>
@@ -97,6 +107,7 @@ const SavedProvidersList = ({ savedProviders, saveProvider, searchCenter, highli
         }}
       </Droppable>
     </div>
-)};
+  );
+};
 
 export default SavedProvidersList;

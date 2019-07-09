@@ -32,10 +32,10 @@ const mapDispatchToProps = dispatch => {
       dispatch(saveProvider(id));
     },
     displayProviderInformation: id => {
-      dispatch(displayProviderInformation(id))
+      dispatch(displayProviderInformation(id));
     },
     changeSortOrder: value => {
-      dispatch(changeSortOrder(value))
+      dispatch(changeSortOrder(value));
     }
   };
 };

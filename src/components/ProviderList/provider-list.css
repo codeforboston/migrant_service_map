@@ -77,11 +77,11 @@ label {
 }
 
 .dropdown-list-container.expanded .dropdown-list {
-  flex: 1; 
+  flex: 1;
   padding-top: 6px;
   height: auto;
   opacity: 1;
-  width: 100%; 
+  width: 100%;
 }
 
 .dropdown-list-item {
