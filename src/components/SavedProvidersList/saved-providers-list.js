@@ -50,7 +50,7 @@ const SavedProvidersList = ({
   return (
     <div className="saved-list">
       <header>
-        <h3>Saved Providers</h3>
+        <span className={"saved-list-title"}>Saved Providers</span>
         <input
           type="button"
           value="Print"

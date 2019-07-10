@@ -19,7 +19,7 @@ class ProviderList extends Component {
       <div className="service-providers">
         {!providersList.length && (
           <>
-            <h4>NO MATCHING RESULTS</h4>
+            <div className={"no_results"}>No Matching Results</div>
             <p>
               Use the filters in the top bar to adjust the number of results
             </p>
