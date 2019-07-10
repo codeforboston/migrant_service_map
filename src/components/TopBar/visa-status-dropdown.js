@@ -39,8 +39,8 @@ export default class VisaStatusDropdown extends React.Component {
     const { subheaderText, viewAllOptions } = this.state;
 
     const preferredVisaTypes = viewAllOptions
-      ? visaTypes
-      : visaTypes.slice(0, 1);
+      ? visaTypes.allVisas
+      : visaTypes.allVisas.slice(0, 1);
     const footer = <div onClick={this.onSeeMore}>See More</div>;
     return (
       <CheckBoxDropdown

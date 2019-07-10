@@ -51,6 +51,8 @@ class Map extends Component {
     // setMapObject(map);
     map.addControl(new mapboxgl.NavigationControl());
     map.on("load", () => {
+      initializeVisaFilter(PLACEHOLDER_VISA_TYPES);
+
       this.removeLayersFromOldDataSet();
       const providerFeatures = map.querySourceFeatures("composite", {
         sourceLayer: "Migrant_Services_-_MSM_Final_1"
@@ -58,9 +60,6 @@ class Map extends Component {
       const normalizedProviders = normalizeProviders(providerFeatures);
       initializeProviders(normalizedProviders);
 
-      initializeVisaFilter({
-        allVisas: PLACEHOLDER_VISA_TYPES
-      });
 
       const allSymbolLayers = [...providerTypes.allIds, "highlightedProviders"];
       allSymbolLayers.forEach(typeId => {

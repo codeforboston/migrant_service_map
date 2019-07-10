@@ -6,7 +6,12 @@ import {
   CLEAR_VISA
 } from "./actions";
 
-export default function filters(state = {}, action) {
+const INITIAL_VISA_STATE = {
+  allVisas: [],
+  visible: [],
+};
+
+export default function filters(state = { visa: INITIAL_VISA_STATE }, action) {
   // TO ADD LATER: visa status, accepting clients
   switch (action.type) {
     case CLEAR_DISTANCE: // both init and 'clear' button
@@ -14,12 +19,29 @@ export default function filters(state = {}, action) {
     case CHANGE_DISTANCE:
       return { ...state, distance: action.distance };
     case INITIALIZE_VISA:
-      return { ...state, visa: action.visa };
+      return { ...state, visa: {
+        allVisas: action.visas,
+        visible: state.visa.visible
+      } };
     case CLEAR_VISA: // both init and 'clear' button
-      return { ...state, visa: null };
+      return { ...state, visa: INITIAL_VISA_STATE };
     case CHANGE_VISA:
-      return { ...state, visa: action.visa }; /*** THIS WILL NEED TO CHANGE ***/
+      return changeVisa(state, action.visa);
     default:
       return state;
   }
+}
+
+function changeVisa(state, visa) {
+  if (state.visa.visible.includes(visa)) {
+    const removedVisible = state.visa.visible.filter(typeId => visa !== typeId);
+    return { ...state, visa: {
+      allVisas: state.visa.allVisas,
+      visible: removedVisible
+    } };
+  }
+  return { ...state, visa: {
+    allVisas: state.visa.allVisas,
+    visible: [ ...state.visa.visible, visa]
+  } };
 }

@@ -60,17 +60,17 @@ export function clearDistanceFilter() {
   };
 }
 
-export function initializeVisaFilter(visa) {
+export function initializeVisaFilter(visas) {
   return {
     type: INITIALIZE_VISA,
-    visa
+    visas
   };
 }
 
 export function changeVisaFilter(visa) {
   return {
     type: CHANGE_VISA,
-    visa
+    visa: visa
   };
 }
 
