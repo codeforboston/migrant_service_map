@@ -3,8 +3,9 @@ import { MenuDropdownItem } from "..";
 import { printJSX } from "util/printJSX";
 import "./saved-providers-list.css";
 import { Droppable, Draggable } from "react-beautiful-dnd";
+import _ from "lodash";
 
-function printableSavedProvider(provider) {
+function toProviderDiv(provider) {
   const {
     id,
     address,
@@ -12,22 +13,41 @@ function printableSavedProvider(provider) {
     mission,
     name,
     telephone,
-    category,
     "Type of Service": type,
     website
   } = provider;
   return (
-    <div className="printedProvider" key={id}>
-      <div className="name">{name}</div>
-      <div className="address">{address}</div>
-      <div className="email">{email}</div>
-      <div className="telephone">{telephone}</div>
-      <div className="website">{website}</div>
-      <div className="type">{type}</div>
-      <div className="category">{category}</div>
-      <div className="mission">{mission}</div>
+    <div className={"provider"} key={id}>
+      <div className={"name"}>{name}</div>
+      <div className={"type"}>{type}</div>
+      <div className={"details"}>
+        <div className={"address"}>{address}</div>
+        <div className={"email"}>{email}</div>
+        <div className={"telephone"}>{telephone}</div>
+        <div className={"website"} >
+          <a href={website}>{website}</a>
+        </div>
+        <div className={"mission"}>{mission}</div>
+      </div>
     </div>
   );
+}
+
+function printSavedProviders(providers) {
+  const byTypeName = _.groupBy(providers, provider => provider.typeName);
+  const printPage = (
+    <div className={"print"}>
+      {_.map(byTypeName, (providers, typeName) => {
+        return (
+          <div className={"category"} key={typeName}>
+            <div className={"header"}>{typeName}</div>
+            {_.map(providers, toProviderDiv)}
+          </div>
+        );
+      })}
+    </div>
+  );
+  printJSX(printPage);
 }
 
 const SavedProvidersList = ({
@@ -54,7 +74,7 @@ const SavedProvidersList = ({
         <input
           type="button"
           value="Print"
-          onClick={() => printJSX(savedProviders.map(printableSavedProvider))}
+          onClick={() => printSavedProviders(savedProviders)}
         />
       </header>
       <div className="search-center">Showing proximity to {searchCenter}</div>
