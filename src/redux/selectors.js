@@ -8,9 +8,10 @@ const getDistance = state => state.filters.distance;
 const getSavedProvidersIds = state => state.providers.savedProviders;
 const getHighlightedProvidersList = state => state.highlightedProviders;
 const getSearchCoordinates = state =>
-  state.search.history[state.search.currentLocation];
+state.search.history[state.search.currentLocation];
 // const getSearchCoordinates = state => state.search.currentLocation ? state.search.history[state.search.currentLocation] : null; // TODO: separate coordinates and searched location
 const getSortMethod = state => state.providers.sortMethod;
+const getSortDirection = state => state.providers.sortDirection;
 
 export const getProvidersSorted = createSelector(
   [
@@ -21,7 +22,8 @@ export const getProvidersSorted = createSelector(
     getSearchCoordinates,
     // visa status,
     // accepting new clients,
-    getSortMethod
+    getSortMethod,
+    getSortDirection,
   ],
   (
     providerTypesById,
@@ -29,7 +31,8 @@ export const getProvidersSorted = createSelector(
     providersById,
     distance,
     searchCoordinates,
-    sortMethod
+    sortMethod,
+    sortDirection
   ) => {
     // for each provider type that is active, get providers belonging to it that are near the search location
     // TODO: limit based on new client status and visa type
@@ -45,8 +48,8 @@ export const getProvidersSorted = createSelector(
         options
       );
       let nearbyProviders = distance
-        ? getProvidersWithinDistance(providersWithDistances, distance)
-        : providersWithDistances;
+      ? getProvidersWithinDistance(providersWithDistances, distance)
+      : providersWithDistances;
       return {
         ...providerType,
         providers: sortProvidersByDistance(nearbyProviders)
@@ -61,24 +64,24 @@ export const getProvidersSorted = createSelector(
     );
     switch (sortMethod) {
       case "Distance":
-        return [
-          {
-            id: "distance-sort",
-            name: "Closest to farthest",
-            providers: sortProvidersByDistance(flatList)
-          }
-        ];
+      return [
+        {
+          id: "distance-sort",
+          name: "Closest to farthest",
+          providers: sortProvidersByDistance(flatList, sortDirection)
+        }
+      ];
       case "Name":
-        return [
-          {
-            id: "alphabetical",
-            name: "By name",
-            providers: sortProvidersByName(flatList)
-          }
-        ];
+      return [
+        {
+          id: "alphabetical",
+          name: "By name",
+          providers: sortProvidersByName(flatList, sortDirection)
+        }
+      ];
       case "Provider Type":
       default:
-        return groupedByProviderType;
+      return groupedByProviderType;
     }
   }
 );
@@ -129,11 +132,22 @@ function getProvidersWithinDistance(providers, maxDistance) {
   );
 }
 
-function sortProvidersByDistance(providerArray) {
+function sortProvidersByDistance(providerArray, direction) {
   // Sort the list by distance
-  return providerArray.sort((a, b) => (a.distance > b.distance ? 1 : -1));
+  return providerArray.sort((a, b) => {
+    if (direction === 'asc') {
+      return (a.distance < b.distance) ? 1 : -1;
+    }
+    return (a.distance > b.distance) ? 1 : -1;
+  });
 }
 
-function sortProvidersByName(providerArray) {
-  return providerArray.sort((a, b) => (a.name > b.name ? 1 : -1));
+function sortProvidersByName(providerArray, direction) {
+  return providerArray.sort((a, b) => {
+    if (direction === 'asc') {
+      return (a.name < b.name) ? 1 : -1;
+    }
+    return (a.name > b.name) ? 1: -1;
+  });
+
 }
