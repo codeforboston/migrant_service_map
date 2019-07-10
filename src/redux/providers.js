@@ -2,6 +2,7 @@ import {
   INITIALIZE_PROVIDERS,
   SAVE_PROVIDER,
   CHANGE_SORT_ORDER,
+  CHANGE_SORT_DIRECTION,
   REORDER_SAVED_PROVIDERS
 } from "./actions";
 
@@ -9,6 +10,7 @@ const INITIAL_STATE = {
   allIds: [],
   byId: {},
   sortMethod: "Provider Type",
+  sortDirection: "desc",
   savedProviders: []
 };
 
@@ -22,6 +24,11 @@ export default function providers(state = INITIAL_STATE, action) {
       return {
         ...state,
         sortMethod: action.id
+      };
+    case CHANGE_SORT_DIRECTION:
+      return {
+        ...state,
+        sortDirection: action.direction
       };
     case REORDER_SAVED_PROVIDERS:
       return {
