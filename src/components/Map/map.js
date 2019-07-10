@@ -183,7 +183,7 @@ class Map extends Component {
           let features = mapView.queryRenderedFeatures(e.point, { layers: [ clusterSelected ] });
 
           let clusterId = features[0].properties.cluster_id;
-          this.getSource(typeId).getClusterExpansionZoom(clusterId, function (err, zoom) {
+          mapView.getSource("displayData").getClusterExpansionZoom(clusterId, function (err, zoom) {
               if (err)
                   return;
 
