@@ -1,4 +1,5 @@
 export const INITIALIZE_PROVIDERS = "INITIALIZE_PROVIDERS";
+export const INITIALIZE_VISA = "INITIALIZE_VISA";
 export const TOGGLE_TYPE = "TOGGLE_TYPE";
 export const CHANGE_DISTANCE = "CHANGE_DISTANCE";
 export const CLEAR_DISTANCE = "CLEAR_DISTANCE";
@@ -56,6 +57,13 @@ export function changeDistanceFilter(distance) {
 export function clearDistanceFilter() {
   return {
     type: CLEAR_DISTANCE
+  };
+}
+
+export function initializeVisaFilter(visa) {
+  return {
+    type: INITIALIZE_VISA,
+    visa
   };
 }
 

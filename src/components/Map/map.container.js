@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import {
   initializeProviders,
+  initializeVisaFilter,
   setSearchCenterCoordinates,
   displayProviderInformation,
   setMapObject
@@ -28,6 +29,9 @@ const mapDispatchToProps = dispatch => {
   return {
     initializeProviders: providers => {
       dispatch(initializeProviders(providers));
+    },
+    initializeVisaFilter: visas => {
+      dispatch(initializeVisaFilter(visas));
     },
     displayProviderInformation: id => {
       dispatch(displayProviderInformation(id));
