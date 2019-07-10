@@ -10,6 +10,12 @@ const printContentDiv = printIFrame.contentWindow.document.getElementById(
   printContentDivId
 );
 
+const cssLink = document.createElement("link");
+cssLink.href = "print.css";
+cssLink.rel = "stylesheet";
+cssLink.type = "text/css";
+printIFrame.contentWindow.document.head.appendChild(cssLink);
+
 function printJSX(contents) {
   const { contentWindow } = printIFrame;
   ReactDOM.render(contents, printContentDiv, () => {
