@@ -17,7 +17,7 @@ export default class RadioButtonDropdown extends React.Component {
           <input
             id={text}
             type="radio"
-            name="distance-dropdown-button"
+            name={text}
             value={text}
             onChange={() => onChange(value, text)}
             checked={text === selected}

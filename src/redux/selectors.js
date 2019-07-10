@@ -1,7 +1,6 @@
 import { distance, point } from "@turf/turf";
 import { createSelector } from "reselect";
 
-const getProviderTypesIds = state => state.providerTypes.allIds;
 const getProviderTypesById = state => state.providerTypes.byId;
 const getVisibleProviderTypes = state => state.providerTypes.visible;
 const getProvidersById = state => state.providers.byId;
@@ -132,9 +131,9 @@ function getProvidersWithinDistance(providers, maxDistance) {
 
 function sortProvidersByDistance(providerArray) {
   // Sort the list by distance
-  return providerArray.sort((a, b) => (a.distance - b.distance) ? 1 : -1);
+  return providerArray.sort((a, b) => (a.distance > b.distance ? 1 : -1));
 }
 
 function sortProvidersByName(providerArray) {
-  return providerArray.sort((a, b) => (a.name > b.name) ? 1 : -1);
+  return providerArray.sort((a, b) => (a.name > b.name ? 1 : -1));
 }

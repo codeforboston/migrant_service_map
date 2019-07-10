@@ -7,7 +7,9 @@
   margin-top: 100px;
   filter: drop-shadow(0 3px 3px gray);
 }
-.react-tabs__tab-list { display: flex; }
+.react-tabs__tab-list {
+  display: flex;
+}
 .react-tabs__tab {
   border: none;
   background: #aaa;
@@ -31,11 +33,9 @@
 /* .panels */
 .side-menu > div {
   margin-top: -10px; /* counter react-tabs styling */
-  padding: 4px 16px;
-
-  max-height: 100%;
-
+  padding-bottom: 4px;
+  height: 60vh;
+  min-height: 500px;
   background-color: white;
-
   overflow-y: scroll;
 }

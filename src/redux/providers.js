@@ -22,7 +22,7 @@ export default function providers(state = INITIAL_STATE, action) {
       return {
         ...state,
         sortMethod: action.id
-      }
+      };
     case REORDER_SAVED_PROVIDERS:
       return {
         ...state,

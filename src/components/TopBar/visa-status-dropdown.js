@@ -5,7 +5,7 @@ const defaultSubheaderText = "Current Visa Status";
 export default class VisaStatusDropdown extends React.Component {
   state = {
     subheaderText: defaultSubheaderText,
-    viewAllOptions: false,
+    viewAllOptions: false
   };
 
   onCheckboxChanged = (option, selectedValues) => {
@@ -24,21 +24,23 @@ export default class VisaStatusDropdown extends React.Component {
     this.setState({
       viewAllOptions: true
     });
-  }
+  };
 
-  onSeeLess = (expanded) => {
+  onSeeLess = expanded => {
     if (!expanded) {
       this.setState({
         viewAllOptions: false
       });
     }
-  }
+  };
 
   render() {
     const { className, visaTypes } = this.props;
     const { subheaderText, viewAllOptions } = this.state;
 
-    const preferredVisaTypes = viewAllOptions ? visaTypes : visaTypes.slice(0,1);
+    const preferredVisaTypes = viewAllOptions
+      ? visaTypes
+      : visaTypes.slice(0, 1);
     const footer = <div onClick={this.onSeeMore}>See More</div>;
     return (
       <CheckBoxDropdown

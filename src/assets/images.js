@@ -34,7 +34,7 @@ const typeImages = [
   {
     type: "legal",
     image: require("./icons/legal.png")
-  }, 
+  },
   {
     type: "highlightedProviders",
     image: require("./icons/highlightedProviders.png")

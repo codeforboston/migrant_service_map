@@ -46,14 +46,21 @@ text-overflow: ellipsis;
   flex-direction: column;
 }
 
-.card-header h5 {
+h5.wrapped {
   margin: 0 0 5px 0;
   font-size: 16px;
   color: #000;
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  cursor: pointer;
+}
+
+h5.expanded {
+  margin: 0 0 5px 0;
+  font-size: 16px;
+  color: #000;
+  text-overflow: ellipsis;
   cursor: pointer;
 }
 
@@ -145,7 +152,7 @@ text-overflow: ellipsis;
 }
 
 .button.saved {
-  background-color: #70B5EE;
+  background-color: #70b5ee;
   border-radius: 5px;
   color: #fff;
 }

@@ -1,6 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
-import { displayProviderInformation, saveProvider, reorderSavedProviders } from "redux/actions";
+import {
+  displayProviderInformation,
+  saveProvider,
+  reorderSavedProviders
+} from "redux/actions";
 import { getSavedProviders } from "redux/selectors.js";
 import SavedProvidersList from "./saved-providers-list";
 import { DragDropContext } from "react-beautiful-dnd";
@@ -38,7 +42,9 @@ const SavedProvidersListContainer = props => {
 
 const mapStateToProps = state => {
   return {
-    searchCenter: state.search.currentLocation ? state.search.history[state.search.currentLocation].searchText : null,
+    searchCenter: state.search.currentLocation
+      ? state.search.history[state.search.currentLocation].searchText
+      : null,
     savedProviders: getSavedProviders(state),
     highlightedProviders: state.highlightedProviders
   };

@@ -1,6 +1,4 @@
-
-
-const scrollToCard = (clickedProviderID )=> {
+const scrollToCard = clickedProviderID => {
   const offsetTop = document.getElementById(clickedProviderID).offsetTop;
   const cardOffset = 50;
 
@@ -19,7 +17,7 @@ const scrollToCard = (clickedProviderID )=> {
       clearInterval(scrollInterval);
     }
   }, 15);
-}
+};
 
 const convertProvidersToGeoJSON = providers => {
   return providers.map(provider => ({
@@ -41,7 +39,7 @@ const createCenterMarker = () => {
   centerMarker.className = "map-pin-container";
   centerMarker.appendChild(mapPin);
   centerMarker.appendChild(pinHole);
-  return centerMarker
+  return centerMarker;
 };
 
 const createDistanceMarker = (distance, color) => {
@@ -60,15 +58,12 @@ const createDistanceMarker = (distance, color) => {
 
 const markerStyle = {
   color: ["#007cbf", "#00AA46", "#71C780", "#D5EDDB"],
-  options: { steps: 100, units: "miles" },
+  options: { steps: 100, units: "miles" }
+};
 
-}
-
-const removeDistanceMarkers = () => {
-  const distanceMarkers = Array.from(
-    document.getElementsByClassName("distanceMarker")
-  );
-  return distanceMarkers.map(marker => marker.remove());
+const removeDistanceMarkers = markerArray => {
+  // const distanceMarkers = Array.from(document.getElementsByClassName("distanceMarker"));
+  return markerArray.map(marker => marker.remove());
 };
 
 const normalizeProviders = providerFeatures => {
@@ -118,6 +113,7 @@ const normalizeProviders = providerFeatures => {
         timestamp: properties.Timestamp,
         // Type of Service
         typeName: properties["Type of Service"], // synonym for next line
+        typeId: formattedTypeId,
         "Type of Service": properties["Type of Service"], // as referenced in reducer helper function
         // Validated By
         website: properties.Website
@@ -135,13 +131,12 @@ const normalizeProviders = providerFeatures => {
   return { providerTypes, providers };
 };
 
-
-export { 
+export {
   convertProvidersToGeoJSON,
   createCenterMarker,
   createDistanceMarker,
   markerStyle,
   normalizeProviders,
   removeDistanceMarkers,
-  scrollToCard,
-}
+  scrollToCard
+};

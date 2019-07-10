@@ -12,8 +12,7 @@ import {
   createDistanceMarker,
   markerStyle,
   normalizeProviders,
-  removeDistanceMarkers,
-  scrollToCard,
+  removeDistanceMarkers
 } from "./utilities.js";
 
 mapboxgl.accessToken =
@@ -23,11 +22,12 @@ class Map extends Component {
   constructor(props) {
     super(props);
     this.map = null;
+    this.markerList = []; //need to keep track of marker handles ourselves -- cannot be queried from map
   }
 
   componentDidMount() {
     const { mapCenter, coordinates } = this.props.search;
-    const { providerTypes, setMapObject, initializeProviders, displayProviderInformation } = this.props;
+    const { providerTypes, initializeProviders } = this.props;
     const map = new mapboxgl.Map({
       container: "map", // container id
       style: "mapbox://styles/refugeeswelcome/cjh9k11zz15ds2spbs4ld6y9o", // stylesheet location
@@ -35,7 +35,7 @@ class Map extends Component {
       zoom: 11 // starting zoom
     });
     // setMapObject(map);
-
+    map.addControl(new mapboxgl.NavigationControl());
     map.on("load", () => {
       this.removeLayersFromOldDataSet();
       const providerFeatures = map.querySourceFeatures("composite", {
@@ -46,19 +46,19 @@ class Map extends Component {
 
       const allSymbolLayers = [...providerTypes.allIds, "highlightedProviders"];
       allSymbolLayers.forEach(typeId => {
-        this.findSourceInMap(typeId);
+        // this.findSourceInMap(typeId);
         this.findLayerInMap(typeId);
-        map.addLayer({
-          "id": "clusterNumber",
-          "type": "symbol",
-          "source": typeId,
-          "filter": ["!=", "cluster", true],
-          layout: {
-            "text-field": "{point_count_abbreviated}",
-            "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-            "text-size": 12
-            }
-          });
+        // map.addLayer({
+        //   "id": "clusterNumber",
+        //   "type": "symbol",
+        //   "source": typeId,
+        //   "filter": ["!=", "cluster", true],
+        //   layout: {
+        //     "text-field": "{point_count_abbreviated}",
+        //     "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+        //     "text-size": 12
+        //     }
+        //   });
       });
       this.loadProviderTypeImage(typeImages);
     });
@@ -86,13 +86,11 @@ class Map extends Component {
       let { geometry, id, text } = ev.result;
       this.props.setSearchCenterCoordinates(geometry.coordinates, id, text);
       this.addDistanceIndicator();
-      this.togglePinMarker(true);
     });
 
     geocoder.on("clear", ev => {
       let center = [-71.066954, 42.359947];
       this.removeReferenceLocation(this.map);
-      this.togglePinMarker(false);
       this.props.setSearchCenterCoordinates(center, 1, "");
     });
   }
@@ -104,26 +102,21 @@ class Map extends Component {
     }
   };
 
-  setSourceFeatures = (typeId, features) => {
-    let { providerTypes } = this.props;
-    if (providerTypes.visible.includes(typeId) || typeId == "highlightedProviders") {
-      this.findSourceInMap(typeId);
-        this.map.getSource(typeId).setData({
-        type: "FeatureCollection",
-        features: features
-      });
-    }
+  setSourceFeatures = features => {
+    this.setSingleSourceInMap(); // checks source exists, adds if not
+    this.map.getSource("displayData").setData({
+      type: "FeatureCollection",
+      features: features
+    });
   };
 
-  findLayerInMap = (typeId) => {
-    // const { providersList } = this.props;
-    // // const providerTypesById = _.keyBy(providersList, "typeId");
+  findLayerInMap = typeId => {
     if (!this.map.getLayer(typeId)) {
       this.map.addLayer({
         id: typeId,
-        source: typeId,
+        source: "displayData",
         type: "symbol",
-        filter: ["!", ["has", "point_count"]],
+        filter: ["all", ["!=", "has", "point_count"],["==", "typeId", typeId]],
         layout: {
           "icon-image": typeId + "icon",
           "icon-size": 0.3,
@@ -135,7 +128,7 @@ class Map extends Component {
       //Adding in cluster functionality
       this.map.addLayer({
         id: typeId+"-cluster",
-        source: typeId,
+        source: "displayData",
         type: "symbol",
         filter: ["has", "point_count"],
         layout: {
@@ -159,11 +152,9 @@ class Map extends Component {
     }
   };
 
-  findSourceInMap = (typeId) => {
-    // const { providersList } = this.props;
-    // const providerTypesById = _.keyBy(providersList, "typeId");
-    if (!this.map.getSource(typeId)) {
-      this.map.addSource(typeId, {
+  setSingleSourceInMap = () => {
+    if (!this.map.getSource("displayData")) {
+      this.map.addSource("displayData", {
         type: "geojson",
         data: {
           type: "FeatureCollection",
@@ -207,8 +198,11 @@ class Map extends Component {
   addClickHandlerToMapIdLayer = typeId => {
     let { displayProviderInformation, highlightedProviders } = this.props;
     this.map.on("click", typeId, e => {
-      if (typeId !== "highlightedProviders") {
-        const offsetTop = document.getElementById(`provider-${e.features[0].properties.id}`).offsetTop;
+      const providerElement = document.getElementById(
+        `provider-${e.features[0].properties.id}`
+      );
+      if (typeId !== "highlightedProviders" && providerElement) {
+        const offsetTop = providerElement.offsetTop;
         const cardOffset = 50;
 
         const panel = document.getElementsByClassName("panels")[0];
@@ -233,34 +227,35 @@ class Map extends Component {
     });
   };
 
-  geoJSONFeatures = typeId => {
-    let { providerTypes, highlightedProviders, providers } = this.props;
-    if (!providerTypes.visible.includes(typeId) && typeId != "highlightedProviders") {
-      return [];
-    }
-    let selectProviders; 
-    if (typeId == "highlightedProviders"){
-      selectProviders = highlightedProviders.map(id => providers.byId[id])
-    }
-    if (providerTypes.allIds.includes(typeId)){
-      selectProviders = providerTypes.byId[typeId].providers.map(id => providers.byId[id])
-    }
-    const features = convertProvidersToGeoJSON(selectProviders);
-    return features
+  geoJSONFeatures = () => {
+    let { providers, providersList, highlightedProviders } = this.props;
+
+    const highlightedProvidersList = highlightedProviders.map(hp => {
+      const providerObject = providers.byId[hp];
+      providerObject["typeId"] = "highlightedProviders";
+      providerObject["typeName"] = "highlightedProviders";
+      return providerObject;
+    });
+    const flattenProviderInfo = _.flatMap(
+      providersList,
+      entry => entry.providers
+    );
+    const forGeoConvert = flattenProviderInfo.concat(highlightedProvidersList);
+    return convertProvidersToGeoJSON(forGeoConvert);
   };
-  
 
   addDistanceIndicator = () => {
     //TODO: make this input from the distance filter
     const distanceFilterDistances = distances;
     const { color, options } = markerStyle;
     const { search } = this.props;
-    removeDistanceMarkers();
+    removeDistanceMarkers(this.markerList);
     this.addDistanceFilterLayer(distanceFilterDistances, this.map);
 
     const centerMarker = createCenterMarker();
 
     const mapPin = new mapboxgl.Marker({ centerMarker });
+    this.markerList.push(mapPin);
     mapPin.setLngLat(search.coordinates);
 
     const circles = distanceFilterDistances.map((radius, i) =>
@@ -270,24 +265,27 @@ class Map extends Component {
       })
     );
     const labels = distanceFilterDistances.map((radius, i) => {
-      const radiusOffset = transformTranslate(point(search.coordinates), radius, 90, { units: "miles" });
+      const radiusOffset = transformTranslate(
+        point(search.coordinates),
+        radius,
+        90,
+        { units: "miles" }
+      );
       const distanceMarker = createDistanceMarker((radius, color[i]));
       const marker = new mapboxgl.Marker({ distanceMarker });
+      this.markerList.push(marker);
       return marker.setLngLat(radiusOffset.geometry.coordinates);
     });
 
     labels.map(label => label.addTo(this.map));
     mapPin.addTo(this.map);
-    this.map.getSource("distance-indicator-source").setData({ type: "FeatureCollection", features: circles });
-  };
-
-  togglePinMarker = show => {
-    // mapPin.style.visibility = show ? '' : 'hidden';
+    this.map
+      .getSource("distance-indicator-source")
+      .setData({ type: "FeatureCollection", features: circles });
   };
 
   removeReferenceLocation = map => {
-    removeDistanceMarkers();
-    this.togglePinMarker(false);
+    removeDistanceMarkers(this.markerList);
     map.removeLayer("distance-indicator");
     map.removeSource("distance-indicator-source");
 
@@ -298,9 +296,16 @@ class Map extends Component {
   };
 
   addDistanceFilterLayer = distanceFilterDistances => {
-    console.log("add distance filter layer");
-    removeDistanceMarkers();
-    this.findSourceInMap("distance-indicator-source");
+    removeDistanceMarkers(this.markerList);
+    if (!this.map.getSource("distance-indicator-source")) {
+      this.map.addSource("distance-indicator-source", {
+        type: "geojson",
+        data: {
+          type: "FeatureCollection",
+          features: []
+        }
+      });
+    }
     if (!this.map.getLayer("distance-indicator")) {
       this.map.addLayer({
         id: "distance-indicator",
@@ -316,16 +321,14 @@ class Map extends Component {
     }
   };
 
-
   componentDidUpdate(prevProps) {
-    const { providerTypes } = this.props;
-    const allSymbolLayers = [...providerTypes.allIds, "highlightedProviders"];
-    allSymbolLayers.forEach(typeId => {
-      this.findSourceInMap(typeId);
-      const features = this.geoJSONFeatures(typeId);
-      this.setSourceFeatures(typeId, features);
-      this.findLayerInMap(typeId);
-    });
+    const { providersList } = this.props;
+    this.setSingleSourceInMap();
+    const providerTypesById = _.keyBy(providersList, "id");
+    const features = this.geoJSONFeatures();
+    this.setSourceFeatures(features);
+    this.props.providerTypes.allIds.map(typeId => this.findLayerInMap(typeId));
+    this.findLayerInMap("highlightedProviders");
   }
 
   componentWillUnmount() {
