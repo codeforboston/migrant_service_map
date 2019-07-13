@@ -20,12 +20,12 @@ class ProviderList extends Component {
     return (
       <div className="service-providers">
         {!providersList.length && (
-          <>
+          <div className={"tab-header"}>
             <h4>NO MATCHING RESULTS</h4>
             <p>
               Use the filters in the top bar to adjust the number of results
             </p>
-          </>
+          </div>
         )}
         {!!providersList.length && (
           <>

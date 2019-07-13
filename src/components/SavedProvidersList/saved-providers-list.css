@@ -1,7 +1,13 @@
 .search-center {
   color: #7e7e7e;
   font-size: 12px;
+  margin-bottom: 10px;
 }
+
+.saved-list {
+  padding: 20px;
+}
+
 .saved-list header {
   display: flex;
   justify-content: space-between;
@@ -10,7 +16,7 @@
   color: gray;
   color: #8c45cf;
   font-weight: bold;
-  margin: 7px 2px;
+  margin: 0px;
 }
 
 .remove-button {
