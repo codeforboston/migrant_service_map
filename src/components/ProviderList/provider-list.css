@@ -137,13 +137,3 @@ label {
 .dropdown-menu.expanded {
   color: #8c45cf;
 }
-
-.service-providers {
-  padding: 20px 30px;
-}
-
-.service-providers .no_results {
-  color: #8c45cf;
-  font-weight: bold;
-  margin-bottom: 20px;
-}

@@ -6,14 +6,13 @@
   display: flex;
   justify-content: space-between;
 }
-.saved-list {
-  padding: 20px 30px;
-}
-.saved-list .saved-list-title {
+.saved-list h3 {
+  color: gray;
   color: #8c45cf;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin: 7px 2px;
 }
+
 .remove-button {
   color: #333;
   display: flex;
