@@ -100,7 +100,6 @@ const normalizeProviders = providerFeatures => {
           providers: [id]
         };
       }
-debugger;
 
       return (providers.byId[id] = {
         id,
@@ -120,7 +119,7 @@ debugger;
         "Type of Service": properties["Type of Service"], // as referenced in reducer helper function
         // Validated By
         website: properties.Website,
-        color: iconColors.formattedTypeId,
+        color: iconColors.formattedTypeId
       });
     }
   );
