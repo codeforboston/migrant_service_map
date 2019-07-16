@@ -286,6 +286,10 @@ class Map extends Component {
     const features = this.geoJSONFeatures();
     this.setSourceFeatures(features);
     this.props.providerTypes.allIds.map(typeId => this.findLayerInMap(typeId));
+<<<<<<< HEAD
+=======
+    this.findLayerInMap("highlightedProviders");
+>>>>>>> 165e9a8d0b351e75892b8b21c8399d5cfabde7ac
     this.updatePinAndDistanceIndicator(prevProps);
   }
 
