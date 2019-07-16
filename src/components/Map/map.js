@@ -204,8 +204,6 @@ class Map extends Component {
       // not changed.
       return;
     }
-    // TODO: Why did this code use an array for distances and colors if we have
-    // a distance filter? Did the filter come after this?
     const distanceFilterDistances = distance ? [distance] : [];
     const { color, options } = markerStyle;
     removeDistanceMarkers(this.markerList);
@@ -214,7 +212,7 @@ class Map extends Component {
     const centerMarker = createCenterMarker();
 
     const mapPin = new mapboxgl.Marker({ centerMarker });
-    this.markerList.push(mapPin); 
+    this.markerList.push(mapPin);
     mapPin.setLngLat(searchCoordinates);
 
     const circles = distanceFilterDistances.map((radius, i) =>
@@ -236,6 +234,7 @@ class Map extends Component {
       return marker.setLngLat(radiusOffset.geometry.coordinates);
     });
 
+    labels.map(label => label.addTo(this.map));
     mapPin.addTo(this.map);
     this.map
       .getSource("distance-indicator-source")
@@ -286,10 +285,6 @@ class Map extends Component {
     const features = this.geoJSONFeatures();
     this.setSourceFeatures(features);
     this.props.providerTypes.allIds.map(typeId => this.findLayerInMap(typeId));
-<<<<<<< HEAD
-=======
-    this.findLayerInMap("highlightedProviders");
->>>>>>> 165e9a8d0b351e75892b8b21c8399d5cfabde7ac
     this.updatePinAndDistanceIndicator(prevProps);
   }
 
