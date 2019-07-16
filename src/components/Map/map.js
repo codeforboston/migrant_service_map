@@ -225,7 +225,7 @@ class Map extends Component {
         90,
         { units: "miles" }
       );
-      const distanceMarker = createDistanceMarker((radius, color[i]));
+      const distanceMarker = createDistanceMarker(radius, color[i]);
       const marker = new mapboxgl.Marker({ distanceMarker });
       this.markerList.push(marker);
       return marker.setLngLat(radiusOffset.geometry.coordinates);
