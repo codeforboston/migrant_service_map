@@ -6,7 +6,6 @@ import { circle, point, transformTranslate } from "@turf/turf";
 import typeImages from "assets/images";
 import distances from "assets/distances";
 import iconColors from "assets/icon-colors";
-import _ from "lodash";
 import {
   convertProvidersToGeoJSON,
   createCenterMarker,
@@ -194,20 +193,22 @@ class Map extends Component {
   updatePinAndDistanceIndicator = (prevProps) => {
     const distance = this.props.filters.distance;
     const searchCoordinates = this.props.search.coordinates;
-    if (!distance && this.props.search.currentLocation == "default") {
+    if (!distance && this.props.search.currentLocation === "default") {
       // The map is at its initial position without a distance filter, so don't
       // render a pin.
       return;
     } 
-    if (distance == prevProps.filters.distance && searchCoordinates == prevProps.search.coordinates) {
+    if (distance === prevProps.filters.distance 
+      && searchCoordinates === prevProps.search.coordinates) {
       // The props that are used to render the pin and distance indicator have
       // not changed.
       return;
     }
-    const distanceFilterDistances = distance ? [distance] : [];
+    // If no distance filter is set, display all distance indicators.
+    const distanceIndicatorRadii = distance ? [distance] : distances;
     const { color, options } = markerStyle;
     removeDistanceMarkers(this.markerList);
-    this.addDistanceFilterLayer(distanceFilterDistances, this.map);
+    this.addDistanceIndicatorLayer();
 
     const centerMarker = createCenterMarker();
 
@@ -215,15 +216,15 @@ class Map extends Component {
     this.markerList.push(mapPin);
     mapPin.setLngLat(searchCoordinates);
 
-    const circles = distanceFilterDistances.map((radius, i) =>
+    const circles = distanceIndicatorRadii.map((radius, i) =>
       circle(searchCoordinates, radius, {
         ...options,
         properties: { color: color[i], "stroke-width": radius }
       })
     );
-    const labels = distanceFilterDistances.map((radius, i) => {
+    const labels = distanceIndicatorRadii.map((radius, i) => {
       const radiusOffset = transformTranslate(
-        point(search.coordinates),
+        point(searchCoordinates),
         radius,
         90,
         { units: "miles" }
@@ -252,7 +253,7 @@ class Map extends Component {
     });
   };
 
-  addDistanceFilterLayer = distanceFilterDistances => {
+  addDistanceIndicatorLayer = () => {
     removeDistanceMarkers(this.markerList);
     if (!this.map.getSource("distance-indicator-source")) {
       this.map.addSource("distance-indicator-source", {
@@ -271,7 +272,7 @@ class Map extends Component {
         paint: {
           "line-color": ["get", "color"],
           "line-opacity": 0.8,
-          "line-width": ["*", distanceFilterDistances[0], 3],
+          "line-width": ["*", 1, 3],
           "line-offset": 5
         }
       });
@@ -279,9 +280,7 @@ class Map extends Component {
   };
 
   componentDidUpdate(prevProps) {
-    const { providersList } = this.props;
     this.setSingleSourceInMap();
-    const providerTypesById = _.keyBy(providersList, "id");
     const features = this.geoJSONFeatures();
     this.setSourceFeatures(features);
     this.props.providerTypes.allIds.map(typeId => this.findLayerInMap(typeId));
