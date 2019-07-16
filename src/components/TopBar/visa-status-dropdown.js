@@ -50,6 +50,7 @@ export default class VisaStatusDropdown extends React.Component {
           display: visaType
         }))}
         onChange={this.onCheckboxChanged}
+        visibleTypes={visaTypes.visible}
         header={
           <>
             <h2>VISA STATUS</h2>
