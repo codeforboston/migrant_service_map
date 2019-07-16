@@ -193,15 +193,11 @@ class Map extends Component {
   updatePinAndDistanceIndicator = (prevProps) => {
     const distance = this.props.filters.distance;
     const searchCoordinates = this.props.search.coordinates;
-    if (!distance && this.props.search.currentLocation === "default") {
-      // The map is at its initial position without a distance filter, so don't
-      // render a pin.
-      return;
-    } 
     if (distance === prevProps.filters.distance 
       && searchCoordinates === prevProps.search.coordinates) {
-      // The props that are used to render the pin and distance indicator have
-      // not changed.
+      // Do not render if the relevant props have not changed. This includes
+      // the first render of this component, so the marker is not shown until
+      // the user starts interacting with the app. 
       return;
     }
     // If no distance filter is set, display all distance indicators.
