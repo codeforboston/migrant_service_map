@@ -12,6 +12,7 @@ export const SAVE_PROVIDER = "SAVE_PROVIDER";
 export const SELECT_TAB = "SELECT_TAB";
 export const REORDER_SAVED_PROVIDERS = "REORDER_SAVED_PROVIDERS";
 export const CHANGE_SORT_ORDER = "CHANGE_SORT_ORDER";
+export const CHANGE_SORT_DIRECTION = "CHANGE_SORT_DIRECTION";
 export const SET_MAP_OBJECT = "SET_MAP_OBJECT";
 
 export const initializeProviders = providers => {
@@ -105,7 +106,7 @@ export function selectTab(index) {
   return {
     type: SELECT_TAB,
     index
-  }
+  };
 }
 
 export function reorderSavedProviders(ids) {
@@ -119,5 +120,13 @@ export function changeSortOrder(id) {
   return {
     type: CHANGE_SORT_ORDER,
     id
+  };
+}
+
+
+export function changeSortDirection(direction) {
+  return {
+    type: CHANGE_SORT_DIRECTION,
+    direction
   }
 }

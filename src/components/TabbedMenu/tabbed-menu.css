@@ -7,7 +7,9 @@
   margin-top: 100px;
   filter: drop-shadow(0 3px 3px gray);
 }
-.react-tabs__tab-list { display: flex; }
+.react-tabs__tab-list {
+  display: flex;
+}
 .react-tabs__tab {
   border: none;
   background: #aaa;

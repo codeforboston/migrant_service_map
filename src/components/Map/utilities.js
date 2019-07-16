@@ -1,3 +1,5 @@
+import iconColors from "../../assets/icon-colors";
+
 const scrollToCard = clickedProviderID => {
   const offsetTop = document.getElementById(clickedProviderID).offsetTop;
   const cardOffset = 50;
@@ -61,7 +63,7 @@ const markerStyle = {
   options: { steps: 100, units: "miles" }
 };
 
-const removeDistanceMarkers = (markerArray) => {
+const removeDistanceMarkers = markerArray => {
   // const distanceMarkers = Array.from(document.getElementsByClassName("distanceMarker"));
   return markerArray.map(marker => marker.remove());
 };
@@ -69,56 +71,64 @@ const removeDistanceMarkers = (markerArray) => {
 const normalizeProviders = providerFeatures => {
   const providerTypes = { byId: {}, allIds: [] };
   const providers = { byId: {}, allIds: [] };
-  Array.from(providerFeatures).map(({ id, geometry: { coordinates }, properties }, index) => {
-    let formattedTypeId = properties["Type of Service"]
-      .toLowerCase()
-      .split(" ")
-      .join("-");
-    id = index;
-    const typeExists = providerTypes.allIds.includes(formattedTypeId);
-    if (formattedTypeId === "community-center") {
-      // special case
-      formattedTypeId = "community-centers";
-    }
-    if (typeExists) {
-      providerTypes.byId[formattedTypeId] = {
-        ...providerTypes.byId[formattedTypeId],
-        id: formattedTypeId,
-        name: properties["Type of Service"],
-        providers: [...providerTypes.byId[formattedTypeId].providers, id]
-      };
-    } else {
-      if (!providerTypes.allIds.includes(formattedTypeId)) {
-        providerTypes.allIds.push(formattedTypeId);
+  Array.from(providerFeatures).map(
+    ({ id, geometry: { coordinates }, properties }, index) => {
+      let formattedTypeId = properties["Type of Service"]
+        .toLowerCase()
+        .split(" ")
+        .join("-");
+      id = index;
+      const typeExists = providerTypes.allIds.includes(formattedTypeId);
+      if (formattedTypeId === "community-center") {
+        // special case
+        formattedTypeId = "community-centers";
       }
-      providerTypes.byId[formattedTypeId] = {
-        id: formattedTypeId,
-        name: properties["Type of Service"],
-        providers: [id]
-      };
-    }
+      if (typeExists) {
+        providerTypes.byId[formattedTypeId] = {
+          ...providerTypes.byId[formattedTypeId],
+          id: formattedTypeId,
+          name: properties["Type of Service"],
+          providers: [...providerTypes.byId[formattedTypeId].providers, id]
+        };
+      } else {
+        if (!providerTypes.allIds.includes(formattedTypeId)) {
+          providerTypes.allIds.push(formattedTypeId);
+        }
+        providerTypes.byId[formattedTypeId] = {
+          id: formattedTypeId,
+          name: properties["Type of Service"],
+          providers: [id]
+        };
+      }
 
-    return (providers.byId[id] = {
-      id,
-      coordinates,
-      address: properties["Address (#, Street Name, District/city, State, Zip Code)"],
-      email: properties["Email:"],
-      mission: properties["Mission:"],
-      name: properties["Organization Name"],
-      telephone: properties["Telephone:"],
-      timestamp: properties.Timestamp,
-      // Type of Service
-      typeName: properties["Type of Service"], // synonym for next line
-      typeId: formattedTypeId,
-      "Type of Service": properties["Type of Service"], // as referenced in reducer helper function
-      // Validated By
-      website: properties.Website
-    });
-  });
+      return (providers.byId[id] = {
+        id,
+        coordinates,
+        address:
+          properties[
+            "Address (#, Street Name, District/city, State, Zip Code)"
+          ],
+        email: properties["Email:"],
+        mission: properties["Mission:"],
+        name: properties["Organization Name"],
+        telephone: properties["Telephone:"],
+        timestamp: properties.Timestamp,
+        // Type of Service
+        typeName: properties["Type of Service"], // synonym for next line
+        typeId: formattedTypeId,
+        "Type of Service": properties["Type of Service"], // as referenced in reducer helper function
+        // Validated By
+        website: properties.Website,
+        color: iconColors.formattedTypeId
+      });
+    }
+  );
   // sorted by name
   providerTypes.allIds.map(id => {
     const providersByType = providerTypes.byId[id].providers;
-    return providersByType.sort((a, b) => providers.byId[a].name.localeCompare(providers.byId[b].name));
+    return providersByType.sort((a, b) =>
+      providers.byId[a].name.localeCompare(providers.byId[b].name)
+    );
   });
   // commit map query result to redux
   return { providerTypes, providers };

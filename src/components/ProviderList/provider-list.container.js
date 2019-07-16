@@ -3,7 +3,8 @@ import { connect } from "react-redux";
 import {
   saveProvider,
   displayProviderInformation,
-  changeSortOrder
+  changeSortOrder,
+  changeSortDirection
 } from "redux/actions";
 import { getProvidersSorted } from "redux/selectors.js";
 import ProviderList from "./provider-list";
@@ -19,6 +20,7 @@ const mapStateToProps = state => {
     providersList: getProvidersSorted(state),
     savedProviders: state.providers.savedProviders,
     incomingState: state.providers.sortMethod,
+    sortDirection: state.providers.sortDirection,
     visaTypes: VISA_TYPES,
     highlightedProviders: state.highlightedProviders,
     filters: state.filters,
@@ -36,6 +38,9 @@ const mapDispatchToProps = dispatch => {
     },
     changeSortOrder: value => {
       dispatch(changeSortOrder(value))
+    },
+    changeSortDirection: direction => {
+      dispatch(changeSortDirection(direction))
     }
   };
 };
