@@ -46,15 +46,10 @@ const createCenterMarker = () => {
 
 const createDistanceMarker = (distance, color) => {
   const markerElement = document.createElement("div");
-  markerElement.className = "distanceMarker";
+  markerElement.className = "distance-marker";
   markerElement.id = "marker-" + distance + "-miles";
-  markerElement.style.display = "block";
   markerElement.innerText = distance + (distance > 1 ? " miles" : " mile");
   markerElement.style.backgroundColor = color;
-  markerElement.style.height = "12px";
-  markerElement.style.width = "12px";
-  markerElement.style.borderRadius = "100%";
-  markerElement.style.transform = "rotate(90)";
   return markerElement;
 };
 

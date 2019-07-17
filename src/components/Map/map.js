@@ -208,7 +208,7 @@ class Map extends Component {
 
     const centerMarker = createCenterMarker();
 
-    const mapPin = new mapboxgl.Marker({ centerMarker });
+    const mapPin = new mapboxgl.Marker({ element: centerMarker });
     this.markerList.push(mapPin);
     mapPin.setLngLat(searchCoordinates);
 
@@ -226,7 +226,7 @@ class Map extends Component {
         { units: "miles" }
       );
       const distanceMarker = createDistanceMarker(radius, color[i]);
-      const marker = new mapboxgl.Marker({ distanceMarker });
+      const marker = new mapboxgl.Marker({ element: distanceMarker });
       this.markerList.push(marker);
       return marker.setLngLat(radiusOffset.geometry.coordinates);
     });
