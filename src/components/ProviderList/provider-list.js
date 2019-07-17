@@ -11,7 +11,9 @@ class ProviderList extends Component {
       savedProviders,
       saveProvider,
       incomingState,
+      sortDirection,
       changeSortOrder,
+      changeSortDirection,
       highlightedProviders,
       displayProviderInformation
     } = this.props;
@@ -34,6 +36,10 @@ class ProviderList extends Component {
               handleChange={id => {
                 changeSortOrder(id);
               }}
+              changeDirection={() => {
+                changeSortDirection(sortDirection === 'desc' ? 'asc' : 'desc');
+              }}
+              sortDirection={sortDirection}
               group="sort"
               incomingState={incomingState}
             />

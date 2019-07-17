@@ -1,21 +1,32 @@
-import React from "react";
+import React from 'react';
 import Expandable from "../Dropdowns/expandable";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faSortNumericDown,
+  faSortNumericUp,
+} from "@fortawesome/free-solid-svg-icons";
 
 import "./sort-dropdown.css";
+
+const getSortIcon = (sortDirection) => {
+  if (sortDirection === 'asc') {
+    return faSortNumericUp;
+  }
+  return faSortNumericDown;
+};
 
 const SortDropdown = ({
   className,
   handleChange,
+  changeDirection,
   header,
   incomingState,
-  group,
-  options
+  options,
+  sortDirection,
 }) => {
-  let inputDiv = options.map((option, index) => (
+  let inputDiv = options.map((option, index) =>
     <div
-      className={`radio-container ${
-        option === incomingState ? "selected" : null
-      }`}
+      className={`radio-container ${option === incomingState ? "selected" : null}`}
       key={index}
       onClick={() => handleChange(option)}
     >
@@ -31,10 +42,10 @@ const SortDropdown = ({
         {option.toString()}
       </label>
     </div>
-  ));
-  let wrappedHeader = <h4>{header}</h4>;
+    );
+    let wrappedHeader = <h4>{header}</h4>;
 
-  return (
+    return (
     <div className="sort-container">
       <Expandable
         className={className}
@@ -42,12 +53,10 @@ const SortDropdown = ({
         content={inputDiv}
         closeOnSelect={true}
       />
-      <img
-        src="/sort-numeric-down.svg"
-        alt={`current sort method: ${incomingState}`}
-      />
+      <FontAwesomeIcon size="3x" icon={getSortIcon(sortDirection)}
+        onClick={() => changeDirection()} style={{cursor: 'pointer'}}/>
     </div>
-  );
+    )
 };
 
 export default SortDropdown;

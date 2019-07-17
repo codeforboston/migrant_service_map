@@ -1,3 +1,5 @@
+import iconColors from "../../assets/icon-colors";
+
 const scrollToCard = clickedProviderID => {
   const offsetTop = document.getElementById(clickedProviderID).offsetTop;
   const cardOffset = 50;
@@ -98,6 +100,7 @@ const normalizeProviders = providerFeatures => {
           providers: [id]
         };
       }
+debugger;
 
       return (providers.byId[id] = {
         id,
@@ -116,7 +119,8 @@ const normalizeProviders = providerFeatures => {
         typeId: formattedTypeId,
         "Type of Service": properties["Type of Service"], // as referenced in reducer helper function
         // Validated By
-        website: properties.Website
+        website: properties.Website,
+        color: iconColors.formattedTypeId,
       });
     }
   );

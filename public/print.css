@@ -1,0 +1,43 @@
+body {
+  -webkit-print-color-adjust: exact;
+}
+
+@page {
+  size: portrait;
+  margin: 0;
+}
+
+.print {
+  width: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 18px;
+}
+
+.print .category {
+  width: 100%;
+}
+
+.print .category .header {
+  background-color: #e2e2e4;
+  font-weight: bold;
+  font-size: 24px;
+  padding: 5px 15px;
+  margin-bottom: 30px;
+}
+
+.print .category .provider {
+  padding-left: 15px;
+}
+
+.print .category .provider * {
+  margin-bottom: 10px;
+}
+
+.print .category .provider .details > * {
+  padding-left: 10px;
+}
+
+.print .category .provider .name {
+  font-weight: bold;
+  font-size: 22px;
+}
