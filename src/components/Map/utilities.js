@@ -100,7 +100,6 @@ const normalizeProviders = providerFeatures => {
           providers: [id]
         };
       }
-debugger;
 
       return (providers.byId[id] = {
         id,
