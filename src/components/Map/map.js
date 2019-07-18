@@ -6,7 +6,6 @@ import { circle, point, transformTranslate } from "@turf/turf";
 import typeImages from "assets/images";
 import distances from "assets/distances";
 import iconColors from "assets/icon-colors";
-import _ from "lodash";
 import {
   convertProvidersToGeoJSON,
   createCenterMarker,
@@ -75,7 +74,6 @@ class Map extends Component {
       // ev.result contains id, place_name, text
       let { geometry, id, text } = ev.result;
       this.props.setSearchCenterCoordinates(geometry.coordinates, id, text);
-      this.addDistanceIndicator();
     });
 
     geocoder.on("clear", ev => {
@@ -189,39 +187,46 @@ class Map extends Component {
         forGeoConvert.push(provider);
       });
     });
-
     return convertProvidersToGeoJSON(forGeoConvert);
   };
 
-  addDistanceIndicator = () => {
-    //TODO: make this input from the distance filter
-    const distanceFilterDistances = distances;
+  updatePinAndDistanceIndicator = (prevProps) => {
+    const distance = this.props.filters.distance;
+    const searchCoordinates = this.props.search.coordinates;
+    if (distance === prevProps.filters.distance 
+      && searchCoordinates === prevProps.search.coordinates) {
+      // Do not render if the relevant props have not changed. This includes
+      // the first render of this component, so the marker is not shown until
+      // the user starts interacting with the app. 
+      return;
+    }
+    // If no distance filter is set, display all distance indicators.
+    const distanceIndicatorRadii = distance ? [distance] : distances;
     const { color, options } = markerStyle;
-    const { search } = this.props;
     removeDistanceMarkers(this.markerList);
-    this.addDistanceFilterLayer(distanceFilterDistances, this.map);
+    this.addDistanceIndicatorLayer();
 
     const centerMarker = createCenterMarker();
 
-    const mapPin = new mapboxgl.Marker({ centerMarker });
+    const mapPin = new mapboxgl.Marker({ element: centerMarker });
     this.markerList.push(mapPin);
-    mapPin.setLngLat(search.coordinates);
+    mapPin.setLngLat(searchCoordinates);
 
-    const circles = distanceFilterDistances.map((radius, i) =>
-      circle(search.coordinates, radius, {
+    const circles = distanceIndicatorRadii.map((radius, i) =>
+      circle(searchCoordinates, radius, {
         ...options,
         properties: { color: color[i], "stroke-width": radius }
       })
     );
-    const labels = distanceFilterDistances.map((radius, i) => {
+    const labels = distanceIndicatorRadii.map((radius, i) => {
       const radiusOffset = transformTranslate(
-        point(search.coordinates),
+        point(searchCoordinates),
         radius,
         90,
         { units: "miles" }
       );
-      const distanceMarker = createDistanceMarker((radius, color[i]));
-      const marker = new mapboxgl.Marker({ distanceMarker });
+      const distanceMarker = createDistanceMarker(radius, color[i]);
+      const marker = new mapboxgl.Marker({ element: distanceMarker });
       this.markerList.push(marker);
       return marker.setLngLat(radiusOffset.geometry.coordinates);
     });
@@ -244,7 +249,7 @@ class Map extends Component {
     });
   };
 
-  addDistanceFilterLayer = distanceFilterDistances => {
+  addDistanceIndicatorLayer = () => {
     removeDistanceMarkers(this.markerList);
     if (!this.map.getSource("distance-indicator-source")) {
       this.map.addSource("distance-indicator-source", {
@@ -263,7 +268,7 @@ class Map extends Component {
         paint: {
           "line-color": ["get", "color"],
           "line-opacity": 0.8,
-          "line-width": ["*", distanceFilterDistances[0], 3],
+          "line-width": ["*", 1, 3],
           "line-offset": 5
         }
       });
@@ -271,12 +276,11 @@ class Map extends Component {
   };
 
   componentDidUpdate(prevProps) {
-    const { providersList } = this.props;
     this.setSingleSourceInMap();
-    const providerTypesById = _.keyBy(providersList, "id");
     const features = this.geoJSONFeatures();
     this.setSourceFeatures(features);
     this.props.providerTypes.allIds.map(typeId => this.findLayerInMap(typeId));
+    this.updatePinAndDistanceIndicator(prevProps);
   }
 
   componentWillUnmount() {
