@@ -3,6 +3,10 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
+import { getProvidersFromSheet } from "util/google_sheets";
+import { providersSheetURL } from "app.json";
+
+getProvidersFromSheet(providersSheetURL);
 
 ReactDOM.render(<App />, document.getElementById("root"));
 
