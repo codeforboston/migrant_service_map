@@ -70,7 +70,7 @@ export function initializeVisaFilter(visas) {
 export function changeVisaFilter(visa) {
   return {
     type: CHANGE_VISA,
-    visa: visa
+    visa
   };
 }
 
