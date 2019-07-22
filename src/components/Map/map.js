@@ -301,7 +301,7 @@ class Map extends Component {
     this.props.providerTypes.allIds.map(typeId => this.findLayerInMap(typeId));
     this.updatePinAndDistanceIndicator(prevProps);
 
-    if (this.props.filters.distance != prevProps.filters.distance) {
+    if (this.props.filters.distance !== prevProps.filters.distance) {
       this.map.flyTo({
         zoom: this.zoomToDistance(this.props.filters.distance)
       })
