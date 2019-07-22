@@ -81,7 +81,7 @@ class Map extends Component {
       }
 
       this.props.setSearchCenterCoordinates(geometry.coordinates, id, text);
-      this.addDistanceIndicator();
+      this.addDistanceIndicatorLayer();
       map.flyTo({
         center: geometry.coordinates,
         zoom: zoom
