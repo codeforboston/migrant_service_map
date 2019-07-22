@@ -288,14 +288,6 @@ class Map extends Component {
     }
   };
 
-  componentWillUpdate(newProps) {
-    if (newProps.filters.distance) {
-      this.map.flyTo({
-        zoom: this.zoomToDistance(newProps.filters.distance)
-      })
-    }
-  }
-
   componentDidUpdate(prevProps) {
     const { providersList } = this.props;
     this.setSingleSourceInMap();
@@ -303,6 +295,12 @@ class Map extends Component {
     const features = this.geoJSONFeatures();
     this.setSourceFeatures(features);
     this.props.providerTypes.allIds.map(typeId => this.findLayerInMap(typeId));
+
+    if (this.props.filters.distance != prevProps.filters.distance) {
+      this.map.flyTo({
+        zoom: this.zoomToDistance(this.props.filters.distance)
+      })
+    }
   }
 
   componentWillUnmount() {
