@@ -18,6 +18,20 @@ label {
   margin-left: 10px;
 }
 
+.service-providers .tab-header {
+  padding: 20px;
+}
+
+.service-providers .tab-header .header-text {
+  margin: 0px;
+}
+
+.service-providers .tab-header .header-subtext {
+  color: #7e7e7e;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
 .dropdown-list-container.expanded p {
   color: white;
 }
