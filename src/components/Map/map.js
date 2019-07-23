@@ -73,11 +73,11 @@ class Map extends Component {
     geocoder.on("result", ev => {
       // ev.result contains id, place_name, text
       let { geometry, id, text } = ev.result;
-      let zoom
+      let zoom;
       if (!this.props.filters.distance) {
-        zoom = 14
+        zoom = 14;
       } else {
-        zoom = this.zoomToDistance(this.props.filters.distance)
+        zoom = this.zoomToDistance(this.props.filters.distance);
       }
 
       this.props.setSearchCenterCoordinates(geometry.coordinates, id, text);
@@ -85,7 +85,7 @@ class Map extends Component {
       map.flyTo({
         center: geometry.coordinates,
         zoom: zoom
-      })
+      });
     });
 
     geocoder.on("clear", ev => {
@@ -96,10 +96,10 @@ class Map extends Component {
   }
 
   zoomToDistance = distance => {
-    let resolution = window.screen.height
-    let latitude = this.props.search.coordinates[1]
-    let milesPerPixel = distance * 1609.344 / resolution
-    return Math.log2(6378137 * Math.cos(latitude * Math.PI / 180) / milesPerPixel) - 8
+    let resolution = window.screen.height;
+    let latitude = this.props.search.coordinates[1];
+    let milesPerPixel = distance * 1609.344 / resolution;
+    return Math.log2(6378137 * Math.cos(latitude * Math.PI / 180) / milesPerPixel) - 8;
   }
 
   removeLayersFromOldDataSet = () => {
@@ -304,7 +304,7 @@ class Map extends Component {
     if (this.props.filters.distance && this.props.filters.distance !== prevProps.filters.distance) {
       this.map.flyTo({
         zoom: this.zoomToDistance(this.props.filters.distance)
-      })
+      });
     }
   }
 
