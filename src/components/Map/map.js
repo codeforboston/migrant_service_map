@@ -53,11 +53,6 @@ class Map extends Component {
       initializeVisaFilter(PLACEHOLDER_VISA_TYPES);
 
       this.removeLayersFromOldDataSet();
-      const providerFeatures = map.querySourceFeatures("composite", {
-        sourceLayer: "Migrant_Services_-_MSM_Final_1"
-      });
-      const normalizedProviders = normalizeProviders(providerFeatures);
-      initializeProviders(normalizedProviders);
 
       const allSymbolLayers = [...providerTypes.allIds, "highlightedProviders"];
       allSymbolLayers.forEach(typeId => {
