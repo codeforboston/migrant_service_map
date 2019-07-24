@@ -115,10 +115,10 @@ class Map extends Component {
           'visibility': 'visible'
         },
         paint: {
-            "icon-color": ['get', 'color'],
-            "icon-halo-color": "white",
-            "icon-halo-width": 1,
-            "icon-halo-blur": 0,
+          "icon-color": ['get', 'color'],
+          "icon-halo-color": "white",
+          "icon-halo-width": .5,
+          "icon-halo-blur": 1,
         }
       });
 
@@ -127,27 +127,45 @@ class Map extends Component {
   };
 
   findClustersInMap = () => {
+
+    this.map.addLayer({
+      id: "clusterCircle",
+      source: "displayData",
+      type: "circle",
+      filter: ["has", "point_count"],
+      // layout: {
+      // },
+      paint: {
+        "circle-color": "black",
+        "circle-radius": 30,
+        // "circle-stroke-width": 2,
+        // "circle-stroke-color": "black",
+        "circle-opacity": .35
+      }
+
+    });
+
     let clusterName = "cluster";
     this.map.addLayer({
-                        id: clusterName,
-                        source: "displayData",
-                        type: "symbol",
-                        filter: ["has", "point_count"],
-                        layout: {
-                          "icon-size": 0.4,
-                          "text-field": "{point_count_abbreviated}",
-                          "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-                          "text-size": 36,
-                          "icon-allow-overlap": true,
-                          "icon-ignore-placement": true,
-                          'visibility': 'visible'
-                        },
-                        paint: {
-                          "text-color": "black",
-                          "text-halo-color": "#ffffff",
-                          "text-halo-width": 2
-                        }
-                      });
+        id: clusterName,
+        source: "displayData",
+        type: "symbol",
+        filter: ["has", "point_count"],
+        layout: {
+          "icon-size": 0.4,
+          "text-field": "{point_count_abbreviated}",
+          "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+          "text-size": 36,
+          "icon-allow-overlap": true,
+          "icon-ignore-placement": true,
+          'visibility': 'visible'
+        },
+        paint: {
+          "text-color": "black",
+          "text-halo-color": "#ffffff",
+          "text-halo-width": 2
+        }
+      });
 
     this.addClusterClickHandlerToMapLayer(clusterName);
   };
