@@ -98,8 +98,8 @@ class Map extends Component {
   zoomToDistance = distance => {
     let resolution = window.screen.height;
     let latitude = this.props.search.coordinates[1];
-    let milesPerPixel = distance * 1609.344 / resolution;
-    return Math.log2(6378137 * Math.cos(latitude * Math.PI / 180) / milesPerPixel) - 8;
+    let milesPerPixel = distance * 7 / resolution;
+    return Math.log2(24901 * Math.cos(latitude * Math.PI / 180) / milesPerPixel) - 8;
   }
 
   removeLayersFromOldDataSet = () => {
@@ -303,6 +303,7 @@ class Map extends Component {
 
     if (this.props.filters.distance && this.props.filters.distance !== prevProps.filters.distance) {
       this.map.flyTo({
+        center: this.props.search.coordinates,
         zoom: this.zoomToDistance(this.props.filters.distance)
       });
     }
