@@ -4,15 +4,24 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSortNumericDown,
   faSortNumericUp,
+  faSortAlphaUp,
+  faSortAlphaDown
 } from "@fortawesome/free-solid-svg-icons";
 
 import "./sort-dropdown.css";
 
-const getSortIcon = (sortDirection) => {
-  if (sortDirection === 'asc') {
-    return faSortNumericUp;
+const getSortIcon = (sortDirection, incomingState) => {
+  if (incomingState === 'Distance') {
+    if (sortDirection === 'asc') {
+      return faSortNumericUp;
+    }
+    return faSortNumericDown;
+  } else {
+    if (sortDirection === 'asc') {
+      return faSortAlphaUp;
+    }
+    return faSortAlphaDown;
   }
-  return faSortNumericDown;
 };
 
 const SortDropdown = ({
@@ -43,7 +52,7 @@ const SortDropdown = ({
       </label>
     </div>
     );
-    let wrappedHeader = <h4>{header}</h4>;
+    let wrappedHeader = <h4>{header}: {incomingState}</h4>;
 
     return (
     <div className="sort-container">
@@ -53,7 +62,7 @@ const SortDropdown = ({
         content={inputDiv}
         closeOnSelect={true}
       />
-      <FontAwesomeIcon size="3x" icon={getSortIcon(sortDirection)}
+      <FontAwesomeIcon size="3x" icon={getSortIcon(sortDirection, incomingState)}
         onClick={() => changeDirection()} style={{cursor: 'pointer'}}/>
     </div>
     )

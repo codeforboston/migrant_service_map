@@ -15,6 +15,19 @@ import {
   removeDistanceMarkers
 } from "./utilities.js";
 
+const PLACEHOLDER_VISA_TYPES = [
+  "Temporary Agricultural Worker H-2A",
+  "H-1B",
+  "Permanent Resident Card (I-551)",
+  "Advance Parole (I-512)",
+  "Demo Type 1 (D1)",
+  "Demo Type 2 (D2)",
+  "Demo Type 3 (D3)",
+  "Demo Type 4 (D4)",
+  "Demo Type 5 (D5)",
+  "Demo Type 6 (D6)"
+];
+
 mapboxgl.accessToken =
   "pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw";
 
@@ -26,8 +39,8 @@ class Map extends Component {
   }
 
   componentDidMount() {
-    const {mapCenter, coordinates} = this.props.search;
-    const {providerTypes, initializeProviders} = this.props;
+    const { mapCenter, coordinates } = this.props.search;
+    const { providerTypes, initializeProviders, initializeVisaFilter } = this.props;
     const map = new mapboxgl.Map({
       container: "map", // container id
       style: "mapbox://styles/refugeeswelcome/cjh9k11zz15ds2spbs4ld6y9o", // stylesheet location
@@ -37,6 +50,8 @@ class Map extends Component {
     // setMapObject(map);
     map.addControl(new mapboxgl.NavigationControl());
     map.on("load", () => {
+      initializeVisaFilter(PLACEHOLDER_VISA_TYPES);
+
       this.removeLayersFromOldDataSet();
       const providerFeatures = map.querySourceFeatures("composite", {
         sourceLayer: "Migrant_Services_-_MSM_Final_1"
@@ -44,7 +59,8 @@ class Map extends Component {
       const normalizedProviders = normalizeProviders(providerFeatures);
       initializeProviders(normalizedProviders);
 
-      const allSymbolLayers = [...providerTypes.allIds, "tests"];
+
+      const allSymbolLayers = [...providerTypes.allIds, "highlightedProviders"];
       allSymbolLayers.forEach(typeId => {
 
         this.findLayerInMap(typeId);
@@ -74,8 +90,20 @@ class Map extends Component {
 
     geocoder.on("result", ev => {
       // ev.result contains id, place_name, text
-      let {geometry, id, text} = ev.result;
+      let { geometry, id, text } = ev.result;
+      let zoom;
+      if (!this.props.filters.distance) {
+        zoom = this.zoomToDistance(1.5);
+      } else {
+        zoom = this.zoomToDistance(this.props.filters.distance);
+      }
+
       this.props.setSearchCenterCoordinates(geometry.coordinates, id, text);
+      this.addDistanceIndicatorLayer();
+      map.flyTo({
+        center: geometry.coordinates,
+        zoom: zoom
+      });
     });
 
     geocoder.on("clear", ev => {
@@ -83,6 +111,13 @@ class Map extends Component {
       this.removeReferenceLocation(this.map);
       this.props.setSearchCenterCoordinates(center, 1, "");
     });
+  }
+
+  zoomToDistance = distance => {
+    let resolution = window.screen.height;
+    let latitude = this.props.search.coordinates[1];
+    let milesPerPixel = distance * 8 / resolution;
+    return Math.log2(24901 * Math.cos(latitude * Math.PI / 180) / milesPerPixel) - 8;
   }
 
   removeLayersFromOldDataSet = () => {
@@ -112,7 +147,8 @@ class Map extends Component {
           "icon-size": 0.3,
           "icon-allow-overlap": true,
           "icon-ignore-placement": true,
-          'visibility': 'visible'
+          "icon-padding": 10,
+          visibility: "visible"
         },
         paint: {
           "icon-color": ['get', 'color'],
@@ -247,7 +283,7 @@ class Map extends Component {
       typeId.providers.forEach(provider => {
         provider.color = highlightedProviders.includes(provider.id)
           ? "rgb(255,195,26)"
-          : iconColors[typeId.id];
+          : iconColors[provider.typeId];
         forGeoConvert.push(provider);
       });
     });
@@ -345,6 +381,13 @@ class Map extends Component {
     this.setSourceFeatures(features);
     this.props.providerTypes.allIds.map(typeId => this.findLayerInMap(typeId));
     this.updatePinAndDistanceIndicator(prevProps);
+
+    if (this.props.filters.distance && this.props.filters.distance !== prevProps.filters.distance) {
+      this.map.flyTo({
+        center: this.props.search.coordinates,
+        zoom: this.zoomToDistance(this.props.filters.distance)
+      });
+    }
   }
 
   componentWillUnmount() {

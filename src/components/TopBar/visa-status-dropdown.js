@@ -4,20 +4,12 @@ import CheckBoxDropdown from "../Dropdowns/checkbox-dropdown";
 const defaultSubheaderText = "Current Visa Status";
 export default class VisaStatusDropdown extends React.Component {
   state = {
-    subheaderText: defaultSubheaderText,
     viewAllOptions: false
   };
 
   onCheckboxChanged = (option, selectedValues) => {
     const { onChange } = this.props;
     onChange(option);
-    if (selectedValues.length === 0) {
-      this.setState({ subheaderText: defaultSubheaderText });
-    } else if (selectedValues.length === 1) {
-      this.setState({ subheaderText: selectedValues[0].display });
-    } else {
-      this.setState({ subheaderText: selectedValues.length + " Selected" });
-    }
   };
 
   onSeeMore = () => {
@@ -36,11 +28,18 @@ export default class VisaStatusDropdown extends React.Component {
 
   render() {
     const { className, visaTypes } = this.props;
-    const { subheaderText, viewAllOptions } = this.state;
+    const { viewAllOptions } = this.state;
+    let subheaderText = defaultSubheaderText;
+
+    if (visaTypes.visible.length === 1) {
+      subheaderText = visaTypes.visible[0];
+    } else {
+      subheaderText = visaTypes.visible.length + " Selected";
+    }
 
     const preferredVisaTypes = viewAllOptions
-      ? visaTypes
-      : visaTypes.slice(0, 1);
+      ? visaTypes.allVisas
+      : visaTypes.allVisas.slice(0, 1);
     const footer = <div onClick={this.onSeeMore}>See More</div>;
     return (
       <CheckBoxDropdown
@@ -50,6 +49,7 @@ export default class VisaStatusDropdown extends React.Component {
           display: visaType
         }))}
         onChange={this.onCheckboxChanged}
+        visibleTypes={visaTypes.visible}
         header={
           <>
             <h2>VISA STATUS</h2>

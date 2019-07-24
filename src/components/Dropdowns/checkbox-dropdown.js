@@ -18,7 +18,7 @@ export default class CheckBoxDropdown extends React.Component {
       header,
       expanded,
       onToggleExpanded,
-      //visibleTypes
+      visibleTypes,
       onChange = () => {}
     } = this.props;
     const inputDiv = options.map((option, index) => {
@@ -29,6 +29,7 @@ export default class CheckBoxDropdown extends React.Component {
             id={id}
             type="checkbox"
             value={display}
+            checked={visibleTypes.includes(id)}
             name={id}
             onChange={({ target: { checked } }) => {
               this.optionsMappings[id] = checked;
