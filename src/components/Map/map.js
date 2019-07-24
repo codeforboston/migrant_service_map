@@ -15,6 +15,19 @@ import {
   removeDistanceMarkers
 } from "./utilities.js";
 
+const PLACEHOLDER_VISA_TYPES = [
+  "Temporary Agricultural Worker H-2A",
+  "H-1B",
+  "Permanent Resident Card (I-551)",
+  "Advance Parole (I-512)",
+  "Demo Type 1 (D1)",
+  "Demo Type 2 (D2)",
+  "Demo Type 3 (D3)",
+  "Demo Type 4 (D4)",
+  "Demo Type 5 (D5)",
+  "Demo Type 6 (D6)"
+];
+
 mapboxgl.accessToken =
   "pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw";
 
@@ -27,7 +40,7 @@ class Map extends Component {
 
   componentDidMount() {
     const { mapCenter, coordinates } = this.props.search;
-    const { providerTypes, initializeProviders } = this.props;
+    const { providerTypes, initializeProviders, initializeVisaFilter } = this.props;
     const map = new mapboxgl.Map({
       container: "map", // container id
       style: "mapbox://styles/refugeeswelcome/cjh9k11zz15ds2spbs4ld6y9o", // stylesheet location
@@ -37,12 +50,15 @@ class Map extends Component {
     // setMapObject(map);
     map.addControl(new mapboxgl.NavigationControl());
     map.on("load", () => {
+      initializeVisaFilter(PLACEHOLDER_VISA_TYPES);
+
       this.removeLayersFromOldDataSet();
       const providerFeatures = map.querySourceFeatures("composite", {
         sourceLayer: "Migrant_Services_-_MSM_Final_1"
       });
       const normalizedProviders = normalizeProviders(providerFeatures);
       initializeProviders(normalizedProviders);
+
 
       const allSymbolLayers = [...providerTypes.allIds, "highlightedProviders"];
       allSymbolLayers.forEach(typeId => {
