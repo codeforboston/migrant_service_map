@@ -219,7 +219,7 @@ class Map extends Component {
       typeId.providers.forEach(provider => {
         provider.color = highlightedProviders.includes(provider.id)
           ? "rgb(255,195,26)"
-          : iconColors[typeId.id];
+          : iconColors[provider.typeId];
         forGeoConvert.push(provider);
       });
     });
