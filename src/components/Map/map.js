@@ -48,6 +48,7 @@ class Map extends Component {
       allSymbolLayers.forEach(typeId => {
 
         this.findLayerInMap(typeId);
+        this.findClustersInMap(typeId);
       });
       this.loadProviderTypeImage(typeImages);
     });
@@ -105,7 +106,7 @@ class Map extends Component {
         id: typeId,
         source: "displayData",
         type: "symbol",
-        // filter: ["all", ["!=", "has", "point_count"],["==", "typeId", typeId]],
+        filter: ["all", ["!=", "has", "point_count"],["==", "typeId", typeId]],
         layout: {
           "icon-image": typeId + "icon",
           "icon-size": 0.3,
@@ -118,41 +119,38 @@ class Map extends Component {
             "icon-halo-color": "white",
             "icon-halo-width": 1,
             "icon-halo-blur": 0,
-        },
-                            // paint: {
-                            //     "text-color": "black",
-                            //     "text-halo-color": "#ffffff",
-                            //     "text-halo-width": 2
-                            // }
-        filter: ["==", "typeId", typeId]
+        }
       });
 
-        //Adding in cluster functionality
-        this.map.addLayer({
-                              id: typeId+"-cluster",
-                              source: "displayData",
-                              type: "symbol",
-                              filter: ["has", "point_count"],
-                              layout: {
-                                  "icon-image": typeId + "icon",
-                                  "icon-size": 0.4,
-                                  "text-field": "{point_count_abbreviated}",
-                                  "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-                                  "text-size": 36,
-                                  "icon-allow-overlap": true,
-                                  "icon-ignore-placement": true,
-                                  'visibility': 'visible'
-                              },
-                              paint: {
-                                  "text-color": "black",
-                                  "text-halo-color": "#ffffff",
-                                  "text-halo-width": 2
-                              }
-                          });
-
-      this.addClickHandlerToMapIdLayer(typeId);
-      this.addClusterClickHandlerToMapLayer(typeId);
+        this.addClickHandlerToMapIdLayer(typeId);
     }
+  };
+
+  findClustersInMap = (typeId) => {
+      this.map.addLayer({
+                            id: typeId+"-cluster",
+                            source: "displayData",
+                            type: "symbol",
+                            filter: ["has", "point_count"],
+                            layout: {
+                                "icon-image": typeId + "icon",
+                                "icon-size": 0.4,
+                                "text-field": "{point_count_abbreviated}",
+                                "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+                                "text-size": 36,
+                                "icon-allow-overlap": true,
+                                "icon-ignore-placement": true,
+                                'visibility': 'visible'
+                            },
+                            paint: {
+                                "text-color": "black",
+                                "text-halo-color": "#ffffff",
+                                "text-halo-width": 2
+                            }
+                        });
+
+
+      this.addClusterClickHandlerToMapLayer(typeId);
   };
 
   setSingleSourceInMap = () => {
