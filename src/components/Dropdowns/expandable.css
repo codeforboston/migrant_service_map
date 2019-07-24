@@ -1,9 +1,9 @@
 .expandable-container {
   /* width: 100%; */
   color: #8c45cf;
-  background-color: white;
   overflow: visible;
   position: relative;
+  background: #FDFAFF;
   z-index: 100;
 }
 
@@ -16,6 +16,9 @@
   flex-direction: column;
   justify-content: stretch;
   padding: 0 1rem 1rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #D7ADFF;
+  box-shadow: 1px 3px 4px rgba(96, 1, 185, 0.25);
 }
 
 .expandable-container .expandable-content-wrapper.expanded {
