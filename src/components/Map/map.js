@@ -144,6 +144,7 @@ class Map extends Component {
           "icon-size": 0.3,
           "icon-allow-overlap": true,
           "icon-ignore-placement": true,
+          "icon-padding": 10,
           visibility: "visible"
         },
         paint: {
