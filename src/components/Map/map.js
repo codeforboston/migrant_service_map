@@ -48,6 +48,7 @@ class Map extends Component {
       allSymbolLayers.forEach(typeId => {
 
         this.findLayerInMap(typeId);
+        this.findClustersInMap(typeId);
       });
       this.loadProviderTypeImage(typeImages);
     });
@@ -109,42 +110,47 @@ class Map extends Component {
         layout: {
           "icon-image": typeId + "icon",
           "icon-size": 0.3,
-          "visibility": "visible",
-          "icon-allow-overlap": true,
-          "icon-ignore-placement": true
-        },
-        paint: {
-          "icon-color": ["get", "color"],
-          "icon-halo-color": "white",
-          "icon-halo-width": 1,
-          "icon-halo-blur": 0
-        },
-      });
-      //Adding in cluster functionality
-      this.map.addLayer({
-        id: typeId+"-cluster",
-        source: "displayData",
-        type: "symbol",
-        filter: ["has", "point_count"],
-        layout: {
-          "icon-image": typeId + "icon",
-          "icon-size": 0.4,
-          "text-field": "{point_count_abbreviated}",
-          "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-          "text-size": 36,
           "icon-allow-overlap": true,
           "icon-ignore-placement": true,
           'visibility': 'visible'
         },
         paint: {
-          "text-color": "black",
-          "text-halo-color": "#ffffff",
-          "text-halo-width": 2
+            "icon-color": ['get', 'color'],
+            "icon-halo-color": "white",
+            "icon-halo-width": 1,
+            "icon-halo-blur": 0,
         }
       });
-      this.addClickHandlerToMapIdLayer(typeId);
-      this.addClusterClickHandlerToMapLayer(typeId);
+
+        this.addClickHandlerToMapIdLayer(typeId);
     }
+  };
+
+  findClustersInMap = (typeId) => {
+      this.map.addLayer({
+                            id: typeId+"-cluster",
+                            source: "displayData",
+                            type: "symbol",
+                            filter: ["has", "point_count"],
+                            layout: {
+                                "icon-image": typeId + "icon",
+                                "icon-size": 0.4,
+                                "text-field": "{point_count_abbreviated}",
+                                "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+                                "text-size": 36,
+                                "icon-allow-overlap": true,
+                                "icon-ignore-placement": true,
+                                'visibility': 'visible'
+                            },
+                            paint: {
+                                "text-color": "black",
+                                "text-halo-color": "#ffffff",
+                                "text-halo-width": 2
+                            }
+                        });
+
+
+      this.addClusterClickHandlerToMapLayer(typeId);
   };
 
   setSingleSourceInMap = () => {
@@ -178,7 +184,7 @@ class Map extends Component {
           let features = mapView.queryRenderedFeatures(e.point, { layers: [ clusterSelected ] });
 
           let clusterId = features[0].properties.cluster_id;
-          this.getSource(typeId).getClusterExpansionZoom(clusterId, function (err, zoom) {
+          mapView.getSource("displayData").getClusterExpansionZoom(clusterId, function (err, zoom) {
               if (err)
                   return;
 
