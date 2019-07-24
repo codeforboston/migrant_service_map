@@ -133,13 +133,9 @@ class Map extends Component {
       source: "displayData",
       type: "circle",
       filter: ["has", "point_count"],
-      // layout: {
-      // },
       paint: {
         "circle-color": "black",
         "circle-radius": 30,
-        // "circle-stroke-width": 2,
-        // "circle-stroke-color": "black",
         "circle-opacity": .35
       }
 
