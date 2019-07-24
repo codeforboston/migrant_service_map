@@ -89,7 +89,19 @@ class Map extends Component {
     geocoder.on("result", ev => {
       // ev.result contains id, place_name, text
       let { geometry, id, text } = ev.result;
+      let zoom;
+      if (!this.props.filters.distance) {
+        zoom = this.zoomToDistance(1.5);
+      } else {
+        zoom = this.zoomToDistance(this.props.filters.distance);
+      }
+
       this.props.setSearchCenterCoordinates(geometry.coordinates, id, text);
+      this.addDistanceIndicatorLayer();
+      map.flyTo({
+        center: geometry.coordinates,
+        zoom: zoom
+      });
     });
 
     geocoder.on("clear", ev => {
@@ -97,6 +109,13 @@ class Map extends Component {
       this.removeReferenceLocation(this.map);
       this.props.setSearchCenterCoordinates(center, 1, "");
     });
+  }
+
+  zoomToDistance = distance => {
+    let resolution = window.screen.height;
+    let latitude = this.props.search.coordinates[1];
+    let milesPerPixel = distance * 8 / resolution;
+    return Math.log2(24901 * Math.cos(latitude * Math.PI / 180) / milesPerPixel) - 8;
   }
 
   removeLayersFromOldDataSet = () => {
@@ -209,11 +228,11 @@ class Map extends Component {
   updatePinAndDistanceIndicator = (prevProps) => {
     const distance = this.props.filters.distance;
     const searchCoordinates = this.props.search.coordinates;
-    if (distance === prevProps.filters.distance 
+    if (distance === prevProps.filters.distance
       && searchCoordinates === prevProps.search.coordinates) {
       // Do not render if the relevant props have not changed. This includes
       // the first render of this component, so the marker is not shown until
-      // the user starts interacting with the app. 
+      // the user starts interacting with the app.
       return;
     }
     // If no distance filter is set, display all distance indicators.
@@ -297,6 +316,13 @@ class Map extends Component {
     this.setSourceFeatures(features);
     this.props.providerTypes.allIds.map(typeId => this.findLayerInMap(typeId));
     this.updatePinAndDistanceIndicator(prevProps);
+
+    if (this.props.filters.distance && this.props.filters.distance !== prevProps.filters.distance) {
+      this.map.flyTo({
+        center: this.props.search.coordinates,
+        zoom: this.zoomToDistance(this.props.filters.distance)
+      });
+    }
   }
 
   componentWillUnmount() {
