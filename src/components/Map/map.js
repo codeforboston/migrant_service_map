@@ -27,7 +27,7 @@ class Map extends Component {
 
   componentDidMount() {
     const { mapCenter, coordinates } = this.props.search;
-    const { providerTypes, initializeProviders } = this.props;
+    const { providerTypes } = this.props;
     const map = new mapboxgl.Map({
       container: "map", // container id
       style: "mapbox://styles/refugeeswelcome/cjh9k11zz15ds2spbs4ld6y9o", // stylesheet location
@@ -38,11 +38,6 @@ class Map extends Component {
     map.addControl(new mapboxgl.NavigationControl());
     map.on("load", () => {
       this.removeLayersFromOldDataSet();
-      const providerFeatures = map.querySourceFeatures("composite", {
-        sourceLayer: "Migrant_Services_-_MSM_Final_1"
-      });
-      const normalizedProviders = normalizeProviders(providerFeatures);
-      initializeProviders(normalizedProviders);
 
       const allSymbolLayers = [...providerTypes.allIds, "highlightedProviders"];
       allSymbolLayers.forEach(typeId => {

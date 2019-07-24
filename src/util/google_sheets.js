@@ -1,5 +1,6 @@
 import Papa from "papaparse";
 import { initializeProviders } from "redux/actions";
+import store from "../redux/store";
 import _ from "lodash";
 
 const headersToProviderProperties = {
@@ -96,8 +97,7 @@ const providersLoadCallback = ({ data: providersData, errors }) => {
   });
   providerTypes.allIds = Array.from(providerTypeIds);
 
-  debugger;
-  initializeProviders(providersData);
+  store.dispatch(initializeProviders({ providerTypes, providers }));
 };
 
 const getProvidersFromSheet = async url => {
