@@ -75,7 +75,7 @@ class Map extends Component {
       let { geometry, id, text } = ev.result;
       let zoom;
       if (!this.props.filters.distance) {
-        zoom = 14;
+        zoom = this.zoomToDistance(1.5);
       } else {
         zoom = this.zoomToDistance(this.props.filters.distance);
       }
@@ -98,7 +98,7 @@ class Map extends Component {
   zoomToDistance = distance => {
     let resolution = window.screen.height;
     let latitude = this.props.search.coordinates[1];
-    let milesPerPixel = distance * 7 / resolution;
+    let milesPerPixel = distance * 8 / resolution;
     return Math.log2(24901 * Math.cos(latitude * Math.PI / 180) / milesPerPixel) - 8;
   }
 
