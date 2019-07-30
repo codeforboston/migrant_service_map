@@ -32,7 +32,7 @@ class ProviderList extends Component {
             <SortDropdown
               className="sort-by"
               options={["Distance", "Name", "Provider Type"]}
-              header={"sorted by "}
+              header={"sorted by " + id}
               handleChange={id => {
                 changeSortOrder(id);
               }}
