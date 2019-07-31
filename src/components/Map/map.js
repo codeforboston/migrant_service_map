@@ -226,6 +226,24 @@ class Map extends Component {
     return convertProvidersToGeoJSON(forGeoConvert);
   };
 
+  getBoundingBox = (providerIds) => {
+    let lngs = [], lats = [];
+    for (let a in providerIds) {
+      lngs.push(this.props.providers.byId[providerIds[a]].coordinates[0]);
+      lats.push(this.props.providers.byId[providerIds[a]].coordinates[1]);
+      }
+
+    const maxLngs = lngs.reduce((a, b) => Math.max(a, b));
+    const minLngs = lngs.reduce((a, b) => Math.min(a, b));
+    const maxLats = lats.reduce((a, b) => Math.max(a, b));
+    const minLats = lats.reduce((a, b) => Math.min(a, b));
+
+    const boundsBox = [[minLngs, minLats], [maxLngs, maxLats]];
+    return boundsBox;
+
+  }
+
+
   updatePinAndDistanceIndicator = (prevProps) => {
     const distance = this.props.filters.distance;
     const searchCoordinates = this.props.search.coordinates;
@@ -311,13 +329,25 @@ class Map extends Component {
     }
   };
 
+  zoomToFit = (providerIds) => {
+    if(providerIds.length > 1){
+      const visibleIcons = this.getBoundingBox(providerIds);
+      this.map.fitBounds(visibleIcons, {
+        padding: {top: 200, bottom: 200, left: 200, right: 200},
+        duration: 2000,
+        maxZoom: 13,
+        linear: false,
+      });
+    }
+  }
+
   componentDidUpdate(prevProps) {
     this.setSingleSourceInMap();
     const features = this.geoJSONFeatures();
     this.setSourceFeatures(features);
     this.props.providerTypes.allIds.map(typeId => this.findLayerInMap(typeId));
     this.updatePinAndDistanceIndicator(prevProps);
-
+    this.zoomToFit(this.props.highlightedProviders);
     if (this.props.filters.distance && this.props.filters.distance !== prevProps.filters.distance) {
       this.map.flyTo({
         center: this.props.search.coordinates,
