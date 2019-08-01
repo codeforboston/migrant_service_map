@@ -34,7 +34,7 @@ const convertProviderProperties = ({provider, id}) => {
   const type_of_service = type_of_service_not_normalized
     .toLowerCase()
     .replace(/ /, "-");
-  return {
+  const convertedProvider = {
     ..._.pick(provider, [
       "address",
       "email",
@@ -45,14 +45,19 @@ const convertProviderProperties = ({provider, id}) => {
       "website"
     ]),
     id,
-    coordinates: [
-      parseFloat(provider.longitude),
-      parseFloat(provider.latitude)
-    ],
     typeName: type_of_service_not_normalized,
     typeId: type_of_service,
     "Type of Service": type_of_service_not_normalized
   };
+
+  if (!isNaN(provider.longitude) && !isNaN(provider.latitude)) {
+    convertedProvider.coordinates = [
+      parseFloat(provider.longitude),
+      parseFloat(provider.latitude)
+    ]
+  }
+
+  return convertedProvider;
 };
 
 const providersLoadCallback = ({ data: providersData, errors }) => {

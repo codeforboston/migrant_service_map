@@ -1,6 +1,5 @@
 import { distance, point } from "@turf/turf";
 import { createSelector } from "reselect";
-import _ from "lodash";
 
 const getProviderTypesById = state => state.providerTypes.byId;
 const getVisibleProviderTypes = state => state.providerTypes.visible;
@@ -120,7 +119,7 @@ function calculateProviderDistances(providers, refLocation, options) {
   var referencePoint = point(refLocation.coordinates);
   return providers.map(provider => {
     // New object with the distance attached
-    if (!isNaN(provider.coordinates[0] && !isNaN(provider.coordinates[1]))) {
+    if (Array.isArray(provider.coordinates)) {
       return {
         ...provider,
         distance: distance(point(provider.coordinates), referencePoint, options)
