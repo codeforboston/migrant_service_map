@@ -59,7 +59,7 @@ export const getProvidersSorted = createSelector(
 
     // sort and return an array of grouped providers
     // (for distance and alphabetical, it's a single-object array)
-    var flatList = groupedByProviderType.reduce(
+    let flatList = groupedByProviderType.reduce(
       (result, type) => result.concat(type.providers),
       [] // result needs to be initialized to empty array
     );
@@ -68,7 +68,7 @@ export const getProvidersSorted = createSelector(
       return [
         {
           id: "distance-sort",
-          name: "Closest to farthest",
+          name: getDistanceSortText(sortDirection),
           providers: sortProvidersByDistance(flatList, sortDirection)
         }
       ];
@@ -133,6 +133,10 @@ function calculateProviderDistances(providers, refLocation, options) {
   });
 }
 
+function getDistanceSortText(sortDirection) {
+  return (sortDirection === 'desc' ? "Closest to farthest" : "Farthest to closest");
+}
+
 function getProvidersWithinDistance(providers, maxDistance) {
   return providers.filter(
     provider => maxDistance && provider.distance < maxDistance
@@ -156,5 +160,4 @@ function sortProvidersByName(providerArray, direction) {
     }
     return (a.name > b.name) ? 1: -1;
   });
-
 }
