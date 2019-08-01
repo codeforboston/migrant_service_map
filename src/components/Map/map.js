@@ -1,8 +1,8 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import mapboxgl from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "./map.css";
-import {circle, point, transformTranslate} from "@turf/turf";
+import { circle, point, transformTranslate } from "@turf/turf";
 import typeImages from "assets/images";
 import distances from "assets/distances";
 import iconColors from "assets/icon-colors";
@@ -36,11 +36,33 @@ class Map extends Component {
     super(props);
     this.map = null;
     this.markerList = []; //need to keep track of marker handles ourselves -- cannot be queried from map
+    this.mapLoadedPromise = new Promise(resolve => {
+      this.mapFinishedLoading = () => resolve();
+    });
   }
+
+  onMapLoaded = () => {
+    const { providerTypes, initializeVisaFilter } = this.props;
+    initializeVisaFilter(PLACEHOLDER_VISA_TYPES);
+
+    this.removeLayersFromOldDataSet();
+    const providerFeatures = this.map.querySourceFeatures("composite", {
+      sourceLayer: "Migrant_Services_-_MSM_Final_1"
+    });
+
+
+    const allSymbolLayers = [...providerTypes.allIds, "highlightedProviders"];
+    allSymbolLayers.forEach(typeId => {
+      this.findLayerInMap(typeId);
+      this.findClustersInMap();
+    });
+    this.loadProviderTypeImage(typeImages);
+
+    this.mapFinishedLoading();
+  };
 
   componentDidMount() {
     const { mapCenter, coordinates } = this.props.search;
-    const { providerTypes, initializeVisaFilter } = this.props;
     const map = new mapboxgl.Map({
       container: "map", // container id
       style: "mapbox://styles/refugeeswelcome/cjh9k11zz15ds2spbs4ld6y9o", // stylesheet location
@@ -49,19 +71,7 @@ class Map extends Component {
     });
     // setMapObject(map);
     map.addControl(new mapboxgl.NavigationControl());
-    map.on("load", () => {
-      initializeVisaFilter(PLACEHOLDER_VISA_TYPES);
-
-      this.removeLayersFromOldDataSet();
-
-      const allSymbolLayers = [...providerTypes.allIds, "highlightedProviders"];
-      allSymbolLayers.forEach(typeId => {
-
-        this.findLayerInMap(typeId);
-        this.findClustersInMap();
-      });
-      this.loadProviderTypeImage(typeImages);
-    });
+    map.on("load", this.onMapLoaded);
 
     this.map = map;
 
@@ -121,7 +131,8 @@ class Map extends Component {
     }
   };
 
-  setSourceFeatures = features => {
+  setSourceFeatures = async features => {
+    await this.mapLoadedPromise;
     this.setSingleSourceInMap(); // checks source exists, adds if not
     this.map.getSource("displayData").setData({
       type: "FeatureCollection",
@@ -399,10 +410,10 @@ class Map extends Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  async componentDidUpdate(prevProps) {
     this.setSingleSourceInMap();
     const features = this.geoJSONFeatures();
-    this.setSourceFeatures(features);
+    await this.setSourceFeatures(features);
     this.props.providerTypes.allIds.map(typeId => this.findLayerInMap(typeId));
     this.updatePinAndDistanceIndicator(prevProps);
     this.zoomToFit(this.props.highlightedProviders);
