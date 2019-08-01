@@ -46,6 +46,7 @@
 .radio-container {
   color: gray;
   padding: 0.75rem;
+  background-color: white;
 }
 .radio-container:hover {
   background-color: #d2e9ff;
