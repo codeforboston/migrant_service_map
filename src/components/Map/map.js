@@ -133,8 +133,7 @@ class Map extends Component {
     }
   };
 
-  setSourceFeatures = async features => {
-    await this.mapLoadedPromise;
+  setSourceFeatures = features => {
     this.setSingleSourceInMap(); // checks source exists, adds if not
     this.map.getSource("displayData").setData({
       type: "FeatureCollection",
@@ -412,19 +411,21 @@ class Map extends Component {
     }
   }
 
-  async componentDidUpdate(prevProps) {
-    this.setSingleSourceInMap();
-    const features = this.geoJSONFeatures();
-    await this.setSourceFeatures(features);
-    this.props.providerTypes.allIds.map(typeId => this.findLayerInMap(typeId));
-    this.updatePinAndDistanceIndicator(prevProps);
-    this.zoomToFit(this.props.highlightedProviders);
-    if (this.props.filters.distance && this.props.filters.distance !== prevProps.filters.distance) {
-      this.map.flyTo({
-        center: this.props.search.coordinates,
-        zoom: this.zoomToDistance(this.props.filters.distance)
-      });
-    }
+  componentDidUpdate(prevProps) {
+    this.mapLoadedPromise.then(() => {
+      this.setSingleSourceInMap();
+      const features = this.geoJSONFeatures();
+      this.setSourceFeatures(features);
+      this.props.providerTypes.allIds.map(typeId => this.findLayerInMap(typeId));
+      this.updatePinAndDistanceIndicator(prevProps);
+      this.zoomToFit(this.props.highlightedProviders);
+      if (this.props.filters.distance && this.props.filters.distance !== prevProps.filters.distance) {
+        this.map.flyTo({
+          center: this.props.search.coordinates,
+          zoom: this.zoomToDistance(this.props.filters.distance)
+        });
+      }
+    });
   }
 
   componentWillUnmount() {
