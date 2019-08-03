@@ -317,21 +317,22 @@ class Map extends Component {
       // the first render of this component, so the marker is not shown until
       // the user starts interacting with the app.
       return;
-    }
-    if (distance !== prevProps.filters.distance) {
+    } else {
       this.updateZoom(distance);
     }
+
     // If no distance filter is set, display all distance indicators.
     const distanceIndicatorRadii = distance ? [distance] : distances;
     const {color, options} = markerStyle;
-    removeDistanceMarkers(this.markerList);
     this.addDistanceIndicatorLayer();
 
-    const centerMarker = createCenterMarker();
-
-    const mapPin = new mapboxgl.Marker({element: centerMarker});
-    this.markerList.push(mapPin);
-    mapPin.setLngLat(searchCoordinates);
+    const addPinToMap = () => {
+      const centerMarker = createCenterMarker();
+      const mapPin = new mapboxgl.Marker({element: centerMarker})
+      .setLngLat(searchCoordinates)
+      .addTo(this.map);
+      this.markerList.push(mapPin);
+    };
 
     const drawCircles = (radii) => {
       return radii.map((radius, i) =>
@@ -343,7 +344,7 @@ class Map extends Component {
     };
 
     let circles;
-    if (this.props.search.currentLocation !== 1) {
+    if (this.props.search.currentLocation !== 1 && this.props.search.currentLocation !== "default") {
       circles = drawCircles(distanceIndicatorRadii);
       const labels = distanceIndicatorRadii.map((radius, i) => {
         const radiusOffset = transformTranslate(
@@ -358,14 +359,14 @@ class Map extends Component {
         return marker.setLngLat(radiusOffset.geometry.coordinates);
       });
       labels.map(label => label.addTo(this.map));
+      addPinToMap();
     } else if (distance) {
       circles = drawCircles(distanceIndicatorRadii);
-      this.updateZoom(distance);
+      addPinToMap();
     } else {
       circles = drawCircles([]);
     };
 
-    mapPin.addTo(this.map);
     this.map
     .getSource("distance-indicator-source")
     .setData({type: "FeatureCollection", features: circles});
@@ -435,12 +436,6 @@ class Map extends Component {
     this.props.providerTypes.allIds.map(typeId => this.findLayerInMap(typeId));
     this.updatePinAndDistanceIndicator(prevProps);
     this.zoomToFit(this.props.highlightedProviders);
-    if (this.props.filters.distance && this.props.filters.distance !== prevProps.filters.distance) {
-      this.map.flyTo({
-        center: this.props.search.coordinates,
-        zoom: this.zoomToDistance(this.props.filters.distance)
-      });
-    }
   }
 
   componentWillUnmount() {
