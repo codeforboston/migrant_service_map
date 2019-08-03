@@ -21,6 +21,14 @@ div#root {
   height: 100%;
   overflow: hidden;
 }
+div#root {
+  display: flex;
+  flex-direction: column;
+}
+main {
+  flex: 1 0 auto;
+  position: relative;
+}
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",

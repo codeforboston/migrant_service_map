@@ -10,8 +10,10 @@ export default function App() {
   return (
     <Provider store={store}>
       <TopBar />
-      <TabbedMenu />
-      <Map />
+      <main role="main">
+        <TabbedMenu />
+        <Map />
+      </main>
     </Provider>
   );
 }

@@ -1,11 +1,17 @@
 .side-menu {
   position: absolute;
+  top: 0;
+  left: 20px;
+  padding: 20px 0;
   z-index: 1;
+  display: flex;
+  flex-direction: column;
   width: 400px;
-  height: calc(100vh - 2em); /* TODO this should be flex box column */
-  margin: 15px;
-  margin-top: 100px;
+  height: 100%;
   filter: drop-shadow(0 3px 3px gray);
+}
+.react-tabs__tab-panel {
+  height: 100%;
 }
 .react-tabs__tab-list {
   display: flex;
@@ -33,9 +39,6 @@
 /* .panels */
 .side-menu > div {
   margin-top: -10px; /* counter react-tabs styling */
-  padding-bottom: 4px;
-  height: 60vh;
-  min-height: 500px;
   background-color: white;
-  overflow-y: scroll;
+  overflow-y: hidden;
 }

@@ -5,6 +5,25 @@ import SortDropdown from "./sort-dropdown.js";
 import "./provider-list.css";
 
 class ProviderList extends Component {
+  constructor(props) {
+    super(props);
+    this.listElementRef = React.createRef();
+    this.lastHighlightedRef = React.createRef();
+  }
+
+  componentDidUpdate(previousProps) {
+    let newhlp = this.props.highlightedProviders;
+    if (newhlp.length && newhlp[0] !== previousProps.highlightedProviders[0]) {
+      // CSS 'scroll-behavior: smooth' animates the scroll when scrollTop is updated;
+      // adding a delay avoids edge case of scroll-upward not taking 'open' height into account
+      let timeoutID = setTimeout(
+        () => this.listElementRef.current.scrollTop = this.lastHighlightedRef.current.offsetTop,
+        60
+      )
+    }
+
+  }
+
   render() {
     const {
       providersList,
@@ -44,17 +63,20 @@ class ProviderList extends Component {
               group="sort"
               incomingState={incomingState}
             />
+            <ul className="providers-list" ref={this.listElementRef}>
             {providersList.map(providerType => (
-              <ul key={providerType.id} className="providers-list">
-                {!!providerType.providers.length && ( //if there is not providers MenuDropdown is not shown
+                <li key={providerType.id}>
                   <MenuDropdown
                     key={providerType.id}
                     id={providerType.id}
                     text={providerType.name}
                   >
-                    {providerType.providers.map(provider => (
+                  <ul className="providers-sublist">
+                  {!!providerType.providers.length &&  //if there is not providers MenuDropdown is not shown
+                    providerType.providers.map(provider => (
                       <li
                         key={provider.id}
+                        ref={ provider.id === highlightedProviders[0] ? this.lastHighlightedRef : null }
                         onClick={() => displayProviderInformation(provider.id)}
                       >
                         <MenuDropdownItem
@@ -72,11 +94,13 @@ class ProviderList extends Component {
                           flyToProvider={()=> flyToProvider(provider.id)}
                         />
                       </li>
-                    ))}
+                    ))
+                  }
+                  </ul>
                   </MenuDropdown>
-                )}
-              </ul>
+                </li>
             ))}
+            </ul>
           </>
         )}
       </div>

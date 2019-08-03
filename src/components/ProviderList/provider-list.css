@@ -18,6 +18,12 @@ label {
   margin-left: 10px;
 }
 
+.service-providers {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 .service-providers .tab-header {
   padding: 20px;
 }
@@ -30,6 +36,34 @@ label {
   color: #7e7e7e;
   font-size: 12px;
   margin-bottom: 10px;
+}
+
+.providers-list {
+  overflow-y: scroll;
+  /* giving relative positioning to this element allows it to be 
+  ** the offsetParent for its (grand)child <li>'s containing provider info
+  ** and eliminate the need to add any offset correction to scrollTop
+  ** when responding to a map click on a provider icon
+  **/
+  position: relative;
+  scroll-behavior: smooth;
+  margin: 0;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .providers-list {
+    scroll-behavior: auto;
+  }
+}
+
+.providers-sublist li:last-child {
+  padding-bottom: 16px;
+}
+
+.providers-sublist {
+  width: 100%;
 }
 
 .dropdown-list-container.expanded p {
