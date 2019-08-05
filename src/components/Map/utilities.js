@@ -49,7 +49,6 @@ const createDistanceMarker = (distance, color) => {
   markerElement.className = "distance-marker";
   markerElement.id = "marker-" + distance + "-miles";
   markerElement.innerText = distance + (distance > 1 ? " miles" : " mile");
-  markerElement.style.backgroundColor = color;
   return markerElement;
 };
 
