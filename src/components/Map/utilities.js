@@ -1,4 +1,10 @@
 import iconColors from "../../assets/icon-colors";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faMapMarkerAlt, faMapMarker, faCircle,
+} from "@fortawesome/free-solid-svg-icons";
+import ReactDOM from "react-dom";
+import React from "react";
 
 const scrollToCard = clickedProviderID => {
   const offsetTop = document.getElementById(clickedProviderID).offsetTop;
@@ -34,13 +40,12 @@ const convertProvidersToGeoJSON = providers => {
 
 const createCenterMarker = () => {
   const centerMarker = document.createElement("div");
-  const mapPin = document.createElement("div");
-  const pinHole = document.createElement("div");
-  mapPin.className = "map-pin";
-  pinHole.className = "pin-hole";
-  centerMarker.className = "map-pin-container";
-  centerMarker.appendChild(mapPin);
-  centerMarker.appendChild(pinHole);
+  ReactDOM.render(
+    <span className="fa-layers fa-fw">
+      <FontAwesomeIcon icon={faMapMarker} size="2x" inverse transform="shrink-6"/>
+      <FontAwesomeIcon icon={faMapMarkerAlt} size="2x" color="#8c45cf"/>
+    </span>
+    , centerMarker);
   return centerMarker;
 };
 
