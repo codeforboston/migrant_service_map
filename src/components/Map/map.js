@@ -52,6 +52,8 @@ class Map extends Component {
     map.on("load", () => {
       initializeVisaFilter(PLACEHOLDER_VISA_TYPES);
 
+      // The Mapbox stylesheet contains a "composite" data source with feature 
+      // data for all providers, as well as now-unused layers for each type.
       this.removeLayersFromOldDataSet();
       const providerFeatures = map.querySourceFeatures("composite", {
         sourceLayer: "Migrant_Services_-_MSM_Final_1"
@@ -358,7 +360,8 @@ class Map extends Component {
 
   removeReferenceLocation = map => {
     removeDistanceMarkers(this.markerList);
-    map.removeLayer("distance-indicator");
+    map.removeLayer("distance-indicator-stroke");
+    map.removeLayer("distance-indicator-fill");
     map.removeSource("distance-indicator-source");
 
     map.flyTo({
@@ -378,16 +381,24 @@ class Map extends Component {
         }
       });
     }
-    if (!this.map.getLayer("distance-indicator")) {
+    if (!this.map.getLayer("distance-indicator-fill")) {
       this.map.addLayer({
-        id: "distance-indicator",
+        id: "distance-indicator-fill",
+        type: "fill",
+        source: "distance-indicator-source",
+        paint: {
+          "fill-color": "hsla(317, 100%, 84%, .9)",
+        }
+      });
+    }
+    if (!this.map.getLayer("distance-indicator-stroke")) {
+      this.map.addLayer({
+        id: "distance-indicator-stroke",
         type: "line",
         source: "distance-indicator-source",
         paint: {
-          "line-color": ["get", "color"],
-          "line-opacity": 0.8,
-          "line-width": ["*", 1, 3],
-          "line-offset": 5
+          "line-color": "#D561B5",
+          "line-width": 2
         }
       });
     }
