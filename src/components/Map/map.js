@@ -324,6 +324,7 @@ class Map extends Component {
     }
 
     removeDistanceMarkers(this.markerList);
+    this.addDistanceIndicatorLayer();
     
     const centerMarker = createCenterMarker();
     const mapPin = new mapboxgl.Marker({element: centerMarker});
@@ -423,9 +424,6 @@ class Map extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    // TODO: do not update if the map isn't loaded, and make sure that when
-    // the map does load, any changes are properly rendered. rn this crashes
-    // if a distance filter is set before the map finishes loading.
     const features = this.geoJSONFeatures();
     if (features) {
       this.setSourceFeatures(features);
