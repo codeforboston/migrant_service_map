@@ -52,11 +52,6 @@ const createDistanceMarker = (distance) => {
   return markerElement;
 };
 
-const markerStyle = {
-  color: ["#007cbf", "#00AA46", "#71C780", "#D5EDDB"],
-  options: { steps: 100, units: "miles" }
-};
-
 const removeDistanceMarkers = markerArray => {
   // const distanceMarkers = Array.from(document.getElementsByClassName("distanceMarker"));
   return markerArray.map(marker => marker.remove());
@@ -132,7 +127,6 @@ export {
   convertProvidersToGeoJSON,
   createCenterMarker,
   createDistanceMarker,
-  markerStyle,
   normalizeProviders,
   removeDistanceMarkers,
   scrollToCard

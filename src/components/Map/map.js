@@ -10,7 +10,6 @@ import {
   convertProvidersToGeoJSON,
   createCenterMarker,
   createDistanceMarker,
-  markerStyle,
   normalizeProviders,
   removeDistanceMarkers
 } from "./utilities.js";
@@ -340,7 +339,8 @@ class Map extends Component {
     const outerColor = "hsla(317, 100%, 84%, .15)";
     const circles = distanceIndicatorRadii.slice().reverse().map((radius, i) =>
       circle(searchCoordinates, radius, {
-        ...markerStyle.options,
+        steps: 100, 
+        units: "miles",
         properties: { color: i == 0 ? outerColor : innerColor }
       })
     );
