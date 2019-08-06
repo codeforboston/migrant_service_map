@@ -44,7 +44,7 @@ const createCenterMarker = () => {
   return centerMarker;
 };
 
-const createDistanceMarker = (distance, color) => {
+const createDistanceMarker = (distance) => {
   const markerElement = document.createElement("div");
   markerElement.className = "distance-marker";
   markerElement.id = "marker-" + distance + "-miles";
