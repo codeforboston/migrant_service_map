@@ -1,8 +1,8 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import mapboxgl from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "./map.css";
-import {circle, point, transformTranslate} from "@turf/turf";
+import { circle, point, transformTranslate } from "@turf/turf";
 import typeImages from "assets/images";
 import distances from "assets/distances";
 import iconColors from "assets/icon-colors";
@@ -39,20 +39,20 @@ class Map extends Component {
 
   componentDidMount() {
     const { mapCenter, coordinates } = this.props.search;
-    const { providerTypes, initializeProviders, initializeVisaFilter } = this.props;
+    const { initializeProviders, initializeVisaFilter } = this.props;
     const map = new mapboxgl.Map({
       container: "map", // container id
       style: "mapbox://styles/refugeeswelcome/cjh9k11zz15ds2spbs4ld6y9o", // stylesheet location
       center: mapCenter,
       zoom: 11 // starting zoom
     });
-    map.addControl(new mapboxgl.NavigationControl());    
+    map.addControl(new mapboxgl.NavigationControl());
     map.on("load", () => {
-      // The Mapbox stylesheet contains a "composite" data source with feature 
+      // The Mapbox stylesheet contains a "composite" data source with feature
       // data for all providers, as well as now-unused layers for each type.
       this.removeLayersFromOldDataSet();
 
-      // Initialize sources and layers. Layers for provider icons are 
+      // Initialize sources and layers. Layers for provider icons are
       // added as they're enabled in the UI. Layers are drawn in the order they
       // are added to the map.
       this.setSingleSourceInMap();
@@ -117,14 +117,18 @@ class Map extends Component {
   zoomToDistance = distance => {
     let resolution = window.screen.height;
     let latitude = this.props.search.coordinates[1];
-    let milesPerPixel = distance * 8 / resolution;
-    return Math.log2(24901 * Math.cos(latitude * Math.PI / 180) / milesPerPixel) - 8;
-  }
+    let milesPerPixel = (distance * 8) / resolution;
+    return (
+      Math.log2(
+        (24901 * Math.cos((latitude * Math.PI) / 180)) / milesPerPixel
+      ) - 8
+    );
+  };
 
   removeLayersFromOldDataSet = () => {
     // We use the data source of the style but none of the layers. Layers
-    // 100-109 are connected to the data source, so we remove them before 
-    // configuring the actual layers. 
+    // 100-109 are connected to the data source, so we remove them before
+    // configuring the actual layers.
     const allLayers = this.map.getStyle().layers;
     for (let i = 100; i < 110; i++) {
       this.map.removeLayer(allLayers[i].id);
@@ -145,7 +149,7 @@ class Map extends Component {
         id: typeId,
         source: "displayData",
         type: "symbol",
-        filter: ["all", ["!=", "has", "point_count"],["==", "typeId", typeId]],
+        filter: ["all", ["!=", "has", "point_count"], ["==", "typeId", typeId]],
         layout: {
           "icon-image": typeId + "icon",
           "icon-size": 0.3,
@@ -155,10 +159,10 @@ class Map extends Component {
           visibility: "visible"
         },
         paint: {
-          "icon-color": ['get', 'color'],
+          "icon-color": ["get", "color"],
           "icon-halo-color": "white",
-          "icon-halo-width": .5,
-          "icon-halo-blur": 1,
+          "icon-halo-width": 0.5,
+          "icon-halo-blur": 1
         }
       });
 
@@ -167,7 +171,6 @@ class Map extends Component {
   };
 
   findClustersInMap = () => {
-
     this.map.addLayer({
       id: "clusterCircle",
       source: "displayData",
@@ -176,32 +179,31 @@ class Map extends Component {
       paint: {
         "circle-color": "black",
         "circle-radius": 30,
-        "circle-opacity": .35
+        "circle-opacity": 0.35
       }
-
     });
 
     let clusterName = "cluster";
     this.map.addLayer({
-        id: clusterName,
-        source: "displayData",
-        type: "symbol",
-        filter: ["has", "point_count"],
-        layout: {
-          "icon-size": 0.4,
-          "text-field": "{point_count_abbreviated}",
-          "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-          "text-size": 36,
-          "icon-allow-overlap": true,
-          "icon-ignore-placement": true,
-          'visibility': 'visible'
-        },
-        paint: {
-          "text-color": "black",
-          "text-halo-color": "#ffffff",
-          "text-halo-width": 2
-        }
-      });
+      id: clusterName,
+      source: "displayData",
+      type: "symbol",
+      filter: ["has", "point_count"],
+      layout: {
+        "icon-size": 0.4,
+        "text-field": "{point_count_abbreviated}",
+        "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+        "text-size": 36,
+        "icon-allow-overlap": true,
+        "icon-ignore-placement": true,
+        visibility: "visible"
+      },
+      paint: {
+        "text-color": "black",
+        "text-halo-color": "#ffffff",
+        "text-halo-width": 2
+      }
+    });
 
     this.addClusterClickHandlerToMapLayer(clusterName);
   };
@@ -230,26 +232,29 @@ class Map extends Component {
     );
   };
 
-  addClusterClickHandlerToMapLayer = (clusterName) => {
-    this.map.on('click', clusterName, function (e) {
+  addClusterClickHandlerToMapLayer = clusterName => {
+    this.map.on("click", clusterName, function(e) {
       let mapView = this;
-      let features = mapView.queryRenderedFeatures(e.point, {layers: [clusterName]});
-
-          let clusterId = features[0].properties.cluster_id;
-          mapView.getSource("displayData").getClusterExpansionZoom(clusterId, function (err, zoom) {
-              if (err)
-                  return;
-
-              mapView.easeTo({
-                             center: features[0].geometry.coordinates,
-                             zoom: zoom
-                         });
-          });
+      let features = mapView.queryRenderedFeatures(e.point, {
+        layers: [clusterName]
       });
+
+      let clusterId = features[0].properties.cluster_id;
+      mapView
+        .getSource("displayData")
+        .getClusterExpansionZoom(clusterId, function(err, zoom) {
+          if (err) return;
+
+          mapView.easeTo({
+            center: features[0].geometry.coordinates,
+            zoom: zoom
+          });
+        });
+    });
   };
 
   addClickHandlerToMapIdLayer = typeId => {
-    let {displayProviderInformation, highlightedProviders} = this.props;
+    let { displayProviderInformation, highlightedProviders } = this.props;
     this.map.on("click", typeId, e => {
       const providerElement = document.getElementById(
         `provider-${e.features[0].properties.id}`
@@ -264,7 +269,7 @@ class Map extends Component {
         const scrollStep = (toScrollTo - panel.scrollTop) / steps;
         let stepCount = 0;
 
-        const scrollInterval = setInterval(function () {
+        const scrollInterval = setInterval(function() {
           if (stepCount < steps) {
             panel.scrollBy(0, scrollStep);
             stepCount++;
@@ -281,7 +286,7 @@ class Map extends Component {
   };
 
   geoJSONFeatures = () => {
-    let {providersList, highlightedProviders} = this.props;
+    let { providersList, highlightedProviders } = this.props;
     let forGeoConvert = [];
     providersList.forEach(typeId => {
       typeId.providers.forEach(provider => {
@@ -294,12 +299,13 @@ class Map extends Component {
     return convertProvidersToGeoJSON(forGeoConvert);
   };
 
-  getBoundingBox = (providerIds) => {
-    let lngs = [], lats = [];
+  getBoundingBox = providerIds => {
+    let lngs = [],
+      lats = [];
     for (let a in providerIds) {
       lngs.push(this.props.providers.byId[providerIds[a]].coordinates[0]);
       lats.push(this.props.providers.byId[providerIds[a]].coordinates[1]);
-      }
+    }
 
     const maxLngs = lngs.reduce((a, b) => Math.max(a, b));
     const minLngs = lngs.reduce((a, b) => Math.min(a, b));
@@ -308,15 +314,15 @@ class Map extends Component {
 
     const boundsBox = [[minLngs, minLats], [maxLngs, maxLats]];
     return boundsBox;
+  };
 
-  }
-
-
-  updatePinAndDistanceIndicator = (prevProps) => {
+  updatePinAndDistanceIndicator = prevProps => {
     const distance = this.props.filters.distance;
     const searchCoordinates = this.props.search.coordinates;
-    if (distance === prevProps.filters.distance
-      && searchCoordinates === prevProps.search.coordinates) {
+    if (
+      distance === prevProps.filters.distance &&
+      searchCoordinates === prevProps.search.coordinates
+    ) {
       // Do not render if the relevant props have not changed. This includes
       // the first render of this component, so the marker is not shown until
       // the user starts interacting with the app.
@@ -325,9 +331,9 @@ class Map extends Component {
 
     removeDistanceMarkers(this.markerList);
     this.addDistanceIndicatorLayer();
-    
+
     const centerMarker = createCenterMarker();
-    const mapPin = new mapboxgl.Marker({element: centerMarker});
+    const mapPin = new mapboxgl.Marker({ element: centerMarker });
     this.markerList.push(mapPin);
     mapPin.setLngLat(searchCoordinates);
 
@@ -338,13 +344,16 @@ class Map extends Component {
     // largest circle having a different fill color than the others.
     const innerColor = "hsla(317, 100%, 84%, .1)";
     const outerColor = "hsla(317, 100%, 84%, .15)";
-    const circles = distanceIndicatorRadii.slice().reverse().map((radius, i) =>
-      circle(searchCoordinates, radius, {
-        steps: 100, 
-        units: "miles",
-        properties: { color: i == 0 ? outerColor : innerColor }
-      })
-    );
+    const circles = distanceIndicatorRadii
+      .slice()
+      .reverse()
+      .map((radius, i) =>
+        circle(searchCoordinates, radius, {
+          steps: 100,
+          units: "miles",
+          properties: { color: i === 0 ? outerColor : innerColor }
+        })
+      );
 
     // Create distance labels drawn from smallest to largest
     const labels = distanceIndicatorRadii.map((radius, i) => {
@@ -352,10 +361,10 @@ class Map extends Component {
         point(searchCoordinates),
         radius,
         90,
-        {units: "miles"}
+        { units: "miles" }
       );
       const distanceMarker = createDistanceMarker(radius);
-      const marker = new mapboxgl.Marker({element: distanceMarker});
+      const marker = new mapboxgl.Marker({ element: distanceMarker });
       this.markerList.push(marker);
       return marker.setLngLat(radiusOffset.geometry.coordinates);
     });
@@ -363,14 +372,16 @@ class Map extends Component {
     labels.map(label => label.addTo(this.map));
     mapPin.addTo(this.map);
     this.map
-    .getSource("distance-indicator-source")
-    .setData({type: "FeatureCollection", features: circles});
+      .getSource("distance-indicator-source")
+      .setData({ type: "FeatureCollection", features: circles });
   };
 
   removeReferenceLocation = map => {
     removeDistanceMarkers(this.markerList);
     map.getSource("distance-indicator-source").setData({
-      type: "FeatureCollection", features: []});
+      type: "FeatureCollection",
+      features: []
+    });
 
     map.flyTo({
       center: [-71.066954, 42.359947],
@@ -394,7 +405,7 @@ class Map extends Component {
         type: "fill",
         source: "distance-indicator-source",
         paint: {
-          "fill-color": ["get", "color"],
+          "fill-color": ["get", "color"]
         }
       });
     }
@@ -411,17 +422,17 @@ class Map extends Component {
     }
   };
 
-  zoomToFit = (providerIds) => {
-    if(providerIds.length > 1){
+  zoomToFit = providerIds => {
+    if (providerIds.length > 1) {
       const visibleIcons = this.getBoundingBox(providerIds);
       this.map.fitBounds(visibleIcons, {
-        padding: {top: 200, bottom: 200, left: 200, right: 200},
+        padding: { top: 200, bottom: 200, left: 200, right: 200 },
         duration: 2000,
         maxZoom: 13,
-        linear: false,
+        linear: false
       });
     }
-  }
+  };
 
   componentDidUpdate(prevProps) {
     const features = this.geoJSONFeatures();
@@ -431,7 +442,10 @@ class Map extends Component {
     this.props.providerTypes.allIds.map(typeId => this.findLayerInMap(typeId));
     this.updatePinAndDistanceIndicator(prevProps);
     this.zoomToFit(this.props.highlightedProviders);
-    if (this.props.filters.distance && this.props.filters.distance !== prevProps.filters.distance) {
+    if (
+      this.props.filters.distance &&
+      this.props.filters.distance !== prevProps.filters.distance
+    ) {
       this.map.flyTo({
         center: this.props.search.coordinates,
         zoom: this.zoomToDistance(this.props.filters.distance)
@@ -444,7 +458,7 @@ class Map extends Component {
   }
 
   render() {
-    return <div id="map" className="map"/>;
+    return <div id="map" className="map" />;
   }
 }
 

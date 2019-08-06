@@ -1,7 +1,8 @@
 import iconColors from "../../assets/icon-colors";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faMapMarkerAlt, faMapMarker, faCircle,
+  faMapMarkerAlt,
+  faMapMarker,
 } from "@fortawesome/free-solid-svg-icons";
 import ReactDOM from "react-dom";
 import React from "react";
@@ -42,14 +43,20 @@ const createCenterMarker = () => {
   const centerMarker = document.createElement("div");
   ReactDOM.render(
     <span className="fa-layers fa-fw">
-      <FontAwesomeIcon icon={faMapMarker} size="2x" inverse transform="shrink-6"/>
-      <FontAwesomeIcon icon={faMapMarkerAlt} size="2x" color="#8c45cf"/>
-    </span>
-    , centerMarker);
+      <FontAwesomeIcon
+        icon={faMapMarker}
+        size="2x"
+        inverse
+        transform="shrink-6"
+      />
+      <FontAwesomeIcon icon={faMapMarkerAlt} size="2x" color="#8c45cf" />
+    </span>,
+    centerMarker
+  );
   return centerMarker;
 };
 
-const createDistanceMarker = (distance) => {
+const createDistanceMarker = distance => {
   const markerElement = document.createElement("div");
   markerElement.className = "distance-marker";
   markerElement.id = "marker-" + distance + "-miles";
