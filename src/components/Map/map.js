@@ -59,7 +59,6 @@ class Map extends Component {
       const normalizedProviders = normalizeProviders(providerFeatures);
       initializeProviders(normalizedProviders);
 
-
       const allSymbolLayers = [...providerTypes.allIds, "highlightedProviders"];
       allSymbolLayers.forEach(typeId => {
 
@@ -99,7 +98,6 @@ class Map extends Component {
       }
 
       this.props.setSearchCenterCoordinates(geometry.coordinates, id, text);
-      this.addDistanceIndicatorLayer();
       map.flyTo({
         center: geometry.coordinates,
         zoom: zoom
@@ -317,10 +315,8 @@ class Map extends Component {
       // the first render of this component, so the marker is not shown until
       // the user starts interacting with the app.
       return;
-    } else {
-      this.updateZoom(distance);
     }
-
+    this.updateZoom(distance);
     // If no distance filter is set, display all distance indicators.
     const distanceIndicatorRadii = distance ? [distance] : distances;
     const {color, options} = markerStyle;
