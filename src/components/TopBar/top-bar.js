@@ -28,11 +28,6 @@ class TopBar extends Component {
 
     return (
       <div className="top-bar">
-        <VisaStatusDropdown
-          className={topBarItemClass}
-          onChange={changeVisaFilter}
-          visaTypes={visaTypes}
-        />
         <ProviderTypeDropdown
           className={topBarItemClass}
           providerTypes={providerTypes}
