@@ -30,6 +30,7 @@ class Map extends Component {
 
   onMapLoaded = () => {
     const { providerTypes } = this.props;
+    this.setSingleSourceInMap();
 
     this.removeLayersFromOldDataSet();
 
@@ -373,7 +374,6 @@ class Map extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.state.loaded) {
-      this.setSingleSourceInMap();
       const features = this.geoJSONFeatures();
       this.setSourceFeatures(features);
       this.props.providerTypes.allIds.map(typeId => this.findLayerInMap(typeId));
