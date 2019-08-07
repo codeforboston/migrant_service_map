@@ -32,21 +32,18 @@ class Map extends Component {
   onMapLoaded = () => {
     const { providerTypes, initializeProviders } = this.props;
 
-    this.removeLayersFromOldDataSet();
     const providerFeatures = this.map.querySourceFeatures("composite", {
       sourceLayer: "Migrant_Services_-_MSM_Final_1"
     });
     const normalizedProviders = normalizeProviders(providerFeatures);
     initializeProviders(normalizedProviders);
 
-
-    const allSymbolLayers = [...providerTypes.allIds, "highlightedProviders"];
-    allSymbolLayers.forEach(typeId => {
+    providerTypes.allIds.forEach(typeId => {
       this.findLayerInMap(typeId);
       this.findClustersInMap();
     });
-    this.loadProviderTypeImage(typeImages);
 
+    this.loadProviderTypeImage(typeImages);
     this.setState({ loaded: true });
   };
 
@@ -54,11 +51,11 @@ class Map extends Component {
     const { mapCenter, coordinates } = this.props.search;
     const map = new mapboxgl.Map({
       container: "map", // container id
-      style: "mapbox://styles/refugeeswelcome/cjh9k11zz15ds2spbs4ld6y9o", // stylesheet location
+      style: "mapbox://styles/refugeeswelcome/cjxmgxala1t5b1dtea37lbi2p", // stylesheet location
       center: mapCenter,
       zoom: 11 // starting zoom
     });
-    // setMapObject(map);
+
     map.addControl(new mapboxgl.NavigationControl());
     map.on("load", this.onMapLoaded);
 
@@ -113,12 +110,6 @@ class Map extends Component {
     return Math.log2(24901 * Math.cos(latitude * Math.PI / 180) / milesPerPixel) - 8;
   };
 
-  removeLayersFromOldDataSet = () => {
-    const allLayers = this.map.getStyle().layers;
-    for (let i = 100; i < 110; i++) {
-      this.map.removeLayer(allLayers[i].id);
-    }
-  };
 
   setSourceFeatures = features => {
     this.setSingleSourceInMap(); // checks source exists, adds if not
