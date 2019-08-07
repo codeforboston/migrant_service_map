@@ -31,6 +31,7 @@ class Map extends Component {
 
   onMapLoaded = () => {
     const { providerTypes, initializeProviders } = this.props;
+    this.setSingleSourceInMap();
 
     this.removeLayersFromOldDataSet();
     const providerFeatures = this.map.querySourceFeatures("composite", {
@@ -381,7 +382,6 @@ class Map extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.state.loaded) {
-      this.setSingleSourceInMap();
       const features = this.geoJSONFeatures();
       this.setSourceFeatures(features);
       this.props.providerTypes.allIds.map(typeId => this.findLayerInMap(typeId));
