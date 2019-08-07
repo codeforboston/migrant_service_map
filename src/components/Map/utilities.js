@@ -129,6 +129,27 @@ const normalizeProviders = providerFeatures => {
   return { providerTypes, providers };
 };
 
+const getBoundingBox = (providers, providerIds) => {
+  let lngs = [],
+    lats = [];
+  providerIds.forEach(id => {
+    const { coordinates } = providers.byId[id];
+    if (coordinates.length > 0) {
+      lngs.push(coordinates[0]);
+      lats.push(coordinates[1]);
+    }
+  });
+
+  const maxLngs = lngs.reduce((a, b) => Math.max(a, b));
+  const minLngs = lngs.reduce((a, b) => Math.min(a, b));
+  const maxLats = lats.reduce((a, b) => Math.max(a, b));
+  const minLats = lats.reduce((a, b) => Math.min(a, b));
+
+  console.log("blah", [[minLngs, minLats], [maxLngs, maxLats]])
+
+  return [[minLngs, minLats], [maxLngs, maxLats]];
+};
+
 export {
   convertProvidersToGeoJSON,
   createCenterMarker,
@@ -136,5 +157,6 @@ export {
   markerStyle,
   normalizeProviders,
   removeDistanceMarkers,
-  scrollToCard
+  scrollToCard,
+  getBoundingBox
 };

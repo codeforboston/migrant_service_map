@@ -29,7 +29,13 @@ const headerToProviderProperty = header => {
   }
 };
 
-const convertProviderProperties = ({provider, id}) => {
+const hasLocation = provider => {
+  const { latitude, longitude } = provider;
+  const isInvalid = value => _.isNil(value) || value === "" || isNaN(value);
+  return !(isInvalid(latitude) || isInvalid(longitude));
+};
+
+const convertProviderProperties = ({ provider, id }) => {
   const type_of_service_not_normalized = provider.type_of_service;
   const type_of_service = type_of_service_not_normalized
     .toLowerCase()
@@ -50,12 +56,9 @@ const convertProviderProperties = ({provider, id}) => {
     "Type of Service": type_of_service_not_normalized
   };
 
-  if (!isNaN(provider.longitude) && !isNaN(provider.latitude)) {
-    convertedProvider.coordinates = [
-      parseFloat(provider.longitude),
-      parseFloat(provider.latitude)
-    ]
-  }
+  convertedProvider.coordinates = hasLocation(provider)
+    ? [parseFloat(provider.longitude), parseFloat(provider.latitude)]
+    : [];
 
   return convertedProvider;
 };

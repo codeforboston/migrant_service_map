@@ -6,6 +6,13 @@ import * as serviceWorker from "./serviceWorker";
 import { getProvidersFromSheet } from "util/google_sheets";
 import { providersSheetURL } from "app.json";
 
+import { initializeVisaFilter } from "./redux/actions";
+import store from "./redux/store";
+
+import VISA_TYPES from "./assets/visa-types";
+
+store.dispatch(initializeVisaFilter(VISA_TYPES));
+
 getProvidersFromSheet(providersSheetURL);
 
 ReactDOM.render(<App />, document.getElementById("root"));

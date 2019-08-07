@@ -119,11 +119,16 @@ function calculateProviderDistances(providers, refLocation, options) {
   var referencePoint = point(refLocation.coordinates);
   return providers.map(provider => {
     // New object with the distance attached
-    if (Array.isArray(provider.coordinates)) {
-      return {
-        ...provider,
-        distance: distance(point(provider.coordinates), referencePoint, options)
-      };
+    if (provider.coordinates.length === 2) {
+      try {
+        return {
+          ...provider,
+          distance: distance(point(provider.coordinates), referencePoint, options)
+        };
+      } catch(error) {
+        console.error(error);
+        debugger;
+      }
     } else {
       return {
         ...provider
