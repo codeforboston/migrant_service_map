@@ -26,6 +26,7 @@
 .mapboxgl-ctrl-geocoder {
   height: 100%;
   border-radius: 0px;
+  max-width: none !important;
 }
 
 .dropdown-row {
@@ -41,9 +42,14 @@
   border-radius: 8px !important;
 }
 
+button.geocoder-icon.geocoder-icon-close {
+  background-color: #FDFAFF;
+}
+
 #nav-search .msm-map-search-box {
   box-shadow: none !important;
   width: 100% !important;
+  background-color: transparent;
 }
 
 .dropdown-row ul {
