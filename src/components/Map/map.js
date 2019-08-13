@@ -277,14 +277,21 @@ class Map extends Component {
   };
 
   geoJSONFeatures = () => {
-    let {providersList, highlightedProviders} = this.props;
+    let { providersList, highlightedProviders, search, providers } = this.props;
+    const showSavedProviders = search.selectedTabIndex === 1;
+    const savedProviderIds = providers.savedProviders;
+
     let forGeoConvert = [];
     providersList.forEach(typeId => {
       typeId.providers.forEach(provider => {
         provider.color = highlightedProviders.includes(provider.id)
           ? "rgb(255,195,26)"
           : iconColors[provider.typeId];
+
+        if (!showSavedProviders || savedProviderIds.includes(provider.id)) {
+        // Show only saved providers if the saved provider tab is selected, otherwise show everything.
         forGeoConvert.push(provider);
+        }
       });
     });
     return convertProvidersToGeoJSON(forGeoConvert);
