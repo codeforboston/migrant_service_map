@@ -44,7 +44,6 @@ class Map extends Component {
     });
     const normalizedProviders = normalizeProviders(providerFeatures);
     initializeProviders(normalizedProviders);
-    
     this.loadProviderTypeImage(typeImages);
     this.setState({ loaded: true });
   };
