@@ -11,21 +11,9 @@ import {
   createCenterMarker,
   createDistanceMarker,
   normalizeProviders,
-  removeDistanceMarkers
+  removeDistanceMarkers,
+  getBoundingBox
 } from "./utilities.js";
-
-const PLACEHOLDER_VISA_TYPES = [
-  "Temporary Agricultural Worker H-2A",
-  "H-1B",
-  "Permanent Resident Card (I-551)",
-  "Advance Parole (I-512)",
-  "Demo Type 1 (D1)",
-  "Demo Type 2 (D2)",
-  "Demo Type 3 (D3)",
-  "Demo Type 4 (D4)",
-  "Demo Type 5 (D5)",
-  "Demo Type 6 (D6)"
-];
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw";
@@ -35,41 +23,47 @@ class Map extends Component {
     super(props);
     this.map = null;
     this.markerList = []; //need to keep track of marker handles ourselves -- cannot be queried from map
+    this.state = {
+      loaded: false
+    };
   }
+
+  onMapLoaded = () => {
+    const { providerTypes, initializeProviders } = this.props;
+    // Initialize sources and layers. Layers for provider icons are
+    // added as they're enabled in the UI. Layers are drawn in the order they
+    // are added to the map.
+    this.setSingleSourceInMap();
+    this.addDistanceIndicatorLayer();
+    this.findClustersInMap();
+
+    const providerFeatures = this.map.querySourceFeatures("composite", {
+      sourceLayer: "Migrant_Services_-_MSM_Final_1"
+    });
+    const normalizedProviders = normalizeProviders(providerFeatures);
+    initializeProviders(normalizedProviders);
+
+    // Check if this is necexsary
+    // providerTypes.allIds.forEach(typeId => {
+    //   this.findLayerInMap(typeId);
+    //   this.findClustersInMap();
+    // });
+
+    this.loadProviderTypeImage(typeImages);
+    this.setState({ loaded: true });
+  };
 
   componentDidMount() {
     const { mapCenter, coordinates } = this.props.search;
-    const { initializeProviders, initializeVisaFilter } = this.props;
     const map = new mapboxgl.Map({
       container: "map", // container id
-      style: "mapbox://styles/refugeeswelcome/cjh9k11zz15ds2spbs4ld6y9o", // stylesheet location
+      style: "mapbox://styles/refugeeswelcome/cjxmgxala1t5b1dtea37lbi2p", // stylesheet location
       center: mapCenter,
       zoom: 11 // starting zoom
     });
+
     map.addControl(new mapboxgl.NavigationControl());
-    map.on("load", () => {
-      // The Mapbox stylesheet contains a "composite" data source with feature
-      // data for all providers, as well as now-unused layers for each type.
-      this.removeLayersFromOldDataSet();
-
-      // Initialize sources and layers. Layers for provider icons are
-      // added as they're enabled in the UI. Layers are drawn in the order they
-      // are added to the map.
-      this.setSingleSourceInMap();
-      this.addDistanceIndicatorLayer();
-      this.findLayerInMap("highlightedProviders");
-      this.findClustersInMap();
-
-      // Pull provider data from mapbox style and initialize app state.
-      const providerFeatures = map.querySourceFeatures("composite", {
-        sourceLayer: "Migrant_Services_-_MSM_Final_1"
-      });
-      const normalizedProviders = normalizeProviders(providerFeatures);
-      initializeProviders(normalizedProviders);
-
-      initializeVisaFilter(PLACEHOLDER_VISA_TYPES);
-      this.loadProviderTypeImage(typeImages);
-    });
+    map.on("load", this.onMapLoaded);
 
     this.map = map;
 
@@ -117,23 +111,10 @@ class Map extends Component {
   zoomToDistance = distance => {
     let resolution = window.screen.height;
     let latitude = this.props.search.coordinates[1];
-    let milesPerPixel = (distance * 8) / resolution;
-    return (
-      Math.log2(
-        (24901 * Math.cos((latitude * Math.PI) / 180)) / milesPerPixel
-      ) - 8
-    );
+    let milesPerPixel = distance * 8 / resolution;
+    return Math.log2(24901 * Math.cos(latitude * Math.PI / 180) / milesPerPixel) - 8;
   };
 
-  removeLayersFromOldDataSet = () => {
-    // We use the data source of the style but none of the layers. Layers
-    // 100-109 are connected to the data source, so we remove them before
-    // configuring the actual layers.
-    const allLayers = this.map.getStyle().layers;
-    for (let i = 100; i < 110; i++) {
-      this.map.removeLayer(allLayers[i].id);
-    }
-  };
 
   setSourceFeatures = features => {
     this.setSingleSourceInMap(); // checks source exists, adds if not
@@ -299,24 +280,7 @@ class Map extends Component {
     return convertProvidersToGeoJSON(forGeoConvert);
   };
 
-  getBoundingBox = providerIds => {
-    let lngs = [],
-      lats = [];
-    for (let a in providerIds) {
-      lngs.push(this.props.providers.byId[providerIds[a]].coordinates[0]);
-      lats.push(this.props.providers.byId[providerIds[a]].coordinates[1]);
-    }
-
-    const maxLngs = lngs.reduce((a, b) => Math.max(a, b));
-    const minLngs = lngs.reduce((a, b) => Math.min(a, b));
-    const maxLats = lats.reduce((a, b) => Math.max(a, b));
-    const minLats = lats.reduce((a, b) => Math.min(a, b));
-
-    const boundsBox = [[minLngs, minLats], [maxLngs, maxLats]];
-    return boundsBox;
-  };
-
-  updatePinAndDistanceIndicator = prevProps => {
+  updatePinAndDistanceIndicator = (prevProps) => {
     const distance = this.props.filters.distance;
     const searchCoordinates = this.props.search.coordinates;
     if (
@@ -422,9 +386,9 @@ class Map extends Component {
     }
   };
 
-  zoomToFit = providerIds => {
-    if (providerIds.length > 1) {
-      const visibleIcons = this.getBoundingBox(providerIds);
+  zoomToFit = (providerIds) => {
+    if(providerIds.length > 1){
+      const visibleIcons = getBoundingBox(this.props.providers, providerIds);
       this.map.fitBounds(visibleIcons, {
         padding: { top: 200, bottom: 200, left: 200, right: 200 },
         duration: 2000,
@@ -435,21 +399,18 @@ class Map extends Component {
   };
 
   componentDidUpdate(prevProps) {
-    const features = this.geoJSONFeatures();
-    if (features) {
+    if (this.state.loaded) {
+      const features = this.geoJSONFeatures();
       this.setSourceFeatures(features);
-    }
-    this.props.providerTypes.allIds.map(typeId => this.findLayerInMap(typeId));
-    this.updatePinAndDistanceIndicator(prevProps);
-    this.zoomToFit(this.props.highlightedProviders);
-    if (
-      this.props.filters.distance &&
-      this.props.filters.distance !== prevProps.filters.distance
-    ) {
-      this.map.flyTo({
-        center: this.props.search.coordinates,
-        zoom: this.zoomToDistance(this.props.filters.distance)
-      });
+      this.props.providerTypes.allIds.map(typeId => this.findLayerInMap(typeId));
+      this.updatePinAndDistanceIndicator(prevProps);
+      this.zoomToFit(this.props.highlightedProviders);
+      if (this.props.filters.distance && this.props.filters.distance !== prevProps.filters.distance) {
+        this.map.flyTo({
+          center: this.props.search.coordinates,
+          zoom: this.zoomToDistance(this.props.filters.distance)
+        });
+      }
     }
   }
 

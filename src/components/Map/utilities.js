@@ -135,11 +135,29 @@ const normalizeProviders = providerFeatures => {
   return { providerTypes, providers };
 };
 
+const getBoundingBox = (providers, providerIds) => {
+  let lngs = [],
+    lats = [];
+  for (let a in providerIds) {
+    lngs.push(providers.byId[providerIds[a]].coordinates[0]);
+    lats.push(providers.byId[providerIds[a]].coordinates[1]);
+  }
+
+  const maxLngs = lngs.reduce((a, b) => Math.max(a, b));
+  const minLngs = lngs.reduce((a, b) => Math.min(a, b));
+  const maxLats = lats.reduce((a, b) => Math.max(a, b));
+  const minLats = lats.reduce((a, b) => Math.min(a, b));
+
+  const boundsBox = [[minLngs, minLats], [maxLngs, maxLats]];
+  return boundsBox;
+};
+
 export {
   convertProvidersToGeoJSON,
   createCenterMarker,
   createDistanceMarker,
   normalizeProviders,
   removeDistanceMarkers,
-  scrollToCard
+  scrollToCard,
+  getBoundingBox
 };
