@@ -29,26 +29,22 @@ class Map extends Component {
   }
 
   onMapLoaded = () => {
-    const { providerTypes, initializeProviders } = this.props;
-    // Initialize sources and layers. Layers for provider icons are
+    const { initializeProviders } = this.props;
+    
+    // Initialize static sources and layers. Layers for provider icons are
     // added as they're enabled in the UI. Layers are drawn in the order they
     // are added to the map.
     this.setSingleSourceInMap();
     this.addDistanceIndicatorLayer();
     this.findClustersInMap();
 
+    // Pull data from Mapbox style and initialize application state
     const providerFeatures = this.map.querySourceFeatures("composite", {
       sourceLayer: "Migrant_Services_-_MSM_Final_1"
     });
     const normalizedProviders = normalizeProviders(providerFeatures);
     initializeProviders(normalizedProviders);
-
-    // Check if this is necexsary
-    // providerTypes.allIds.forEach(typeId => {
-    //   this.findLayerInMap(typeId);
-    //   this.findClustersInMap();
-    // });
-
+    
     this.loadProviderTypeImage(typeImages);
     this.setState({ loaded: true });
   };
