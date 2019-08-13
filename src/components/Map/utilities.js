@@ -1,4 +1,11 @@
 import iconColors from "../../assets/icon-colors";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faMapMarkerAlt,
+  faMapMarker,
+} from "@fortawesome/free-solid-svg-icons";
+import ReactDOM from "react-dom";
+import React from "react";
 
 const scrollToCard = clickedProviderID => {
   const offsetTop = document.getElementById(clickedProviderID).offsetTop;
@@ -34,28 +41,27 @@ const convertProvidersToGeoJSON = providers => {
 
 const createCenterMarker = () => {
   const centerMarker = document.createElement("div");
-  const mapPin = document.createElement("div");
-  const pinHole = document.createElement("div");
-  mapPin.className = "map-pin";
-  pinHole.className = "pin-hole";
-  centerMarker.className = "map-pin-container";
-  centerMarker.appendChild(mapPin);
-  centerMarker.appendChild(pinHole);
+  ReactDOM.render(
+    <span className="fa-layers fa-fw">
+      <FontAwesomeIcon
+        icon={faMapMarker}
+        size="2x"
+        inverse
+        transform="shrink-6"
+      />
+      <FontAwesomeIcon icon={faMapMarkerAlt} size="2x" color="#8c45cf" />
+    </span>,
+    centerMarker
+  );
   return centerMarker;
 };
 
-const createDistanceMarker = (distance, color) => {
+const createDistanceMarker = distance => {
   const markerElement = document.createElement("div");
   markerElement.className = "distance-marker";
   markerElement.id = "marker-" + distance + "-miles";
   markerElement.innerText = distance + (distance > 1 ? " miles" : " mile");
-  markerElement.style.backgroundColor = color;
   return markerElement;
-};
-
-const markerStyle = {
-  color: ["#007cbf", "#00AA46", "#71C780", "#D5EDDB"],
-  options: { steps: 100, units: "miles" }
 };
 
 const removeDistanceMarkers = markerArray => {
@@ -150,7 +156,6 @@ export {
   convertProvidersToGeoJSON,
   createCenterMarker,
   createDistanceMarker,
-  markerStyle,
   normalizeProviders,
   removeDistanceMarkers,
   scrollToCard,
