@@ -293,7 +293,7 @@ class Map extends Component {
     }
     this.updateZoom(distance);
     // If no distance filter is set, display all distance indicators.
-    const distanceIndicatorRadii = distance ? [distance] : distances;
+    let distanceIndicatorRadii = distance ? [distance] : distances;
     const {color, options} = markerStyle;
     this.addDistanceIndicatorLayer();
 
@@ -305,18 +305,7 @@ class Map extends Component {
       this.markerList.push(mapPin);
     };
 
-    const drawCircles = (radii) => {
-      return radii.map((radius, i) =>
-        circle(searchCoordinates, radius, {
-          ...options,
-          properties: { color: color[i], "stroke-width": radius }
-        })
-      );
-    };
-
-    let circles;
     if (this.props.search.currentLocation !== 1 && this.props.search.currentLocation !== "default") {
-      circles = drawCircles(distanceIndicatorRadii);
       const labels = distanceIndicatorRadii.map((radius, i) => {
         const radiusOffset = transformTranslate(
           point(searchCoordinates),
@@ -332,11 +321,17 @@ class Map extends Component {
       labels.map(label => label.addTo(this.map));
       addPinToMap();
     } else if (distance) {
-      circles = drawCircles(distanceIndicatorRadii);
       addPinToMap();
     } else {
-      circles = drawCircles([]);
+      distanceIndicatorRadii = [];
     };
+
+    const circles = distanceIndicatorRadii.map((radius, i) =>
+      circle(searchCoordinates, radius, {
+        ...options,
+        properties: { color: color[i], "stroke-width": radius }
+      })
+    );
 
     this.map
     .getSource("distance-indicator-source")
