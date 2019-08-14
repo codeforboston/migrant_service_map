@@ -288,21 +288,20 @@ class Map extends Component {
       // the user starts interacting with the app.
       return;
     }
-    this.updateZoom(distance);
+    this.updateZoom(this.props.filters.distance);
     removeDistanceMarkers(this.markerList);
     this.addDistanceIndicatorLayer();
     // If no distance filter is set, display all distance indicators.
     let distanceIndicatorRadii = distance ? [distance] : distances;
 
-    const addPinToMap = () => {
+    if (distance || (this.props.search.currentLocation !== 1 && this.props.search.currentLocation !== "default")) {
+
       const centerMarker = createCenterMarker();
       const mapPin = new mapboxgl.Marker({element: centerMarker})
       .setLngLat(searchCoordinates)
       .addTo(this.map);
       this.markerList.push(mapPin);
-    };
 
-    const addLabelsToMap = () => {
       const labels = distanceIndicatorRadii.map((radius, i) => {
         const radiusOffset = transformTranslate(
           point(searchCoordinates),
@@ -316,14 +315,6 @@ class Map extends Component {
         return marker.setLngLat(radiusOffset.geometry.coordinates);
       });
       labels.map(label => label.addTo(this.map));
-    }
-
-    if (this.props.search.currentLocation !== 1 && this.props.search.currentLocation !== "default") {
-      addLabelsToMap();
-      addPinToMap();
-    } else if (distance) {
-      addLabelsToMap();
-      addPinToMap();
     } else {
       distanceIndicatorRadii = [];
     };
