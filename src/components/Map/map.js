@@ -302,7 +302,7 @@ class Map extends Component {
     removeDistanceMarkers(this.markerList);
     this.addDistanceIndicatorLayer();
     // If no distance filter is set, display all distance indicators.
-    let distanceIndicatorRadii = distance ? [distance] : distances;
+    let distanceIndicatorRadii = distance ? [distance] : distances.sort();
     let userSearch = ![1, "default"].includes(this.props.search.currentLocation)
 
     if (distance || userSearch) {
@@ -312,6 +312,7 @@ class Map extends Component {
       .addTo(this.map);
       this.markerList.push(mapPin);
 
+      // Create distance labels drawn from smallest to largest
       const labels = distanceIndicatorRadii.map((radius, i) => {
         const radiusOffset = transformTranslate(
           point(searchCoordinates),
@@ -329,6 +330,8 @@ class Map extends Component {
       distanceIndicatorRadii = [];
     };
 
+    // Create concentric circles, drawn from largest to smallest, with the
+    // largest circle having a different fill color than the others.
     const innerColor = "hsla(317, 100%, 84%, .1)";
     const outerColor = "hsla(317, 100%, 84%, .15)";
     const circles = distanceIndicatorRadii
