@@ -2,9 +2,10 @@ import React from "react";
 import CheckBoxDropdown from "../Dropdowns/checkbox-dropdown";
 
 const defaultSubheaderText = "Current Visa Status";
+const numberOptionsBeforeViewmore = 3
 export default class VisaStatusDropdown extends React.Component {
   state = {
-    viewAllOptions: false
+    viewAllOptions: false,
   };
 
   onCheckboxChanged = (option, selectedValues) => {
@@ -27,7 +28,7 @@ export default class VisaStatusDropdown extends React.Component {
   };
 
   render() {
-    const { className, visaTypes } = this.props;
+    let { className, visaTypes } = this.props;
     const { viewAllOptions } = this.state;
     let subheaderText = defaultSubheaderText;
 
@@ -37,10 +38,9 @@ export default class VisaStatusDropdown extends React.Component {
       subheaderText = visaTypes.visible.length + " Selected";
     }
 
-    const preferredVisaTypes = viewAllOptions
-      ? visaTypes.allVisas
-      : visaTypes.allVisas.slice(0, 1);
+    const preferredVisaTypes = viewAllOptions ? visaTypes.allVisas : visaTypes.allVisas.slice(0, numberOptionsBeforeViewmore)
     const footer = <div onClick={this.onSeeMore}>See More</div>;
+    const footerShown = visaTypes.allVisas.length > numberOptionsBeforeViewmore ? (viewAllOptions ? null : footer) : null;
     return (
       <CheckBoxDropdown
         className={className}
@@ -56,7 +56,7 @@ export default class VisaStatusDropdown extends React.Component {
             <p>{subheaderText}</p>
           </>
         }
-        footer={viewAllOptions ? null : footer}
+        footer={footerShown}
         onToggleExpanded={this.onSeeLess}
         expanded={true}
       />
