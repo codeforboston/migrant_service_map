@@ -10,7 +10,6 @@ import {
   convertProvidersToGeoJSON,
   createCenterMarker,
   createDistanceMarker,
-  markerStyle,
   normalizeProviders,
   removeDistanceMarkers,
   getBoundingBox
@@ -30,19 +29,21 @@ class Map extends Component {
   }
 
   onMapLoaded = () => {
-    const { providerTypes, initializeProviders } = this.props;
-    this.setSingleSourceInMap();
+    const { initializeProviders } = this.props;
 
+    // Initialize static sources and layers. Layers for provider icons are
+    // added as they're enabled in the UI. Layers are drawn in the order they
+    // are added to the map.
+    this.setSingleSourceInMap();
+    this.addDistanceIndicatorLayer();
+    this.findClustersInMap();
+
+    // Pull data from Mapbox style and initialize application state
     const providerFeatures = this.map.querySourceFeatures("composite", {
       sourceLayer: "Migrant_Services_-_MSM_Final_1"
     });
     const normalizedProviders = normalizeProviders(providerFeatures);
     initializeProviders(normalizedProviders);
-
-    providerTypes.allIds.forEach(typeId => {
-      this.findLayerInMap(typeId);
-      this.findClustersInMap();
-    });
 
     this.loadProviderTypeImage(typeImages);
     this.setState({ loaded: true });
@@ -125,7 +126,7 @@ class Map extends Component {
         id: typeId,
         source: "displayData",
         type: "symbol",
-        filter: ["all", ["!=", "has", "point_count"],["==", "typeId", typeId]],
+        filter: ["all", ["!=", "has", "point_count"], ["==", "typeId", typeId]],
         layout: {
           "icon-image": typeId + "icon",
           "icon-size": 0.3,
@@ -135,10 +136,10 @@ class Map extends Component {
           visibility: "visible"
         },
         paint: {
-          "icon-color": ['get', 'color'],
+          "icon-color": ["get", "color"],
           "icon-halo-color": "white",
-          "icon-halo-width": .5,
-          "icon-halo-blur": 1,
+          "icon-halo-width": 0.5,
+          "icon-halo-blur": 1
         }
       });
 
@@ -155,32 +156,31 @@ class Map extends Component {
       paint: {
         "circle-color": "black",
         "circle-radius": 30,
-        "circle-opacity": .35
+        "circle-opacity": 0.35
       }
-
     });
 
     let clusterName = "cluster";
     this.map.addLayer({
-        id: clusterName,
-        source: "displayData",
-        type: "symbol",
-        filter: ["has", "point_count"],
-        layout: {
-          "icon-size": 0.4,
-          "text-field": "{point_count_abbreviated}",
-          "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-          "text-size": 36,
-          "icon-allow-overlap": true,
-          "icon-ignore-placement": true,
-          'visibility': 'visible'
-        },
-        paint: {
-          "text-color": "black",
-          "text-halo-color": "#ffffff",
-          "text-halo-width": 2
-        }
-      });
+      id: clusterName,
+      source: "displayData",
+      type: "symbol",
+      filter: ["has", "point_count"],
+      layout: {
+        "icon-size": 0.4,
+        "text-field": "{point_count_abbreviated}",
+        "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+        "text-size": 36,
+        "icon-allow-overlap": true,
+        "icon-ignore-placement": true,
+        visibility: "visible"
+      },
+      paint: {
+        "text-color": "black",
+        "text-halo-color": "#ffffff",
+        "text-halo-width": 2
+      }
+    });
 
     this.addClusterClickHandlerToMapLayer(clusterName);
   };
@@ -209,26 +209,29 @@ class Map extends Component {
     );
   };
 
-  addClusterClickHandlerToMapLayer = (clusterName) => {
-    this.map.on('click', clusterName, function (e) {
+  addClusterClickHandlerToMapLayer = clusterName => {
+    this.map.on("click", clusterName, function(e) {
       let mapView = this;
-      let features = mapView.queryRenderedFeatures(e.point, {layers: [clusterName]});
-
-          let clusterId = features[0].properties.cluster_id;
-          mapView.getSource("displayData").getClusterExpansionZoom(clusterId, function (err, zoom) {
-              if (err)
-                  return;
-
-              mapView.easeTo({
-                             center: features[0].geometry.coordinates,
-                             zoom: zoom
-                         });
-          });
+      let features = mapView.queryRenderedFeatures(e.point, {
+        layers: [clusterName]
       });
+
+      let clusterId = features[0].properties.cluster_id;
+      mapView
+        .getSource("displayData")
+        .getClusterExpansionZoom(clusterId, function(err, zoom) {
+          if (err) return;
+
+          mapView.easeTo({
+            center: features[0].geometry.coordinates,
+            zoom: zoom
+          });
+        });
+    });
   };
 
   addClickHandlerToMapIdLayer = typeId => {
-    let {displayProviderInformation, highlightedProviders} = this.props;
+    let { displayProviderInformation, highlightedProviders } = this.props;
     this.map.on("click", typeId, e => {
       const providerElement = document.getElementById(
         `provider-${e.features[0].properties.id}`
@@ -243,7 +246,7 @@ class Map extends Component {
         const scrollStep = (toScrollTo - panel.scrollTop) / steps;
         let stepCount = 0;
 
-        const scrollInterval = setInterval(function () {
+        const scrollInterval = setInterval(function() {
           if (stepCount < steps) {
             panel.scrollBy(0, scrollStep);
             stepCount++;
@@ -260,7 +263,7 @@ class Map extends Component {
   };
 
   geoJSONFeatures = () => {
-    let {providersList, highlightedProviders} = this.props;
+    let { providersList, highlightedProviders } = this.props;
     let forGeoConvert = [];
     providersList.forEach(typeId => {
       typeId.providers.forEach(provider => {
@@ -276,18 +279,20 @@ class Map extends Component {
   updatePinAndDistanceIndicator = (prevProps) => {
     const distance = this.props.filters.distance;
     const searchCoordinates = this.props.search.coordinates;
-    if (distance === prevProps.filters.distance
-      && searchCoordinates === prevProps.search.coordinates) {
+    if (
+      distance === prevProps.filters.distance &&
+      searchCoordinates === prevProps.search.coordinates
+    ) {
       // Do not render if the relevant props have not changed. This includes
       // the first render of this component, so the marker is not shown until
       // the user starts interacting with the app.
       return;
     }
     this.updateZoom(distance);
+    removeDistanceMarkers(this.markerList);
     this.addDistanceIndicatorLayer();
     // If no distance filter is set, display all distance indicators.
     let distanceIndicatorRadii = distance ? [distance] : distances;
-    const {color, options} = markerStyle;
 
     const addPinToMap = () => {
       const centerMarker = createCenterMarker();
@@ -297,7 +302,7 @@ class Map extends Component {
       this.markerList.push(mapPin);
     };
 
-    if (this.props.search.currentLocation !== 1 && this.props.search.currentLocation !== "default") {
+    const addLabelsToMap = () => {
       const labels = distanceIndicatorRadii.map((radius, i) => {
         const radiusOffset = transformTranslate(
           point(searchCoordinates),
@@ -305,14 +310,19 @@ class Map extends Component {
           90,
           { units: "miles" }
         );
-        const distanceMarker = createDistanceMarker(radius, color[i]);
+        const distanceMarker = createDistanceMarker(radius);
         const marker = new mapboxgl.Marker({ element: distanceMarker });
         this.markerList.push(marker);
         return marker.setLngLat(radiusOffset.geometry.coordinates);
       });
       labels.map(label => label.addTo(this.map));
+    }
+
+    if (this.props.search.currentLocation !== 1 && this.props.search.currentLocation !== "default") {
+      addLabelsToMap();
       addPinToMap();
     } else if (distance) {
+      addLabelsToMap();
       addPinToMap();
     } else {
       distanceIndicatorRadii = [];
@@ -332,8 +342,8 @@ class Map extends Component {
       );
 
     this.map
-    .getSource("distance-indicator-source")
-    .setData({type: "FeatureCollection", features: circles});
+      .getSource("distance-indicator-source")
+      .setData({ type: "FeatureCollection", features: circles });
   };
 
   updateZoom = distance => {
@@ -346,8 +356,10 @@ class Map extends Component {
 
   removeReferenceLocation = map => {
     removeDistanceMarkers(this.markerList);
-    map.removeLayer("distance-indicator");
-    map.removeSource("distance-indicator-source");
+    map.getSource("distance-indicator-source").setData({
+      type: "FeatureCollection",
+      features: []
+    });
 
     map.flyTo({
       center: [-71.066954, 42.359947],
@@ -356,7 +368,6 @@ class Map extends Component {
   };
 
   addDistanceIndicatorLayer = () => {
-    removeDistanceMarkers(this.markerList);
     if (!this.map.getSource("distance-indicator-source")) {
       this.map.addSource("distance-indicator-source", {
         type: "geojson",
@@ -366,16 +377,24 @@ class Map extends Component {
         }
       });
     }
-    if (!this.map.getLayer("distance-indicator")) {
+    if (!this.map.getLayer("distance-indicator-fill")) {
       this.map.addLayer({
-        id: "distance-indicator",
+        id: "distance-indicator-fill",
+        type: "fill",
+        source: "distance-indicator-source",
+        paint: {
+          "fill-color": ["get", "color"]
+        }
+      });
+    }
+    if (!this.map.getLayer("distance-indicator-stroke")) {
+      this.map.addLayer({
+        id: "distance-indicator-stroke",
         type: "line",
         source: "distance-indicator-source",
         paint: {
-          "line-color": ["get", "color"],
-          "line-opacity": 0.8,
-          "line-width": ["*", 1, 3],
-          "line-offset": 5
+          "line-color": "#D561B5",
+          "line-width": 2
         }
       });
     }
@@ -385,10 +404,10 @@ class Map extends Component {
     if(providerIds.length > 1){
       const visibleIcons = getBoundingBox(this.props.providers, providerIds);
       this.map.fitBounds(visibleIcons, {
-        padding: {top: 200, bottom: 200, left: 200, right: 200},
+        padding: { top: 200, bottom: 200, left: 200, right: 200 },
         duration: 2000,
         maxZoom: 13,
-        linear: false,
+        linear: false
       });
     }
   };
@@ -414,7 +433,7 @@ class Map extends Component {
   }
 
   render() {
-    return <div id="map" className="map"/>;
+    return <div id="map" className="map" />;
   }
 }
 
