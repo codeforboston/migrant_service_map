@@ -1,11 +1,18 @@
 import React from "react";
 import CheckBoxDropdown from "../Dropdowns/checkbox-dropdown";
+import { Row } from "simple-flexbox";
 
 const defaultSubheaderText = "Not Selected";
 export default class ProviderTypeDropdown extends React.Component {
   onCheckboxChanged = (changedOption, selectedValues) => {
     const { onChange, providerTypes } = this.props;
     onChange(changedOption);
+  };
+
+  clearProviderTypes = (event) => {
+    event.stopPropagation();
+    const { onChange = () => {} } = this.props;
+    onChange(undefined);
   };
 
   render() {
@@ -31,7 +38,10 @@ export default class ProviderTypeDropdown extends React.Component {
         visibleTypes={providerTypes.visible}
         header={
           <>
-            <h2>PROVIDER TYPE</h2>
+            <Row alignItems="center">
+            <h2 style={{flex: 1 }}>PROVIDER TYPE</h2>
+            <div onClick={this.clearProviderTypes}>x</div>
+            </Row>
             <p>{subheaderText}</p>
           </>
         }

@@ -107,10 +107,13 @@ class Map extends Component {
   zoomToDistance = distance => {
     let resolution = window.screen.height;
     let latitude = this.props.search.coordinates[1];
-    let milesPerPixel = distance * 8 / resolution;
-    return Math.log2(24901 * Math.cos(latitude * Math.PI / 180) / milesPerPixel) - 8;
+    let milesPerPixel = (distance * 8) / resolution;
+    return (
+      Math.log2(
+        (24901 * Math.cos((latitude * Math.PI) / 180)) / milesPerPixel
+      ) - 8
+    );
   };
-
 
   setSourceFeatures = features => {
     this.setSingleSourceInMap(); // checks source exists, adds if not
@@ -263,20 +266,27 @@ class Map extends Component {
   };
 
   geoJSONFeatures = () => {
-    let { providersList, highlightedProviders } = this.props;
+    let { providersList, highlightedProviders, search, providers } = this.props;
+    const showSavedProviders = search.selectedTabIndex === 1;
+    const savedProviderIds = providers.savedProviders;
+
     let forGeoConvert = [];
     providersList.forEach(typeId => {
       typeId.providers.forEach(provider => {
         provider.color = highlightedProviders.includes(provider.id)
           ? "rgb(255,195,26)"
           : iconColors[provider.typeId];
-        forGeoConvert.push(provider);
+
+        if (!showSavedProviders || savedProviderIds.includes(provider.id)) {
+          // Show only saved providers if the saved provider tab is selected, otherwise show everything.
+          forGeoConvert.push(provider);
+        }
       });
     });
     return convertProvidersToGeoJSON(forGeoConvert);
   };
 
-  updatePinAndDistanceIndicator = (prevProps) => {
+  updatePinAndDistanceIndicator = prevProps => {
     const distance = this.props.filters.distance;
     const searchCoordinates = this.props.search.coordinates;
     if (
@@ -288,7 +298,10 @@ class Map extends Component {
       // the user starts interacting with the app.
       return;
     }
+<<<<<<< HEAD
     this.updateZoom(this.props.filters.distance);
+=======
+>>>>>>> af6a160a20bada3c75c21d50d221eff35eef6c86
     removeDistanceMarkers(this.markerList);
     this.addDistanceIndicatorLayer();
     // If no distance filter is set, display all distance indicators.
@@ -391,8 +404,8 @@ class Map extends Component {
     }
   };
 
-  zoomToFit = (providerIds) => {
-    if(providerIds.length > 1){
+  zoomToFit = providerIds => {
+    if (providerIds.length > 1) {
       const visibleIcons = getBoundingBox(this.props.providers, providerIds);
       this.map.fitBounds(visibleIcons, {
         padding: { top: 200, bottom: 200, left: 200, right: 200 },
@@ -407,10 +420,15 @@ class Map extends Component {
     if (this.state.loaded) {
       const features = this.geoJSONFeatures();
       this.setSourceFeatures(features);
-      this.props.providerTypes.allIds.map(typeId => this.findLayerInMap(typeId));
+      this.props.providerTypes.allIds.map(typeId =>
+        this.findLayerInMap(typeId)
+      );
       this.updatePinAndDistanceIndicator(prevProps);
       this.zoomToFit(this.props.highlightedProviders);
-      if (this.props.filters.distance && this.props.filters.distance !== prevProps.filters.distance) {
+      if (
+        this.props.filters.distance &&
+        this.props.filters.distance !== prevProps.filters.distance
+      ) {
         this.map.flyTo({
           center: this.props.search.coordinates,
           zoom: this.zoomToDistance(this.props.filters.distance)
