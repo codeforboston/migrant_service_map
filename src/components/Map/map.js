@@ -303,9 +303,9 @@ class Map extends Component {
     this.addDistanceIndicatorLayer();
     // If no distance filter is set, display all distance indicators.
     let distanceIndicatorRadii = distance ? [distance] : distances;
+    let userSearch = ![1, "default"].includes(this.props.search.currentLocation)
 
-    if (distance || (this.props.search.currentLocation !== 1 && this.props.search.currentLocation !== "default")) {
-
+    if (distance || userSearch) {
       const centerMarker = createCenterMarker();
       const mapPin = new mapboxgl.Marker({element: centerMarker})
       .setLngLat(searchCoordinates)
