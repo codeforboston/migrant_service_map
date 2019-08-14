@@ -298,10 +298,7 @@ class Map extends Component {
       // the user starts interacting with the app.
       return;
     }
-<<<<<<< HEAD
     this.updateZoom(this.props.filters.distance);
-=======
->>>>>>> af6a160a20bada3c75c21d50d221eff35eef6c86
     removeDistanceMarkers(this.markerList);
     this.addDistanceIndicatorLayer();
     // If no distance filter is set, display all distance indicators.
