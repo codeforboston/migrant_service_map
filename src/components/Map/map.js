@@ -298,8 +298,6 @@ class Map extends Component {
       // the user starts interacting with the app.
       return;
     }
-    // If no distance filter is set, display all distance indicators.
-    const distanceIndicatorRadii = distance ? [distance] : distances;
     removeDistanceMarkers(this.markerList);
     this.addDistanceIndicatorLayer();
 
