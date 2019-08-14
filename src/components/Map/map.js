@@ -284,10 +284,10 @@ class Map extends Component {
       return;
     }
     this.updateZoom(distance);
+    this.addDistanceIndicatorLayer();
     // If no distance filter is set, display all distance indicators.
     let distanceIndicatorRadii = distance ? [distance] : distances;
     const {color, options} = markerStyle;
-    this.addDistanceIndicatorLayer();
 
     const addPinToMap = () => {
       const centerMarker = createCenterMarker();
@@ -318,12 +318,18 @@ class Map extends Component {
       distanceIndicatorRadii = [];
     };
 
-    const circles = distanceIndicatorRadii.map((radius, i) =>
-      circle(searchCoordinates, radius, {
-        ...options,
-        properties: { color: color[i], "stroke-width": radius }
-      })
-    );
+    const innerColor = "hsla(317, 100%, 84%, .1)";
+    const outerColor = "hsla(317, 100%, 84%, .15)";
+    const circles = distanceIndicatorRadii
+      .slice()
+      .reverse()
+      .map((radius, i) =>
+        circle(searchCoordinates, radius, {
+          steps: 100,
+          units: "miles",
+          properties: { color: i === 0 ? outerColor : innerColor }
+        })
+      );
 
     this.map
     .getSource("distance-indicator-source")
