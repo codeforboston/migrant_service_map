@@ -10,7 +10,6 @@ import {
   convertProvidersToGeoJSON,
   createCenterMarker,
   createDistanceMarker,
-  markerStyle,
   normalizeProviders,
   removeDistanceMarkers,
   getBoundingBox
@@ -30,20 +29,22 @@ class Map extends Component {
   }
 
   onMapLoaded = () => {
-    const { providerTypes, initializeProviders } = this.props;
+    const { initializeProviders } = this.props;
+    
+    // Initialize static sources and layers. Layers for provider icons are
+    // added as they're enabled in the UI. Layers are drawn in the order they
+    // are added to the map.
     this.setSingleSourceInMap();
+    this.addDistanceIndicatorLayer();
+    this.findClustersInMap();
 
+    // Pull data from Mapbox style and initialize application state
     const providerFeatures = this.map.querySourceFeatures("composite", {
       sourceLayer: "Migrant_Services_-_MSM_Final_1"
     });
     const normalizedProviders = normalizeProviders(providerFeatures);
     initializeProviders(normalizedProviders);
-
-    providerTypes.allIds.forEach(typeId => {
-      this.findLayerInMap(typeId);
-      this.findClustersInMap();
-    });
-
+    
     this.loadProviderTypeImage(typeImages);
     this.setState({ loaded: true });
   };
@@ -90,7 +91,6 @@ class Map extends Component {
       }
 
       this.props.setSearchCenterCoordinates(geometry.coordinates, id, text);
-      this.addDistanceIndicatorLayer();
       map.flyTo({
         center: geometry.coordinates,
         zoom: zoom
@@ -300,22 +300,33 @@ class Map extends Component {
     }
     // If no distance filter is set, display all distance indicators.
     const distanceIndicatorRadii = distance ? [distance] : distances;
-    const { color, options } = markerStyle;
     removeDistanceMarkers(this.markerList);
     this.addDistanceIndicatorLayer();
 
     const centerMarker = createCenterMarker();
-
     const mapPin = new mapboxgl.Marker({ element: centerMarker });
     this.markerList.push(mapPin);
     mapPin.setLngLat(searchCoordinates);
 
-    const circles = distanceIndicatorRadii.map((radius, i) =>
-      circle(searchCoordinates, radius, {
-        ...options,
-        properties: { color: color[i], "stroke-width": radius }
-      })
-    );
+    // If no distance filter is set, display all distance indicators.
+    const distanceIndicatorRadii = distance ? [distance] : distances.sort();
+
+    // Create concentric circles, drawn from largest to smallest, with the
+    // largest circle having a different fill color than the others.
+    const innerColor = "hsla(317, 100%, 84%, .1)";
+    const outerColor = "hsla(317, 100%, 84%, .15)";
+    const circles = distanceIndicatorRadii
+      .slice()
+      .reverse()
+      .map((radius, i) =>
+        circle(searchCoordinates, radius, {
+          steps: 100,
+          units: "miles",
+          properties: { color: i === 0 ? outerColor : innerColor }
+        })
+      );
+
+    // Create distance labels drawn from smallest to largest
     const labels = distanceIndicatorRadii.map((radius, i) => {
       const radiusOffset = transformTranslate(
         point(searchCoordinates),
@@ -323,7 +334,7 @@ class Map extends Component {
         90,
         { units: "miles" }
       );
-      const distanceMarker = createDistanceMarker(radius, color[i]);
+      const distanceMarker = createDistanceMarker(radius);
       const marker = new mapboxgl.Marker({ element: distanceMarker });
       this.markerList.push(marker);
       return marker.setLngLat(radiusOffset.geometry.coordinates);
@@ -338,8 +349,10 @@ class Map extends Component {
 
   removeReferenceLocation = map => {
     removeDistanceMarkers(this.markerList);
-    map.removeLayer("distance-indicator");
-    map.removeSource("distance-indicator-source");
+    map.getSource("distance-indicator-source").setData({
+      type: "FeatureCollection",
+      features: []
+    });
 
     map.flyTo({
       center: [-71.066954, 42.359947],
@@ -348,7 +361,6 @@ class Map extends Component {
   };
 
   addDistanceIndicatorLayer = () => {
-    removeDistanceMarkers(this.markerList);
     if (!this.map.getSource("distance-indicator-source")) {
       this.map.addSource("distance-indicator-source", {
         type: "geojson",
@@ -358,16 +370,24 @@ class Map extends Component {
         }
       });
     }
-    if (!this.map.getLayer("distance-indicator")) {
+    if (!this.map.getLayer("distance-indicator-fill")) {
       this.map.addLayer({
-        id: "distance-indicator",
+        id: "distance-indicator-fill",
+        type: "fill",
+        source: "distance-indicator-source",
+        paint: {
+          "fill-color": ["get", "color"]
+        }
+      });
+    }
+    if (!this.map.getLayer("distance-indicator-stroke")) {
+      this.map.addLayer({
+        id: "distance-indicator-stroke",
         type: "line",
         source: "distance-indicator-source",
         paint: {
-          "line-color": ["get", "color"],
-          "line-opacity": 0.8,
-          "line-width": ["*", 1, 3],
-          "line-offset": 5
+          "line-color": "#D561B5",
+          "line-width": 2
         }
       });
     }
