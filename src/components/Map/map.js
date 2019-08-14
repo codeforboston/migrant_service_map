@@ -30,7 +30,7 @@ class Map extends Component {
 
   onMapLoaded = () => {
     const { initializeProviders } = this.props;
-    
+
     // Initialize static sources and layers. Layers for provider icons are
     // added as they're enabled in the UI. Layers are drawn in the order they
     // are added to the map.
@@ -44,7 +44,7 @@ class Map extends Component {
     });
     const normalizedProviders = normalizeProviders(providerFeatures);
     initializeProviders(normalizedProviders);
-    
+
     this.loadProviderTypeImage(typeImages);
     this.setState({ loaded: true });
   };
@@ -298,16 +298,37 @@ class Map extends Component {
       // the user starts interacting with the app.
       return;
     }
+    this.updateZoom(this.props.filters.distance);
     removeDistanceMarkers(this.markerList);
     this.addDistanceIndicatorLayer();
-
-    const centerMarker = createCenterMarker();
-    const mapPin = new mapboxgl.Marker({ element: centerMarker });
-    this.markerList.push(mapPin);
-    mapPin.setLngLat(searchCoordinates);
-
     // If no distance filter is set, display all distance indicators.
-    const distanceIndicatorRadii = distance ? [distance] : distances.sort();
+    let distanceIndicatorRadii = distance ? [distance] : distances.sort();
+    let userSearch = ![1, "default"].includes(this.props.search.currentLocation)
+
+    if (distance || userSearch) {
+      const centerMarker = createCenterMarker();
+      const mapPin = new mapboxgl.Marker({element: centerMarker})
+      .setLngLat(searchCoordinates)
+      .addTo(this.map);
+      this.markerList.push(mapPin);
+
+      // Create distance labels drawn from smallest to largest
+      const labels = distanceIndicatorRadii.map((radius, i) => {
+        const radiusOffset = transformTranslate(
+          point(searchCoordinates),
+          radius,
+          90,
+          { units: "miles" }
+        );
+        const distanceMarker = createDistanceMarker(radius);
+        const marker = new mapboxgl.Marker({ element: distanceMarker });
+        this.markerList.push(marker);
+        return marker.setLngLat(radiusOffset.geometry.coordinates);
+      });
+      labels.map(label => label.addTo(this.map));
+    } else {
+      distanceIndicatorRadii = [];
+    };
 
     // Create concentric circles, drawn from largest to smallest, with the
     // largest circle having a different fill color than the others.
@@ -324,25 +345,17 @@ class Map extends Component {
         })
       );
 
-    // Create distance labels drawn from smallest to largest
-    const labels = distanceIndicatorRadii.map((radius, i) => {
-      const radiusOffset = transformTranslate(
-        point(searchCoordinates),
-        radius,
-        90,
-        { units: "miles" }
-      );
-      const distanceMarker = createDistanceMarker(radius);
-      const marker = new mapboxgl.Marker({ element: distanceMarker });
-      this.markerList.push(marker);
-      return marker.setLngLat(radiusOffset.geometry.coordinates);
-    });
-
-    labels.map(label => label.addTo(this.map));
-    mapPin.addTo(this.map);
     this.map
       .getSource("distance-indicator-source")
       .setData({ type: "FeatureCollection", features: circles });
+  };
+
+  updateZoom = distance => {
+    const zoom = distance ? distance : 1.5;
+    this.map.easeTo({
+      center: this.props.search.coordinates,
+      zoom: this.zoomToDistance(zoom)
+    });
   };
 
   removeReferenceLocation = map => {
