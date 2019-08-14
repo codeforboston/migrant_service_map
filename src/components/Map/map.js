@@ -407,6 +407,14 @@ class Map extends Component {
           zoom: this.zoomToDistance(this.props.filters.distance)
         });
       }
+      if (this.props.search.flyToProviderId !== prevProps.search.flyToProviderId) {
+        const {flyToProviderId} = this.props.search;
+        const {coordinates} = this.props.providers.byId[flyToProviderId];
+        this.map.flyTo({
+          center: coordinates,
+          zoom: 15
+        });
+      }
     }
   }
 
