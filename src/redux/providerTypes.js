@@ -27,6 +27,9 @@ function initialProviders(state, payload) {
 
 function setVisibleTypes(state, type) {
   // If visible contains type removes it
+  if (typeof type === 'undefined') {
+    return { ...state, visible: [] };
+  }
   if (state.visible.includes(type)) {
     const removedVisible = state.visible.filter(typeId => type !== typeId);
     return { ...state, visible: removedVisible };
