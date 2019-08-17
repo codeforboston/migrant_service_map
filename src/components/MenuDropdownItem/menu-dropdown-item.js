@@ -121,7 +121,13 @@ export default class DropdownMenuItem extends React.Component {
             )}
           </div>
         </div>
-        {isHighlighted && <DetailsPane provider={provider} />}
+        {/*{isHighlighted && <DetailsPane provider={provider} />}*/}
+
+        {isSaved ?
+            (this.state.expand == "expanded" && <DetailsPane provider={provider}/>)
+            : (isHighlighted && <DetailsPane provider={provider} />)
+
+        }
       </div>
     );
   }
