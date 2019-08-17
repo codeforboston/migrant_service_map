@@ -5,6 +5,12 @@ import SortDropdown from "./sort-dropdown.js";
 import "./provider-list.css";
 
 class ProviderList extends Component {
+
+  toggleStatus = (id,e) => {
+    e.stopPropagation();
+    this.props.saveProvider(id);
+  }
+
   render() {
     const {
       providersList,
@@ -67,7 +73,7 @@ class ProviderList extends Component {
                               ? "saved"
                               : "unsaved"
                           }
-                          toggleSavedStatus={() => saveProvider(provider.id)}
+                          toggleSavedStatus={e => this.toggleStatus(provider.id, e)}
                         />
                       </li>
                     ))}

@@ -25,6 +25,7 @@ import providerTypeToColor from "provider-type-to-color.json";
 
 const isPresent = value => value && value !== "n/a";
 
+// TODO: refactor cardIconMappings to use typeID instead of typeName
 const cardIconMappings = {
   "Job Placement": faBriefcase,
   "Community Center": faPlaceOfWorship,
@@ -58,10 +59,11 @@ export default class DropdownMenuItem extends React.Component {
       <div
         className={`provider-card ${savedMenuHighlightedProviderCard}`}
         id={`provider-${provider.id}`}
+        onClick={this.onItemClick}
       >
         <div className="card-container">
           <div className="card-header">
-            <h5 className={expand} onClick={this.onItemClick}>
+            <h5 className={expand}>
               {provider.name}
             </h5>
             <div className="wrapped-info">
@@ -72,7 +74,7 @@ export default class DropdownMenuItem extends React.Component {
                 />
                 <p>{provider.typeName}</p>
               </div>
-              {!isHighlighted && (
+              {this.state.expand === "wrapped" && !isHighlighted && (
                 <div className="wrapped-icons">
                   {isPresent(provider.email) && (
                     <FontAwesomeIcon icon={faEnvelopeOpenText} />
@@ -121,12 +123,9 @@ export default class DropdownMenuItem extends React.Component {
             )}
           </div>
         </div>
-        {/*{isHighlighted && <DetailsPane provider={provider} />}*/}
-
         {isSaved ?
             (this.state.expand == "expanded" && <DetailsPane provider={provider}/>)
             : (isHighlighted && <DetailsPane provider={provider} />)
-
         }
       </div>
     );
