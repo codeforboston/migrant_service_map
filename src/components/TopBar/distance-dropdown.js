@@ -1,7 +1,9 @@
 import React from "react";
 import RadioButtonDropdown from "../Dropdowns/radio-button-dropdown";
 import distances from "assets/distances";
-import { Row } from "simple-flexbox";
+import { Row, Column } from "simple-flexbox";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
 const defaultDistanceText = "None Selected";
 export default class DistanceDropdown extends React.Component {
@@ -17,8 +19,8 @@ export default class DistanceDropdown extends React.Component {
     }
   };
 
-  clearDistance = (event) => {
-    event.stopPropagation()
+  clearDistance = event => {
+    event.stopPropagation();
     const { onChange = () => {} } = this.props;
     onChange(undefined);
     this.setState({ distanceText: defaultDistanceText });
@@ -47,10 +49,17 @@ export default class DistanceDropdown extends React.Component {
         header={
           <>
             <Row alignItems="center">
-              <h2 style={{ flex: 1 }}>Distance</h2>
-              <div onClick={this.clearDistance}>x</div>
+              <Column flexGrow={1}>
+                <h2 style={{ flex: 1 }}>Distance</h2>
+                <p>{distanceText}</p>
+              </Column>
+              <div
+                className="clear-icon-container"
+                onClick={this.clearDistance}
+              >
+                <FontAwesomeIcon icon={faTimes} />
+              </div>
             </Row>
-            <p>{distanceText}</p>
           </>
         }
       />
