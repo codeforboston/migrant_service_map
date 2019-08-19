@@ -3,15 +3,13 @@ import "./expandable.css";
 
 export default class Expandable extends React.Component {
   static defaultProps = {
-    expanded: false,
-    closeOnSelect: false
+    expanded: false
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      expanded: props.expanded,
-      closeOnSelect: props.closeOnSelect
+      expanded: props.expanded
     };
   }
 
@@ -25,28 +23,12 @@ export default class Expandable extends React.Component {
   }
 
   toggleExpanded = () => {
-    const { expanded } = this.state;
-    this.setState({ expanded: !expanded });
+    this.setState(state => ({expanded: !state.expanded}));
   };
 
-  toggleExpandedOnSelect = () => {
-    const { closeOnSelect } = this.state;
-    if (closeOnSelect) {
+  closeOnSelect = () => {
+    if (this.props.closeOnSelect) {
       this.setState({ expanded: false });
-    }
-  };
-
-  onFocusLost = () => {
-    const { expanded } = this.state;
-    if (expanded) {
-      this.setState({ expanded: false });
-    }
-  };
-
-  onFocusGained = () => {
-    const { expanded } = this.state;
-    if (!expanded) {
-      this.setState({ expanded: true });
     }
   };
 
@@ -57,8 +39,8 @@ export default class Expandable extends React.Component {
     return (
       <div
         className="expandable-container"
-        onMouseEnter={this.onFocusGained}
-        onMouseLeave={this.onFocusLost}
+        onMouseEnter={() => this.setState({ expanded: true })}
+        onMouseLeave={() => this.setState({ expanded: false })}
       >
         <div
           className={`expandable-content-wrapper ${className} ${
@@ -69,7 +51,7 @@ export default class Expandable extends React.Component {
             {header}
           </div>
           <div
-            onClick={this.toggleExpandedOnSelect}
+            onClick={this.closeOnSelect}
             className={`expanded-content ${expanded ? "expanded" : ""}`}
           >
             {content}
