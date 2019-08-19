@@ -1,6 +1,6 @@
 import React from "react";
 import "./expandable.css";
-import FocusDetector from "components/common/click-away-detector";
+import FocusDetector from "components/common/focus-detector";
 
 export default class Expandable extends React.Component {
   static defaultProps = {
