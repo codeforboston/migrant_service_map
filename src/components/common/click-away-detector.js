@@ -1,6 +1,6 @@
 import React from "react";
 
-export default class ClickAwayDetector extends React.Component {
+export default class FocusDetector extends React.Component {
   constructor(props) {
     super(props);
 
@@ -8,9 +8,9 @@ export default class ClickAwayDetector extends React.Component {
   }
 
   onClick = ({ target }) => {
-    const { onClickAway } = this.props;
+    const { onFocusLost } = this.props;
     if (!this.ref.current.contains(target)) {
-      onClickAway();
+      onFocusLost();
     }
   };
 
