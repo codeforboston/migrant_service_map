@@ -1,6 +1,5 @@
 import React from "react";
 import "./expandable.css";
-import FocusDetector from "components/common/focus-detector";
 
 export default class Expandable extends React.Component {
   static defaultProps = {
@@ -44,14 +43,22 @@ export default class Expandable extends React.Component {
     }
   };
 
+  onFocusGained = () => {
+    const { expanded } = this.state;
+    if (!expanded) {
+      this.setState({ expanded: true });
+    }
+  };
+
   render() {
     const { expanded } = this.state;
     const { className, content, footer, header } = this.props;
 
     return (
-      <FocusDetector
-        onFocusLost={this.onFocusLost}
-        className={"expandable-container"}
+      <div
+        className="expandable-container"
+        onMouseEnter={this.onFocusGained}
+        onMouseLeave={this.onFocusLost}
       >
         <div
           className={`expandable-content-wrapper ${className} ${
@@ -71,7 +78,7 @@ export default class Expandable extends React.Component {
             {footer}
           </div>
         </div>
-      </FocusDetector>
+      </div>
     );
   }
 }
