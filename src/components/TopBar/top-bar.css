@@ -56,3 +56,7 @@ button.geocoder-icon.geocoder-icon-close {
   display: flex;
   flex-direction: row;
 }
+
+.clear-icon-container {
+  padding: 10px;
+}

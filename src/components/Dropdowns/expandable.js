@@ -1,18 +1,15 @@
 import React from "react";
 import "./expandable.css";
-import ClickAwayDetector from "components/common/click-away-detector";
 
 export default class Expandable extends React.Component {
   static defaultProps = {
-    expanded: false,
-    closeOnSelect: false
+    expanded: false
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      expanded: props.expanded,
-      closeOnSelect: props.closeOnSelect
+      expanded: props.expanded
     };
   }
 
@@ -26,20 +23,11 @@ export default class Expandable extends React.Component {
   }
 
   toggleExpanded = () => {
-    const { expanded } = this.state;
-    this.setState({ expanded: !expanded });
+    this.setState(state => ({expanded: !state.expanded}));
   };
 
-  toggleExpandedOnSelect = () => {
-    const { closeOnSelect } = this.state;
-    if (closeOnSelect) {
-      this.setState({ expanded: false });
-    }
-  };
-
-  onClickAway = () => {
-    const { expanded } = this.state;
-    if (expanded) {
+  closeOnSelect = () => {
+    if (this.props.closeOnSelect) {
       this.setState({ expanded: false });
     }
   };
@@ -49,9 +37,10 @@ export default class Expandable extends React.Component {
     const { className, content, footer, header } = this.props;
 
     return (
-      <ClickAwayDetector
-        onClickAway={this.onClickAway}
-        className={"expandable-container"}
+      <div
+        className="expandable-container"
+        onMouseEnter={() => this.setState({ expanded: true })}
+        onMouseLeave={() => this.setState({ expanded: false })}
       >
         <div
           className={`expandable-content-wrapper ${className} ${
@@ -62,7 +51,7 @@ export default class Expandable extends React.Component {
             {header}
           </div>
           <div
-            onClick={this.toggleExpandedOnSelect}
+            onClick={this.closeOnSelect}
             className={`expanded-content ${expanded ? "expanded" : ""}`}
           >
             {content}
@@ -71,7 +60,7 @@ export default class Expandable extends React.Component {
             {footer}
           </div>
         </div>
-      </ClickAwayDetector>
+      </div>
     );
   }
 }
