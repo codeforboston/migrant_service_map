@@ -48,7 +48,7 @@ export default class DistanceDropdown extends React.Component {
           <>
             <Row alignItems="center">
               <h2 style={{ flex: 1 }}>Distance</h2>
-              <div onClick={this.clearDistance}>x</div>
+              <div onClick={this.clearDistance}>clear</div>
             </Row>
             <p>{distanceText}</p>
           </>

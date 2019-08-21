@@ -40,7 +40,7 @@ export default class ProviderTypeDropdown extends React.Component {
           <>
             <Row alignItems="center">
             <h2 style={{flex: 1 }}>PROVIDER TYPE</h2>
-            <div onClick={this.clearProviderTypes}>x</div>
+            <div onClick={this.clearProviderTypes}>clear all</div>
             </Row>
             <p>{subheaderText}</p>
           </>
