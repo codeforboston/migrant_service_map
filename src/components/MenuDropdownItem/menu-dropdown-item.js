@@ -48,7 +48,7 @@ export default class DropdownMenuItem extends React.Component {
   };
 
   render() {
-    const { provider, isSaved, toggleSavedStatus, isHighlighted } = this.props;
+    const { provider, isSaved, toggleSavedStatus, isHighlighted, flyToProvider } = this.props;
     const inSavedMenu = this.props.inSavedMenu ? this.props.inSavedMenu : false;
     const savedMenuHighlightedProviderCard =
       inSavedMenu && isHighlighted ? "savedHighlighted" : "unchanged";
@@ -121,7 +121,7 @@ export default class DropdownMenuItem extends React.Component {
             )}
           </div>
         </div>
-        {isHighlighted && <DetailsPane provider={provider} />}
+        {isHighlighted && <DetailsPane provider={provider} flyToProvider={flyToProvider} />}
       </div>
     );
   }

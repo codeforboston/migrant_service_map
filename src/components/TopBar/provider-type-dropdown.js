@@ -1,6 +1,8 @@
 import React from "react";
 import CheckBoxDropdown from "../Dropdowns/checkbox-dropdown";
-import { Row } from "simple-flexbox";
+import { Row, Column } from "simple-flexbox";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
 const defaultSubheaderText = "Not Selected";
 export default class ProviderTypeDropdown extends React.Component {
@@ -9,7 +11,7 @@ export default class ProviderTypeDropdown extends React.Component {
     onChange(changedOption);
   };
 
-  clearProviderTypes = (event) => {
+  clearProviderTypes = event => {
     event.stopPropagation();
     const { onChange = () => {} } = this.props;
     onChange(undefined);
@@ -24,7 +26,7 @@ export default class ProviderTypeDropdown extends React.Component {
         providerTypes.byId[providerTypes.visible[0]].name;
       subheaderText = selectedProviderType;
     } else {
-      subheaderText = providerTypes.visible.length + " Selected"
+      subheaderText = providerTypes.visible.length + " Selected";
     }
 
     return (
@@ -39,10 +41,17 @@ export default class ProviderTypeDropdown extends React.Component {
         header={
           <>
             <Row alignItems="center">
-            <h2 style={{flex: 1 }}>PROVIDER TYPE</h2>
-            <div onClick={this.clearProviderTypes}>clear all</div>
+              <Column flexGrow={1}>
+                <h2 style={{ flex: 1 }}>PROVIDER TYPE</h2>
+                <p>{subheaderText}</p>
+              </Column>
+              <div
+                className="clear-icon-container"
+                onClick={this.clearProviderTypes}
+              >
+                clear all
+              </div>
             </Row>
-            <p>{subheaderText}</p>
           </>
         }
       />

@@ -4,7 +4,8 @@ import {
   saveProvider,
   displayProviderInformation,
   changeSortOrder,
-  changeSortDirection
+  changeSortDirection,
+  flyToProvider,
 } from "redux/actions";
 import { getProvidersSorted } from "redux/selectors.js";
 import ProviderList from "./provider-list";
@@ -41,6 +42,9 @@ const mapDispatchToProps = dispatch => {
     },
     changeSortDirection: direction => {
       dispatch(changeSortDirection(direction))
+    },
+    flyToProvider: id => {
+      dispatch(flyToProvider(id))
     }
   };
 };

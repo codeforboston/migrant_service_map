@@ -1,7 +1,9 @@
 .sort-container {
-  align-items: center;
   display: flex;
   flex-direction: row;
+  box-sizing: content-box;
+  /* Height should match the height of the sort icon. */
+  height: 48px;
   padding-top: 24px;
   padding-left: 16px;
   padding-right: 16px;
@@ -19,11 +21,6 @@
 }
 .sort-container .expandable-container .expanded {
   transition: all 0.08s ease-out;
-}
-.side-menu .expandable-container .expanded-content {
-  padding: 0;
-  position: absolute;
-  top: 100%;
 }
 .side-menu .expandable-content .expandable-header {
   padding: 0;
