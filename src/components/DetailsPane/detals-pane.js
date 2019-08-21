@@ -15,7 +15,8 @@ export default class DetailsPane extends React.Component {
 
   render() {
     const {
-      provider: { email, address, website, telephone, mission }
+      provider: { email, address, website, telephone, mission },
+      flyToProvider
     } = this.props;
     const { isMissionTextExpanded } = this.state;
     return (
@@ -29,7 +30,7 @@ export default class DetailsPane extends React.Component {
           </ProviderDetailsInfo>
         </Row>
         <Row>
-          <ProviderDetailsInfo icon="home" label="address">
+          <ProviderDetailsInfo icon="home" label="address" flyToProvider={flyToProvider}>
             {address || "address"}
           </ProviderDetailsInfo>
           <ProviderDetailsInfo icon="perm_phone_msg" label="phone">

@@ -3,6 +3,12 @@ import { Column } from "simple-flexbox";
 import "./provider-details-info.css";
 
 export default class ProviderDetailsInfo extends React.Component {
+
+  onAddressClicked = e => {
+    e.stopPropagation();
+    this.props.flyToProvider();
+  }
+
   render() {
     const { label, icon, ellipsis } = this.props;
     return (
@@ -12,7 +18,7 @@ export default class ProviderDetailsInfo extends React.Component {
           alt={icon + " icon"}
           src={"https://icon.now.sh/" + icon}
         />
-        <Column className={ellipsis ? "ellipsis" : ""} justifyContent="center">
+        <Column className={ellipsis ? "ellipsis" : ""} justifyContent="center" onClick={this.onAddressClicked}>
           <div className="provider-details-content-label">
             {label.toUpperCase()}
           </div>

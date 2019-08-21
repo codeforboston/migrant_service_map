@@ -15,7 +15,8 @@ class ProviderList extends Component {
       changeSortOrder,
       changeSortDirection,
       highlightedProviders,
-      displayProviderInformation
+      displayProviderInformation,
+      flyToProvider
     } = this.props;
     return (
       <div className="service-providers">
@@ -68,6 +69,7 @@ class ProviderList extends Component {
                               : "unsaved"
                           }
                           toggleSavedStatus={() => saveProvider(provider.id)}
+                          flyToProvider={()=> flyToProvider(provider.id)}
                         />
                       </li>
                     ))}
