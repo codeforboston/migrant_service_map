@@ -48,7 +48,6 @@ function printSavedProviders(providers) {
     </div>
   );
   printJSX(printPage);
-  console.log('byTypeName', byTypeName)
 }
 
 function emailSavedProviders(providers) {
@@ -65,16 +64,10 @@ function emailSavedProviders(providers) {
       providerString = providerString.concat("Website: " + provider.website + "%0D%0A")
       providerString = providerString.concat("Phone: " + provider.telephone + "%0D%0A")
       providerString = providerString.concat("Email: " + provider.email + "%0D%0A")
-      console.log('provider', provider)
       })
     emailBodyString = emailBodyString.concat(providerString + "%0D%0A")
-    console.log('individual typeName', typeName)
   })
-  // emailBodyString = emailBodyString.replace(/\r\n?/g, '%0D%0A');
   window.location.href = "mailto:?subject=Subject&body="+emailBodyString+"";
-  console.log('emailBodyString', emailBodyString)
-  // console.log('Type Name', byTypeName)
-  // console.log('job placement', byTypeName['Job Placement'])
 }
 
 const SavedProvidersList = ({
