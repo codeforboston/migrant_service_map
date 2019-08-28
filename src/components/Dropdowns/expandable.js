@@ -6,48 +6,27 @@ export default class Expandable extends React.Component {
     expanded: false
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      expanded: props.expanded
-    };
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (
-      this.props.onToggleExpanded &&
-      this.state.expanded !== prevState.expanded
-    ) {
-      this.props.onToggleExpanded(this.state.expanded);
-    }
-  }
-
-  toggleExpanded = () => {
-    this.setState(state => ({expanded: !state.expanded}));
-  };
-
   closeOnSelect = () => {
     if (this.props.closeOnSelect) {
-      this.setState({ expanded: false });
+      this.props.setExpanded(false);
     }
   };
 
   render() {
-    const { expanded } = this.state;
-    const { className, content, footer, header } = this.props;
+    const { className, content, footer, header, expanded, setExpanded } = this.props;
 
     return (
       <div
         className="expandable-container"
-        onMouseEnter={() => this.setState({ expanded: true })}
-        onMouseLeave={() => this.setState({ expanded: false })}
+        onMouseEnter={setExpanded(true)}
+        onMouseLeave={setExpanded(false)}
       >
         <div
           className={`expandable-content-wrapper ${className} ${
             expanded ? "expanded" : ""
           }`}
         >
-          <div onClick={this.toggleExpanded} className="expandable-header">
+          <div onClick={setExpanded(!expanded)} className="expandable-header">
             {header}
           </div>
           <div

@@ -17,7 +17,7 @@ export default class CheckBoxDropdown extends React.Component {
       footer,
       header,
       expanded,
-      onToggleExpanded,
+      setExpanded,
       visibleTypes,
       onChange = () => {}
     } = this.props;
@@ -53,7 +53,7 @@ export default class CheckBoxDropdown extends React.Component {
         content={inputDiv}
         footer={footer}
         expanded={expanded}
-        onToggleExpanded={onToggleExpanded}
+        setExpanded={setExpanded}
       />
     );
   }

@@ -6,6 +6,10 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
 const defaultSubheaderText = "Not Selected";
 export default class ProviderTypeDropdown extends React.Component {
+  state = {
+    expanded: false
+  };
+
   onCheckboxChanged = (changedOption, selectedValues) => {
     const { onChange, providerTypes } = this.props;
     onChange(changedOption);
@@ -15,9 +19,18 @@ export default class ProviderTypeDropdown extends React.Component {
     event.stopPropagation();
     const { onChange = () => {} } = this.props;
     onChange(undefined);
+    this.setExpanded(false);
   };
 
+  setExpanded = expanded => {
+    this.setState({
+      expanded
+    });
+  };
+
+
   render() {
+    const {expanded} = this.state;
     const { className, providerTypes } = this.props;
     let subheaderText = defaultSubheaderText;
 
@@ -36,6 +49,8 @@ export default class ProviderTypeDropdown extends React.Component {
           id,
           display: providerTypes.byId[id].name
         }))}
+        expanded={expanded}
+        setExpanded={this.setExpanded}
         onChange={this.onCheckboxChanged}
         visibleTypes={providerTypes.visible}
         header={
