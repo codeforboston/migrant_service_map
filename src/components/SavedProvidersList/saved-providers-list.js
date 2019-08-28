@@ -52,24 +52,23 @@ function printSavedProviders(providers) {
 
 function emailSavedProviders(providers) {
   const byTypeName = _.groupBy(providers, provider => provider.typeName);
-  // const emailBody = `Test body`
   let emailBodyString = ''
   const newLine = "%0D%0A"
-  // byTypeName.jobPlacement.forEach(provider => emailBodyString.concat(provider.typeName))
   _.forEach(byTypeName, (providers, typeName) => {
     let providerString = ''
     providerString = providerString.concat(typeName + newLine)
     providers.forEach((provider) => {
-      providerString = providerString.concat(newLine)
-      providerString = providerString.concat(provider.name + newLine)
-      providerString = providerString.concat("Address: " + provider.address + newLine)
-      providerString = providerString.concat("Website: " + provider.website + newLine)
-      providerString = providerString.concat("Phone: " + provider.telephone + newLine)
-      providerString = providerString.concat("Email: " + provider.email + newLine)
+      providerString = providerString.concat(
+        newLine + provider.name + newLine +
+        "Address: " + provider.address + newLine +
+        "Website: " + provider.website + newLine +
+        "Phone: " + provider.telephone + newLine +
+        "Email: " + provider.email + newLine)
       })
     emailBodyString = emailBodyString.concat(providerString + newLine)
   })
-  window.location.href = "mailto:?subject=Subject&body="+emailBodyString+"";
+  // Opens up default email application populated with formatted provider data
+  window.location.href = "mailto:?&body="+emailBodyString;
 }
 
 const SavedProvidersList = ({
