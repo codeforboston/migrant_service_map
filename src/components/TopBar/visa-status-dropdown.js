@@ -22,7 +22,7 @@ export default class VisaStatusDropdown extends React.Component {
 
   setExpanded = expanded => {
     this.setState({
-      viewAllOptions: !expanded ? false : viewAllOptions,
+      viewAllOptions: !expanded ? false : this.state.viewAllOptions,
       expanded
     });
   };

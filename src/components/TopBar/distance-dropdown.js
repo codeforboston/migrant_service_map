@@ -26,12 +26,6 @@ export default class DistanceDropdown extends React.Component {
     this.setState({ distanceText: defaultDistanceText , expanded: false});
   };
 
-  setExpanded = expanded => {
-    this.setState({
-      expanded
-    });
-  };
-
   render() {
     const { className } = this.props;
     const { distanceText, expanded } = this.state;
@@ -53,7 +47,7 @@ export default class DistanceDropdown extends React.Component {
         options={options}
         selected={this.state.distanceText}
         expanded={expanded}
-        setExpanded={this.setExpanded}
+        setExpanded={(expanded) => this.setState({expanded})}
         header={
           <>
             <Row alignItems="center">
