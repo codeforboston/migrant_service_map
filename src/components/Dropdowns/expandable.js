@@ -1,45 +1,42 @@
 import React from "react";
 import "./expandable.css";
 
-export default class Expandable extends React.Component {
-  static defaultProps = {
-    expanded: false
-  };
-
-  closeOnSelect = () => {
-    if (this.props.closeOnSelect) {
-      this.props.setExpanded(false);
-    }
-  };
-
-  render() {
-    const { className, content, footer, header, expanded, setExpanded } = this.props;
-
-    return (
+export default function Expandable({
+  className,
+  content,
+  footer,
+  header,
+  expanded = false,
+  setExpanded,
+  onSelect = () => {}
+}) {
+  return (
+    <div
+      className="expandable-container"
+      onMouseEnter={() => setExpanded(true)}
+      onMouseLeave={() => setExpanded(false)}
+    >
       <div
-        className="expandable-container"
-        onMouseEnter={setExpanded(true)}
-        onMouseLeave={setExpanded(false)}
+        className={`expandable-content-wrapper ${className} ${
+          expanded ? "expanded" : ""
+        }`}
       >
         <div
-          className={`expandable-content-wrapper ${className} ${
-            expanded ? "expanded" : ""
-          }`}
+          onClick={() => setExpanded(!expanded)}
+          className="expandable-header"
         >
-          <div onClick={setExpanded(!expanded)} className="expandable-header">
-            {header}
-          </div>
-          <div
-            onClick={this.closeOnSelect}
-            className={`expanded-content ${expanded ? "expanded" : ""}`}
-          >
-            {content}
-          </div>
-          <div className={`expanded-content ${expanded ? "expanded" : ""}`}>
-            {footer}
-          </div>
+          {header}
+        </div>
+        <div
+          onClick={onSelect}
+          className={`expanded-content ${expanded ? "expanded" : ""}`}
+        >
+          {content}
+        </div>
+        <div className={`expanded-content ${expanded ? "expanded" : ""}`}>
+          {footer}
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 }
