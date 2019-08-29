@@ -408,7 +408,8 @@ class Map extends Component {
     if (providerIds.length > 1) {
       const visibleIcons = getBoundingBox(this.props.providers, providerIds);
       this.map.fitBounds(visibleIcons, {
-        padding: { top: 200, bottom: 200, left: 200, right: 200 },
+        // Left padding accounts for provider list UI.
+        padding: { top: 100, bottom: 100, left: 450, right: 100 },
         duration: 2000,
         maxZoom: 13,
         linear: false
