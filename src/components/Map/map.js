@@ -415,6 +415,24 @@ class Map extends Component {
     return highlightedProviders.filter(id => enabledProviderIds.has(id));
   };
 
+  zoomToFit = providerIds => {
+    providerIds =
+      providerIds ||
+      this.getEnabledHighlightedProviders(
+        this.props.providersList,
+        this.props.highlightedProviders
+      );
+    if (providerIds.length > 0) {
+      this.map.fitBounds(getBoundingBox(this.props.providers, providerIds), {
+        // Left padding accounts for provider list UI.
+        padding: { top: 100, bottom: 100, left: 450, right: 100 },
+        duration: 2000,
+        maxZoom: 13,
+        linear: false
+      });
+    }
+  };
+
   /**
    * Zooms to fit when there are new providers not currently in view.
    *
@@ -447,14 +465,7 @@ class Map extends Component {
       newFeatureBounds.getSouth() < mapBounds.getSouth() ||
       newFeatureBounds.getWest() < mapBounds.getWest()
     ) {
-      // Some new feature lies outside the map bounds. Zoom to fit.
-      this.map.fitBounds(getBoundingBox(this.props.providers, currIds), {
-        // Left padding accounts for provider list UI.
-        padding: { top: 100, bottom: 100, left: 450, right: 100 },
-        duration: 2000,
-        maxZoom: 13,
-        linear: false
-      });
+      this.zoomToFit(currIds);
     }
   };
 
@@ -485,6 +496,9 @@ class Map extends Component {
           center: coordinates,
           zoom: 15
         });
+      }
+      if (this.props.search.zoomToFitKey !== prevProps.search.zoomToFitKey) {
+        this.zoomToFit();
       }
     }
   }

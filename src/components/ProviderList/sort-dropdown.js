@@ -7,7 +7,7 @@ import {
   faSortAlphaUp,
   faSortAlphaDown
 } from "@fortawesome/free-solid-svg-icons";
-
+import {faCompass} from "@fortawesome/free-regular-svg-icons";
 import "./sort-dropdown.css";
 
 const getSortIcon = (sortDirection, incomingState) => {
@@ -32,6 +32,7 @@ const SortDropdown = ({
   incomingState,
   options,
   sortDirection,
+  zoomToFit
 }) => {
   let inputDiv = options.map((option, index) =>
     <div
@@ -62,8 +63,10 @@ const SortDropdown = ({
         content={inputDiv}
         closeOnSelect={true}
       />
-      <FontAwesomeIcon size="3x" icon={getSortIcon(sortDirection, incomingState)}
-        onClick={() => changeDirection()} style={{cursor: 'pointer'}}/>
+      <FontAwesomeIcon size="2x" icon={getSortIcon(sortDirection, incomingState)}
+        onClick={() => changeDirection()} className="sort-container-icon"/>
+      <FontAwesomeIcon size="2x" icon={faCompass}
+        onClick={zoomToFit} className="sort-container-icon"/>
     </div>
     )
 };
