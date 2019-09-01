@@ -1,0 +1,14 @@
+# Configures builds for all branches and deployment on the "prod" branch.
+
+language: node_js
+
+# TODO: If deployment becomes unreliable, use a package-lock.json and npm ci
+install: npm install
+script: npm run-script build
+
+deploy:
+  provider: firebase
+  skip-cleanup: true
+  on:
+    branch: prod
+  
