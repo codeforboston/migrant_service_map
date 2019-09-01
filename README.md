@@ -113,7 +113,20 @@ npm install
 
 ## Testing
 
-TODO
+We use [Travis CI](https://docs.travis-ci.com/) for continuous integration and deployment (automatically run tests and deploy the website). Travis is configured in `.travis.yml` and builds are viewable in the [Travis dashboard](https://travis-ci.com/alexjball/migrant_service_map).
+
+Travis builds the app (it runs `npm run build`) when a commit is added to a branch or open pull request. This provides a basic sanity check for the app. Pull requests should build successfully before being merged.
+
+TODO: Unit/Functional tests
+
+## Deployment
+
+We use [Firebase](https://firebase.google.com/docs/hosting) to host the app at these URL's, part of the [migrant-service-map](https://console.firebase.google.com/project/migrant-service-map/hosting/main) Firebase project:
+
+https://migrant-service-map.web.app
+https://migrant-service-map.firebaseapp.com
+
+We use Travis to automate the deployment process. Whenever the `prod` (production) branch is updated, Travis builds the app as for any other commit. Then, if the build succeeds, it uploads the site to Firebase using the token stored in `.travis.yml`. This token is encrypted, specific to this repository, and only readable by Travis.
 
 ## Tech Stack
 
