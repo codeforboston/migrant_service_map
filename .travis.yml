@@ -13,3 +13,6 @@ script: npm run build
 #   on:
 #     branch: prod
   
+# Allow warnings because we don't care right now
+env:
+  - CI=false
