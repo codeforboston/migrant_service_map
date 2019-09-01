@@ -17,5 +17,5 @@ deploy:
   
 env:
   global:
-    # Allow warnings because we don't care right now
+    # TODO: Remove once warnings are fixed at head.
     - CI=false

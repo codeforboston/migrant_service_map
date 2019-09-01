@@ -121,10 +121,7 @@ TODO: Unit/Functional tests
 
 ## Deployment
 
-We use [Firebase](https://firebase.google.com/docs/hosting) to host the app at these URL's, part of the [migrant-service-map](https://console.firebase.google.com/project/migrant-service-map/hosting/main) Firebase project:
-
-https://migrant-service-map.web.app
-https://migrant-service-map.firebaseapp.com
+We use [Firebase](https://firebase.google.com/docs/hosting) to host the app at [migrant-service-map.web.app](https://migrant-service-map.web.app) and [migrant-service-map.firebaseapp.com](https://migrant-service-map.firebaseapp.com). Resources and billing are managed in our [migrant-service-map](https://console.firebase.google.com/project/migrant-service-map/hosting/main) Firebase project.
 
 We use Travis to automate the deployment process. Whenever the `prod` (production) branch is updated, Travis builds the app as for any other commit. Then, if the build succeeds, it uploads the site to Firebase using the token stored in `.travis.yml`. This token is encrypted, specific to this repository, and only readable by Travis.
 
