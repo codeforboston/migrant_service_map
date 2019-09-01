@@ -4,11 +4,11 @@ language: node_js
 
 # TODO: If deployment becomes unreliable, use a package-lock.json and npm ci
 install: npm install
-script: npm run-script build
+script: npm run build
 
-deploy:
-  provider: firebase
-  skip-cleanup: true
-  on:
-    branch: prod
+# deploy:
+#   provider: firebase
+#   skip-cleanup: true
+#   on:
+#     branch: prod
   
