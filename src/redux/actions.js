@@ -15,6 +15,7 @@ export const REORDER_SAVED_PROVIDERS = "REORDER_SAVED_PROVIDERS";
 export const CHANGE_SORT_ORDER = "CHANGE_SORT_ORDER";
 export const CHANGE_SORT_DIRECTION = "CHANGE_SORT_DIRECTION";
 export const SET_MAP_OBJECT = "SET_MAP_OBJECT";
+export const FLY_TO_PROVIDER = "FLY_TO_PROVIDER";
 
 export const initializeProviders = providers => {
   // TODO WHEN ASYNC async dispatch => {
@@ -136,5 +137,12 @@ export function changeSortDirection(direction) {
   return {
     type: CHANGE_SORT_DIRECTION,
     direction
+  }
+}
+
+export function flyToProvider(id) {
+  return {
+    type: FLY_TO_PROVIDER,
+    id
   }
 }

@@ -1,4 +1,4 @@
-import { SET_SEARCH_COORDINATES, SELECT_TAB } from "./actions";
+import { SET_SEARCH_COORDINATES, SELECT_TAB, FLY_TO_PROVIDER } from "./actions";
 
 const INITIAL_STATE = {
   mapCenter: [-71.066954, 42.359947],
@@ -30,6 +30,11 @@ export default function search(state = INITIAL_STATE, action) {
           }
         }
       };
+    case FLY_TO_PROVIDER:
+      return {
+        ...state,
+        flyToProviderId: action.id
+      }
     default:
       return state;
   }
