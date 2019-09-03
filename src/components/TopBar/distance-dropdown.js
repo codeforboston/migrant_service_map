@@ -57,7 +57,7 @@ export default class DistanceDropdown extends React.Component {
                 className="clear-icon-container"
                 onClick={this.clearDistance}
               >
-                <FontAwesomeIcon icon={faTimes} />
+                clear
               </div>
             </Row>
           </>

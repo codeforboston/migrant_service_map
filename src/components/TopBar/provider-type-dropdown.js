@@ -49,7 +49,7 @@ export default class ProviderTypeDropdown extends React.Component {
                 className="clear-icon-container"
                 onClick={this.clearProviderTypes}
               >
-                <FontAwesomeIcon icon={faTimes} />
+                clear all
               </div>
             </Row>
           </>
