@@ -7,7 +7,7 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 const defaultSubheaderText = "Not Selected";
 export default class ProviderTypeDropdown extends React.Component {
   onCheckboxChanged = (changedOption, selectedValues) => {
-    const { onChange, providerTypes } = this.props;
+    const { onChange } = this.props;
     onChange(changedOption);
   };
 

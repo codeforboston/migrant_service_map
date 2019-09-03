@@ -64,7 +64,7 @@ If you're new to github check out [Github Guide, Hello World](https://guides.git
 3. Clone your fork: In your terminal type `git clone`, paste the URL you copied and press enter. In your terminal/command prompt cd (change directory) into the new folder. Inside the directory:
 
 ```
-git clone
+git clone \
 https://github.com/YOUR-USERNAME/migrant_service_map.git
 cd migrant_service_map
 ```
@@ -72,7 +72,7 @@ cd migrant_service_map
 4. Add the migrant_service_map repository as a remote to your fork:
 
 ```
-git remote add upstream
+git remote add upstream \
 https://github.com/codeforboston/migrant_service_map.git
 ```
 
