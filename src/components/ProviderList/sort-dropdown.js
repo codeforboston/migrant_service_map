@@ -6,9 +6,9 @@ import {
   faSortNumericDown,
   faSortNumericUp,
   faSortAlphaUp,
-  faSortAlphaDown
+  faSortAlphaDown,
+  faCompressArrowsAlt
 } from "@fortawesome/free-solid-svg-icons";
-import { faCompass } from "@fortawesome/free-regular-svg-icons";
 import "./sort-dropdown.css";
 
 export default class SortDropdown extends React.Component {
@@ -93,7 +93,7 @@ export default class SortDropdown extends React.Component {
         />
         <FontAwesomeIcon
           size="2x"
-          icon={faCompass}
+          icon={faCompressArrowsAlt}
           onClick={zoomToFit}
           className="sort-container-icon"
           data-tip="Zoom to fit"
