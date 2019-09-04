@@ -135,10 +135,11 @@ const normalizeProviders = providerFeatures => {
 
 const getBoundingBox = (providers, providerIds) => {
   let lngs = [],
-    lats = [];
-  for (let a in providerIds) {
-    lngs.push(providers.byId[providerIds[a]].coordinates[0]);
-    lats.push(providers.byId[providerIds[a]].coordinates[1]);
+    lats = [],
+    id;
+  for (id in providerIds) {
+    lngs.push(providers.byId[providerIds[id]].coordinates[0]);
+    lats.push(providers.byId[providerIds[id]].coordinates[1]);
   }
 
   const maxLngs = lngs.reduce((a, b) => Math.max(a, b));

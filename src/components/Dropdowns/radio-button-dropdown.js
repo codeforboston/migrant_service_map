@@ -8,6 +8,8 @@ export default class RadioButtonDropdown extends React.Component {
       options,
       header,
       selected,
+      expanded,
+      setExpanded,
       onChange = () => {}
     } = this.props;
     const inputDiv = options.map((option, index) => {
@@ -30,7 +32,13 @@ export default class RadioButtonDropdown extends React.Component {
     });
 
     return (
-      <Expandable className={className} header={header} content={inputDiv} />
+      <Expandable
+        className={className}
+        header={header}
+        content={inputDiv}
+        expanded={expanded}
+        setExpanded={setExpanded}
+      />
     );
   }
 }

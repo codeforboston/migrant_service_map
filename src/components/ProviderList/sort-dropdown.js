@@ -12,6 +12,10 @@ import { faCompass } from "@fortawesome/free-regular-svg-icons";
 import "./sort-dropdown.css";
 
 export default class SortDropdown extends React.Component {
+  state = {
+    expanded: false
+  };
+
   getSortIcon = (sortDirection, incomingState) => {
     if (incomingState === "Distance") {
       if (sortDirection === "asc") {
@@ -31,6 +35,7 @@ export default class SortDropdown extends React.Component {
   }
 
   render() {
+    const { expanded } = this.state;
     const {
       className,
       handleChange,
@@ -75,7 +80,9 @@ export default class SortDropdown extends React.Component {
           className={className}
           header={wrappedHeader}
           content={inputDiv}
-          closeOnSelect={true}
+          onSelect={() => this.setState({ expanded: false })}
+          expanded={expanded}
+          setExpanded={expanded => this.setState({ expanded })}
         />
         <FontAwesomeIcon
           size="2x"
