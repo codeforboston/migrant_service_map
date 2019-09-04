@@ -53,22 +53,24 @@ function printSavedProviders(providers) {
 function emailSavedProviders(providers) {
   const byTypeName = _.groupBy(providers, provider => provider.typeName);
   let emailBodyString = ''
-  const newLine = "%0D%0A"
+  const newLine = "\n"
   _.forEach(byTypeName, (providers, typeName) => {
     let providerString = ''
-    providerString = providerString.concat(typeName + newLine)
+    providerString += (typeName + newLine)
     providers.forEach((provider) => {
-      providerString = providerString.concat(
+      console.log(provider)
+      providerString = providerString += (
         newLine + provider.name + newLine +
         "Address: " + provider.address + newLine +
         "Website: " + provider.website + newLine +
         "Phone: " + provider.telephone + newLine +
         "Email: " + provider.email + newLine)
       })
-    emailBodyString = emailBodyString.concat(providerString + newLine)
+    emailBodyString += (providerString + newLine)
   })
+  const uriEncodedBody = encodeURIComponent(emailBodyString)
   // Opens up default email application populated with formatted provider data
-  window.location.href = "mailto:?&body="+emailBodyString;
+  window.open("mailto:?&body="+uriEncodedBody)
 }
 
 const SavedProvidersList = ({
