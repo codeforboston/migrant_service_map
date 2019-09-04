@@ -23,12 +23,12 @@ export default class DistanceDropdown extends React.Component {
     event.stopPropagation();
     const { onChange = () => {} } = this.props;
     onChange(undefined);
-    this.setState({ distanceText: defaultDistanceText });
+    this.setState({ distanceText: defaultDistanceText , expanded: false});
   };
 
   render() {
     const { className } = this.props;
-    const { distanceText } = this.state;
+    const { distanceText, expanded } = this.state;
     const options = distances.map(distance => {
       if (distance < 0) {
         // "null" clears the filter
@@ -46,6 +46,8 @@ export default class DistanceDropdown extends React.Component {
         onChange={this.onRadioButtonChanged}
         options={options}
         selected={this.state.distanceText}
+        expanded={expanded}
+        setExpanded={(expanded) => this.setState({expanded})}
         header={
           <>
             <Row alignItems="center">
