@@ -20,6 +20,16 @@ export default class ProviderTypeDropdown extends React.Component {
     this.setExpanded(false);
   };
 
+  selectAllProviderTypes = event => {
+    event.stopPropagation();
+    const { onChange = () => { } } = this.props;
+    const { providerTypes } = this.props;
+
+    providerTypes.allIds.forEach(providerType => {
+      onChange(providerType)
+    });
+  };
+
   setExpanded = expanded => {
     this.setState({
       expanded
@@ -31,6 +41,7 @@ export default class ProviderTypeDropdown extends React.Component {
     const {expanded} = this.state;
     const { className, providerTypes } = this.props;
     let subheaderText = defaultSubheaderText;
+    let selectOrClearCommand = providerTypes.visible.length > 0 ? "clear all" : "select all"
 
     if (providerTypes.visible.length === 1) {
       const selectedProviderType =
@@ -60,9 +71,9 @@ export default class ProviderTypeDropdown extends React.Component {
               </Column>
               <div
                 className="clear-icon-container"
-                onClick={this.clearProviderTypes}
+                onClick={ providerTypes.visible.length > 0 ? this.clearProviderTypes : this.selectAllProviderTypes}
               >
-                clear all
+                {selectOrClearCommand}
               </div>
             </Row>
           </>
