@@ -6,6 +6,7 @@ const numberOptionsBeforeViewmore = 3
 export default class VisaStatusDropdown extends React.Component {
   state = {
     viewAllOptions: false,
+    expanded: false
   };
 
   onCheckboxChanged = (option, selectedValues) => {
@@ -19,17 +20,16 @@ export default class VisaStatusDropdown extends React.Component {
     });
   };
 
-  onSeeLess = expanded => {
-    if (!expanded) {
-      this.setState({
-        viewAllOptions: false
-      });
-    }
+  setExpanded = expanded => {
+    this.setState({
+      viewAllOptions: !expanded ? false : this.state.viewAllOptions,
+      expanded
+    });
   };
 
   render() {
     let { className, visaTypes } = this.props;
-    const { viewAllOptions } = this.state;
+    const { viewAllOptions, expanded } = this.state;
     let subheaderText = defaultSubheaderText;
 
     if (visaTypes.visible.length === 1) {
@@ -57,8 +57,8 @@ export default class VisaStatusDropdown extends React.Component {
           </>
         }
         footer={footerShown}
-        onToggleExpanded={this.onSeeLess}
-        expanded={true}
+        expanded={expanded}
+        setExpanded={this.setExpanded}
       />
     );
   }

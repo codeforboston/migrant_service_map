@@ -2,8 +2,6 @@ import React from "react";
 import RadioButtonDropdown from "../Dropdowns/radio-button-dropdown";
 import distances from "assets/distances";
 import { Row, Column } from "simple-flexbox";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
 const defaultDistanceText = "None Selected";
 export default class DistanceDropdown extends React.Component {
@@ -23,12 +21,12 @@ export default class DistanceDropdown extends React.Component {
     event.stopPropagation();
     const { onChange = () => {} } = this.props;
     onChange(undefined);
-    this.setState({ distanceText: defaultDistanceText });
+    this.setState({ distanceText: defaultDistanceText , expanded: false});
   };
 
   render() {
     const { className } = this.props;
-    const { distanceText } = this.state;
+    const { distanceText, expanded } = this.state;
     const options = distances.map(distance => {
       if (distance < 0) {
         // "null" clears the filter
@@ -46,6 +44,8 @@ export default class DistanceDropdown extends React.Component {
         onChange={this.onRadioButtonChanged}
         options={options}
         selected={this.state.distanceText}
+        expanded={expanded}
+        setExpanded={(expanded) => this.setState({expanded})}
         header={
           <>
             <Row alignItems="center">
@@ -57,7 +57,7 @@ export default class DistanceDropdown extends React.Component {
                 className="clear-icon-container"
                 onClick={this.clearDistance}
               >
-                <FontAwesomeIcon icon={faTimes} />
+                clear
               </div>
             </Row>
           </>

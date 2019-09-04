@@ -303,13 +303,15 @@ class Map extends Component {
     this.addDistanceIndicatorLayer();
     // If no distance filter is set, display all distance indicators.
     let distanceIndicatorRadii = distance ? [distance] : distances.sort();
-    let userSearch = ![1, "default"].includes(this.props.search.currentLocation)
+    let userSearch = ![1, "default"].includes(
+      this.props.search.currentLocation
+    );
 
     if (distance || userSearch) {
       const centerMarker = createCenterMarker();
-      const mapPin = new mapboxgl.Marker({element: centerMarker})
-      .setLngLat(searchCoordinates)
-      .addTo(this.map);
+      const mapPin = new mapboxgl.Marker({ element: centerMarker })
+        .setLngLat(searchCoordinates)
+        .addTo(this.map);
       this.markerList.push(mapPin);
 
       // Create distance labels drawn from smallest to largest
@@ -328,7 +330,7 @@ class Map extends Component {
       labels.map(label => label.addTo(this.map));
     } else {
       distanceIndicatorRadii = [];
-    };
+    }
 
     // Create concentric circles, drawn from largest to smallest, with the
     // largest circle having a different fill color than the others.
@@ -404,15 +406,66 @@ class Map extends Component {
     }
   };
 
+  getEnabledHighlightedProviders = (providersList, highlightedProviders) => {
+    const enabledProviderIds = new Set(
+      providersList.flatMap(listByType =>
+        listByType.providers.map(provider => provider.id)
+      )
+    );
+    return highlightedProviders.filter(id => enabledProviderIds.has(id));
+  };
+
   zoomToFit = providerIds => {
-    if (providerIds.length > 1) {
-      const visibleIcons = getBoundingBox(this.props.providers, providerIds);
-      this.map.fitBounds(visibleIcons, {
-        padding: { top: 200, bottom: 200, left: 200, right: 200 },
+    providerIds =
+      providerIds ||
+      this.getEnabledHighlightedProviders(
+        this.props.providersList,
+        this.props.highlightedProviders
+      );
+    if (providerIds.length > 0) {
+      this.map.fitBounds(getBoundingBox(this.props.providers, providerIds), {
+        // Left padding accounts for provider list UI.
+        padding: { top: 100, bottom: 100, left: 450, right: 100 },
         duration: 2000,
         maxZoom: 13,
         linear: false
       });
+    }
+  };
+
+  /**
+   * Zooms to fit when there are new providers not currently in view.
+   *
+   * TODO: This treats all selections the same. We may want to do different things depending
+   * on how the provider was selected. For example, when selecting a provider from the list,
+   * maybe we should zoom to that specific provider if not in view, but when deselecting
+   * a distance filter, maybe we want to zoom to fit all selected providers. Handling these
+   * cases is best done using more granular props passed to the map rather than having the map
+   * track changes to highlighted props.
+   */
+  zoomToShowNewProviders = prevProps => {
+    const prevIds = this.getEnabledHighlightedProviders(
+        prevProps.providersList,
+        prevProps.highlightedProviders
+      ),
+      currIds = this.getEnabledHighlightedProviders(
+        this.props.providersList,
+        this.props.highlightedProviders
+      ),
+      newIds = currIds.filter(id => !prevIds.includes(id));
+    if (newIds.length === 0) {
+      // The set of selected providers stayed the same or got smaller, no need to zoom.
+      return;
+    }
+    const newFeatureBounds = getBoundingBox(this.props.providers, newIds),
+      mapBounds = this.map.getBounds();
+    if (
+      newFeatureBounds.getNorth() > mapBounds.getNorth() ||
+      newFeatureBounds.getEast() > mapBounds.getEast() ||
+      newFeatureBounds.getSouth() < mapBounds.getSouth() ||
+      newFeatureBounds.getWest() < mapBounds.getWest()
+    ) {
+      this.zoomToFit(currIds);
     }
   };
 
@@ -424,7 +477,7 @@ class Map extends Component {
         this.findLayerInMap(typeId)
       );
       this.updatePinAndDistanceIndicator(prevProps);
-      this.zoomToFit(this.props.highlightedProviders);
+      this.zoomToShowNewProviders(prevProps);
       if (
         this.props.filters.distance &&
         this.props.filters.distance !== prevProps.filters.distance
@@ -434,13 +487,18 @@ class Map extends Component {
           zoom: this.zoomToDistance(this.props.filters.distance)
         });
       }
-      if (this.props.search.flyToProviderId !== prevProps.search.flyToProviderId) {
-        const {flyToProviderId} = this.props.search;
-        const {coordinates} = this.props.providers.byId[flyToProviderId];
+      if (
+        this.props.search.flyToProviderId !== prevProps.search.flyToProviderId
+      ) {
+        const { flyToProviderId } = this.props.search;
+        const { coordinates } = this.props.providers.byId[flyToProviderId];
         this.map.flyTo({
           center: coordinates,
           zoom: 15
         });
+      }
+      if (this.props.search.zoomToFitKey !== prevProps.search.zoomToFitKey) {
+        this.zoomToFit();
       }
     }
   }

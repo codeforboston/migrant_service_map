@@ -4,6 +4,7 @@ import ProviderTypeDropdown from "./provider-type-dropdown";
 import Search from "./search";
 import DistanceDropdown from "./distance-dropdown";
 import "./top-bar.css";
+// import VisaStatusDropdown from "./visa-status-dropdown";
 
 class TopBar extends Component {
   onSearchInputClick = () => {
@@ -20,13 +21,18 @@ class TopBar extends Component {
     const {
       // changeVisaFilter,
       providerTypes,
-      toggleProviderVisibility,
+      toggleProviderVisibility
       // visaTypes
     } = this.props;
     const topBarItemClass = "top-bar-item";
 
     return (
       <div className="top-bar">
+        {/* <VisaStatusDropdown
+          className={topBarItemClass}
+          onChange={changeVisaFilter}
+          visaTypes={visaTypes}
+        /> */}
         <ProviderTypeDropdown
           className={topBarItemClass}
           providerTypes={providerTypes}

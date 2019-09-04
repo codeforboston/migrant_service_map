@@ -11,13 +11,14 @@
   position: sticky;
   top: 0;
   background: white;
+  color: #8c45cf;
   z-index: 2;
   border-bottom: 1px solid hsla(271, 34%, 86%, 0.5);
   box-shadow: 1px 3px 4px rgba(184, 147, 217, 0.2);
 }
 .sort-container .expandable-container {
   flex: 1 1 auto;
-  margin-right: 1rem;
+  margin-right: 5px;
 }
 .sort-container .expandable-container .expanded {
   transition: all 0.08s ease-out;
@@ -62,4 +63,10 @@
 .providers-list {
   padding-left: 16px;
   padding-right: 16px;
+}
+
+.sort-container-icon {
+  align-self: center;
+  margin: 5px;
+  cursor: pointer;
 }
