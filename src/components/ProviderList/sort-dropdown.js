@@ -1,11 +1,13 @@
 import React from "react";
+import ReactTooltip from "react-tooltip";
 import Expandable from "../Dropdowns/expandable";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSortNumericDown,
   faSortNumericUp,
   faSortAlphaUp,
-  faSortAlphaDown
+  faSortAlphaDown,
+  faCompressArrowsAlt
 } from "@fortawesome/free-solid-svg-icons";
 import "./sort-dropdown.css";
 
@@ -28,6 +30,10 @@ export default class SortDropdown extends React.Component {
     }
   };
 
+  componentDidUpdate() {
+    ReactTooltip.rebuild();
+  }
+
   render() {
     const { expanded } = this.state;
     const {
@@ -37,7 +43,8 @@ export default class SortDropdown extends React.Component {
       header,
       incomingState,
       options,
-      sortDirection
+      sortDirection,
+      zoomToFit
     } = this.props;
 
     let inputDiv = options.map((option, index) => (
@@ -78,10 +85,18 @@ export default class SortDropdown extends React.Component {
           setExpanded={expanded => this.setState({ expanded })}
         />
         <FontAwesomeIcon
-          size="3x"
+          size="2x"
           icon={this.getSortIcon(sortDirection, incomingState)}
           onClick={() => changeDirection()}
-          style={{ cursor: "pointer" }}
+          className="sort-container-icon"
+          data-tip="Change sort direction"
+        />
+        <FontAwesomeIcon
+          size="2x"
+          icon={faCompressArrowsAlt}
+          onClick={zoomToFit}
+          className="sort-container-icon"
+          data-tip="Zoom to fit"
         />
       </div>
     );

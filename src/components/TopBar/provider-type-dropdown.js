@@ -1,8 +1,6 @@
 import React from "react";
 import CheckBoxDropdown from "../Dropdowns/checkbox-dropdown";
 import { Row, Column } from "simple-flexbox";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
 const defaultSubheaderText = "Not Selected";
 export default class ProviderTypeDropdown extends React.Component {

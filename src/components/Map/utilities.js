@@ -1,4 +1,5 @@
 import iconColors from "../../assets/icon-colors";
+import mapboxgl from "mapbox-gl";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMapMarkerAlt, faMapMarker } from "@fortawesome/free-solid-svg-icons";
 import ReactDOM from "react-dom";
@@ -146,8 +147,10 @@ const getBoundingBox = (providers, providerIds) => {
   const maxLats = lats.reduce((a, b) => Math.max(a, b));
   const minLats = lats.reduce((a, b) => Math.min(a, b));
 
-  const boundsBox = [[minLngs, minLats], [maxLngs, maxLats]];
-  return boundsBox;
+  return mapboxgl.LngLatBounds.convert([
+    [minLngs, minLats],
+    [maxLngs, maxLats]
+  ]);
 };
 
 export {

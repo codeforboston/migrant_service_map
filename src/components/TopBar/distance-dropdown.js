@@ -2,8 +2,6 @@ import React from "react";
 import RadioButtonDropdown from "../Dropdowns/radio-button-dropdown";
 import distances from "assets/distances";
 import { Row, Column } from "simple-flexbox";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
 const defaultDistanceText = "None Selected";
 export default class DistanceDropdown extends React.Component {

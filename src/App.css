@@ -138,3 +138,11 @@
   cursor: pointer;
   display: flex;
 }
+
+.tooltip {
+  background-color: #8c45cf !important;
+}
+
+.tooltip::after {
+  border-bottom-color: #8c45cf !important;
+}
