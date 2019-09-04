@@ -20,6 +20,7 @@
     "react-redux": "^6.0.0",
     "react-scripts": "^3.0.1",
     "react-tabs": "^3.0.0",
+    "react-tooltip": "^3.11.0",
     "redux": "^4.0.1",
     "reselect": "^4.0.0",
     "simple-flexbox": "^1.2.0"

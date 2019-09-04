@@ -35,7 +35,8 @@ class ProviderList extends Component {
       changeSortDirection,
       highlightedProviders,
       displayProviderInformation,
-      flyToProvider
+      flyToProvider,
+      zoomToFit
     } = this.props;
     return (
       <div className="service-providers">
@@ -62,6 +63,7 @@ class ProviderList extends Component {
               sortDirection={sortDirection}
               group="sort"
               incomingState={incomingState}
+              zoomToFit={zoomToFit}
             />
             <ul className="providers-list" ref={this.listElementRef}>
             {providersList.map(providerType => (

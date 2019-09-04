@@ -1,9 +1,7 @@
 import iconColors from "../../assets/icon-colors";
+import mapboxgl from "mapbox-gl";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faMapMarkerAlt,
-  faMapMarker,
-} from "@fortawesome/free-solid-svg-icons";
+import { faMapMarkerAlt, faMapMarker } from "@fortawesome/free-solid-svg-icons";
 import ReactDOM from "react-dom";
 import React from "react";
 
@@ -137,10 +135,11 @@ const normalizeProviders = providerFeatures => {
 
 const getBoundingBox = (providers, providerIds) => {
   let lngs = [],
-    lats = [];
-  for (let a in providerIds) {
-    lngs.push(providers.byId[providerIds[a]].coordinates[0]);
-    lats.push(providers.byId[providerIds[a]].coordinates[1]);
+    lats = [],
+    id;
+  for (id in providerIds) {
+    lngs.push(providers.byId[providerIds[id]].coordinates[0]);
+    lats.push(providers.byId[providerIds[id]].coordinates[1]);
   }
 
   const maxLngs = lngs.reduce((a, b) => Math.max(a, b));
@@ -148,8 +147,10 @@ const getBoundingBox = (providers, providerIds) => {
   const maxLats = lats.reduce((a, b) => Math.max(a, b));
   const minLats = lats.reduce((a, b) => Math.min(a, b));
 
-  const boundsBox = [[minLngs, minLats], [maxLngs, maxLats]];
-  return boundsBox;
+  return mapboxgl.LngLatBounds.convert([
+    [minLngs, minLats],
+    [maxLngs, maxLats]
+  ]);
 };
 
 export {
