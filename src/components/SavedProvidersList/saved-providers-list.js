@@ -70,7 +70,7 @@ function emailSavedProviders(providers) {
   })
   const uriEncodedBody = encodeURIComponent(emailBodyString)
   // Opens up default email application populated with formatted provider data
-  window.open("mailto:?&body="+uriEncodedBody)
+  window.open("mailto:?&body="+uriEncodedBody,'_self')
 }
 
 const SavedProvidersList = ({
@@ -103,6 +103,7 @@ const SavedProvidersList = ({
           type="button"
           value="Email"
           onClick={() => emailSavedProviders(savedProviders)}
+          target="_newtab"
         />
       </header>
       <div className="search-center">Showing proximity to {searchCenter}</div>
