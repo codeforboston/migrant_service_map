@@ -1,5 +1,6 @@
 .map {
   height: 100%; /* take up full height of flex'ed <main> */
+  height: -webkit-fill-available;
   width: 100%;
   z-index: 0;
 }
