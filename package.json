@@ -9,6 +9,7 @@
     "@mapbox/mapbox-gl-geocoder": "^2.3.0",
     "@turf/turf": "^5.1.6",
     "classnames": "^2.2.6",
+    "core-js": "^3.2.1",
     "dot-prop-immutable": "^1.5.0",
     "lodash": "^4.17.11",
     "mapbox": "^1.0.0-beta10",
