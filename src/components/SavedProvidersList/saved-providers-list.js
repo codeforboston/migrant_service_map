@@ -56,9 +56,8 @@ function emailSavedProviders(providers) {
   const newLine = "\n"
   _.forEach(byTypeName, (providers, typeName) => {
     let providerString = ''
-    providerString += (typeName + newLine)
+    providerString += (typeName + ':' + newLine)
     providers.forEach((provider) => {
-      console.log(provider)
       providerString = providerString += (
         newLine + provider.name + newLine +
         "Address: " + provider.address + newLine +
@@ -69,8 +68,32 @@ function emailSavedProviders(providers) {
     emailBodyString += (providerString + newLine)
   })
   const uriEncodedBody = encodeURIComponent(emailBodyString)
-  // Opens up default email application populated with formatted provider data
-  window.open("mailto:?&body="+uriEncodedBody,'_self')
+
+  let myWindow;
+
+  function openWin() {
+    myWindow = window.open("mailto:?&body="+uriEncodedBody);
+    setTimeout(closeWin, 3000)
+  }
+
+  // closeWin shuts new tab after 3 seconds if email is
+  // opened in email application e.g. Outlook, Mail, and keeps new tab open if
+  // redirected to browser email application e.g. Gmail
+
+  function closeWin() {
+    try {
+      // Without try block, "if (myWindow.location)" would cause
+      // cross site error after redirect
+      if (myWindow.location.href) {
+        myWindow.close()
+      }
+    }
+    catch {
+      return
+    }
+  }
+
+  openWin()
 }
 
 const SavedProvidersList = ({
