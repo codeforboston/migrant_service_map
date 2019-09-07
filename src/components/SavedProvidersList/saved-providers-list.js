@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { MenuDropdownItem } from "..";
 import { printJSX } from "util/printJSX";
 import "./saved-providers-list.css";
