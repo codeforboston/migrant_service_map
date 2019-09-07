@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from 'react'
 import { MenuDropdownItem } from "..";
 import { printJSX } from "util/printJSX";
 import "./saved-providers-list.css";
@@ -115,20 +115,22 @@ const SavedProvidersList = ({
 
   return (
     <div className="saved-list">
-      <header>
-        <h3>Saved Providers</h3>
-        <div>
-          <button
-            className="print-email-btn"
-            onClick={() => printSavedProviders(savedProviders)}
-          >Print</button>
-          <button
-            className="print-email-btn"
-            onClick={() => emailSavedProviders(savedProviders)}
-            target="_newtab"
-          >Email</button>
-        </div>
-      </header>
+      <div className="header-container">
+        <header>
+          <h3>Saved Providers</h3>
+          <div>
+            <button
+              className="print-email-btn"
+              onClick={() => printSavedProviders(savedProviders)}
+            >Print</button>
+            <button
+              className="print-email-btn"
+              onClick={() => emailSavedProviders(savedProviders)}
+              target="_newtab"
+            >Email</button>
+          </div>
+        </header>
+      </div>
       <div className="search-center">Showing proximity to {searchCenter}</div>
 
       <Droppable
