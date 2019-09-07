@@ -270,7 +270,7 @@ class Map extends Component {
       closeButton: false,
       closeOnClick: false,
       className: "name-popup",
-      offset: {'bottom': [0, -20]},
+      offset: 20,
     });
 
     this.map.on("mouseenter", typeId, e => {
