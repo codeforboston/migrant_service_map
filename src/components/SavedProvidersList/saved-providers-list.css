@@ -25,3 +25,22 @@
   cursor: pointer;
   text-transform: uppercase;
 }
+
+.print-email-btn {
+  height: 20px;
+  background-color: #8c45cf;
+  color: white;
+  border-radius: 5px;
+  border: none;
+  transition: .3s;
+  margin-left: 5px;
+}
+
+.print-email-btn:hover {
+  background-color: #a16fd1;
+  cursor: pointer;
+}
+
+.print-email-btn:focus {
+  outline: none;
+}
