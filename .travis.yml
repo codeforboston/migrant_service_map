@@ -1,0 +1,21 @@
+# Configures builds for all branches and deployment on the "prod" branch.
+
+language: node_js
+node_js: node
+
+# TODO: If deployment becomes unreliable, use a package-lock.json and npm ci
+install: npm install
+script: npm run build
+
+deploy:
+  provider: firebase
+  skip-cleanup: true
+  on:
+    branch: prod
+  token:
+    secure: F5+Wqa+JiKt5YYKkZB1M8FAvO1TR5qW18/59yHCVNO1+fmVAF6YdIqB66NTTBFNNHS9rsN9CN6EVB5gRBJYfM4D0d6BvLCaFsCm0pc4NXmMeivsa2EWtQ2EaHh6dA8RIG4YmIDh1lPEtQTZ62Exbi+1L8FIsYostRXtbgR/DcMAQIjZ89wsLpZV0Nmw1jPGUZs4zG0pVq9EJ0nWRxygDDizfDf1OCPV6ca8Jb30LdYBr4KAE2QevsFfk2gd7Rb0fTBwwUo8oDS3MqY3XUWCpS+8OoX5qEyHNileSYKQC3h3AoCZzDQN26bG0au/dMhXzrjNpAxnxzDSsWuq0aLvPd0ZodcqRzJrSOrLgNe7ljSEL7Xd91ysfSP0C82MI3XTWQZl2oB4bIr6qwCgyVuuUVhbkoeix9pLIBknOpqn2+Ar27G5R/VdpZxndA5rNeViREMRhbUpQnv7JltRrSjTTfYt4+5Uvdz/icorx+Tl603C/pyAtM1zJogb1byzSbbefR/iInJSfkkk2XMIi8JfaEfGa2WwtF6YLa1iuzxx2i1aUW98M6lAObKVf7GFyDj3qY6B/rvEKLiwCogc9pdUSYPlpG2IH3dQ4S5UCXfQ5YzYRwsP/AJd5obrrXuJ7e4lFDqc8JL2cXKK2B1131vyazXSr9Jm1OASf6bDQXEuHQk0=
+  
+env:
+  global:
+    # TODO: Remove once warnings are fixed at head.
+    - CI=false
