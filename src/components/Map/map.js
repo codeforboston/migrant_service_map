@@ -145,8 +145,8 @@ class Map extends Component {
           "icon-halo-blur": 1
         }
       });
-
-      this.addClickHandlerToMapIdLayer(typeId);
+    this.addClickHandlerToMapIdLayer(typeId);
+    this.addHoverHandlerToMapIdLayer(typeId);
     }
   };
 
@@ -262,6 +262,28 @@ class Map extends Component {
       } else if (!highlightedProviders.includes(e.features[0].properties.id)) {
         displayProviderInformation(e.features[0].properties.id);
       }
+    });
+  };
+
+  addHoverHandlerToMapIdLayer = typeId => {
+    let popup = new mapboxgl.Popup({
+      closeButton: false,
+      closeOnClick: false,
+      className: "name-popup",
+      offset: 20,
+    });
+
+    this.map.on("mouseenter", typeId, e => {
+      let popupCoordinates = e.features[0].geometry.coordinates.slice();
+      let name = e.features[0].properties.name;
+
+      popup.setLngLat(popupCoordinates)
+          .setHTML(name)
+          .addTo(this.map);
+    });
+
+    this.map.on("mouseleave", typeId, () => {
+      popup.remove();
     });
   };
 
