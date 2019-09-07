@@ -117,17 +117,15 @@ const SavedProvidersList = ({
     <div className="saved-list">
       <header>
         <h3>Saved Providers</h3>
-        <input
-          type="button"
-          value="Print"
+        <button
+          className="print-email-btn"
           onClick={() => printSavedProviders(savedProviders)}
-        />
-        <input
-          type="button"
-          value="Email"
+        >Print</button>
+        <button
+          className="print-email-btn"
           onClick={() => emailSavedProviders(savedProviders)}
           target="_newtab"
-        />
+        >Email</button>
       </header>
       <div className="search-center">Showing proximity to {searchCenter}</div>
 
