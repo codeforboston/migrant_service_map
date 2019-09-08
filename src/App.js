@@ -1,3 +1,5 @@
+import "core-js/features/array/flat-map";
+
 import React from "react";
 import { Provider } from "react-redux";
 import { Map, TopBar, TabbedMenu } from "components";
