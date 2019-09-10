@@ -1,0 +1,2 @@
+.dropdown-menu.closed svg { transform: rotate(-90deg); }
+.dropdown-menu.open {}
