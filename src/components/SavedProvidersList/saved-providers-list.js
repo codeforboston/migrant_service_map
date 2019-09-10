@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 import { MenuDropdownItem } from "..";
 import { printJSX } from "util/printJSX";
 import "./saved-providers-list.css";
@@ -50,6 +50,52 @@ function printSavedProviders(providers) {
   printJSX(printPage);
 }
 
+function emailSavedProviders(providers) {
+  const byTypeName = _.groupBy(providers, provider => provider.typeName);
+  let emailBodyString = ''
+  const newLine = "\n"
+  _.forEach(byTypeName, (providers, typeName) => {
+    let providerString = ''
+    providerString += (typeName + ':' + newLine)
+    providers.forEach((provider) => {
+      providerString = providerString += (
+        newLine + provider.name + newLine +
+        "Address: " + provider.address + newLine +
+        "Website: " + provider.website + newLine +
+        "Phone: " + provider.telephone + newLine +
+        "Email: " + provider.email + newLine)
+      })
+    emailBodyString += (providerString + newLine)
+  })
+  const uriEncodedBody = encodeURIComponent(emailBodyString)
+
+  let myWindow;
+
+  function openWin() {
+    myWindow = window.open("mailto:?&body="+uriEncodedBody);
+    setTimeout(closeWin, 3000)
+  }
+
+  // closeWin shuts new tab after 3 seconds if email is
+  // opened in email application e.g. Outlook, Mail, and keeps new tab open if
+  // redirected to browser email application e.g. Gmail
+
+  function closeWin() {
+    try {
+      // Without try block, "if (myWindow.location)" would cause
+      // cross site error after redirect
+      if (myWindow.location.href) {
+        myWindow.close()
+      }
+    }
+    catch {
+      return
+    }
+  }
+
+  openWin()
+}
+
 const SavedProvidersList = ({
   savedProviders,
   saveProvider,
@@ -69,14 +115,22 @@ const SavedProvidersList = ({
 
   return (
     <div className="saved-list">
-      <header>
-        <h3>Saved Providers</h3>
-        <input
-          type="button"
-          value="Print"
-          onClick={() => printSavedProviders(savedProviders)}
-        />
-      </header>
+      <div className="header-container">
+        <header>
+          <h3>Saved Providers</h3>
+          <div>
+            <button
+              className="print-email-btn"
+              onClick={() => printSavedProviders(savedProviders)}
+            >Print</button>
+            <button
+              className="print-email-btn"
+              onClick={() => emailSavedProviders(savedProviders)}
+              target="_newtab"
+            >Email</button>
+          </div>
+        </header>
+      </div>
       <div className="search-center">Showing proximity to {searchCenter}</div>
 
       <Droppable

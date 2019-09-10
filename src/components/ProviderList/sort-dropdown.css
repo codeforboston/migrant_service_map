@@ -4,10 +4,12 @@
   box-sizing: content-box;
   /* Height should match the height of the sort icon. */
   height: 48px;
-  padding-top: 24px;
+  /* padding-top: 24px;
   padding-left: 16px;
   padding-right: 16px;
-  padding-bottom: 8px;
+  padding-bottom: 8px; */
+  /* Changed padding to match SavedProvidersList padding */
+  padding: 7px;
   position: sticky;
   top: 0;
   background: white;
