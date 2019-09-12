@@ -22,6 +22,7 @@
   color: royalblue;
   text-overflow: ellipsis;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .provider-details-info .providers-detail-content a:link {

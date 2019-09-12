@@ -101,7 +101,8 @@ const SavedProvidersList = ({
   saveProvider,
   searchCenter,
   highlightedProviders,
-  displayProviderInformation
+  displayProviderInformation,
+  flyToProvider
 }) => {
   const getItemStyle = (isDragging, draggableStyle) => ({
     // some style overrides so that draggable items don't inherit unwanted styling
@@ -170,6 +171,7 @@ const SavedProvidersList = ({
                           displayProviderInformation(provider.id)
                         }
                         inSavedMenu={true}
+                        flyToProvider={()=> flyToProvider(provider.id)}
                       />
                     </div>
                   )}
