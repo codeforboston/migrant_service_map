@@ -5,6 +5,7 @@ import { faMapMarkerAlt, faMapMarker } from "@fortawesome/free-solid-svg-icons";
 import ReactDOM from "react-dom";
 import React from "react";
 
+
 const scrollToCard = clickedProviderID => {
   const offsetTop = document.getElementById(clickedProviderID).offsetTop;
   const cardOffset = 50;
@@ -160,5 +161,5 @@ export {
   normalizeProviders,
   removeDistanceMarkers,
   scrollToCard,
-  getBoundingBox
+  getBoundingBox,
 };
