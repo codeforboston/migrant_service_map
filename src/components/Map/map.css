@@ -1,8 +1,16 @@
 .map {
+  /* Cross-browser compatability issues:
+  ** Proper map display in Chrome, Safari, and Firefox 
+  ** requires '-webkit-fill-available' + absolute positioning
+  ** (prevents map height collapsing to 0)
+  */
+  height: 100%; /* take up full height of flex'ed <main> */
+  height: -webkit-fill-available;
   width: 100%;
-  height: 100vh;
   z-index: 0;
+  position: absolute;
 }
+
 
 .distance-marker {
   justify-content: center;
