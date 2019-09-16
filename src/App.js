@@ -13,9 +13,11 @@ export default function App() {
   return (
     <Provider store={store}>
       <TopBar />
-      <TabbedMenu />
-      <Map />
-      <ReactTooltip effect="solid" place="bottom" className="tooltip" />
+      <main role="main">
+        <TabbedMenu />
+        <Map />
+        <ReactTooltip effect="solid" place="bottom" className="tooltip" />
+      </main>
     </Provider>
   );
 }

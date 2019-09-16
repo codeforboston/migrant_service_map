@@ -113,7 +113,7 @@ npm install
 
 ## Testing
 
-We use [Travis CI](https://docs.travis-ci.com/) for continuous integration and deployment (automatically run tests and deploy the website). Travis is configured in `.travis.yml` and builds are viewable in the [Travis dashboard](https://travis-ci.com/alexjball/migrant_service_map).
+We use [Travis CI](https://docs.travis-ci.com/) for continuous integration and deployment (automatically run tests and deploy the website). Travis is configured in `.travis.yml` and builds are viewable in the [Travis dashboard](https://travis-ci.org/codeforboston/migrant_service_map).
 
 Travis builds the app (it runs `npm run build`) when a commit is added to a branch or open pull request. This provides a basic sanity check for the app. Pull requests should build successfully before being merged.
 
