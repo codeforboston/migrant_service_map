@@ -101,7 +101,8 @@ const SavedProvidersList = ({
   saveProvider,
   searchCenter,
   highlightedProviders,
-  displayProviderInformation
+  displayProviderInformation,
+  flyToProvider
 }) => {
   const getItemStyle = (isDragging, draggableStyle) => ({
     // some style overrides so that draggable items don't inherit unwanted styling
@@ -163,6 +164,7 @@ const SavedProvidersList = ({
                         providerTypeName={provider["Type of Service"]}
                         isSaved="saved"
                         toggleSavedStatus={() => saveProvider(provider.id)}
+                        flyToProvider={()=> flyToProvider(provider.id)}
                         isHighlighted={highlightedProviders.includes(
                           provider.id
                         )}

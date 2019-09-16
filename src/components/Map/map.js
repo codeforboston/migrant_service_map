@@ -510,7 +510,7 @@ class Map extends Component {
         });
       }
       if (
-        this.props.search.flyToProviderId !== prevProps.search.flyToProviderId
+        this.props.search.flyToProviderKey !== prevProps.search.flyToProviderKey
       ) {
         const { flyToProviderId } = this.props.search;
         const { coordinates } = this.props.providers.byId[flyToProviderId];
