@@ -157,6 +157,7 @@ const SavedProvidersList = ({
                         snapshot.isDragging,
                         provided.draggableProps.style
                       )}
+                      onClick={() => displayProviderInformation(provider.id)}
                     >
                       <MenuDropdownItem
                         key={provider.id}
@@ -168,9 +169,6 @@ const SavedProvidersList = ({
                         isHighlighted={highlightedProviders.includes(
                           provider.id
                         )}
-                        toggleHighlight={() =>
-                          displayProviderInformation(provider.id)
-                        }
                         inSavedMenu={true}
                       />
                     </div>

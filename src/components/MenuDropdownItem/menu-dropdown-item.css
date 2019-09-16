@@ -25,11 +25,11 @@ text-overflow: ellipsis;
   margin-top: 0.25em;
 }
 
-.provider-card.savedHighlighted {
+.provider-card.saved {
   background-color: #faf7fe;
 }
 
-.provider-card.unchanged {
+.provider-card.search {
   background-color: #f5fbff;
 }
 

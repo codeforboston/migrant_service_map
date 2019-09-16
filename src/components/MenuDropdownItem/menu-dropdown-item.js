@@ -38,41 +38,33 @@ const cardIconMappings = {
 };
 
 export default class DropdownMenuItem extends React.Component {
-  state = { expand: "wrapped", more: false };
-
-  onItemClick = () => {
-    const { expand } = this.state;
-    expand === "wrapped"
-      ? this.setState({ expand: "expanded" })
-      : this.setState({ expand: "wrapped" });
-  };
-
   render() {
     const { provider, isSaved, toggleSavedStatus, isHighlighted, flyToProvider } = this.props;
-    const inSavedMenu = this.props.inSavedMenu ? this.props.inSavedMenu : false;
-    const savedMenuHighlightedProviderCard =
-      inSavedMenu && isHighlighted ? "savedHighlighted" : "unchanged";
-    const { expand } = this.state;
+    const inSavedMenu = !!this.props.inSavedMenu;
+    const isExpanded = isHighlighted;
+    const expandClass = isExpanded ? "expanded" : "wrapped";
+    const menuClass = inSavedMenu ? "saved" : "search";
+
     const cardIcon = cardIconMappings[provider.typeName];
     return (
       <div
-        className={`provider-card ${savedMenuHighlightedProviderCard}`}
+        className={`provider-card ${menuClass}`}
         id={`provider-${provider.id}`}
       >
         <div className="card-container">
           <div className="card-header">
-            <h5 className={expand} onClick={this.onItemClick}>
+            <h5 className={expandClass}>
               {provider.name}
             </h5>
             <div className="wrapped-info">
-              <div className={`prov-type ${expand}`}>
+              <div className={`prov-type ${expandClass}`}>
                 <FontAwesomeIcon
                   icon={cardIcon}
                   color={providerTypeToColor[provider.typeName]}
                 />
                 <p>{provider.typeName}</p>
               </div>
-              {!isHighlighted && (
+              {!isExpanded && (
                 <div className="wrapped-icons">
                   {isPresent(provider.email) && (
                     <FontAwesomeIcon icon={faEnvelopeOpenText} />
@@ -121,7 +113,7 @@ export default class DropdownMenuItem extends React.Component {
             )}
           </div>
         </div>
-        {isHighlighted && <DetailsPane provider={provider} flyToProvider={flyToProvider} />}
+        {isExpanded && <DetailsPane provider={provider} flyToProvider={flyToProvider} />}
       </div>
     );
   }
