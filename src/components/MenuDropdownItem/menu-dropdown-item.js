@@ -38,6 +38,11 @@ const cardIconMappings = {
 };
 
 export default class DropdownMenuItem extends React.Component {
+  toggleSave = e => {
+    e.stopPropagation();
+    this.props.toggleSavedStatus();
+  }
+  
   render() {
     const { provider, isSaved, toggleSavedStatus, isHighlighted, flyToProvider } = this.props;
     const inSavedMenu = !!this.props.inSavedMenu;
@@ -89,14 +94,14 @@ export default class DropdownMenuItem extends React.Component {
           </div>
           <div className="save-button-container">
             {inSavedMenu ? (
-              <button className={`remoteButton`} onClick={toggleSavedStatus}>
+              <button className={`remoteButton`} onClick={this.toggleSave}>
                 <FontAwesomeIcon icon={faTrashAlt} />
                 Remove
               </button>
             ) : (
               <button
                 className={`button ${isSaved}`}
-                onClick={toggleSavedStatus}
+                onClick={this.toggleSave}
               >
                 {isSaved === "saved" ? (
                   <Fragment>
