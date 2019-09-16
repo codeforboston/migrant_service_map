@@ -7,15 +7,17 @@
   display: flex;
   flex-direction: column;
   width: 400px;
-  max-height: 100%;
+  height: 100%;
   filter: drop-shadow(0 3px 3px gray);
 }
-.react-tabs__tab-panel {
-  height: 100%;
-}
+
 .react-tabs__tab-list {
-  display: flex;
+  flex: initial;
+  border-bottom: 1px solid #aaa;
+  margin: 0;
+  padding: 0;
 }
+
 .react-tabs__tab {
   border: none;
   background: #aaa;
@@ -36,9 +38,8 @@
   color: #8c45cf;
 }
 
-/* .panels */
-.side-menu > div {
-  margin-top: -10px; /* counter react-tabs styling */
+.react-tabs__tab-panel {
   background-color: white;
-  overflow-y: hidden;
+  flex: auto;
+  min-height: 0;
 }

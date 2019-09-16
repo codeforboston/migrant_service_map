@@ -131,8 +131,8 @@ const SavedProvidersList = ({
             >Email</button>
           </div>
         </header>
+        <div className="search-center">Showing proximity to {searchCenter}</div>
       </div>
-      <div className="search-center">Showing proximity to {searchCenter}</div>
 
       <Droppable
         droppableId="saved-items"
@@ -141,7 +141,9 @@ const SavedProvidersList = ({
       >
         {provided => {
           return (
-            <div ref={provided.innerRef} {...provided.droppableProps}>
+            <div 
+            className="saved-content-container"            
+            ref={provided.innerRef} {...provided.droppableProps}>
               {savedProviders.map((provider, index) => (
                 <Draggable
                   draggableId={provider.id}

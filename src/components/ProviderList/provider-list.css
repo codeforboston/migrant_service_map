@@ -22,7 +22,6 @@ label {
   display: flex;
   flex-direction: column;
   height: 100%;
-  height: -webkit-fill-available;
 }
 
 .service-providers .tab-header {
@@ -40,7 +39,7 @@ label {
 }
 
 .providers-list {
-  overflow-y: scroll;
+  overflow-y: auto;
   /* giving relative positioning to this element allows it to be 
   ** the offsetParent for its (grand)child <li>'s containing provider info
   ** and eliminate the need to add any offset correction to scrollTop
