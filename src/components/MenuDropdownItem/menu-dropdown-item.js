@@ -44,7 +44,7 @@ export default class DropdownMenuItem extends React.Component {
   }
   
   render() {
-    const { provider, isSaved, toggleSavedStatus, isHighlighted, flyToProvider } = this.props;
+    const { provider, isSaved, isHighlighted, flyToProvider } = this.props;
     const inSavedMenu = !!this.props.inSavedMenu;
     const isExpanded = isHighlighted;
     const expandClass = isExpanded ? "expanded" : "wrapped";
