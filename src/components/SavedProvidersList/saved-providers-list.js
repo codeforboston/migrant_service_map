@@ -104,16 +104,6 @@ const SavedProvidersList = ({
   displayProviderInformation,
   flyToProvider
 }) => {
-  const getItemStyle = (isDragging, draggableStyle) => ({
-    // some style overrides so that draggable items don't inherit unwanted styling
-    ...draggableStyle,
-    userSelect: "none",
-    padding: "0 !important",
-    margin: "0 !important",
-    top: "0 !important",
-    left: "0 !important"
-  });
-
   return (
     <div className="saved-list">
       <div className="header-container">
@@ -155,10 +145,6 @@ const SavedProvidersList = ({
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
-                      style={getItemStyle(
-                        snapshot.isDragging,
-                        provided.draggableProps.style
-                      )}
                       onClick={() => displayProviderInformation(provider.id)}
                     >
                       <MenuDropdownItem
