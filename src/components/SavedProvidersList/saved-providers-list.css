@@ -15,7 +15,7 @@
   top: 0;
   background: white;
   z-index: 2;
-  padding: 20px;
+  padding: 16px;
   box-shadow: 0 3px 4px rgba(184, 147, 217, 0.2);
 }
 
@@ -23,7 +23,7 @@
   overflow-y: auto;
   position: relative;
   margin: 0;
-  padding: 8px 16px 8px 16px;
+  padding: 16px 16px 8px 16px;
 }
 
 .saved-draggable {
