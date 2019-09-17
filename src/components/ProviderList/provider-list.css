@@ -25,6 +25,8 @@ label {
 }
 
 .service-providers .tab-header {
+  background-color: white;
+  z-index: 2;
   padding: 20px;
 }
 
@@ -48,8 +50,7 @@ label {
   position: relative;
   scroll-behavior: smooth;
   margin: 0;
-  padding-left: 16px;
-  padding-right: 16px;
+  padding: 8px 16px 8px 16px;  
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -64,6 +65,10 @@ label {
 
 .providers-sublist {
   width: 100%;
+}
+
+.search-item-container {
+  margin: 0.5em 0 0 0;
 }
 
 .dropdown-list-container.expanded p {
@@ -179,7 +184,7 @@ label {
   cursor: pointer;
   color: gray;
   font-weight: bold;
-  margin: 7px 2px;
+  margin: 0px 2px;
 }
 
 .dropdown-menu.expanded {

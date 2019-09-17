@@ -8,12 +8,10 @@
   flex-direction: column;
   width: 400px;
   height: 100%;
-  filter: drop-shadow(0 3px 3px gray);
 }
 
 .react-tabs__tab-list {
   flex: initial;
-  border-bottom: 1px solid #aaa;
   margin: 0;
   padding: 0;
 }
@@ -28,7 +26,9 @@
 .react-tabs__tab--selected {
   background: white;
   border: none;
+  box-shadow: 0 0 6px grey;
 }
+
 .react-tabs__tab h3 {
   margin: 8px 20px;
   text-transform: uppercase;
@@ -42,4 +42,5 @@
   background-color: white;
   flex: auto;
   min-height: 0;
+  box-shadow: 0 0 6px grey;
 }

@@ -140,11 +140,12 @@ const SavedProvidersList = ({
                   key={provider.id}
                   index={index}
                 >
-                  {(provided, snapshot) => (
+                  {provided => (
                     <div
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
+                      className="saved-draggable"
                       onClick={() => displayProviderInformation(provider.id)}
                     >
                       <MenuDropdownItem
