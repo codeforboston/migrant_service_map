@@ -21,15 +21,14 @@ text-overflow: ellipsis;
   flex-flow: column nowrap;
   padding: 10px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-  margin-bottom: 0.25em;
-  margin-top: 0.25em;
+  user-select: none;
 }
 
-.provider-card.savedHighlighted {
+.provider-card.saved {
   background-color: #faf7fe;
 }
 
-.provider-card.unchanged {
+.provider-card.search {
   background-color: #f5fbff;
 }
 
@@ -79,7 +78,6 @@ h5.expanded {
   display: flex;
   flex-direction: row;
   align-items: center;
-  color: #538200;
 }
 
 .prov-type.wrapped {

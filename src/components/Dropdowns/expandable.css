@@ -3,7 +3,7 @@
   color: #8c45cf;
   overflow: visible;
   position: relative;
-  background: #FDFAFF;
+  background: #fdfaff;
   z-index: 100;
 }
 
@@ -17,7 +17,7 @@
   justify-content: stretch;
   padding: 0 1rem 1rem 1rem;
   border-radius: 8px;
-  border: 1px solid #D7ADFF;
+  border: 1px solid #d7adff;
   box-shadow: 1px 3px 4px rgba(96, 1, 185, 0.25);
 }
 
