@@ -159,6 +159,7 @@ const SavedProvidersList = ({
                           provider.id
                         )}
                         inSavedMenu={true}
+                        flyToProvider={()=> flyToProvider(provider.id)}
                       />
                     </div>
                   )}
