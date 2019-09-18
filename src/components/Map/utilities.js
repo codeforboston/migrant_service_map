@@ -5,28 +5,6 @@ import { faMapMarkerAlt, faMapMarker } from "@fortawesome/free-solid-svg-icons";
 import ReactDOM from "react-dom";
 import React from "react";
 
-
-const scrollToCard = clickedProviderID => {
-  const offsetTop = document.getElementById(clickedProviderID).offsetTop;
-  const cardOffset = 50;
-
-  const panel = document.getElementsByClassName("panels")[0];
-  const toScrollTo = offsetTop - cardOffset;
-  const steps = 15;
-  const scrollStep = (toScrollTo - panel.scrollTop) / steps;
-  let stepCount = 0;
-
-  const scrollInterval = setInterval(function() {
-    if (stepCount < steps) {
-      panel.scrollBy(0, scrollStep);
-      stepCount++;
-    } else {
-      panel.scrollTop = toScrollTo;
-      clearInterval(scrollInterval);
-    }
-  }, 15);
-};
-
 const convertProvidersToGeoJSON = providers => {
   return providers.map(provider => ({
     type: "Feature",
@@ -160,6 +138,5 @@ export {
   createDistanceMarker,
   normalizeProviders,
   removeDistanceMarkers,
-  scrollToCard,
-  getBoundingBox,
+  getBoundingBox
 };

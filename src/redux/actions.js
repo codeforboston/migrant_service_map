@@ -152,6 +152,7 @@ export function changeSortDirection(direction) {
 export function flyToProvider(id) {
   return {
     type: FLY_TO_PROVIDER,
+    key: nextActionKey(),
     id
   };
 }
