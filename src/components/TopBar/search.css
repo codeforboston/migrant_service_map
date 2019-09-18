@@ -1,3 +1,11 @@
+/* 
+This file is a copy + edit of this mapbox css:
+https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v3.1.6/mapbox-gl-geocoder.css 
+
+Do not use this file to store other css. If we update mapbox, we may need to update this file
+to match.
+*/
+
 /* Basics */
 .mapboxgl-ctrl-geocoder,
 .mapboxgl-ctrl-geocoder *,
@@ -8,7 +16,9 @@
   box-sizing: border-box;
 }
 .mapboxgl-ctrl-geocoder {
-  font: 15px/20px "Helvetica Neue", Arial, Helvetica, sans-serif;
+  font-size: 15px;
+  line-height: 20px;
+  font-family: var(--msm-font-family);
   position: relative;
   background-color: white;
   width: 33.3333%;
@@ -19,7 +29,8 @@
 }
 
 .mapboxgl-ctrl-geocoder input[type="text"] {
-  font-size: 12px;
+  font-size: 15px;
+  font-family: var(--msm-font-family);
   width: 100%;
   border: 0;
   background-color: transparent;
@@ -111,7 +122,7 @@
 }
 .mapboxgl-ctrl-geocoder ul > li > a:hover {
   color: #202020;
-  background-color: #d7adff;
+  background-color: #ead3ff;
   text-decoration: none;
   cursor: pointer;
   width: 100%;
