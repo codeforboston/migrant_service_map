@@ -79,7 +79,6 @@ h5.expanded {
   display: flex;
   flex-direction: row;
   align-items: center;
-  color: #538200;
 }
 
 .prov-type.wrapped {
