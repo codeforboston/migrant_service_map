@@ -18,6 +18,11 @@ import {
 mapboxgl.accessToken =
   "pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw";
 
+const boundingBox = [
+  -71.562762,42.154131, // Longitude,Latitude near Milford MA
+  -70.647115,42.599752 // Longitude, Latitute near Gloucester MA
+];
+
 class Map extends Component {
   constructor(props) {
     super(props);
@@ -73,7 +78,8 @@ class Map extends Component {
       accessToken: mapboxgl.accessToken,
       proximity: coordinateObject,
       placeholder: "Location",
-      marker: false
+      marker: false,
+      bbox: boundingBox
     });
 
     const searchBox = geocoder.onAdd(map);
