@@ -80,6 +80,12 @@ class Map extends Component {
     searchBox.className += " msm-map-search-box";
     document.getElementById("nav-search").appendChild(searchBox);
 
+    geocoder.on('results', ev => {
+      if (!ev.features || !ev.features.length) {
+        ev.features = [{ place_name: 'No search results'}];
+      }
+    });
+
     geocoder.on("result", ev => {
       // ev.result contains id, place_name, text
       let { geometry, id, text } = ev.result;
