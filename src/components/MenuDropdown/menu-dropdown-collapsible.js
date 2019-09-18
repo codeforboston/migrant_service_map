@@ -7,24 +7,21 @@ let triangle = <svg height="16px" width="16px" xmlns="http://www.w3.org/2000/svg
 class CollapsibleMenuDropdown extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      collapsed: false
-    }
   }
 
   render() {
-    let { text, children } = this.props;
-    let domClasses=`dropdown-menu ${this.state.collapsed ? 'closed' : 'open'}`
+    let { text, children, collapsed, handleToggle } = this.props;
+    let domClasses=`dropdown-menu ${collapsed ? 'closed' : 'open'}`
     return (
       <>
         <Row
           className={domClasses}
-          onClick={() => this.setState({collapsed: !this.state.collapsed})}
+          onClick={handleToggle}
         >
           <span style={{ flexGrow: 1 }}>{text}</span>
           {triangle}
         </Row>
-        {!this.state.collapsed && children}
+        {!collapsed && children}
       </>
     );
   }

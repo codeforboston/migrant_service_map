@@ -9,6 +9,16 @@ class ProviderList extends Component {
     super(props);
     this.listElementRef = React.createRef();
     this.lastHighlightedRef = React.createRef();
+    this.state = {
+      collapsedProviderTypes: [],
+    }
+  }
+
+  toggleProviderType = (id) => {
+    console.log('toggling provider type', id);
+    let collapsed = this.state.collapsedProviderTypes;
+    let updated = collapsed.includes(id) ? collapsed.filter(c => c !== id) : [id, ...collapsed];
+    this.setState({ collapsedProviderTypes: updated });
   }
 
   componentDidUpdate(previousProps) {
@@ -73,6 +83,8 @@ class ProviderList extends Component {
                     key={providerType.id}
                     id={providerType.id}
                     text={providerType.name}
+                    collapsed={this.state.collapsedProviderTypes.includes(providerType.id)}
+                    handleToggle={() => {this.toggleProviderType(providerType.id)}}
                   >
                   <ul className="providers-sublist">
                   {!!providerType.providers.length &&  //if there is not providers MenuDropdown is not shown
