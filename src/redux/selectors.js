@@ -80,6 +80,8 @@ export const getProvidersSorted = createSelector(
         }
       ];
       case "Provider Type":
+      return sortProvidersByType(groupedByProviderType, sortDirection)
+            
       default:
       return groupedByProviderType;
     }
@@ -152,5 +154,14 @@ function sortProvidersByName(providerArray, direction) {
       return (a.name < b.name) ? 1 : -1;
     }
     return (a.name > b.name) ? 1: -1;
+  });
+}
+
+function sortProvidersByType(prividersByType, direction) {
+  return prividersByType.sort((a, b) => {
+    if (direction === 'asc') {
+      return (a.id < b.id) ? 1 : -1;
+    }
+    return (a.id > b.id) ? 1: -1;
   });
 }
