@@ -1,11 +1,13 @@
 .search-center {
   color: #7e7e7e;
   font-size: 12px;
-  margin-bottom: 10px;
+  margin-top: 10px;
 }
 
 .saved-list {
-  padding: 0 20px 20px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .header-container {
@@ -13,9 +15,20 @@
   top: 0;
   background: white;
   z-index: 2;
-  padding: 20px;
-  margin: 0 -20px;
+  padding: 16px;
   box-shadow: 0 3px 4px rgba(184, 147, 217, 0.2);
+}
+
+.saved-content-container {
+  overflow-y: auto;
+  position: relative;
+  margin: 0;
+  padding: 16px 16px 8px 16px;
+  flex: auto;
+}
+
+.saved-draggable {
+  margin: 0 0 0.5em 0;
 }
 
 .saved-list header {

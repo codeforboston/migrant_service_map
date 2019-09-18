@@ -33,7 +33,8 @@ export default function search(state = INITIAL_STATE, action) {
     case FLY_TO_PROVIDER:
       return {
         ...state,
-        flyToProviderId: action.id
+        flyToProviderId: action.id,
+        flyToProviderKey: action.key
       };
     case ZOOM_TO_FIT:
       return {

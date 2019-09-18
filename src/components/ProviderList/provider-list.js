@@ -86,6 +86,7 @@ class ProviderList extends Component {
                             onClick={() =>
                               displayProviderInformation(provider.id)
                             }
+                            className="search-item-container"
                           >
                             <MenuDropdownItem
                               key={provider.id}

@@ -21,14 +21,12 @@ const TabbedMenu = ({ selectedTabIndex, selectTab }) => {
         </Tab>
       </TabList>
 
-      <div className="panels">
-        <TabPanel>
-          <ProviderList />
-        </TabPanel>
-        <TabPanel>
-          <SavedProvidersList />
-        </TabPanel>
-      </div>
+      <TabPanel>
+        <ProviderList />
+      </TabPanel>
+      <TabPanel>
+        <SavedProvidersList />
+      </TabPanel>
     </Tabs>
   );
 };

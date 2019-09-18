@@ -30,7 +30,7 @@ export default class DetailsPane extends React.Component {
           </ProviderDetailsInfo>
         </Row>
         <Row>
-          <ProviderDetailsInfo icon="home" label="address" flyToProvider={flyToProvider}>
+          <ProviderDetailsInfo icon="home" label="address" onClick={flyToProvider}>
             {address || "address"}
           </ProviderDetailsInfo>
           <ProviderDetailsInfo icon="perm_phone_msg" label="phone">

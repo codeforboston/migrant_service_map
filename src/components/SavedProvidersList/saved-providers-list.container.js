@@ -56,15 +56,15 @@ const mapDispatchToProps = dispatch => {
     saveProvider: id => {
       dispatch(saveProvider(id));
     },
+    flyToProvider: id => {
+      dispatch(flyToProvider(id));
+    },
     displayProviderInformation: id => {
       dispatch(displayProviderInformation(id));
     },
     reorderSavedProviders: ids => {
       dispatch(reorderSavedProviders(ids));
     },
-    flyToProvider: id => {
-      dispatch(flyToProvider(id));
-    }
   };
 };
 
