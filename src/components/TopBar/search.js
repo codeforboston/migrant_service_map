@@ -1,5 +1,5 @@
 import React from "react";
-import "./search.css";
+import "./mapbox-gl-geocoder.css";
 
 export default class Search extends React.Component {
   render() {
