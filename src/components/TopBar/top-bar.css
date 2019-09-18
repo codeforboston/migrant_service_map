@@ -4,6 +4,9 @@
   border-bottom: 1px solid #8c45cf;
   width: 100%;
   display: flex;
+  flex: 0 0 auto;
+  margin: -70px 0 0 0;
+  position: fixed;
   padding: 10px;
   justify-content: stretch;
   height: 70px;

@@ -5,6 +5,25 @@ import SortDropdown from "./sort-dropdown.js";
 import "./provider-list.css";
 
 class ProviderList extends Component {
+  constructor(props) {
+    super(props);
+    this.listElementRef = React.createRef();
+    this.lastHighlightedRef = React.createRef();
+  }
+
+  componentDidUpdate(previousProps) {
+    let newhlp = this.props.highlightedProviders;
+    if (newhlp.length && newhlp[0] !== previousProps.highlightedProviders[0]) {
+      // CSS 'scroll-behavior: smooth' animates the scroll when scrollTop is updated;
+      // adding a delay avoids edge case of scroll-upward not taking 'open' height into account
+      setTimeout(
+        () =>
+          (this.listElementRef.current.scrollTop = this.lastHighlightedRef.current.offsetTop),
+        60
+      );
+    }
+  }
+
   render() {
     const {
       providersList,
@@ -46,39 +65,51 @@ class ProviderList extends Component {
               incomingState={incomingState}
               zoomToFit={zoomToFit}
             />
-            {providersList.map(providerType => (
-              <ul key={providerType.id} className="providers-list">
-                {!!providerType.providers.length && ( //if there is not providers MenuDropdown is not shown
+            <ul className="providers-list" ref={this.listElementRef}>
+              {providersList.map(providerType => (
+                <li key={providerType.id}>
                   <MenuDropdown
                     key={providerType.id}
                     id={providerType.id}
                     text={providerType.name}
                   >
-                    {providerType.providers.map(provider => (
-                      <li
-                        key={provider.id}
-                        onClick={() => displayProviderInformation(provider.id)}
-                      >
-                        <MenuDropdownItem
-                          key={provider.id}
-                          provider={provider}
-                          isHighlighted={highlightedProviders.includes(
-                            provider.id
-                          )}
-                          isSaved={
-                            savedProviders.includes(provider.id)
-                              ? "saved"
-                              : "unsaved"
-                          }
-                          toggleSavedStatus={() => saveProvider(provider.id)}
-                          flyToProvider={()=> flyToProvider(provider.id)}
-                        />
-                      </li>
-                    ))}
+                    <ul className="providers-sublist">
+                      {!!providerType.providers.length && //if there is not providers MenuDropdown is not shown
+                        providerType.providers.map(provider => (
+                          <li
+                            key={provider.id}
+                            ref={
+                              provider.id === highlightedProviders[0]
+                                ? this.lastHighlightedRef
+                                : null
+                            }
+                            onClick={() =>
+                              displayProviderInformation(provider.id)
+                            }
+                          >
+                            <MenuDropdownItem
+                              key={provider.id}
+                              provider={provider}
+                              isHighlighted={highlightedProviders.includes(
+                                provider.id
+                              )}
+                              isSaved={
+                                savedProviders.includes(provider.id)
+                                  ? "saved"
+                                  : "unsaved"
+                              }
+                              toggleSavedStatus={() =>
+                                saveProvider(provider.id)
+                              }
+                              flyToProvider={() => flyToProvider(provider.id)}
+                            />
+                          </li>
+                        ))}
+                    </ul>
                   </MenuDropdown>
-                )}
-              </ul>
-            ))}
+                </li>
+              ))}
+            </ul>
           </>
         )}
       </div>
