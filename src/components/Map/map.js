@@ -12,7 +12,7 @@ import {
   createDistanceMarker,
   normalizeProviders,
   removeDistanceMarkers,
-  getBoundingBox
+  getBoundingBox,
 } from "./utilities.js";
 
 mapboxgl.accessToken =
@@ -132,17 +132,17 @@ class Map extends Component {
         filter: ["all", ["!=", "has", "point_count"], ["==", "typeId", typeId]],
         layout: {
           "icon-image": typeId + "icon",
-          "icon-size": 0.3,
+          "icon-size": 0.4,
           "icon-allow-overlap": true,
           "icon-ignore-placement": true,
           "icon-padding": 10,
           visibility: "visible"
         },
         paint: {
-          "icon-color": ["get", "color"],
-          "icon-halo-color": "white",
-          "icon-halo-width": 0.5,
-          "icon-halo-blur": 1
+          // "background": {
+          //   visibility: "visible",
+          //   color: "black",
+          // },
         }
       });
     this.addClickHandlerToMapIdLayer(typeId);
@@ -150,17 +150,38 @@ class Map extends Component {
     }
   };
 
+  setSpecialLayerInMap = (property, layerName) => {
+    if (!this.map.getLayer(layerName)) {
+      this.map.addLayer({
+        id: layerName,
+        source: "displayData",
+        type: "symbol",
+        filter: ["==", property, layerName],
+        layout: {
+          "icon-image": layerName + "icon",
+          "icon-size": 0.4,
+          "icon-allow-overlap": true,
+          "icon-ignore-placement": true,
+          "icon-padding": 10,
+          visibility: "visible",
+        },
+      })
+    }
+  };
+
+
   findClustersInMap = () => {
     this.map.addLayer({
       id: "clusterCircle",
       source: "displayData",
-      type: "circle",
+      type: "symbol",
       filter: ["has", "point_count"],
-      paint: {
-        "circle-color": "black",
-        "circle-radius": 30,
-        "circle-opacity": 0.35
-      }
+      layout: {
+        "icon-image": "clustersicon",
+        "icon-size": 0.5,
+        "icon-allow-overlap": true,
+        "icon-ignore-placement": true,
+      },
     });
 
     let clusterName = "cluster";
@@ -173,7 +194,8 @@ class Map extends Component {
         "icon-size": 0.4,
         "text-field": "{point_count_abbreviated}",
         "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-        "text-size": 36,
+        "text-size": 26,
+        "text-offset": [0,-0.3],
         "icon-allow-overlap": true,
         "icon-ignore-placement": true,
         visibility: "visible"
@@ -207,7 +229,7 @@ class Map extends Component {
     images.map(typeImage =>
       this.map.loadImage(typeImage.image, (error, image) => {
         if (error) throw error;
-        this.map.addImage(`${typeImage.type}icon`, image, { sdf: true });
+        this.map.addImage(`${typeImage.type}icon`, image);
       })
     );
   };
@@ -277,9 +299,9 @@ class Map extends Component {
     let forGeoConvert = [];
     providersList.forEach(typeId => {
       typeId.providers.forEach(provider => {
-        provider.color = highlightedProviders.includes(provider.id)
-          ? "rgb(255,195,26)"
-          : iconColors[provider.typeId];
+        provider.highlighted = highlightedProviders.includes(provider.id)
+          ? "highlighted"
+          : "not-highlighted";
 
         if (!showSavedProviders || savedProviderIds.includes(provider.id)) {
           // Show only saved providers if the saved provider tab is selected, otherwise show everything.
@@ -480,6 +502,7 @@ class Map extends Component {
       this.props.providerTypes.allIds.map(typeId =>
         this.findLayerInMap(typeId)
       );
+      this.setSpecialLayerInMap("highlighted", "highlighted");
       this.updatePinAndDistanceIndicator(prevProps);
       this.zoomToShowNewProviders(prevProps);
       if (
