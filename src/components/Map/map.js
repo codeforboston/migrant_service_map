@@ -5,7 +5,6 @@ import "./map.css";
 import { circle, point, transformTranslate } from "@turf/turf";
 import typeImages from "assets/images";
 import distances from "assets/distances";
-import iconColors from "assets/icon-colors";
 import {
   convertProvidersToGeoJSON,
   createCenterMarker,
@@ -137,12 +136,6 @@ class Map extends Component {
           "icon-ignore-placement": true,
           "icon-padding": 10,
           visibility: "visible"
-        },
-        paint: {
-          // "background": {
-          //   visibility: "visible",
-          //   color: "black",
-          // },
         }
       });
     this.addClickHandlerToMapIdLayer(typeId);
