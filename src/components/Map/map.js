@@ -11,7 +11,9 @@ import {
   createDistanceMarker,
   normalizeProviders,
   removeDistanceMarkers,
-  getBoundingBox
+  getBoundingBox,
+  filterProviderIds,
+  providersById
 } from "./utilities.js";
 
 mapboxgl.accessToken =
@@ -423,26 +425,24 @@ class Map extends Component {
     }
   };
 
-  getVisibleHighlightedProviders = (visibleProviders, highlightedProviders) => {
-    const visibleProviderIds = new Set(visibleProviders.map(provider => provider.id));
-    return highlightedProviders.filter(id => visibleProviderIds.has(id));
-  };
-
   zoomToFit = providerIds => {
     providerIds =
       providerIds ||
-      this.getVisibleHighlightedProviders(
-        this.props.visibleProviders,
+      filterProviderIds(
+        providersById(this.props.visibleProviders),
         this.props.highlightedProviders
       );
     if (providerIds.length > 0) {
-      this.map.fitBounds(getBoundingBox(this.props.providers, providerIds), {
-        // Left padding accounts for provider list UI.
-        padding: { top: 100, bottom: 100, left: 450, right: 100 },
-        duration: 2000,
-        maxZoom: 13,
-        linear: false
-      });
+      this.map.fitBounds(
+        getBoundingBox(providersById(this.props.visibleProviders), providerIds),
+        {
+          // Left padding accounts for provider list UI.
+          padding: { top: 100, bottom: 100, left: 450, right: 100 },
+          duration: 2000,
+          maxZoom: 13,
+          linear: false
+        }
+      );
     }
   };
 
@@ -457,12 +457,12 @@ class Map extends Component {
    * track changes to highlighted props.
    */
   zoomToShowNewProviders = prevProps => {
-    const prevIds = this.getVisibleHighlightedProviders(
-        prevProps.visibleProviders,
+    const prevIds = filterProviderIds(
+        providersById(prevProps.visibleProviders),
         prevProps.highlightedProviders
       ),
-      currIds = this.getVisibleHighlightedProviders(
-        this.props.visibleProviders,
+      currIds = filterProviderIds(
+        providersById(this.props.visibleProviders),
         this.props.highlightedProviders
       ),
       newIds = currIds.filter(id => !prevIds.includes(id));
@@ -470,7 +470,10 @@ class Map extends Component {
       // The set of selected providers stayed the same or got smaller, no need to zoom.
       return;
     }
-    const newFeatureBounds = getBoundingBox(this.props.providers, newIds),
+    const newFeatureBounds = getBoundingBox(
+        providersById(this.props.visibleProviders),
+        newIds
+      ),
       mapBounds = this.map.getBounds();
     if (
       newFeatureBounds.getNorth() > mapBounds.getNorth() ||
@@ -505,7 +508,9 @@ class Map extends Component {
         this.props.search.flyToProviderKey !== prevProps.search.flyToProviderKey
       ) {
         const { flyToProviderId } = this.props.search;
-        const { coordinates } = this.props.providers.byId[flyToProviderId];
+        const { coordinates } = providersById(this.props.visibleProviders)[
+          flyToProviderId
+        ];
         this.map.flyTo({
           center: coordinates,
           zoom: 15

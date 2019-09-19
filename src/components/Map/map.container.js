@@ -18,7 +18,6 @@ const mapStateToProps = state => {
   return {
     visibleProviders: getMapProviders(state),
     loadedProviderTypeIds: state.providerTypes.allIds,
-    providers: state.providers,
     highlightedProviders: state.highlightedProviders,
     filters: state.filters,
     search: state.search
