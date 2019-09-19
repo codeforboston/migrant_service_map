@@ -486,7 +486,7 @@ class Map extends Component {
     if (this.state.loaded) {
       const features = this.geoJSONFeatures();
       this.setSourceFeatures(features);
-      this.props.providerTypes.allIds.map(typeId =>
+      this.props.loadedProviderTypeIds.map(typeId =>
         this.findLayerInMap(typeId)
       );
       this.setSpecialLayerInMap("highlighted", "highlighted");
