@@ -7,7 +7,7 @@ import {
   displayProviderInformation,
   setMapObject
 } from "redux/actions";
-import { getProvidersSorted } from "redux/selectors";
+import { getProvidersSorted, getMapProviders } from "redux/selectors";
 import Map from "./map";
 
 const MapContainer = props => {
@@ -16,6 +16,7 @@ const MapContainer = props => {
 
 const mapStateToProps = state => {
   return {
+    visibleProviders: getMapProviders(state),
     providersList: getProvidersSorted(state),
     providerTypes: state.providerTypes,
     providers: state.providers,
