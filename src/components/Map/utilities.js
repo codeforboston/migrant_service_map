@@ -1,6 +1,6 @@
 import iconColors from "../../assets/icon-colors";
 import mapboxgl from "mapbox-gl";
-import memoizeOne from 'memoize-one';
+import memoizeOne from "memoize-one";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMapMarkerAlt, faMapMarker } from "@fortawesome/free-solid-svg-icons";
 import ReactDOM from "react-dom";
