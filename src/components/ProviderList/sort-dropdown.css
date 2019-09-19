@@ -17,6 +17,7 @@
   z-index: 2;
   border-bottom: 1px solid hsla(271, 34%, 86%, 0.5);
   box-shadow: 1px 3px 4px rgba(184, 147, 217, 0.2);
+  flex: none;
 }
 .sort-container .expandable-container {
   flex: 1 1 auto;
