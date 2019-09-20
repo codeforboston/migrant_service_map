@@ -11,16 +11,25 @@ import {
   createDistanceMarker,
   normalizeProviders,
   removeDistanceMarkers,
-  getBoundingBox,
+  getBoundingBox
 } from "./utilities.js";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw";
 
 const boundingBox = [
-  -71.562762,42.154131, // Longitude,Latitude near Milford MA
-  -70.647115,42.599752 // Longitude, Latitute near Gloucester MA
+  -71.562762,
+  42.154131, // Longitude,Latitude near Milford MA
+  -70.647115,
+  42.599752 // Longitude, Latitute near Gloucester MA
 ];
+
+// The map has a zoom level between 0 (zoomed entirely out)
+// and 22 (zoomed entirely in). Zoom level is configured as integers but
+// the map can zoom to decimal values. The effective zoom level is
+// Math.floor(map.getZoom()).
+const MAX_CLUSTERED_ZOOM = 14,
+  MIN_UNCLUSTERED_ZOOM = 15;
 
 class Map extends Component {
   constructor(props) {
@@ -144,8 +153,8 @@ class Map extends Component {
           visibility: "visible"
         }
       });
-    this.addClickHandlerToMapIdLayer(typeId);
-    this.addHoverHandlerToMapIdLayer(typeId);
+      this.addClickHandlerToMapIdLayer(typeId);
+      this.addHoverHandlerToMapIdLayer(typeId);
     }
   };
 
@@ -162,12 +171,11 @@ class Map extends Component {
           "icon-allow-overlap": true,
           "icon-ignore-placement": true,
           "icon-padding": 10,
-          visibility: "visible",
-        },
-      })
+          visibility: "visible"
+        }
+      });
     }
   };
-
 
   findClustersInMap = () => {
     this.map.addLayer({
@@ -179,8 +187,8 @@ class Map extends Component {
         "icon-image": "clustersicon",
         "icon-size": 0.5,
         "icon-allow-overlap": true,
-        "icon-ignore-placement": true,
-      },
+        "icon-ignore-placement": true
+      }
     });
 
     let clusterName = "cluster";
@@ -194,7 +202,7 @@ class Map extends Component {
         "text-field": "{point_count_abbreviated}",
         "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
         "text-size": 26,
-        "text-offset": [0,-0.3],
+        "text-offset": [0, -0.3],
         "icon-allow-overlap": true,
         "icon-ignore-placement": true,
         visibility: "visible"
@@ -218,7 +226,7 @@ class Map extends Component {
           features: []
         },
         cluster: true,
-        clusterMaxZoom: 14, // Max zoom to cluster points on
+        clusterMaxZoom: MAX_CLUSTERED_ZOOM,
         clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
       });
     }
@@ -234,21 +242,21 @@ class Map extends Component {
   };
 
   addClusterClickHandlerToMapLayer = clusterName => {
-    this.map.on("click", clusterName, function(e) {
-      let mapView = this;
-      let features = mapView.queryRenderedFeatures(e.point, {
+    this.map.on("click", clusterName, e => {
+      let features = this.map.queryRenderedFeatures(e.point, {
         layers: [clusterName]
       });
 
       let clusterId = features[0].properties.cluster_id;
-      mapView
+      this.map
         .getSource("displayData")
-        .getClusterExpansionZoom(clusterId, function(err, zoom) {
+        .getClusterExpansionZoom(clusterId, (err, zoom) => {
           if (err) return;
 
-          mapView.easeTo({
+          const mapZoom = this.map.getZoom();
+          this.map.easeTo({
             center: features[0].geometry.coordinates,
-            zoom: zoom
+            zoom: mapZoom >= zoom ? mapZoom + 1 : zoom 
           });
         });
     });
@@ -273,16 +281,17 @@ class Map extends Component {
       closeButton: false,
       closeOnClick: false,
       className: "name-popup",
-      offset: 20,
+      offset: 20
     });
 
     this.map.on("mouseenter", typeId, e => {
       let popupCoordinates = e.features[0].geometry.coordinates.slice();
       let name = e.features[0].properties.name;
 
-      popup.setLngLat(popupCoordinates)
-          .setHTML(name)
-          .addTo(this.map);
+      popup
+        .setLngLat(popupCoordinates)
+        .setHTML(name)
+        .addTo(this.map);
     });
 
     this.map.on("mouseleave", typeId, () => {
@@ -452,7 +461,7 @@ class Map extends Component {
         // Left padding accounts for provider list UI.
         padding: { top: 100, bottom: 100, left: 450, right: 100 },
         duration: 2000,
-        maxZoom: 13,
+        maxZoom: MIN_UNCLUSTERED_ZOOM,
         linear: false
       });
     }
@@ -520,7 +529,7 @@ class Map extends Component {
         const { coordinates } = this.props.providers.byId[flyToProviderId];
         this.map.flyTo({
           center: coordinates,
-          zoom: 15
+          zoom: MIN_UNCLUSTERED_ZOOM
         });
       }
       if (this.props.search.zoomToFitKey !== prevProps.search.zoomToFitKey) {
