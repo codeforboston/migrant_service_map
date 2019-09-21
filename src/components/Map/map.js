@@ -15,8 +15,9 @@ import {
   filterProviderIds,
   providersById
 } from "./utilities.js";
-
 const SPECIAL_NO_RESULTS_ID = 'notfound.0';
+import { AnimatedMarker } from "components/AnimatedMarker/animated-marker.js";
+
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw";
@@ -40,6 +41,7 @@ class Map extends Component {
     super(props);
     this.map = null;
     this.markerList = []; //need to keep track of marker handles ourselves -- cannot be queried from map
+    this.selectionMarkers = [];
     this.state = {
       loaded: false
     };
@@ -54,7 +56,6 @@ class Map extends Component {
     this.setSingleSourceInMap();
     this.addDistanceIndicatorLayer();
     this.findClustersInMap();
-
     // Pull data from Mapbox style and initialize application state
     const providerFeatures = this.map.querySourceFeatures("composite", {
       sourceLayer: "Migrant_Services_-_MSM_Final_1"
@@ -77,7 +78,6 @@ class Map extends Component {
 
     map.addControl(new mapboxgl.NavigationControl());
     map.on("load", this.onMapLoaded);
-
     this.map = map;
 
     const coordinateObject = {
@@ -189,8 +189,12 @@ class Map extends Component {
           "icon-allow-overlap": true,
           "icon-ignore-placement": true,
           "icon-padding": 10,
-          visibility: "visible"
+          visibility: "visible",
+        },
+        paint: {
+          "icon-opacity": ["get" , ["feature-state", "myOpacity"]],
         }
+
       });
       this.addClickHandlerToMapIdLayer(typeId);
       this.addHoverHandlerToMapIdLayer(typeId);
@@ -313,7 +317,16 @@ class Map extends Component {
         displayProviderInformation(e.features[0].properties.id);
       }
     });
+
   };
+
+  addAnimatedMarker(coordinates, providerId, typeId){
+      const ANM = AnimatedMarker(providerId, typeId);
+    return new mapboxgl.Marker({
+        element: ANM
+      }).setLngLat(coordinates).addTo(this.map);
+  }
+
 
   addHoverHandlerToMapIdLayer = typeId => {
     let popup = new mapboxgl.Popup({
@@ -529,7 +542,50 @@ class Map extends Component {
     }
   };
 
+  identifyNewSelection = function (prevProps) {
+    const prevHP = prevProps.highlightedProviders;
+    const newHP = this.props.highlightedProviders;
+    const newSelection = newHP.filter(id => !prevHP.includes(id));
+    console.log("newSelection " + newSelection);
+    // if (newSelection.length > 0) {
+    //   const selectedProvider = this.props.providers.byId[newSelection[0]];
+    //   const selectedId = selectedProvider.id;
+    //   const selSource = this.map.getSource("displayData");
+    //   this.map.setPaintProperty(selectedProvider.typeId, "raster-opacity", "1")
+    //   console.log(selectedProvider, this.map.getPaintProperty(selectedProvider.typeId, "raster-opacity"));
+    //   const selFeat =  {
+    //     id: selectedId,
+    //     source: "displayData"
+    //   }
+    //   this.map.setFeatureState({id: selectedId, source: "displayData"}, {"myOpacity": 0});
+    //   console.log(this.map.getFeatureState({id: selectedId, source: "displayData"}));
+    // this.map.setFeatureState({id: selectedProvider.id, source: "displayData"}, {visibility: "hidden"});
+    // const markerEl = this.addAnimatedMarker(selectedProvider.coordinates, selectedProvider.id, selectedProvider.typeId);
+    // const markerIcon = document.getElementById(`marker-icon-${selectedProvider.id}`);
+    // markerIcon.classList.add("bounceOn");
+    // console.log(markerIcon ,document.getElementsByClassName("mapboxgl-marker"));
+  };
+
+  identifyExitingSelection = function(prevProps){
+    const prevHP = prevProps.highlightedProviders;
+    const newHP = this.props.highlightedProviders;
+    const removedSelection = prevHP.filter(id => !newHP.includes(id));
+    console.log("removedSelection " + removedSelection)
+    // if (removedSelection.length > 0) {
+    //   const selectedProvider = this.props.providers.byId[removedSelection[0]];
+    //   console.log(selectedProvider.coordinates, selectedProvider.typeId);
+    //   const markerEl = document.getElementById(`marker-${selectedProvider.id}`);
+    //   markerEl.classList.add("bounceOff");
+    //   this.map.once("animationend", markerEl.remove());
+    //   console.log(document.getElementsByClassName("mapboxgl-marker"));
+    // } else {
+    //   console.log("no selection change");
+    // }
+  }
+
+
   componentDidUpdate(prevProps) {
+    this.map.once("moveend", this.identifyNewSelection(prevProps));
     if (this.state.loaded) {
       const features = this.geoJSONFeatures();
       this.setSourceFeatures(features);
@@ -546,7 +602,7 @@ class Map extends Component {
         this.map.flyTo({
           center: this.props.search.coordinates,
           zoom: this.zoomToDistance(this.props.filters.distance)
-        });
+        })
       }
       if (
         this.props.search.flyToProviderKey !== prevProps.search.flyToProviderKey
@@ -564,6 +620,7 @@ class Map extends Component {
         this.zoomToFit();
       }
     }
+    this.identifyExitingSelection(prevProps);
   }
 
   componentWillUnmount() {

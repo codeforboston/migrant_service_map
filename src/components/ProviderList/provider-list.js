@@ -13,17 +13,15 @@ class ProviderList extends Component {
 
   componentDidUpdate(previousProps) {
     let newhlp = this.props.highlightedProviders;
-    if (newhlp.length && newhlp[0] !== previousProps.highlightedProviders[0]) {
-      // CSS 'scroll-behavior: smooth' animates the scroll when scrollTop is updated;
-      // adding a delay avoids edge case of scroll-upward not taking 'open' height into account
-      setTimeout(
-        () =>
-          (this.listElementRef.current.scrollTop = this.lastHighlightedRef.current.offsetTop),
-        60
-      );
+    // CSS 'scroll-behavior: smooth' animates the scroll when scrollTop is updated;
+    // adding a delay avoids edge case of scroll-upward not taking 'open' height into account
+    // first checking to make sure highlighted provider list is not empty
+    if (this.lastHighlightedRef.current === null) {
+      if (newhlp.length && newhlp[0] !== previousProps.highlightedProviders[0]) {
+        setTimeout(() => (this.listElementRef.current.scrollTop = this.lastHighlightedRef.current.offsetTop), 60);
+      }
     }
   }
-
   render() {
     const {
       providersList,
@@ -117,5 +115,6 @@ class ProviderList extends Component {
     );
   }
 }
+
 
 export default ProviderList;
