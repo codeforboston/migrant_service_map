@@ -34,6 +34,7 @@
 }
 
 .marker {
+  position: relative;
   /*background-image: url("../../assets/icons/pin cash.svg");*/
   /*background-size: cover;*/
   /*width: 50px;*/
@@ -57,6 +58,32 @@
   margin: auto;
 }
 
+.marker-highlight-container {
+  position: relative;
+  height: 70px;
+  width: 100%;
+  margin: 0% 0 -100% 0;
+  -webkit-transform-origin: bottom;
+  transform-origin: bottom;
+  padding-bottom: 100%;
+}
+
+.marker-highlight {
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 62%;
+  -webkit-transform-origin: bottom;
+  transform-origin: bottom;
+  margin: auto;
+  bottom: 100%;
+  opacity: .5;
+}
+
+.highlightOn {
+  animation: highlightColor linear 3s;
+}
+
 .bounceOn {
   animation: changeheight ease 1s 3 both;
 }
@@ -65,6 +92,16 @@
   animation: shimmy ease 3s 2 both;
 }
 
+
+
+@keyframes highlightColor {
+  0% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
 
 @keyframes changeheight {
   0% {

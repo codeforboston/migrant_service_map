@@ -182,7 +182,7 @@ class Map extends Component {
         id: typeId,
         source: "displayData",
         type: "symbol",
-        filter: ["all", ["!=", "has", "point_count"], ["==", "typeId", typeId]],
+        filter: ["all", ["!=", "has", "point_count"], ["==", "typeId", typeId], ["!=", "highlighted", "highlighted"]],
         layout: {
           "icon-image": typeId + "icon",
           "icon-size": 0.4,
@@ -317,16 +317,25 @@ class Map extends Component {
         displayProviderInformation(e.features[0].properties.id);
       }
     });
-
   };
 
+
   addAnimatedMarker(coordinates, providerId, typeId){
+
       const ANM = AnimatedMarker(providerId, typeId);
-    return new mapboxgl.Marker({
+
+       ANM.addEventListener("click", () => {
+         console.log(providerId);
+         this.props.displayProviderInformation(providerId)
+         selectedMarker.remove();
+       })
+
+      const selectedMarker = new mapboxgl.Marker({
         element: ANM
       }).setLngLat(coordinates).addTo(this.map);
-  }
 
+       return selectedMarker
+  }
 
   addHoverHandlerToMapIdLayer = typeId => {
     let popup = new mapboxgl.Popup({
@@ -547,30 +556,31 @@ class Map extends Component {
     const newHP = this.props.highlightedProviders;
     const newSelection = newHP.filter(id => !prevHP.includes(id));
     console.log("newSelection " + newSelection);
-    // if (newSelection.length > 0) {
-    //   const selectedProvider = this.props.providers.byId[newSelection[0]];
-    //   const selectedId = selectedProvider.id;
-    //   const selSource = this.map.getSource("displayData");
-    //   this.map.setPaintProperty(selectedProvider.typeId, "raster-opacity", "1")
-    //   console.log(selectedProvider, this.map.getPaintProperty(selectedProvider.typeId, "raster-opacity"));
-    //   const selFeat =  {
-    //     id: selectedId,
-    //     source: "displayData"
-    //   }
-    //   this.map.setFeatureState({id: selectedId, source: "displayData"}, {"myOpacity": 0});
-    //   console.log(this.map.getFeatureState({id: selectedId, source: "displayData"}));
-    // this.map.setFeatureState({id: selectedProvider.id, source: "displayData"}, {visibility: "hidden"});
-    // const markerEl = this.addAnimatedMarker(selectedProvider.coordinates, selectedProvider.id, selectedProvider.typeId);
-    // const markerIcon = document.getElementById(`marker-icon-${selectedProvider.id}`);
-    // markerIcon.classList.add("bounceOn");
-    // console.log(markerIcon ,document.getElementsByClassName("mapboxgl-marker"));
+    if (newSelection.length > 0) {
+      const selectedProvider = this.props.providers.byId[newSelection[0]];
+      const selectedId = selectedProvider.id;
+
+      const selFeat = {
+        id: selectedId,
+        source: "displayData"
+      }
+
+      const markerEl = this.addAnimatedMarker(selectedProvider.coordinates, selectedProvider.id, selectedProvider.typeId);
+      const markerIcon = document.getElementById(`marker-icon-${selectedProvider.id}`);
+
+      markerIcon.classList.add("bounceOn");
+      const markerIconHighlight = markerIcon.nextSibling.firstChild;
+      markerIconHighlight.classList.add("bounceOn");
+      markerIconHighlight.classList.add("highlightOn");
+    }
   };
 
-  identifyExitingSelection = function(prevProps){
-    const prevHP = prevProps.highlightedProviders;
-    const newHP = this.props.highlightedProviders;
-    const removedSelection = prevHP.filter(id => !newHP.includes(id));
-    console.log("removedSelection " + removedSelection)
+
+  // identifyExitingSelection = function(prevProps){
+  //   const prevHP = prevProps.highlightedProviders;
+  //   const newHP = this.props.highlightedProviders;
+  //   const removedSelection = prevHP.filter(id => !newHP.includes(id));
+  //   console.log("removedSelection " + removedSelection)
     // if (removedSelection.length > 0) {
     //   const selectedProvider = this.props.providers.byId[removedSelection[0]];
     //   console.log(selectedProvider.coordinates, selectedProvider.typeId);
@@ -581,8 +591,7 @@ class Map extends Component {
     // } else {
     //   console.log("no selection change");
     // }
-  }
-
+  // }
 
   componentDidUpdate(prevProps) {
     this.map.once("moveend", this.identifyNewSelection(prevProps));
@@ -592,7 +601,7 @@ class Map extends Component {
       this.props.loadedProviderTypeIds.map(typeId =>
         this.findLayerInMap(typeId)
       );
-      this.setSpecialLayerInMap("highlighted", "highlighted");
+      // this.setSpecialLayerInMap("highlighted", "highlighted");
       this.updatePinAndDistanceIndicator(prevProps);
       this.zoomToShowNewProviders(prevProps);
       if (
@@ -620,7 +629,7 @@ class Map extends Component {
         this.zoomToFit();
       }
     }
-    this.identifyExitingSelection(prevProps);
+    // this.identifyExitingSelection(prevProps);
   }
 
   componentWillUnmount() {

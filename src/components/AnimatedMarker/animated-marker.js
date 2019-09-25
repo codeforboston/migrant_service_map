@@ -11,7 +11,15 @@ const AnimatedMarker = (providerId, typeId) => {
     icon.id = `marker-icon-${providerId}`;
     icon.src = getPin(typeId);
     icon.className = "baseState";
+    const highlight = document.createElement("img");
+    highlight.src = require("../../assets/icons/pin-highlight.svg");
+    highlight.className = "marker-highlight";
+    const highlightContainer = document.createElement("div");
+    highlightContainer.className = "marker-highlight-container";
+    highlightContainer.appendChild(highlight);
     marker.appendChild(icon);
+    marker.appendChild(highlightContainer);
+
 
     return marker;
 }
