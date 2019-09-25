@@ -105,7 +105,7 @@ export default class SavedProvidersList extends React.Component {
     openWin()
   }
 
-  componentDidUpdate() {
+  componentDidMount() {
     ReactTooltip.rebuild();
   }
 
