@@ -1,7 +1,7 @@
 .search-center {
   color: #7e7e7e;
   font-size: 12px;
-  margin-top: 10px;
+  /* margin-top: 10px; */
 }
 
 .saved-list {
@@ -67,4 +67,12 @@
 
 .print-email-btn:focus {
   outline: none;
+}
+
+.email-icon, .print-icon {
+  color: #8c45cf;
+}
+
+.print-icon {
+  margin-right: 16px;
 }

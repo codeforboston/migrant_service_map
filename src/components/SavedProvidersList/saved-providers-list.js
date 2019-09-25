@@ -4,6 +4,11 @@ import { printJSX } from "util/printJSX";
 import "./saved-providers-list.css";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import _ from "lodash";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPrint,
+  faEnvelope
+} from "@fortawesome/free-solid-svg-icons";
 
 function toProviderDiv(provider) {
   const {
@@ -108,17 +113,22 @@ const SavedProvidersList = ({
     <div className="saved-list">
       <div className="header-container">
         <header>
-          <h3>Saved Providers</h3>
+          <h3>SAVED PROVIDERS</h3>
           <div>
-            <button
-              className="print-email-btn"
+            <FontAwesomeIcon
+              size="2x"
+              icon={faPrint}
               onClick={() => printSavedProviders(savedProviders)}
-            >Print</button>
-            <button
-              className="print-email-btn"
+              className="print-icon"
+              data-tip="Print"
+            />
+            <FontAwesomeIcon
+              size="2x"
+              icon={faEnvelope}
               onClick={() => emailSavedProviders(savedProviders)}
-              target="_newtab"
-            >Email</button>
+              className="email-icon"
+              data-tip="Email"
+            />
           </div>
         </header>
         <div className="search-center">Showing proximity to {searchCenter}</div>
@@ -131,8 +141,8 @@ const SavedProvidersList = ({
       >
         {provided => {
           return (
-            <div 
-            className="saved-content-container"            
+            <div
+            className="saved-content-container"
             ref={provided.innerRef} {...provided.droppableProps}>
               {savedProviders.map((provider, index) => (
                 <Draggable
