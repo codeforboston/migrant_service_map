@@ -61,7 +61,6 @@ class Map extends Component {
       center: mapCenter,
       zoom: 11 // starting zoom
     });
-
     map.addControl(new mapboxgl.NavigationControl());
     map.on("load", this.onMapLoaded);
 
