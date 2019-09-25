@@ -25,7 +25,7 @@ import providerTypeToColor from "provider-type-to-color.json";
 
 const isPresent = value => value && value !== "n/a";
 
-const cardIconMappings = {
+export const cardIconMappings = {
   "Job Placement": faBriefcase,
   "Community Center": faPlaceOfWorship,
   Education: faGraduationCap,
