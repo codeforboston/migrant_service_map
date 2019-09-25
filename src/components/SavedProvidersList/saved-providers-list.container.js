@@ -3,7 +3,8 @@ import { connect } from "react-redux";
 import {
   displayProviderInformation,
   saveProvider,
-  reorderSavedProviders
+  reorderSavedProviders,
+  flyToProvider,
 } from "redux/actions";
 import { getSavedProviders } from "redux/selectors.js";
 import SavedProvidersList from "./saved-providers-list";
@@ -55,12 +56,15 @@ const mapDispatchToProps = dispatch => {
     saveProvider: id => {
       dispatch(saveProvider(id));
     },
+    flyToProvider: id => {
+      dispatch(flyToProvider(id));
+    },
     displayProviderInformation: id => {
       dispatch(displayProviderInformation(id));
     },
     reorderSavedProviders: ids => {
       dispatch(reorderSavedProviders(ids));
-    }
+    },
   };
 };
 

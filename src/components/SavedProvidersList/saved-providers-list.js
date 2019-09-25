@@ -101,18 +101,9 @@ const SavedProvidersList = ({
   saveProvider,
   searchCenter,
   highlightedProviders,
-  displayProviderInformation
+  displayProviderInformation,
+  flyToProvider
 }) => {
-  const getItemStyle = (isDragging, draggableStyle) => ({
-    // some style overrides so that draggable items don't inherit unwanted styling
-    ...draggableStyle,
-    userSelect: "none",
-    padding: "0 !important",
-    margin: "0 !important",
-    top: "0 !important",
-    left: "0 !important"
-  });
-
   return (
     <div className="saved-list">
       <div className="header-container">
@@ -130,8 +121,8 @@ const SavedProvidersList = ({
             >Email</button>
           </div>
         </header>
+        <div className="search-center">Showing proximity to {searchCenter}</div>
       </div>
-      <div className="search-center">Showing proximity to {searchCenter}</div>
 
       <Droppable
         droppableId="saved-items"
@@ -140,22 +131,22 @@ const SavedProvidersList = ({
       >
         {provided => {
           return (
-            <div ref={provided.innerRef} {...provided.droppableProps}>
+            <div 
+            className="saved-content-container"            
+            ref={provided.innerRef} {...provided.droppableProps}>
               {savedProviders.map((provider, index) => (
                 <Draggable
                   draggableId={provider.id}
                   key={provider.id}
                   index={index}
                 >
-                  {(provided, snapshot) => (
+                  {provided => (
                     <div
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
-                      style={getItemStyle(
-                        snapshot.isDragging,
-                        provided.draggableProps.style
-                      )}
+                      className="saved-draggable"
+                      onClick={() => displayProviderInformation(provider.id)}
                     >
                       <MenuDropdownItem
                         key={provider.id}
@@ -163,12 +154,10 @@ const SavedProvidersList = ({
                         providerTypeName={provider["Type of Service"]}
                         isSaved="saved"
                         toggleSavedStatus={() => saveProvider(provider.id)}
+                        flyToProvider={()=> flyToProvider(provider.id)}
                         isHighlighted={highlightedProviders.includes(
                           provider.id
                         )}
-                        toggleHighlight={() =>
-                          displayProviderInformation(provider.id)
-                        }
                         inSavedMenu={true}
                       />
                     </div>
