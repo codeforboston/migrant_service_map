@@ -5,7 +5,8 @@ import {
   initializeVisaFilter,
   setSearchCenterCoordinates,
   displayProviderInformation,
-  setMapObject
+  setMapObject,
+  selectTab
 } from "redux/actions";
 import { getProvidersSorted } from "redux/selectors";
 import Map from "./map";
@@ -41,6 +42,9 @@ const mapDispatchToProps = dispatch => {
     },
     setSearchCenterCoordinates: (coordinates, mapboxId, text) => {
       dispatch(setSearchCenterCoordinates(coordinates, mapboxId, text));
+    },
+    selectTab: index => {
+      dispatch(selectTab(index));
     }
   };
 };

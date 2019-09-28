@@ -7,10 +7,6 @@ import "./top-bar.css";
 // import VisaStatusDropdown from "./visa-status-dropdown";
 
 class TopBar extends Component {
-  onSearchInputClick = () => {
-    const { selectTab } = this.props;
-    selectTab(0);
-  };
 
   onDistanceSelected = distance => {
     const { changeDistanceFilter } = this.props;
@@ -40,7 +36,6 @@ class TopBar extends Component {
         />
         <Search
           className={topBarItemClass}
-          onSearchInputClick={this.onSearchInputClick}
         />
         <DistanceDropdown
           className={topBarItemClass}
