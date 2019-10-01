@@ -1,3 +1,4 @@
 import MenuDropdown from "./menu-dropdown";
+import CollapsibleMenuDropdown from "./menu-dropdown-collapsible";
 
-export default MenuDropdown;
+export { CollapsibleMenuDropdown, MenuDropdown };
