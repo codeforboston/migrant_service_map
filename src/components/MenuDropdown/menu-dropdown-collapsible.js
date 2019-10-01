@@ -18,7 +18,7 @@ class CollapsibleMenuDropdown extends React.Component {
           className={domClasses}
           onClick={handleToggle}
         >
-          <span style={{ flexGrow: 1 }}>{text}</span>
+          <div>{text}</div>
           {triangle}
         </Row>
         {!collapsed && children}

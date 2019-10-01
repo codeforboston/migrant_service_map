@@ -1,2 +1,11 @@
+.dropdown-menu {
+    width: 100%;
+}
+.dropdown-menu div {
+    flex: 1 0 auto;
+}
+.dropdown-menu svg {
+    align-self: center;
+    flex: 0 0 16px;
+}
 .dropdown-menu.closed svg { transform: rotate(-90deg); }
-.dropdown-menu.open {}
