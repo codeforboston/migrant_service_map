@@ -56,7 +56,10 @@ export default class ProviderTypeDropdown extends React.Component {
     return (
       <CheckBoxDropdown
         className={className}
-        options={providerTypes.allIds.map(id => ({
+        // options={providerTypes.allIds.map
+        options={providerTypes.allIds.sort((a,b) => {
+  return providerTypes.byId[a].name <= providerTypes.byId[b].name}).map
+        (id => ({
           id,
           display:
             <span>
@@ -66,10 +69,11 @@ export default class ProviderTypeDropdown extends React.Component {
               />
              {' '}
               {providerTypes.byId[id].name}
-              
+          
            </span>
 
         }))}
+        
         expanded={expanded}
         setExpanded={this.setExpanded}
         onChange={this.onCheckboxChanged}
