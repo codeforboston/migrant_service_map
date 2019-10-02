@@ -4,6 +4,7 @@ import { Row, Column } from "simple-flexbox";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { cardIconMappings } from "../../components/MenuDropdownItem/menu-dropdown-item.js";
 import providerTypeToColor from "provider-type-to-color.json";
+import { keyImages } from "../../assets/images.js";
 
 const defaultSubheaderText = "Not Selected";
 export default class ProviderTypeDropdown extends React.Component {
@@ -59,6 +60,7 @@ export default class ProviderTypeDropdown extends React.Component {
         // options={providerTypes.allIds.map
         options={providerTypes.allIds.sort((a,b) => {
   return providerTypes.byId[a].name <= providerTypes.byId[b].name}).map
+
         (id => ({
           id,
           display:
