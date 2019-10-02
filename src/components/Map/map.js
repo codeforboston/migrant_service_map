@@ -198,26 +198,15 @@ class Map extends Component {
           "icon-opacity": ["get", ["feature-state", "myOpacity"]]
         }
       });
-      this.addClickHandlerToMapIdLayer(typeId);
-      this.addHoverHandlerToMapIdLayer(typeId);
-    }
-  };
+      this.map.on("click", typeId, e => this.idLayerClickHandler(e));
 
-  setSpecialLayerInMap = (property, layerName) => {
-    if (!this.map.getLayer(layerName)) {
-      this.map.addLayer({
-        id: layerName,
-        source: "displayData",
-        type: "symbol",
-        filter: ["==", property, layerName],
-        layout: {
-          "icon-image": layerName + "icon",
-          "icon-size": 0.4,
-          "icon-allow-overlap": true,
-          "icon-ignore-placement": true,
-          "icon-padding": 10,
-          visibility: "visible"
-        }
+      let popup = this.createPopup();
+
+      this.map.on("mouseover", typeId, e => {
+        this.addPopup(popup, e);
+      });
+      this.map.on("mouseleave", typeId, () => {
+        popup.remove();
       });
     }
   };
@@ -286,8 +275,7 @@ class Map extends Component {
     );
   };
 
-
-  clusterClickHandler = (event) => {
+  clusterClickHandler = event => {
     let features = this.map.queryRenderedFeatures(event.point, {
       layers: [event.features[0].layer.id]
     });
@@ -301,53 +289,50 @@ class Map extends Component {
             zoom: mapZoom >= zoom ? mapZoom + 1 : zoom 
           });
         });
-  }
+  };
 
-  addClickHandlerToMapIdLayer = typeId => {
+  idLayerClickHandler = e => {
     let { displayProviderInformation, highlightedProviders } = this.props;
-    this.map.on("click", typeId, e => {
-      const providerElement = document.getElementById(
-        `provider-${e.features[0].properties.id}`
-      );
-      if (typeId !== "highlightedProviders" && providerElement) {
-        displayProviderInformation(e.features[0].properties.id);
-      } else if (!highlightedProviders.includes(e.features[0].properties.id)) {
-        displayProviderInformation(e.features[0].properties.id);
-      }
-    });
+    const providerElement = document.getElementById(
+      `provider-${e.features[0].properties.id}`
+    );
+    const typeId = e.features[0].layer.id;
+    if (typeId !== "highlightedProviders" && providerElement) {
+      displayProviderInformation(e.features[0].properties.id);
+    } else if (!highlightedProviders.includes(e.features[0].properties.id)) {
+      displayProviderInformation(e.features[0].properties.id);
+    }
   };
 
   addAnimatedMarker(coordinates, providerId, typeId) {
     const providerMarker = this.selectionMarkers.filter(
       item => item.id === providerId
     );
-    if (providerMarker.length > 0) {
-      return;
+    if (!providerMarker.length > 0) {
+      const ANM = AnimatedMarker(providerId, typeId);
+      ANM.addEventListener("click", e => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.props.displayProviderInformation(providerId);
+        this.removeAnimatedMarkers();
+      });
+
+      const selectedMarker = new mapboxgl.Marker({
+        element: ANM
+      })
+        .setLngLat(coordinates)
+        .addTo(this.map);
+
+      this.selectionMarkers.push({ id: providerId, marker: selectedMarker });
     }
-
-    const ANM = AnimatedMarker(providerId, typeId);
-
-    ANM.addEventListener("click", e => {
-      e.preventDefault();
-      e.stopPropagation();
-      this.props.displayProviderInformation(providerId);
-      this.removeAnimatedMarkers();
-    });
-
-    const selectedMarker = new mapboxgl.Marker({
-      element: ANM
-    })
-      .setLngLat(coordinates)
-      .addTo(this.map);
-
-    this.selectionMarkers.push({ id: providerId, marker: selectedMarker });
   }
 
   removeAnimatedMarkers = () => {
     if (this.selectionMarkers.length > 0) {
       for (let item of this.selectionMarkers) {
         if (!this.props.highlightedProviders.includes(item.id)) {
-          item.marker.remove();
+          const markerEl = item.marker.getElement();
+          markerEl.remove();
           this.selectionMarkers = this.selectionMarkers.filter(
             mapItem => mapItem.id !== item.id
           );
@@ -356,27 +341,22 @@ class Map extends Component {
     }
   };
 
-  addHoverHandlerToMapIdLayer = typeId => {
-    let popup = new mapboxgl.Popup({
+  createPopup = () => {
+    return new mapboxgl.Popup({
       closeButton: false,
       closeOnClick: false,
       className: "name-popup",
       offset: 20
     });
+  };
 
-    this.map.on("mouseenter", typeId, e => {
-      let popupCoordinates = e.features[0].geometry.coordinates.slice();
-      let name = e.features[0].properties.name;
-
-      popup
-        .setLngLat(popupCoordinates)
-        .setHTML(name)
-        .addTo(this.map);
-    });
-
-    this.map.on("mouseleave", typeId, () => {
-      popup.remove();
-    });
+  addPopup = (popup, e) => {
+    let popupCoordinates = e.features[0].geometry.coordinates.slice();
+    let name = e.features[0].properties.name;
+    popup
+      .setLngLat(popupCoordinates)
+      .setHTML(name)
+      .addTo(this.map);
   };
 
   geoJSONFeatures = () => {
@@ -570,7 +550,7 @@ class Map extends Component {
     }
   };
 
-  identifyNewSelection = function(prevProps) {
+  identifyNewSelection = prevProps => {
     const prevHP = prevProps.highlightedProviders;
     const newHP = this.props.highlightedProviders;
     const newSelection = newHP.filter(id => !prevHP.includes(id));
@@ -594,32 +574,13 @@ class Map extends Component {
     }
   };
 
-  // identifyExitingSelection = function(prevProps){
-  //   const prevHP = prevProps.highlightedProviders;
-  //   const newHP = this.props.highlightedProviders;
-  //   const removedSelection = prevHP.filter(id => !newHP.includes(id));
-  //   console.log("removedSelection " + removedSelection)
-  // if (removedSelection.length > 0) {
-  //   const selectedProvider = this.props.providers.byId[removedSelection[0]];
-  //   console.log(selectedProvider.coordinates, selectedProvider.typeId);
-  //   const markerEl = document.getElementById(`marker-${selectedProvider.id}`);
-  //   markerEl.classList.add("bounceOff");
-  //   this.map.once("animationend", markerEl.remove());
-  //   console.log(document.getElementsByClassName("mapboxgl-marker"));
-  // } else {
-  //   console.log("no selection change");
-  // }
-  // }
-
   componentDidUpdate(prevProps) {
-    this.map.once("moveend", this.identifyNewSelection(prevProps));
     if (this.state.loaded) {
       const features = this.geoJSONFeatures();
       this.setSourceFeatures(features);
       this.props.loadedProviderTypeIds.map(typeId =>
         this.findLayerInMap(typeId)
       );
-      // this.setSpecialLayerInMap("highlighted", "highlighted");
       this.updatePinAndDistanceIndicator(prevProps);
       this.zoomToShowNewProviders(prevProps);
       if (
@@ -647,6 +608,7 @@ class Map extends Component {
         this.zoomToFit();
       }
       this.removeAnimatedMarkers();
+      this.identifyNewSelection(prevProps);
     }
   }
 
