@@ -86,6 +86,9 @@ class Map extends Component {
     document.getElementById("nav-search").appendChild(searchBox);
 
     geocoder.on("result", ev => {
+      // display service providers results tab
+      const { selectTab } = this.props;
+      selectTab(0)
       // ev.result contains id, place_name, text
       let { geometry, id, text } = ev.result;
       let zoom;
