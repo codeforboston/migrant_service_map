@@ -26,11 +26,8 @@ const AnimatedMarker = (providerId, typeId) => {
 
 
 const getPin = (typeId) => {
-    for (let i = 0; i < typeImages.length; i++){
-        if ( typeImages[i].type == typeId ) {
-            return typeImages[i].image;
-        }
-    }
+    const pinImage = typeImages.filter(item => item.type === typeId)
+    return (pinImage[0].image);
 }
 
 

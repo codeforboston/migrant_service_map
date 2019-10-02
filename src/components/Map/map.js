@@ -16,9 +16,7 @@ import {
   providersById
 } from "./utilities.js";
 const SPECIAL_NO_RESULTS_ID = 'notfound.0';
-import { AnimatedMarker } from "components/AnimatedMarker/animated-marker.js";
-
-
+import { AnimatedMarker } from "../AnimatedMarker/animated-marker.js";
 mapboxgl.accessToken =
   "pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw";
 
@@ -182,19 +180,23 @@ class Map extends Component {
         id: typeId,
         source: "displayData",
         type: "symbol",
-        filter: ["all", ["!=", "has", "point_count"], ["==", "typeId", typeId], ["!=", "highlighted", "highlighted"]],
+        filter: [
+          "all",
+          ["!=", "has", "point_count"],
+          ["==", "typeId", typeId],
+          ["!=", "highlighted", "highlighted"]
+        ],
         layout: {
           "icon-image": typeId + "icon",
           "icon-size": 0.4,
           "icon-allow-overlap": true,
           "icon-ignore-placement": true,
           "icon-padding": 10,
-          visibility: "visible",
+          visibility: "visible"
         },
         paint: {
-          "icon-opacity": ["get" , ["feature-state", "myOpacity"]],
+          "icon-opacity": ["get", ["feature-state", "myOpacity"]]
         }
-
       });
       this.addClickHandlerToMapIdLayer(typeId);
       this.addHoverHandlerToMapIdLayer(typeId);
@@ -257,7 +259,7 @@ class Map extends Component {
       }
     });
 
-    this.addClusterClickHandlerToMapLayer(clusterName);
+    this.map.on("click", clusterName, e => this.clusterClickHandler(e));
   };
 
   setSingleSourceInMap = () => {
@@ -284,26 +286,22 @@ class Map extends Component {
     );
   };
 
-  addClusterClickHandlerToMapLayer = clusterName => {
-    this.map.on("click", clusterName, e => {
-      let features = this.map.queryRenderedFeatures(e.point, {
-        layers: [clusterName]
-      });
 
-      let clusterId = features[0].properties.cluster_id;
-      this.map
+  clusterClickHandler = (event) => {
+    let features = this.map.queryRenderedFeatures(event.point, {
+      layers: [event.features[0].layer.id]
+    });
+    let clusterId = features[0].properties.cluster_id;
+    this.map
         .getSource("displayData")
         .getClusterExpansionZoom(clusterId, (err, zoom) => {
           if (err) return;
-
-          const mapZoom = this.map.getZoom();
           this.map.easeTo({
             center: features[0].geometry.coordinates,
             zoom: mapZoom >= zoom ? mapZoom + 1 : zoom 
           });
         });
-    });
-  };
+  }
 
   addClickHandlerToMapIdLayer = typeId => {
     let { displayProviderInformation, highlightedProviders } = this.props;
@@ -319,23 +317,44 @@ class Map extends Component {
     });
   };
 
+  addAnimatedMarker(coordinates, providerId, typeId) {
+    const providerMarker = this.selectionMarkers.filter(
+      item => item.id === providerId
+    );
+    if (providerMarker.length > 0) {
+      return;
+    }
 
-  addAnimatedMarker(coordinates, providerId, typeId){
+    const ANM = AnimatedMarker(providerId, typeId);
 
-      const ANM = AnimatedMarker(providerId, typeId);
+    ANM.addEventListener("click", e => {
+      e.preventDefault();
+      e.stopPropagation();
+      this.props.displayProviderInformation(providerId);
+      this.removeAnimatedMarkers();
+    });
 
-       ANM.addEventListener("click", () => {
-         console.log(providerId);
-         this.props.displayProviderInformation(providerId)
-         selectedMarker.remove();
-       })
+    const selectedMarker = new mapboxgl.Marker({
+      element: ANM
+    })
+      .setLngLat(coordinates)
+      .addTo(this.map);
 
-      const selectedMarker = new mapboxgl.Marker({
-        element: ANM
-      }).setLngLat(coordinates).addTo(this.map);
-
-       return selectedMarker
+    this.selectionMarkers.push({ id: providerId, marker: selectedMarker });
   }
+
+  removeAnimatedMarkers = () => {
+    if (this.selectionMarkers.length > 0) {
+      for (let item of this.selectionMarkers) {
+        if (!this.props.highlightedProviders.includes(item.id)) {
+          item.marker.remove();
+          this.selectionMarkers = this.selectionMarkers.filter(
+            mapItem => mapItem.id !== item.id
+          );
+        }
+      }
+    }
+  };
 
   addHoverHandlerToMapIdLayer = typeId => {
     let popup = new mapboxgl.Popup({
@@ -551,22 +570,22 @@ class Map extends Component {
     }
   };
 
-  identifyNewSelection = function (prevProps) {
+  identifyNewSelection = function(prevProps) {
     const prevHP = prevProps.highlightedProviders;
     const newHP = this.props.highlightedProviders;
     const newSelection = newHP.filter(id => !prevHP.includes(id));
-    console.log("newSelection " + newSelection);
     if (newSelection.length > 0) {
       const selectedProvider = this.props.providers.byId[newSelection[0]];
-      const selectedId = selectedProvider.id;
 
-      const selFeat = {
-        id: selectedId,
-        source: "displayData"
-      }
+      this.addAnimatedMarker(
+        selectedProvider.coordinates,
+        selectedProvider.id,
+        selectedProvider.typeId
+      );
 
-      const markerEl = this.addAnimatedMarker(selectedProvider.coordinates, selectedProvider.id, selectedProvider.typeId);
-      const markerIcon = document.getElementById(`marker-icon-${selectedProvider.id}`);
+      const markerIcon = document.getElementById(
+        `marker-icon-${selectedProvider.id}`
+      );
 
       markerIcon.classList.add("bounceOn");
       const markerIconHighlight = markerIcon.nextSibling.firstChild;
@@ -575,22 +594,21 @@ class Map extends Component {
     }
   };
 
-
   // identifyExitingSelection = function(prevProps){
   //   const prevHP = prevProps.highlightedProviders;
   //   const newHP = this.props.highlightedProviders;
   //   const removedSelection = prevHP.filter(id => !newHP.includes(id));
   //   console.log("removedSelection " + removedSelection)
-    // if (removedSelection.length > 0) {
-    //   const selectedProvider = this.props.providers.byId[removedSelection[0]];
-    //   console.log(selectedProvider.coordinates, selectedProvider.typeId);
-    //   const markerEl = document.getElementById(`marker-${selectedProvider.id}`);
-    //   markerEl.classList.add("bounceOff");
-    //   this.map.once("animationend", markerEl.remove());
-    //   console.log(document.getElementsByClassName("mapboxgl-marker"));
-    // } else {
-    //   console.log("no selection change");
-    // }
+  // if (removedSelection.length > 0) {
+  //   const selectedProvider = this.props.providers.byId[removedSelection[0]];
+  //   console.log(selectedProvider.coordinates, selectedProvider.typeId);
+  //   const markerEl = document.getElementById(`marker-${selectedProvider.id}`);
+  //   markerEl.classList.add("bounceOff");
+  //   this.map.once("animationend", markerEl.remove());
+  //   console.log(document.getElementsByClassName("mapboxgl-marker"));
+  // } else {
+  //   console.log("no selection change");
+  // }
   // }
 
   componentDidUpdate(prevProps) {
@@ -611,7 +629,7 @@ class Map extends Component {
         this.map.flyTo({
           center: this.props.search.coordinates,
           zoom: this.zoomToDistance(this.props.filters.distance)
-        })
+        });
       }
       if (
         this.props.search.flyToProviderKey !== prevProps.search.flyToProviderKey
@@ -628,8 +646,8 @@ class Map extends Component {
       if (this.props.search.zoomToFitKey !== prevProps.search.zoomToFitKey) {
         this.zoomToFit();
       }
+      this.removeAnimatedMarkers();
     }
-    // this.identifyExitingSelection(prevProps);
   }
 
   componentWillUnmount() {
