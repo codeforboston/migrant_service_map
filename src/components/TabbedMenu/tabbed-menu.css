@@ -44,3 +44,8 @@
   min-height: 0;
   box-shadow: 0 0 6px grey;
 }
+
+.selected-tab-panel {
+  display: flex;
+  flex-direction: column;
+}
