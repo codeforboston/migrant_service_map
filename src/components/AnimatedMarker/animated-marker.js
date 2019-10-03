@@ -1,10 +1,9 @@
-import React, { Component } from "react";
 import typeImages from "assets/images";
-import react_dom from "react-dom";
 
 const AnimatedMarker = (providerId, typeId) => {
   const marker = document.createElement("div");
   marker.id = `marker-${providerId}`;
+  marker.className = "marker";
   const icon = document.createElement("img");
   icon.id = `marker-icon-${providerId}`;
   icon.src = getPin(typeId);

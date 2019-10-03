@@ -304,41 +304,64 @@ class Map extends Component {
     }
   };
 
-  addAnimatedMarker(coordinates, providerId, typeId) {
-    const providerMarker = this.selectionMarkers.filter(
-      item => item.id === providerId
+  markRecentSelection() {
+    let { providers, highlightedProviders } = this.props;
+
+    const newSelections = highlightedProviders.filter(
+      providerId => this.selectionMarkers.map(item => item.providerId).includes(providerId) === false
     );
-    if (!providerMarker.length > 0) {
-      const ANM = AnimatedMarker(providerId, typeId);
+
+    for (const providerId of newSelections) {
+      const provider = providers.byId[providerId];
+      const ANM = AnimatedMarker(providerId, provider.typeId);
+      const popup = this.createPopup();
+      popup.setText(provider.name);
+
+      const marker = new mapboxgl.Marker({
+        element: ANM
+      })
+        .setLngLat(provider.coordinates)
+        .setPopup(popup)
+        .addTo(this.map);
+
+      const popupHandle = marker.getPopup();
+
+      ANM.addEventListener("mouseover", e => {
+        marker.togglePopup();
+      });
+
+      ANM.addEventListener("mouseout", e => {
+        marker.togglePopup();
+      });
+
       ANM.addEventListener("click", e => {
         e.preventDefault();
         e.stopPropagation();
         this.props.displayProviderInformation(providerId);
-        this.removeAnimatedMarkers();
+        popupHandle.remove();
       });
 
-      const selectedMarker = new mapboxgl.Marker({
-        element: ANM
-      })
-        .setLngLat(coordinates)
-        .addTo(this.map);
+      const markerIcon = marker.getElement().firstChild;
+      markerIcon.classList.add("bounceOn");
+      const markerIconHighlight = markerIcon.nextSibling.firstChild;
+      markerIconHighlight.classList.add("bounceOn");
+      markerIconHighlight.classList.add("highlightOn");
 
-      this.selectionMarkers.push({ id: providerId, marker: selectedMarker });
+      this.selectionMarkers.push({providerId: providerId, marker: marker});
     }
   }
 
-  removeAnimatedMarkers = () => {
-    if (this.selectionMarkers.length > 0) {
-      for (let item of this.selectionMarkers) {
-        if (!this.props.highlightedProviders.includes(item.id)) {
-          const markerEl = item.marker.getElement();
-          markerEl.remove();
-          this.selectionMarkers = this.selectionMarkers.filter(
-            mapItem => mapItem.id !== item.id
-          );
-        }
-      }
-    }
+  removeSelectionMarkers = () => {
+    let { highlightedProviders } = this.props;
+    const deselectedProviders = this.selectionMarkers.filter(
+      provider => highlightedProviders.includes(provider.providerId) === false
+    );
+    deselectedProviders.forEach(provider => {
+      provider.marker.remove();
+    });
+    this.selectionMarkers = this.selectionMarkers.filter(
+      provider => deselectedProviders.includes(provider.providerId) === false
+    );
   };
 
   createPopup = () => {
@@ -550,14 +573,14 @@ class Map extends Component {
     }
   };
 
-  identifyNewSelection = prevProps => {
+  /* identifyNewSelection = prevProps => {
     const prevHP = prevProps.highlightedProviders;
     const newHP = this.props.highlightedProviders;
     const newSelection = newHP.filter(id => !prevHP.includes(id));
     if (newSelection.length > 0) {
       const selectedProvider = this.props.providers.byId[newSelection[0]];
 
-      this.addAnimatedMarker(
+      this.markRecentSelection(
         selectedProvider.coordinates,
         selectedProvider.id,
         selectedProvider.typeId
@@ -572,7 +595,7 @@ class Map extends Component {
       markerIconHighlight.classList.add("bounceOn");
       markerIconHighlight.classList.add("highlightOn");
     }
-  };
+  };*/
 
   componentDidUpdate(prevProps) {
     if (this.state.loaded) {
@@ -607,8 +630,8 @@ class Map extends Component {
       if (this.props.search.zoomToFitKey !== prevProps.search.zoomToFitKey) {
         this.zoomToFit();
       }
-      this.removeAnimatedMarkers();
-      this.identifyNewSelection(prevProps);
+      this.markRecentSelection();
+      this.removeSelectionMarkers();
     }
   }
 

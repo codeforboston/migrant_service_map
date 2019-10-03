@@ -33,7 +33,7 @@
 }
 
 .marker {
-  position: relative;
+  cursor: pointer;
 }
 
 .baseState {
@@ -42,6 +42,7 @@
   height: 40%;
   transform-origin: bottom;
   margin: auto;
+  cursor: pointer;
 }
 
 .marker-highlight-container {
@@ -71,7 +72,7 @@
 }
 
 .bounceOn {
-  animation: changeheight ease 1s 3 both;
+  animation: changeheight ease 1s /*3*/ both;
 }
 
 .bounceOff {
