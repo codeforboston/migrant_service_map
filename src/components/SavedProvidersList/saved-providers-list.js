@@ -140,7 +140,9 @@ const SavedProvidersList = ({
                   key={provider.id}
                   index={index}
                 >
-                  {provided => (
+                  {(provided, snapshot) => {
+                    const {isDragging} = snapshot
+                    return (
                     <div
                       ref={provided.innerRef}
                       {...provided.draggableProps}
@@ -159,9 +161,10 @@ const SavedProvidersList = ({
                           provider.id
                         )}
                         inSavedMenu={true}
+                        isDragging={isDragging}
                       />
                     </div>
-                  )}
+                  )}}
                 </Draggable>
               ))}
               {provided.placeholder}
