@@ -7,8 +7,7 @@ import {
   changeDistanceFilter,
   changeVisaFilter,
   clearVisaFilter,
-  displayProviderInformation,
-  selectTab
+  displayProviderInformation
 } from "redux/actions";
 import { getProvidersSorted } from "redux/selectors";
 import TopBar from "./top-bar";
@@ -52,9 +51,6 @@ const mapDispatchToProps = dispatch => {
     },
     displayProviderInformation: id => {
       dispatch(displayProviderInformation(id));
-    },
-    selectTab: index => {
-      dispatch(selectTab(index));
     }
   };
 };

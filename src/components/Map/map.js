@@ -11,7 +11,9 @@ import {
   createDistanceMarker,
   normalizeProviders,
   removeDistanceMarkers,
-  getBoundingBox
+  getBoundingBox,
+  filterProviderIds,
+  providersById
 } from "./utilities.js";
 
 mapboxgl.accessToken =
@@ -95,6 +97,9 @@ class Map extends Component {
     document.getElementById("nav-search").appendChild(searchBox);
 
     geocoder.on("result", ev => {
+      // display service providers results tab
+      const { selectTab } = this.props;
+      selectTab(0)
       // ev.result contains id, place_name, text
       let { geometry, id, text } = ev.result;
       let zoom;
@@ -300,24 +305,14 @@ class Map extends Component {
   };
 
   geoJSONFeatures = () => {
-    let { providersList, highlightedProviders, search, providers } = this.props;
-    const showSavedProviders = search.selectedTabIndex === 1;
-    const savedProviderIds = providers.savedProviders;
-
-    let forGeoConvert = [];
-    providersList.forEach(typeId => {
-      typeId.providers.forEach(provider => {
-        provider.highlighted = highlightedProviders.includes(provider.id)
-          ? "highlighted"
-          : "not-highlighted";
-
-        if (!showSavedProviders || savedProviderIds.includes(provider.id)) {
-          // Show only saved providers if the saved provider tab is selected, otherwise show everything.
-          forGeoConvert.push(provider);
-        }
-      });
-    });
-    return convertProvidersToGeoJSON(forGeoConvert);
+    let { highlightedProviders, visibleProviders = [] } = this.props;
+    let provider;
+    for (provider of visibleProviders) {
+      provider.highlighted = highlightedProviders.includes(provider.id)
+        ? "highlighted"
+        : "not-highlighted";
+    }
+    return convertProvidersToGeoJSON(visibleProviders);
   };
 
   updatePinAndDistanceIndicator = prevProps => {
@@ -440,30 +435,24 @@ class Map extends Component {
     }
   };
 
-  getEnabledHighlightedProviders = (providersList, highlightedProviders) => {
-    const enabledProviderIds = new Set(
-      providersList.flatMap(listByType =>
-        listByType.providers.map(provider => provider.id)
-      )
-    );
-    return highlightedProviders.filter(id => enabledProviderIds.has(id));
-  };
-
   zoomToFit = providerIds => {
     providerIds =
       providerIds ||
-      this.getEnabledHighlightedProviders(
-        this.props.providersList,
+      filterProviderIds(
+        providersById(this.props.visibleProviders),
         this.props.highlightedProviders
       );
     if (providerIds.length > 0) {
-      this.map.fitBounds(getBoundingBox(this.props.providers, providerIds), {
-        // Left padding accounts for provider list UI.
-        padding: { top: 100, bottom: 100, left: 450, right: 100 },
-        duration: 2000,
-        maxZoom: MIN_UNCLUSTERED_ZOOM,
-        linear: false
-      });
+      this.map.fitBounds(
+        getBoundingBox(providersById(this.props.visibleProviders), providerIds),
+        {
+          // Left padding accounts for provider list UI.
+          padding: { top: 100, bottom: 100, left: 450, right: 100 },
+          duration: 2000,
+          maxZoom: MIN_UNCLUSTERED_ZOOM,
+          linear: false
+        }
+      );
     }
   };
 
@@ -478,12 +467,12 @@ class Map extends Component {
    * track changes to highlighted props.
    */
   zoomToShowNewProviders = prevProps => {
-    const prevIds = this.getEnabledHighlightedProviders(
-        prevProps.providersList,
+    const prevIds = filterProviderIds(
+        providersById(prevProps.visibleProviders),
         prevProps.highlightedProviders
       ),
-      currIds = this.getEnabledHighlightedProviders(
-        this.props.providersList,
+      currIds = filterProviderIds(
+        providersById(this.props.visibleProviders),
         this.props.highlightedProviders
       ),
       newIds = currIds.filter(id => !prevIds.includes(id));
@@ -491,7 +480,10 @@ class Map extends Component {
       // The set of selected providers stayed the same or got smaller, no need to zoom.
       return;
     }
-    const newFeatureBounds = getBoundingBox(this.props.providers, newIds),
+    const newFeatureBounds = getBoundingBox(
+        providersById(this.props.visibleProviders),
+        newIds
+      ),
       mapBounds = this.map.getBounds();
     if (
       newFeatureBounds.getNorth() > mapBounds.getNorth() ||
@@ -507,7 +499,7 @@ class Map extends Component {
     if (this.state.loaded) {
       const features = this.geoJSONFeatures();
       this.setSourceFeatures(features);
-      this.props.providerTypes.allIds.map(typeId =>
+      this.props.loadedProviderTypeIds.map(typeId =>
         this.findLayerInMap(typeId)
       );
       this.setSpecialLayerInMap("highlighted", "highlighted");
@@ -526,7 +518,9 @@ class Map extends Component {
         this.props.search.flyToProviderKey !== prevProps.search.flyToProviderKey
       ) {
         const { flyToProviderId } = this.props.search;
-        const { coordinates } = this.props.providers.byId[flyToProviderId];
+        const { coordinates } = providersById(this.props.visibleProviders)[
+          flyToProviderId
+        ];
         this.map.flyTo({
           center: coordinates,
           zoom: MIN_UNCLUSTERED_ZOOM
