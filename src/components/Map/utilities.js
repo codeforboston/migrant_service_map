@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMapMarkerAlt, faMapMarker } from "@fortawesome/free-solid-svg-icons";
 import ReactDOM from "react-dom";
 import React from "react";
+import _ from "lodash";
 
 const convertProvidersToGeoJSON = providers => {
   return providers.map(provider => ({
@@ -47,10 +48,26 @@ const removeDistanceMarkers = markerArray => {
   return markerArray.map(marker => marker.remove());
 };
 
+const cleanFeatures = providerFeatures => {
+  // The dataset contains some duplicate providers.
+  // Deduplicate by comparing coordinates and name, to allow for multiple providers at the
+  // same location. In that case, mapbox will render one icon over the other.
+  return _.uniqWith(
+    providerFeatures,
+    (f1, f2) =>
+      _.isEqual(f1.geometry.coordinates, f2.geometry.coordinates) &&
+      _.isEqual(
+        f1.properties["Organization Name"],
+        f2.properties["Organization Name"]
+      )
+  );
+};
+
 const normalizeProviders = providerFeatures => {
   const providerTypes = { byId: {}, allIds: [] };
-  const providers = { byId: {}, allIds: [] };
-  Array.from(providerFeatures).map(
+  const providers = { byId: {} };
+  providerFeatures = cleanFeatures(providerFeatures);
+  providerFeatures.forEach(
     ({ id, geometry: { coordinates }, properties }, index) => {
       let formattedTypeId = properties["Type of Service"]
         .toLowerCase()
@@ -80,7 +97,7 @@ const normalizeProviders = providerFeatures => {
         };
       }
 
-      return (providers.byId[id] = {
+      providers.byId[id] = {
         id,
         coordinates,
         address:
@@ -99,7 +116,7 @@ const normalizeProviders = providerFeatures => {
         // Validated By
         website: properties.Website,
         color: iconColors.formattedTypeId
-      });
+      };
     }
   );
   // sorted by name
