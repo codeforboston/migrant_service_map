@@ -1,9 +1,11 @@
 import iconColors from "../../assets/icon-colors";
 import mapboxgl from "mapbox-gl";
+import memoizeOne from "memoize-one";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMapMarkerAlt, faMapMarker } from "@fortawesome/free-solid-svg-icons";
 import ReactDOM from "react-dom";
 import React from "react";
+import _ from "lodash";
 
 const convertProvidersToGeoJSON = providers => {
   return providers.map(provider => ({
@@ -46,10 +48,26 @@ const removeDistanceMarkers = markerArray => {
   return markerArray.map(marker => marker.remove());
 };
 
+const cleanFeatures = providerFeatures => {
+  // The dataset contains some duplicate providers.
+  // Deduplicate by comparing coordinates and name, to allow for multiple providers at the
+  // same location. In that case, mapbox will render one icon over the other.
+  return _.uniqWith(
+    providerFeatures,
+    (f1, f2) =>
+      _.isEqual(f1.geometry.coordinates, f2.geometry.coordinates) &&
+      _.isEqual(
+        f1.properties["Organization Name"],
+        f2.properties["Organization Name"]
+      )
+  );
+};
+
 const normalizeProviders = providerFeatures => {
   const providerTypes = { byId: {}, allIds: [] };
-  const providers = { byId: {}, allIds: [] };
-  Array.from(providerFeatures).map(
+  const providers = { byId: {} };
+  providerFeatures = cleanFeatures(providerFeatures);
+  providerFeatures.forEach(
     ({ id, geometry: { coordinates }, properties }, index) => {
       let formattedTypeId = properties["Type of Service"]
         .toLowerCase()
@@ -79,7 +97,7 @@ const normalizeProviders = providerFeatures => {
         };
       }
 
-      return (providers.byId[id] = {
+      providers.byId[id] = {
         id,
         coordinates,
         address:
@@ -98,7 +116,7 @@ const normalizeProviders = providerFeatures => {
         // Validated By
         website: properties.Website,
         color: iconColors.formattedTypeId
-      });
+      };
     }
   );
   // sorted by name
@@ -112,14 +130,10 @@ const normalizeProviders = providerFeatures => {
   return { providerTypes, providers };
 };
 
-const getBoundingBox = (providers, providerIds) => {
-  let lngs = [],
-    lats = [],
-    id;
-  for (id in providerIds) {
-    lngs.push(providers.byId[providerIds[id]].coordinates[0]);
-    lats.push(providers.byId[providerIds[id]].coordinates[1]);
-  }
+const getBoundingBox = (providersById, providerIds) => {
+  const providers = lookupProviders(providersById, providerIds),
+    lngs = providers.map(provider => provider.coordinates[0]),
+    lats = providers.map(provider => provider.coordinates[1]);
 
   const maxLngs = lngs.reduce((a, b) => Math.max(a, b));
   const minLngs = lngs.reduce((a, b) => Math.min(a, b));
@@ -132,11 +146,29 @@ const getBoundingBox = (providers, providerIds) => {
   ]);
 };
 
+/** Looks up all providers in the given map with an id in the given array. */
+const lookupProviders = (providersById, ids) =>
+  filterProviderIds(providersById, ids).map(id => providersById[id]);
+
+/** Filters the given ids down to just those that appear in the map from id's to providers. */
+const filterProviderIds = (providersById, ids) =>
+  ids.filter(id => providersById.hasOwnProperty(id));
+
+/** Converts an array of providers to a map from id to provider */
+const providersById = memoizeOne(providers => {
+  const byId = {};
+  providers.map(provider => (byId[provider.id] = provider));
+  return byId;
+});
+
 export {
   convertProvidersToGeoJSON,
   createCenterMarker,
   createDistanceMarker,
   normalizeProviders,
   removeDistanceMarkers,
-  getBoundingBox
+  getBoundingBox,
+  lookupProviders,
+  filterProviderIds,
+  providersById
 };
