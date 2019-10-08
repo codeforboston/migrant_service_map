@@ -296,35 +296,33 @@ class Map extends Component {
     const providerElement = document.getElementById(
       `provider-${e.features[0].properties.id}`
     );
-    const typeId = e.features[0].layer.id;
-    if (typeId !== "highlightedProviders" && providerElement) {
-      displayProviderInformation(e.features[0].properties.id);
-    } else if (!highlightedProviders.includes(e.features[0].properties.id)) {
-      displayProviderInformation(e.features[0].properties.id);
-    }
+    displayProviderInformation(e.features[0].properties.id);
+
+    // const typeId = e.features[0].layer.id;
+    // if (typeId !== "highlightedProviders" && providerElement) {
+    //   displayProviderInformation(e.features[0].properties.id);
+    // } else if (!highlightedProviders.includes(e.features[0].properties.id)) {
+    //   displayProviderInformation(e.features[0].properties.id);
+    // }
   };
 
-  markRecentSelection() {
-    let { providers, highlightedProviders } = this.props;
-
-    const newSelections = highlightedProviders.filter(
-      providerId => this.selectionMarkers.map(item => item.providerId).includes(providerId) === false
-    );
-
-    for (const providerId of newSelections) {
-      const provider = providers.byId[providerId];
-      const ANM = AnimatedMarker(providerId, provider.typeId);
+  markRecentSelection(prevProps) {
+    let { displayProviderInformation, providers } = this.props;
+    const newSelection = this.newSelection(prevProps);
+    if (newSelection.length === 0 ) {
+      return
+    }
+      const provider = providers.byId[newSelection[0]];
+      const ANM = AnimatedMarker(provider.id, provider.typeId);
       const popup = this.createPopup();
       popup.setText(provider.name);
 
       const marker = new mapboxgl.Marker({
         element: ANM
       })
-        .setLngLat(provider.coordinates)
-        .setPopup(popup)
-        .addTo(this.map);
-
-      const popupHandle = marker.getPopup();
+          .setLngLat(provider.coordinates)
+          .setPopup(popup)
+          .addTo(this.map);
 
       ANM.addEventListener("mouseover", e => {
         marker.togglePopup();
@@ -335,10 +333,10 @@ class Map extends Component {
       });
 
       ANM.addEventListener("click", e => {
-        e.preventDefault();
         e.stopPropagation();
-        this.props.displayProviderInformation(providerId);
-        popupHandle.remove();
+        displayProviderInformation(provider.id)
+        popup.remove();
+        marker.remove();
       });
 
       const markerIcon = marker.getElement().firstChild;
@@ -346,22 +344,23 @@ class Map extends Component {
       const markerIconHighlight = markerIcon.nextSibling.firstChild;
       markerIconHighlight.classList.add("bounceOn");
       markerIconHighlight.classList.add("highlightOn");
+      this.selectionMarkers.push({providerId: provider.id, marker: marker});
+   }
 
-      this.selectionMarkers.push({providerId: providerId, marker: marker});
-    }
-  }
-
-  removeSelectionMarkers = () => {
+  removeDeselectedMarkers = () => {
     let { highlightedProviders } = this.props;
+    //retrieve the saved marker objects, and remove any marker no longer in highlighted providers
     const deselectedProviders = this.selectionMarkers.filter(
       provider => highlightedProviders.includes(provider.providerId) === false
     );
-    deselectedProviders.forEach(provider => {
+    for (let provider of deselectedProviders) {
       provider.marker.remove();
-    });
+      provider.marker.getPopup().remove();
+      }
     this.selectionMarkers = this.selectionMarkers.filter(
       provider => deselectedProviders.includes(provider.providerId) === false
     );
+
   };
 
   createPopup = () => {
@@ -405,7 +404,7 @@ class Map extends Component {
       // the user starts interacting with the app.
       return;
     }
-    this.updateZoom(this.props.filters.distance);
+    this.updateZoom(searchCoordinates, distance);
     removeDistanceMarkers(this.markerList);
     this.addDistanceIndicatorLayer();
     // If no distance filter is set, display all distance indicators.
@@ -459,10 +458,33 @@ class Map extends Component {
       .setData({ type: "FeatureCollection", features: circles });
   };
 
-  updateZoom = distance => {
+  zoomToDistance = distance => {
+    let resolution = window.screen.height;
+    let latitude = this.props.search.coordinates[1];
+    let milesPerPixel = (distance * 8) / resolution;
+    return (
+        Math.log2(
+            (24901 * Math.cos((latitude * Math.PI) / 180)) / milesPerPixel
+        ) - 8
+    );
+  };
+
+  newSelection = (prevProps) => {
+    const prevIds = filterProviderIds(
+        providersById(prevProps.visibleProviders),
+        prevProps.highlightedProviders
+        ),
+        currIds = filterProviderIds(
+            providersById(this.props.visibleProviders),
+            this.props.highlightedProviders
+        );
+    return currIds.filter(id => !prevIds.includes(id));
+  };
+
+  updateZoom = (coordinates, distance) => {
     const zoom = distance ? distance : 1.5;
     this.map.easeTo({
-      center: this.props.search.coordinates,
+      center: coordinates,
       zoom: this.zoomToDistance(zoom)
     });
   };
@@ -545,15 +567,7 @@ class Map extends Component {
    * track changes to highlighted props.
    */
   zoomToShowNewProviders = prevProps => {
-    const prevIds = filterProviderIds(
-        providersById(prevProps.visibleProviders),
-        prevProps.highlightedProviders
-      ),
-      currIds = filterProviderIds(
-        providersById(this.props.visibleProviders),
-        this.props.highlightedProviders
-      ),
-      newIds = currIds.filter(id => !prevIds.includes(id));
+    const newIds = this.newSelection(prevProps);
     if (newIds.length === 0) {
       // The set of selected providers stayed the same or got smaller, no need to zoom.
       return;
@@ -568,72 +582,65 @@ class Map extends Component {
       newFeatureBounds.getEast() > mapBounds.getEast() ||
       newFeatureBounds.getSouth() < mapBounds.getSouth() ||
       newFeatureBounds.getWest() < mapBounds.getWest()
-    ) {
-      this.zoomToFit(currIds);
+    ){
+      const newBounds = new mapboxgl.LngLatBounds(
+          [newFeatureBounds.getEast(), newFeatureBounds.getNorth()],
+          [newFeatureBounds.getWest(), newFeatureBounds.getSouth()]
+      );
+      return {
+        center: newBounds.getCenter(),
+        zoom: this.map.getZoom()
+      }
     }
   };
 
-  /* identifyNewSelection = prevProps => {
-    const prevHP = prevProps.highlightedProviders;
-    const newHP = this.props.highlightedProviders;
-    const newSelection = newHP.filter(id => !prevHP.includes(id));
-    if (newSelection.length > 0) {
-      const selectedProvider = this.props.providers.byId[newSelection[0]];
-
-      this.markRecentSelection(
-        selectedProvider.coordinates,
-        selectedProvider.id,
-        selectedProvider.typeId
-      );
-
-      const markerIcon = document.getElementById(
-        `marker-icon-${selectedProvider.id}`
-      );
-
-      markerIcon.classList.add("bounceOn");
-      const markerIconHighlight = markerIcon.nextSibling.firstChild;
-      markerIconHighlight.classList.add("bounceOn");
-      markerIconHighlight.classList.add("highlightOn");
+  getProviderKeyMapPosition = (prevProps) =>{
+    if ( this.props.search.flyToProviderKey !== prevProps.search.flyToProviderKey) {
+      const { flyToProviderId } = this.props.search;
+      const { coordinates } = providersById(this.props.visibleProviders)[
+      flyToProviderId
+      ];
+      return {
+        center: coordinates,
+        zoom: 15
+      }
     }
-  };*/
+}
+
+  getDistanceFilterMapPosition = (prevProps) => {
+    if (
+        this.props.filters.distance &&
+        this.props.filters.distance !== prevProps.filters.distance
+    ) {
+      return {
+        center: this.props.search.coordinates,
+        zoom: this.zoomToDistance(this.props.filters.distance)
+      }
+    }
+  }
 
   componentDidUpdate(prevProps) {
+    console.time("updatetime");
+    this.removeDeselectedMarkers();
     if (this.state.loaded) {
       const features = this.geoJSONFeatures();
       this.setSourceFeatures(features);
       this.props.loadedProviderTypeIds.map(typeId =>
-        this.findLayerInMap(typeId)
+          this.findLayerInMap(typeId)
       );
       this.updatePinAndDistanceIndicator(prevProps);
-      this.zoomToShowNewProviders(prevProps);
-      if (
-        this.props.filters.distance &&
-        this.props.filters.distance !== prevProps.filters.distance
-      ) {
-        this.map.flyTo({
-          center: this.props.search.coordinates,
-          zoom: this.zoomToDistance(this.props.filters.distance)
-        });
-      }
-      if (
-        this.props.search.flyToProviderKey !== prevProps.search.flyToProviderKey
-      ) {
-        const { flyToProviderId } = this.props.search;
-        const { coordinates } = providersById(this.props.visibleProviders)[
-          flyToProviderId
-        ];
-        this.map.flyTo({
-          center: coordinates,
-          zoom: MIN_UNCLUSTERED_ZOOM
-        });
-      }
-      if (this.props.search.zoomToFitKey !== prevProps.search.zoomToFitKey) {
-        this.zoomToFit();
-      }
-      this.markRecentSelection();
-      this.removeSelectionMarkers();
+      const mapPosition = this.getProviderKeyMapPosition(prevProps) ||
+          this.getDistanceFilterMapPosition(prevProps) ||
+          this.zoomToShowNewProviders(prevProps) ||
+          {
+            center: this.map.getCenter(),
+            zoom: this.map.getZoom()
+          };
+      this.map.easeTo(mapPosition);
     }
-  }
+    this.markRecentSelection(prevProps);
+    console.timeEnd("updatetime")
+    }
 
   componentWillUnmount() {
     this.map.remove();

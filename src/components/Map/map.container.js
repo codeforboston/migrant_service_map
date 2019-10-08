@@ -6,7 +6,8 @@ import {
   setSearchCenterCoordinates,
   displayProviderInformation,
   setMapObject,
-  selectTab
+  selectTab,
+  zoomToFit
 } from "redux/actions";
 import { getMapProviders } from "redux/selectors";
 import Map from "./map";
@@ -45,6 +46,9 @@ const mapDispatchToProps = dispatch => {
     },
     selectTab: index => {
       dispatch(selectTab(index));
+    },
+    zoomToFit: () => {
+      dispatch(zoomToFit());
     }
   };
 };

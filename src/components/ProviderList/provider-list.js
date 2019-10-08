@@ -16,7 +16,7 @@ class ProviderList extends Component {
     // CSS 'scroll-behavior: smooth' animates the scroll when scrollTop is updated;
     // adding a delay avoids edge case of scroll-upward not taking 'open' height into account
     // first checking to make sure highlighted provider list is not empty
-    if (this.lastHighlightedRef.current === null) {
+    if (this.lastHighlightedRef.current !== null) {
       if (newhlp.length && newhlp[0] !== previousProps.highlightedProviders[0]) {
         setTimeout(() => (this.listElementRef.current.scrollTop = this.lastHighlightedRef.current.offsetTop), 60);
       }
@@ -77,9 +77,10 @@ class ProviderList extends Component {
                           <li
                             key={provider.id}
                             ref={
-                              provider.id === highlightedProviders[0]
-                                ? this.lastHighlightedRef
-                                : null
+                              this.lastHighlightedRef
+                              // provider.id === highlightedProviders[0]
+                              //   ? this.lastHighlightedRef
+                              //   : null
                             }
                             onClick={() =>
                               displayProviderInformation(provider.id)
