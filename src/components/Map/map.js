@@ -15,8 +15,10 @@ import {
   filterProviderIds,
   providersById
 } from "./utilities.js";
-const SPECIAL_NO_RESULTS_ID = 'notfound.0';
 import { AnimatedMarker } from "../AnimatedMarker/animated-marker.js";
+
+const SPECIAL_NO_RESULTS_ID = 'notfound.0';
+
 mapboxgl.accessToken =
   "pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw";
 
@@ -280,6 +282,7 @@ class Map extends Component {
       layers: [event.features[0].layer.id]
     });
     let clusterId = features[0].properties.cluster_id;
+    const mapZoom = this.map.getZoom();
     this.map
         .getSource("displayData")
         .getClusterExpansionZoom(clusterId, (err, zoom) => {
