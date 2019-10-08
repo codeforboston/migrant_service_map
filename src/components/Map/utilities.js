@@ -110,9 +110,8 @@ const normalizeProviders = providerFeatures => {
         telephone: properties["Telephone:"],
         timestamp: properties.Timestamp,
         // Type of Service
-        typeName: properties["Type of Service"], // synonym for next line
+        typeName: properties["Type of Service"],
         typeId: formattedTypeId,
-        "Type of Service": properties["Type of Service"], // as referenced in reducer helper function
         // Validated By
         website: properties.Website,
         color: iconColors.formattedTypeId

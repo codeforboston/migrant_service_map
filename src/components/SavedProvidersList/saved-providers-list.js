@@ -13,13 +13,13 @@ function toProviderDiv(provider) {
     mission,
     name,
     telephone,
-    "Type of Service": type,
+    typeName,
     website
   } = provider;
   return (
     <div className={"provider"} key={id}>
       <div className={"name"}>{name}</div>
-      <div className={"type"}>{type}</div>
+      <div className={"type"}>{typeName}</div>
       <div className={"details"}>
         <div className={"address"}>{address}</div>
         <div className={"email"}>{email}</div>
@@ -151,7 +151,6 @@ const SavedProvidersList = ({
                       <MenuDropdownItem
                         key={provider.id}
                         provider={provider}
-                        providerTypeName={provider["Type of Service"]}
                         isSaved="saved"
                         toggleSavedStatus={() => saveProvider(provider.id)}
                         flyToProvider={()=> flyToProvider(provider.id)}

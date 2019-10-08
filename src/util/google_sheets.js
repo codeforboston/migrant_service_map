@@ -53,7 +53,6 @@ const convertProviderProperties = ({ provider, id }) => {
     id,
     typeName: type_of_service_not_normalized,
     typeId: type_of_service,
-    "Type of Service": type_of_service_not_normalized
   };
 
   convertedProvider.coordinates = hasLocation(provider)
