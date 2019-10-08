@@ -50,23 +50,23 @@ text-overflow: ellipsis;
   box-shadow: 1px 3px 4px rgba(110, 2, 207, 0.4);
 }
 
-.provider-card.card-expanded .card-graggable-icon {
+.provider-card.card-expanded .card-draggable-icon {
   color: #A36DD6;
 }
 
-.provider-card.card-expanded:hover .card-graggable-icon {
+.provider-card.card-expanded:hover .card-draggable-icon {
   color: #8C45CF;
 }
 
-.provider-card.card-wrapped .card-graggable-icon {
+.provider-card.card-wrapped .card-draggable-icon {
   color: #DCCFE8;
 }
 
-.provider-card.card-wrapped:hover .card-graggable-icon {
+.provider-card.card-wrapped:hover .card-draggable-icon {
   color: #D4A5FF;
 }
 
-.provider-card.card-dragging .card-graggable-icon {
+.provider-card.card-dragging .card-draggable-icon {
   color: #8C45CF;
 }
 
@@ -100,7 +100,7 @@ text-overflow: ellipsis;
   margin-left: -31px;
 }
 
-.card-graggable-icon {
+.card-draggable-icon {
   align-self: center;
   padding: 10px 10px;
   flex: 0 0 auto;

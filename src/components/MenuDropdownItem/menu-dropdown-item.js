@@ -68,7 +68,7 @@ export default class DropdownMenuItem extends React.Component {
         onMouseUp={this.unsetActive}
         onMouseLeave={this.unsetActive}
       >
-        {inSavedMenu && (<div className="card-graggable-icon">
+        {inSavedMenu && (<div className="card-draggable-icon">
         <FontAwesomeIcon
                   icon={faGripVertical}
                 />
