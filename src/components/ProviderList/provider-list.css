@@ -50,7 +50,7 @@ label {
   position: relative;
   scroll-behavior: smooth;
   margin: 0;
-  padding: 8px 16px 8px 16px;  
+  padding: 8px 16px 8px 16px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -84,7 +84,7 @@ label {
 }
 
 .nav-search {
-  margin-top: 5px;
+  margin-top: 0px;
 }
 
 .upper-bar {

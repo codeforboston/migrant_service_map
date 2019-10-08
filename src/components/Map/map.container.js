@@ -5,9 +5,10 @@ import {
   initializeVisaFilter,
   setSearchCenterCoordinates,
   displayProviderInformation,
-  setMapObject
+  setMapObject,
+  selectTab
 } from "redux/actions";
-import { getProvidersSorted } from "redux/selectors";
+import { getMapProviders } from "redux/selectors";
 import Map from "./map";
 
 const MapContainer = props => {
@@ -16,9 +17,8 @@ const MapContainer = props => {
 
 const mapStateToProps = state => {
   return {
-    providersList: getProvidersSorted(state),
-    providerTypes: state.providerTypes,
-    providers: state.providers,
+    visibleProviders: getMapProviders(state),
+    loadedProviderTypeIds: state.providerTypes.allIds,
     highlightedProviders: state.highlightedProviders,
     filters: state.filters,
     search: state.search
@@ -41,6 +41,9 @@ const mapDispatchToProps = dispatch => {
     },
     setSearchCenterCoordinates: (coordinates, mapboxId, text) => {
       dispatch(setSearchCenterCoordinates(coordinates, mapboxId, text));
+    },
+    selectTab: index => {
+      dispatch(selectTab(index));
     }
   };
 };

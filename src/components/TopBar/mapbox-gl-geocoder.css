@@ -29,15 +29,16 @@ to match.
 }
 
 .mapboxgl-ctrl-geocoder input[type="text"] {
-  font-size: 15px;
+  font-size: 14px;
   font-family: var(--msm-font-family);
   width: 100%;
+  font-weight: 700;
   border: 0;
   background-color: transparent;
-  height: 40px;
+  height: 5%;
   margin: 0;
-  color: rgba(0, 0, 0, 0.5);
-  padding: 10px 10px 10px 40px;
+  color: grey;
+  padding: 0px 10px 0px 40px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -51,7 +52,7 @@ to match.
 
 .mapboxgl-ctrl-geocoder .geocoder-icon-search {
   position: absolute;
-  top: 10px;
+  top: 0px;
   left: 10px;
 }
 .mapboxgl-ctrl-geocoder button {
@@ -89,7 +90,7 @@ to match.
   padding: 0;
   position: absolute;
   width: 100%;
-  top: 1.5rem;
+  top: 0.5rem;
   z-index: 1000;
   overflow: hidden;
   font-size: 12px;
@@ -174,7 +175,7 @@ to match.
   width: 20px;
   height: 20px;
   vertical-align: middle;
-  speak: none;
+  /* speak: none; */
   background-repeat: no-repeat;
 }
 .geocoder-icon-search {
@@ -182,6 +183,7 @@ to match.
 }
 .geocoder-icon-close {
   background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxuczpzdmc9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMCAyMCIgdmVyc2lvbj0iMS4xIiBoZWlnaHQ9IjIwIiB3aWR0aD0iMjAiPg0KICA8cGF0aCBkPSJtNSA1IDAgMS41IDMuNSAzLjUtMy41IDMuNSAwIDEuNSAxLjUgMCAzLjUtMy41IDMuNSAzLjUgMS41IDAgMC0xLjUtMy41LTMuNSAzLjUtMy41IDAtMS41LTEuNSAwLTMuNSAzLjUtMy41LTMuNS0xLjUgMHoiIGZpbGw9IiMwMDAiLz4NCjwvc3ZnPg==);
+  position: relative;
 }
 .geocoder-icon-loading {
   background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxuczpzdmc9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiB2aWV3Qm94PSIwIDAgMjAgMjAiPjxwYXRoIGQ9Im0xMCAyIDAgMy4zYzIuNiAwIDQuNyAyLjEgNC43IDQuN2wzLjMgMGMwLTQuNC0zLjYtOC04LTh6IiBmaWxsPSIjMDAwIi8+PHBhdGggZD0iTTEwIDJDNi44IDIgMy43IDQuMSAyLjYgNy4xIDEuNCAxMCAyLjEgMTMuNiA0LjUgMTUuOGMyLjQgMi40IDYuNCAyLjkgOS40IDEuMiAyLjUtMS40IDQuMi00LjIgNC4yLTctMS4xIDAtMi4yIDAtMy4zIDAgMC4xIDIuMi0xLjcgNC4zLTMuOCA0LjZDOC43IDE1IDYuNCAxMy44IDUuNyAxMS43IDQuOCA5LjcgNS42IDcuMSA3LjYgNiA4LjMgNS42IDkuMSA1LjMgMTAgNS4zYzAtMS4xIDAtMi4yIDAtMy4zeiIgc3R5bGU9ImZpbGw6IzAwMDtvcGFjaXR5OjAuMiIvPjwvc3ZnPg==);
