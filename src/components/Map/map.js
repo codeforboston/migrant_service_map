@@ -26,6 +26,13 @@ const boundingBox = [
   42.599752 // Longitude, Latitute near Gloucester MA
 ];
 
+// The map has a zoom level between 0 (zoomed entirely out)
+// and 22 (zoomed entirely in). Zoom level is configured as integers but
+// the map can zoom to decimal values. The effective zoom level is
+// Math.floor(map.getZoom()).
+const MAX_CLUSTERED_ZOOM = 14,
+  MIN_UNCLUSTERED_ZOOM = 15;
+
 class Map extends Component {
   constructor(props) {
     super(props);
@@ -224,7 +231,7 @@ class Map extends Component {
           features: []
         },
         cluster: true,
-        clusterMaxZoom: 80, // Max zoom to cluster points on
+        clusterMaxZoom: MAX_CLUSTERED_ZOOM,
         clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
       });
     }
@@ -240,21 +247,21 @@ class Map extends Component {
   };
 
   addClusterClickHandlerToMapLayer = clusterName => {
-    this.map.on("click", clusterName, function(e) {
-      let mapView = this;
-      let features = mapView.queryRenderedFeatures(e.point, {
+    this.map.on("click", clusterName, e => {
+      let features = this.map.queryRenderedFeatures(e.point, {
         layers: [clusterName]
       });
 
       let clusterId = features[0].properties.cluster_id;
-      mapView
+      this.map
         .getSource("displayData")
-        .getClusterExpansionZoom(clusterId, function(err, zoom) {
+        .getClusterExpansionZoom(clusterId, (err, zoom) => {
           if (err) return;
 
-          mapView.easeTo({
+          const mapZoom = this.map.getZoom();
+          this.map.easeTo({
             center: features[0].geometry.coordinates,
-            zoom: zoom
+            zoom: mapZoom >= zoom ? mapZoom + 1 : zoom 
           });
         });
     });
@@ -442,7 +449,7 @@ class Map extends Component {
           // Left padding accounts for provider list UI.
           padding: { top: 100, bottom: 100, left: 450, right: 100 },
           duration: 2000,
-          maxZoom: 13,
+          maxZoom: MIN_UNCLUSTERED_ZOOM,
           linear: false
         }
       );
@@ -516,7 +523,7 @@ class Map extends Component {
         ];
         this.map.flyTo({
           center: coordinates,
-          zoom: 15
+          zoom: MIN_UNCLUSTERED_ZOOM
         });
       }
       if (this.props.search.zoomToFitKey !== prevProps.search.zoomToFitKey) {
