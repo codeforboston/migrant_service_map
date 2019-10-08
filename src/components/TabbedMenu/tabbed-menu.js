@@ -11,6 +11,7 @@ const TabbedMenu = ({ selectedTabIndex, selectTab }) => {
       className="side-menu"
       selectedIndex={selectedTabIndex}
       onSelect={index => selectTab(index)}
+      selectedTabPanelClassName="selected-tab-panel"
     >
       <TabList>
         <Tab>
