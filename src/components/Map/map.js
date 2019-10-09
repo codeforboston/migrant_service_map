@@ -362,17 +362,18 @@ class Map extends Component {
    }
 
   removeDeselectedMarkers = () => {
-    let { highlightedProviders } = this.props;
+    let {highlightedProviders} = this.props;
     //retrieve the saved marker objects, and remove any marker no longer in highlighted providers
     const deselectedProviders = this.selectionMarkers.filter(
-      provider => highlightedProviders.includes(provider.providerId) === false
+        provider => highlightedProviders.includes(provider.providerId) === false
     );
-    for (let provider of deselectedProviders) {
+    deselectedProviders.forEach(provider => {
       provider.marker.remove();
       provider.marker.getPopup().remove();
-      }
+    });
+
     this.selectionMarkers = this.selectionMarkers.filter(
-      provider => deselectedProviders.includes(provider.providerId) === false
+        provider => deselectedProviders.includes(provider.providerId) === false
     );
 
   };
