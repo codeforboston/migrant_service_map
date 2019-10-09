@@ -19,7 +19,7 @@ function toProviderDiv(provider) {
   return (
     <div className={"provider"} key={id}>
       <div className={"name"}>{name}</div>
-      <div className={"type"}>{type}</div>
+      <div className={"type"} style={{fontStyle: 'italic'}}>{type}</div>
       <div className={"details"}>
         <div className={"address"}>{address}</div>
         <div className={"email"}>{email}</div>
