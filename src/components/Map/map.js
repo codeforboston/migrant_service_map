@@ -15,6 +15,7 @@ import {
   filterProviderIds,
   providersById
 } from "./utilities.js";
+import { AnimatedMarker } from "../AnimatedMarker/animated-marker.js";
 
 const SPECIAL_NO_RESULTS_ID = 'notfound.0';
 
@@ -40,6 +41,7 @@ class Map extends Component {
     super(props);
     this.map = null;
     this.markerList = []; //need to keep track of marker handles ourselves -- cannot be queried from map
+    this.selectionMarkers = [];
     this.state = {
       loaded: false
     };
@@ -54,7 +56,6 @@ class Map extends Component {
     this.setSingleSourceInMap();
     this.addDistanceIndicatorLayer();
     this.findClustersInMap();
-
     // Pull data from Mapbox style and initialize application state
     const providerFeatures = this.map.querySourceFeatures("composite", {
       sourceLayer: "Migrant_Services_-_MSM_Final_1"
@@ -77,7 +78,6 @@ class Map extends Component {
 
     map.addControl(new mapboxgl.NavigationControl());
     map.on("load", this.onMapLoaded);
-
     this.map = map;
 
     const coordinateObject = {
@@ -192,8 +192,16 @@ class Map extends Component {
           visibility: "visible"
         }
       });
-      this.addClickHandlerToMapIdLayer(typeId);
-      this.addHoverHandlerToMapIdLayer(typeId);
+      this.map.on("click", typeId, e => this.idLayerClickHandler(e));
+
+      let popup = this.createPopup();
+
+      this.map.on("mouseover", typeId, e => {
+        this.addPopup(popup, e);
+      });
+      this.map.on("mouseleave", typeId, () => {
+        popup.remove();
+      });
     }
   };
 
@@ -253,7 +261,7 @@ class Map extends Component {
       }
     });
 
-    this.addClusterClickHandlerToMapLayer(clusterName);
+    this.map.on("click", clusterName, e => this.clusterClickHandler(e));
   };
 
   setSingleSourceInMap = () => {
@@ -280,12 +288,10 @@ class Map extends Component {
     );
   };
 
-  addClusterClickHandlerToMapLayer = clusterName => {
-    this.map.on("click", clusterName, e => {
-      let features = this.map.queryRenderedFeatures(e.point, {
-        layers: [clusterName]
-      });
-
+  clusterClickHandler = event => {
+    let features = this.map.queryRenderedFeatures(event.point, {
+      layers: [event.features[0].layer.id]
+    });
       let clusterId = features[0].properties.cluster_id;
       this.map
         .getSource("displayData")
@@ -298,44 +304,95 @@ class Map extends Component {
             zoom: mapZoom >= zoom ? mapZoom + 1 : zoom 
           });
         });
-    });
   };
 
-  addClickHandlerToMapIdLayer = typeId => {
+  idLayerClickHandler = e => {
     let { displayProviderInformation, highlightedProviders } = this.props;
-    this.map.on("click", typeId, e => {
       const providerElement = document.getElementById(
         `provider-${e.features[0].properties.id}`
       );
-      if (typeId !== "highlightedProviders" && providerElement) {
+      if (e.features[0].properties.typeId !== "highlightedProviders" && providerElement) {
         displayProviderInformation(e.features[0].properties.id);
       } else if (!highlightedProviders.includes(e.features[0].properties.id)) {
         displayProviderInformation(e.features[0].properties.id);
       }
-    });
   };
 
-  addHoverHandlerToMapIdLayer = typeId => {
-    let popup = new mapboxgl.Popup({
+
+
+  markRecentSelection(prevProps) {
+    let { displayProviderInformation, providers, highlightedProviders } = this.props;
+    const newSelection = highlightedProviders.filter(provider => prevProps.highlightedProviders.includes(provider) === false);
+    if (newSelection.length === 0 ) {
+      return
+    }
+      const provider = providers.byId[newSelection[0]];
+      const ANM = AnimatedMarker(provider.id, provider.typeId);
+      const popup = this.createPopup();
+      popup.setText(provider.name);
+
+      const marker = new mapboxgl.Marker({
+        element: ANM
+      })
+          .setLngLat(provider.coordinates)
+          .setPopup(popup)
+          .addTo(this.map);
+
+      ANM.addEventListener("mouseover", e => {
+        marker.togglePopup();
+      });
+
+      ANM.addEventListener("mouseout", e => {
+        marker.togglePopup();
+      });
+
+      ANM.addEventListener("click", e => {
+        e.stopPropagation();
+        displayProviderInformation(provider.id)
+        popup.remove();
+        marker.remove();
+      });
+
+      const markerIcon = marker.getElement().firstChild;
+      markerIcon.classList.add("bounceOn");
+      const markerIconHighlight = markerIcon.nextSibling.firstChild;
+      markerIconHighlight.classList.add("bounceOn");
+      markerIconHighlight.classList.add("highlightOn");
+      this.selectionMarkers.push({providerId: provider.id, marker: marker});
+   }
+
+  removeDeselectedMarkers = () => {
+    let { highlightedProviders } = this.props;
+    //retrieve the saved marker objects, and remove any marker no longer in highlighted providers
+    const deselectedProviders = this.selectionMarkers.filter(
+      provider => highlightedProviders.includes(provider.providerId) === false
+    );
+    for (let provider of deselectedProviders) {
+      provider.marker.remove();
+      provider.marker.getPopup().remove();
+      }
+    this.selectionMarkers = this.selectionMarkers.filter(
+      provider => deselectedProviders.includes(provider.providerId) === false
+    );
+
+  };
+
+  createPopup = () => {
+    return new mapboxgl.Popup({
       closeButton: false,
       closeOnClick: false,
       className: "name-popup",
       offset: 20
     });
+  };
 
-    this.map.on("mouseenter", typeId, e => {
-      let popupCoordinates = e.features[0].geometry.coordinates.slice();
-      let name = e.features[0].properties.name;
-
-      popup
-        .setLngLat(popupCoordinates)
-        .setHTML(name)
-        .addTo(this.map);
-    });
-
-    this.map.on("mouseleave", typeId, () => {
-      popup.remove();
-    });
+  addPopup = (popup, e) => {
+    let popupCoordinates = e.features[0].geometry.coordinates.slice();
+    let name = e.features[0].properties.name;
+    popup
+      .setLngLat(popupCoordinates)
+      .setHTML(name)
+      .addTo(this.map);
   };
 
   geoJSONFeatures = () => {
@@ -533,9 +590,11 @@ class Map extends Component {
     if (this.state.loaded) {
       const features = this.geoJSONFeatures();
       this.setSourceFeatures(features);
+      this.selectionMarkers.forEach(item => item.marker.remove());
       this.props.loadedProviderTypeIds.map(typeId =>
         this.findLayerInMap(typeId)
       );
+      this.markRecentSelection(prevProps);
       this.setSpecialLayerInMap("highlighted", "highlighted");
       this.updatePinAndDistanceIndicator(prevProps);
       this.zoomToShowNewProviders(prevProps);
