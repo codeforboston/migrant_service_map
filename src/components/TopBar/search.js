@@ -17,7 +17,7 @@ export default class Search extends React.Component {
                   marginTop: "2px"
                 }}
               >
-                NEAR:
+                NEAR
               </h2>
               <div id="nav-search" onClick={onSearchInputClick} />
             </Column>
