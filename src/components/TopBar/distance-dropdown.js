@@ -5,7 +5,6 @@ import { Row, Column } from "simple-flexbox";
 
 const distanceText = (distance) => distance ? `${distance} mile${distance === 1 ? "" : "s"}` : 'None Selected';
 
-const defaultDistanceText = "None Selected";
 export default class DistanceDropdown extends React.Component {
   state = { expanded: false };
 
