@@ -77,10 +77,9 @@ class ProviderList extends Component {
                           <li
                             key={provider.id}
                             ref={
-                              this.lastHighlightedRef
-                              // provider.id === highlightedProviders[0]
-                              //   ? this.lastHighlightedRef
-                              //   : null
+                              provider.id === highlightedProviders[0]
+                                ? this.lastHighlightedRef
+                                : null
                             }
                             onClick={() =>
                               displayProviderInformation(provider.id)

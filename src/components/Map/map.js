@@ -570,7 +570,15 @@ class Map extends Component {
    * track changes to highlighted props.
    */
   zoomToShowNewProviders = prevProps => {
-    const newIds = this.newSelection(prevProps);
+    const prevIds = filterProviderIds(
+        providersById(prevProps.visibleProviders),
+        prevProps.highlightedProviders
+      ),
+      currIds = filterProviderIds(
+        providersById(this.props.visibleProviders),
+        this.props.highlightedProviders
+      ),
+      newIds = currIds.filter(id => !prevIds.includes(id));
     if (newIds.length === 0) {
       // The set of selected providers stayed the same or got smaller, no need to zoom.
       return;
@@ -585,15 +593,8 @@ class Map extends Component {
       newFeatureBounds.getEast() > mapBounds.getEast() ||
       newFeatureBounds.getSouth() < mapBounds.getSouth() ||
       newFeatureBounds.getWest() < mapBounds.getWest()
-    ){
-      const newBounds = new mapboxgl.LngLatBounds(
-          [newFeatureBounds.getEast(), newFeatureBounds.getNorth()],
-          [newFeatureBounds.getWest(), newFeatureBounds.getSouth()]
-      );
-      return {
-        center: newBounds.getCenter(),
-        zoom: this.map.getZoom()
-      }
+    ) {
+      this.zoomToFit(currIds);
     }
   };
 
@@ -629,21 +630,38 @@ class Map extends Component {
       const features = this.geoJSONFeatures();
       this.setSourceFeatures(features);
       this.props.loadedProviderTypeIds.map(typeId =>
-          this.findLayerInMap(typeId)
+        this.findLayerInMap(typeId)
       );
       this.updatePinAndDistanceIndicator(prevProps);
-      const mapPosition = this.getProviderKeyMapPosition(prevProps) ||
-          this.getDistanceFilterMapPosition(prevProps) ||
-          this.zoomToShowNewProviders(prevProps) ||
-          {
-            center: this.map.getCenter(),
-            zoom: this.map.getZoom()
-          };
-      this.map.easeTo(mapPosition);
+      this.zoomToShowNewProviders(prevProps);
+      if (
+        this.props.filters.distance &&
+        this.props.filters.distance !== prevProps.filters.distance
+      ) {
+        this.map.flyTo({
+          center: this.props.search.coordinates,
+          zoom: this.zoomToDistance(this.props.filters.distance)
+        });
+      }
+      if (
+        this.props.search.flyToProviderKey !== prevProps.search.flyToProviderKey
+      ) {
+        const { flyToProviderId } = this.props.search;
+        const { coordinates } = providersById(this.props.visibleProviders)[
+          flyToProviderId
+        ];
+        this.map.flyTo({
+          center: coordinates,
+          zoom: MIN_UNCLUSTERED_ZOOM
+        });
+      }
+      if (this.props.search.zoomToFitKey !== prevProps.search.zoomToFitKey) {
+        this.zoomToFit();
+      }
     }
-    this.markRecentSelection(prevProps);
     console.timeEnd("updatetime")
-    }
+    this.markRecentSelection(prevProps);
+  }
 
   componentWillUnmount() {
     this.map.remove();
