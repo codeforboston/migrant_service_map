@@ -34,40 +34,29 @@ function toProviderDiv(provider) {
 }
 
 function printSavedProviders(providers) {
-  const byTypeName = _.groupBy(providers, provider => provider.typeName);
   const printPage = (
     <div className={"print"}>
-      {_.map(byTypeName, (providers, typeName) => {
-        return (
-          <div className={"category"} key={typeName}>
-            <div className={"header"}>{typeName}</div>
-            {_.map(providers, toProviderDiv)}
-          </div>
-        );
-      })}
+      <div className={"category"}>
+        {_.map(providers, toProviderDiv)}
+      </div>
     </div>
   );
   printJSX(printPage);
 }
 
 function emailSavedProviders(providers) {
-  const byTypeName = _.groupBy(providers, provider => provider.typeName);
-  let emailBodyString = ''
-  const newLine = "\n"
-  _.forEach(byTypeName, (providers, typeName) => {
-    let providerString = ''
-    providerString += (typeName + ':' + newLine)
-    providers.forEach((provider) => {
-      providerString = providerString += (
-        newLine + provider.name + newLine +
-        "Address: " + provider.address + newLine +
-        "Website: " + provider.website + newLine +
-        "Phone: " + provider.telephone + newLine +
-        "Email: " + provider.email + newLine)
-      })
-    emailBodyString += (providerString + newLine)
-  })
-  const uriEncodedBody = encodeURIComponent(emailBodyString)
+  const email = Array.map(providers, (provider) => {
+    const {name, address, website, telephone, email} = provider;
+    return [
+      name, 
+      `Address: ${address}`, 
+      `Website: ${website}`,
+      `Phone: ${telephone}`,
+      `Email: ${email}`,
+    ].join("\n")
+    }).join("\n\n")
+
+  const uriEncodedBody = encodeURIComponent(email)
 
   let myWindow;
 
