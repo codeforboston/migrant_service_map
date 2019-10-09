@@ -1,12 +1,12 @@
 import _ from "lodash";
 
-export class InvalidProviderError extends Error {};
+class InvalidProviderError extends Error {}
 
 /**
  * List of all provider types recognized by the app and their type ID's.
  * Provider type names are matched to these values.
  */
-export const ALL_PROVIDER_TYPES = {
+const ALL_PROVIDER_TYPES = {
   jobPlacement: "job-placement",
   resettlement: "resettlement",
   health: "health",
@@ -85,9 +85,9 @@ class ProviderBuilder {
     this._loadedProviders = [];
   }
 
-  /** 
+  /**
    * Adds a provider to the overall set of providers.
-   * 
+   *
    * @throws InvalidProviderError if any of the fields are invalid.
    */
   addProvider({
@@ -173,3 +173,5 @@ class ProviderBuilder {
     };
   }
 }
+
+export { InvalidProviderError, ALL_PROVIDER_TYPES, ProviderBuilder };
