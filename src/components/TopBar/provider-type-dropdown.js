@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { cardIconMappings } from "../../components/MenuDropdownItem/menu-dropdown-item.js";
 import providerTypeToColor from "provider-type-to-color.json";
 import { keyImages } from "../../assets/images.js";
+import { SSL_OP_NO_TLSv1_1 } from "constants";
 
 const defaultSubheaderText = "Not Selected";
 export default class ProviderTypeDropdown extends React.Component {
@@ -59,7 +60,11 @@ export default class ProviderTypeDropdown extends React.Component {
         className={className}
         // options={providerTypes.allIds.map
         options={providerTypes.allIds.sort((a,b) => {
-  return providerTypes.byId[a].name <= providerTypes.byId[b].name}).map
+  if (providerTypes.byId[a].name <= providerTypes.byId[b].name) { return -1; }
+
+  if (providerTypes.byId[a].name > providerTypes.byId[b].name) { return +1; }
+
+          return 0;}).map
 
         (id => ({
           id,
