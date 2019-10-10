@@ -1,32 +1,50 @@
 import _ from "lodash";
 
-class InvalidProviderError extends Error {}
+/**
+ * Represents any error generated while loading a provider.
+ */
+class InvalidProviderError extends Error {
+  constructor(messageOrCause) {
+    const message = typeof messageOrCause === "string" ? messageOrCause : "";
+    super(message);
+    this.name = this.constructor.name;
+    if (messageOrCause instanceof Error) {
+      this.stack = `Unexpected error\n${messageOrCause.stack}`;
+    }
+  }
+}
 
 /**
- * List of all provider types recognized by the app and their type ID's.
+ * List of all provider types recognized by the app.
  * Provider type names are matched to these values.
  */
-const ALL_PROVIDER_TYPES = {
-  jobPlacement: "job-placement",
-  resettlement: "resettlement",
-  health: "health",
-  mentalHealth: "mental-health",
-  legal: "legal",
-  education: "education",
-  communityCenters: "community-centers",
-  cashFoodAssistance: "cash/food-assistance",
-  housing: "housing"
+const allProviderTypes = {
+  jobPlacement: { name: "Job Placement", id: "job-placement" },
+  resettlement: { name: "Resettlement", id: "resettlement" },
+  health: { name: "Health", id: "health" },
+  mentalHealth: { name: "Mental Health", id: "mental-health" },
+  legal: { name: "Legal", id: "legal" },
+  education: { name: "Education", id: "education" },
+  communityCenters: { name: "Community Centers", id: "community-centers" },
+  cashFoodAssistance: {
+    name: "Cash/Food Assistance",
+    id: "cash/food-assistance"
+  },
+  housing: { name: "Housing", id: "housing" }
 };
 
-const allTypeIds = Object.values(ALL_PROVIDER_TYPES);
+const allTypeIds = Object.values(allProviderTypes).map(t => t.id);
 const typeIdsByNormalizedTypeName = {
   ..._.zipObject(allTypeIds, allTypeIds),
-  "community-center": ALL_PROVIDER_TYPES.communityCenters
+  "community-center": allProviderTypes.communityCenters.id
 };
+const typeNamesByTypeId = _.fromPairs(
+  Object.values(allProviderTypes).map(t => [t.id, t.name])
+);
 
 const check = (condition, why, what) => {
   if (!condition) {
-    throw Error(`${why}: ${what}`);
+    throw new InvalidProviderError(`${why}: ${what}`);
   }
 };
 
@@ -42,23 +60,32 @@ const loadTypeId = typeName => {
       .replace(/ /, "-"),
     typeId = typeIdsByNormalizedTypeName[normalizedTypeName];
   if (!typeId) {
-    throw Error(`Could not match type name ${typeName} to type ID`);
+    throw new InvalidProviderError(
+      `Could not match type name ${typeName} to type ID`
+    );
   }
   return typeId;
 };
 
 const loadTypeName = typeName => {
-  // The type name is valid if we can use it to load the type id.
+  // The type name is valid if it matches an ID.
+  let id;
   try {
-    loadTypeId(typeName);
+    id = loadTypeId(typeName);
   } catch (e) {
-    throw Error(`Invalid type name ${typeName}`);
+    throw new InvalidProviderError(`Invalid type name ${typeName}`);
   }
-  return String(typeName);
+  // Since multiple capitalizations can map to the same ID, return a "canonical" name for the type.
+  if (typeNamesByTypeId[id]) {
+    return typeNamesByTypeId[id];
+  } else {
+    throw new InvalidProviderError(`Invalid type name ${typeName}`);
+  }
 };
 
 const loadCoordinates = c => {
-  coordinates = Array.of(c);
+  check(!_.isNil(c), "coordinates must be defined", c);
+  const coordinates = Array.from(c);
   check(coordinates.length === 2, "Expected [lon, lat]", coordinates);
   check(
     typeof coordinates[0] === "number" &&
@@ -116,7 +143,10 @@ class ProviderBuilder {
         typeId: loadTypeId(typeName)
       };
     } catch (e) {
-      throw InvalidProviderError(`Invalid provider ${e}`);
+      if (e instanceof InvalidProviderError) {
+        throw e;
+      }
+      throw new InvalidProviderError(e);
     }
     this._loadedProviders.push(provider);
   }
@@ -125,7 +155,9 @@ class ProviderBuilder {
     return _.uniqWith(
       this._loadedProviders,
       (p1, p2) =>
-        _.isEqual(p1.coordinates, p2.coordinates) && _.isEqual(p1.name, p2.name)
+        _.isEqual(p1.coordinates, p2.coordinates) &&
+        _.isEqual(p1.name, p2.name) &&
+        _.isEqual(p1.typeId, p2.typeId)
     );
   }
 
@@ -142,11 +174,11 @@ class ProviderBuilder {
   _getProviderTypesByTypeId(providers) {
     const providersByTypeId = _.groupBy(providers, provider => provider.typeId);
     const providerTypesByTypeId = {};
+    let providersOfSameType;
     for (providersOfSameType of Object.values(providersByTypeId)) {
       const typeId = providersOfSameType[0].typeId;
       providerTypesByTypeId[typeId] = {
         id: typeId,
-        // TODO: use a canonical name rather than what's represented in the data.
         name: providersOfSameType[0].typeName,
         providers: providersOfSameType.map(provider => provider.id)
       };
@@ -155,7 +187,7 @@ class ProviderBuilder {
   }
 
   /**
-   * Returns an object with providers and providerTypes, as used to initialize thge app.
+   * Returns an object with providers and providerTypes, as used to initialize the app.
    *
    * This should be called once, after adding all providers.
    */
@@ -174,4 +206,4 @@ class ProviderBuilder {
   }
 }
 
-export { InvalidProviderError, ALL_PROVIDER_TYPES, ProviderBuilder };
+export { InvalidProviderError, allProviderTypes, ProviderBuilder };
