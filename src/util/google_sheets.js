@@ -31,7 +31,6 @@ const createRowParser = columnHeaders => {
       .toLowerCase()
       .trim();
   });
-  console.log(normalizedHeaders);
   const headerColumnIndices = Object.keys(
     normalizedColumnHeadersToProviderFields
   ).map(expectedHeader => {

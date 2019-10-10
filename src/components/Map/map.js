@@ -55,13 +55,6 @@ class Map extends Component {
     this.addDistanceIndicatorLayer();
     this.findClustersInMap();
 
-    // Pull data from Mapbox style and initialize application state
-    const providerFeatures = this.map.querySourceFeatures("composite", {
-      sourceLayer: "Migrant_Services_-_MSM_Final_1"
-    });
-    const normalizedProviders = normalizeProviders(providerFeatures);
-    initializeProviders(normalizedProviders);
-
     this.loadProviderTypeImage(typeImages);
     this.setState({ loaded: true });
   };

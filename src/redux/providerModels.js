@@ -25,7 +25,7 @@ const allProviderTypes = {
   mentalHealth: { name: "Mental Health", id: "mental-health" },
   legal: { name: "Legal", id: "legal" },
   education: { name: "Education", id: "education" },
-  communityCenters: { name: "Community Centers", id: "community-centers" },
+  communityCenter: { name: "Community Center", id: "community-centers" },
   cashFoodAssistance: {
     name: "Cash/Food Assistance",
     id: "cash/food-assistance"
@@ -36,7 +36,7 @@ const allProviderTypes = {
 const allTypeIds = Object.values(allProviderTypes).map(t => t.id);
 const typeIdsByNormalizedTypeName = {
   ..._.zipObject(allTypeIds, allTypeIds),
-  "community-center": allProviderTypes.communityCenters.id
+  "community-center": allProviderTypes.communityCenter.id
 };
 const typeNamesByTypeId = _.fromPairs(
   Object.values(allProviderTypes).map(t => [t.id, t.name])
