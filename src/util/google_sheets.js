@@ -1,116 +1,115 @@
 import Papa from "papaparse";
 import { initializeProviders } from "redux/actions";
 import store from "../redux/store";
+import { ProviderBuilder } from "../redux/providerModels";
 import _ from "lodash";
 
-const headersToProviderProperties = {
-  "Validated By": "validated_by",
-  Timestamp: "timestamp",
-  "Organization Name": "name",
-  Website: "website",
-  "Type of Service": "type_of_service",
-  Mission: "mission",
-  Telephone: "telephone",
-  Email: "email",
-  Address: "address",
-  Longitude: "longitude",
-  Latitude: "latitude"
+const normalizedColumnHeadersToProviderFields = {
+  "validated by": "validatedBy",
+  timestamp: "timestamp",
+  "organization name": "name",
+  website: "website",
+  "type of service": "typeName",
+  mission: "mission",
+  telephone: "telephone",
+  email: "email",
+  address: "address",
+  longitude: "longitude",
+  latitude: "latitude"
 };
 
-const headerToProviderProperty = header => {
-  /**
-   * For instance, "Type of Service: " => "type_of_service"
-   */
-  try {
-    const [headerText] = header.match(/^[a-zA-Z ]*/);
-    return headersToProviderProperties[headerText.trim()];
-  } catch (e) {
-    console.error(e);
-  }
-};
-
-const hasLocation = provider => {
-  const { latitude, longitude } = provider;
-  const isInvalid = value => _.isNil(value) || value === "" || isNaN(value);
-  return !(isInvalid(latitude) || isInvalid(longitude));
-};
-
-const convertProviderProperties = ({ provider, id }) => {
-  const type_of_service_not_normalized = provider.type_of_service;
-  const type_of_service = type_of_service_not_normalized
-    .toLowerCase()
-    .replace(/ /, "-");
-  const convertedProvider = {
-    ..._.pick(provider, [
-      "address",
-      "email",
-      "mission",
-      "name",
-      "telephone",
-      "timestamp",
-      "website"
-    ]),
-    id,
-    typeName: type_of_service_not_normalized,
-    typeId: type_of_service,
-  };
-
-  convertedProvider.coordinates = hasLocation(provider)
-    ? [parseFloat(provider.longitude), parseFloat(provider.latitude)]
-    : [];
-
-  return convertedProvider;
-};
-
-const providersLoadCallback = ({ data: providersData, errors }) => {
-  if (Array.isArray(errors) && errors.length > 0) {
-    throw new Error(errors);
-  }
-
-  const headers = providersData.shift();
-  const providerProperties = headers.map(headerToProviderProperty);
-
-  const providerTypes = {
-    byId: {},
-    allIds: []
-  };
-  const providerTypeIds = new Set();
-  const providers = {
-    byId: {},
-    allIds: []
-  };
-
-  _.forEach(providersData, (providerRow, index) => {
-    const provider = convertProviderProperties(
-      {
-        provider: _.zipObject(providerProperties, providerRow),
-        id: index
-      }
-    );
-    const { id, typeId } = provider;
-
-    providerTypeIds.add(typeId);
-    if (providerTypes.byId[typeId]) {
-      providerTypes.byId[typeId].providers.push(id);
-    } else {
-      providerTypes.byId[typeId] = {
-        id: typeId,
-        name: provider.typeName,
-        providers: [id]
-      };
-    }
-
-    providers.byId[id] = provider;
+/**
+ * Processes column headers, matching against expected columns.
+ *
+ * @returns A function that accepts a row array and returns a map from provider fields to cell contents.
+ *          Fields are not included for empty cells.
+ */
+const createRowParser = columnHeaders => {
+  const normalizedHeaders = columnHeaders.map(header => {
+    return header
+      .match(/^[a-zA-Z ]*/)[0]
+      .toLowerCase()
+      .trim();
   });
-  providerTypes.allIds = Array.from(providerTypeIds);
+  console.log(normalizedHeaders);
+  const headerColumnIndices = Object.keys(
+    normalizedColumnHeadersToProviderFields
+  ).map(expectedHeader => {
+    const headerColumnIndex = normalizedHeaders.indexOf(expectedHeader);
+    if (headerColumnIndex === -1) {
+      throw Error(`No column matching ${expectedHeader}`);
+    }
+    return headerColumnIndex;
+  });
+  const fieldNames = Object.values(normalizedColumnHeadersToProviderFields);
+  return row => {
+    const rawFields = {};
+    headerColumnIndices.forEach((columnIndex, i) => {
+      if (!_.isNil(row[columnIndex]) && row[columnIndex].trim()) {
+        rawFields[fieldNames[i]] = row[columnIndex].trim();
+      }
+    });
+    return rawFields;
+  };
+};
 
-  store.dispatch(initializeProviders({ providerTypes, providers }));
+const providersLoadCallback = (rows, errors, url) => {
+  if (Array.isArray(errors) && errors.length > 0) {
+    console.error(`Errors while loading spreadsheet: ${errors}`);
+  }
+
+  const columnHeaders = rows.shift();
+  if (!columnHeaders) {
+    console.error(
+      `Could not parse spreadsheet from ${url}. Spreadsheet seem to be empty`
+    );
+    return;
+  }
+
+  let getRawFields;
+  try {
+    getRawFields = createRowParser(columnHeaders);
+  } catch (e) {
+    console.error(
+      `Could not parse spreadsheet from ${url}. Could not find required columns ${Object.keys(
+        normalizedColumnHeadersToProviderFields
+      )} among actual columns ${columnHeaders}`
+    );
+    return;
+  }
+
+  const providerBuilder = new ProviderBuilder();
+
+  rows.forEach((row, rowIndex)=> {
+    const rawFields = getRawFields(row);
+    try {
+      providerBuilder.addProvider({
+        coordinates: [
+          parseFloat(rawFields.longitude),
+          parseFloat(rawFields.latitude)
+        ],
+        name: rawFields.name,
+        address: rawFields.address,
+        email: rawFields.email,
+        mission: rawFields.mission,
+        telephone: rawFields.telephone,
+        timestamp: rawFields.timestamp,
+        typeName: rawFields.typeName,
+        website: rawFields.website
+      });
+    } catch (e) {
+      console.warn(`Could not load provider from row ${rowIndex + 1} with values [${row}]\n${e}`);
+    }
+  });
+
+  const providerStore = providerBuilder.build();
+  store.dispatch(initializeProviders(providerStore));
 };
 
 const getProvidersFromSheet = async url => {
   Papa.parse(url, {
     download: true,
-    complete: providersLoadCallback
+    complete: result => providersLoadCallback(result.data, result.errors, url)
   });
 };
 

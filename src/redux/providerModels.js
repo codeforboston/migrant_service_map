@@ -113,7 +113,7 @@ class ProviderBuilder {
   }
 
   /**
-   * Adds a provider to the overall set of providers.
+   * Adds a provider to the overall set of providers. All fields are required except those with default values.
    *
    * @throws InvalidProviderError if any of the fields are invalid.
    */
