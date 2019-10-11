@@ -7,6 +7,7 @@ import "./provider-list.css";
 class ProviderList extends Component {
   constructor(props) {
     super(props);
+    this.listRef = React.createRef();
     this.listElementRef = React.createRef();
     this.lastHighlightedRef = React.createRef();
   }
@@ -39,7 +40,7 @@ class ProviderList extends Component {
       zoomToFit
     } = this.props;
     return (
-      <div className="service-providers">
+      <div className="service-providers" ref={this.listRef}>
         {!providersList.length && (
           <div className={"tab-header"}>
             <h3 className={"header-text"}>No Matching Results</h3>
@@ -99,6 +100,7 @@ class ProviderList extends Component {
                                   ? "saved"
                                   : "unsaved"
                               }
+                              listRef={this.listRef}
                               toggleSavedStatus={() =>
                                 saveProvider(provider.id)
                               }
