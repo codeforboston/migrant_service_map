@@ -178,7 +178,7 @@ class Map extends Component {
           visibility: "visible"
         }
       });
-      this.map.on("click", typeId, e => this.idLayerClickHandler(e));
+      this.map.on("click", typeId, e => this.providerLayerClickHandler(e));
 
       let popup = this.createPopup();
 
@@ -246,8 +246,6 @@ class Map extends Component {
         "text-halo-width": 2
       }
     });
-
-    this.addClusterClickHandlerToMapLayer(clusterName);
   };
 
   setSingleSourceInMap = () => {
@@ -292,7 +290,7 @@ class Map extends Component {
         });
   };
 
-  idLayerClickHandler = e => {
+  providerLayerClickHandler = e => {
     let { displayProviderInformation, highlightedProviders } = this.props;
       const providerElement = document.getElementById(
         `provider-${e.features[0].properties.id}`
@@ -304,65 +302,17 @@ class Map extends Component {
       }
   };
 
-
-
   markRecentSelection(prevProps) {
-    let { displayProviderInformation, providers, highlightedProviders } = this.props;
+    let { providers, highlightedProviders } = this.props;
     const newSelection = highlightedProviders.filter(provider => prevProps.highlightedProviders.includes(provider) === false);
     if (newSelection.length === 0 ) {
       return
     }
-      const provider = providers.byId[newSelection[0]];
-      const ANM = AnimatedMarker(provider.id, provider.typeId);
-      const popup = this.createPopup();
-      popup.setText(provider.name);
-
-      const marker = new mapboxgl.Marker({
-        element: ANM
-      })
-          .setLngLat(provider.coordinates)
-          .setPopup(popup)
-          .addTo(this.map);
-
-      ANM.addEventListener("mouseover", e => {
-        marker.togglePopup();
-      });
-
-      ANM.addEventListener("mouseout", e => {
-        marker.togglePopup();
-      });
-
-      ANM.addEventListener("click", e => {
-        e.stopPropagation();
-        displayProviderInformation(provider.id)
-        popup.remove();
-        marker.remove();
-      });
-
-      const markerIcon = marker.getElement().firstChild;
-      markerIcon.classList.add("bounceOn");
-      const markerIconHighlight = markerIcon.nextSibling.firstChild;
-      markerIconHighlight.classList.add("bounceOn");
-      markerIconHighlight.classList.add("highlightOn");
-      this.selectionMarkers.push({providerId: provider.id, marker: marker});
+    const provider = providers.byId[newSelection[0]];
+    const marker = new AnimatedMarker(provider);// AnimatedMarker(provider.id, provider.typeId);
+    marker.addTo(this.map);
+    this.selectionMarkers.push({providerId: provider.id, marker: marker});
    }
-
-  removeDeselectedMarkers = () => {
-    let {highlightedProviders} = this.props;
-    //retrieve the saved marker objects, and remove any marker no longer in highlighted providers
-    const deselectedProviders = this.selectionMarkers.filter(
-        provider => highlightedProviders.includes(provider.providerId) === false
-    );
-    deselectedProviders.forEach(provider => {
-      provider.marker.remove();
-      provider.marker.getPopup().remove();
-    });
-
-    this.selectionMarkers = this.selectionMarkers.filter(
-        provider => deselectedProviders.includes(provider.providerId) === false
-    );
-
-  };
 
   createPopup = () => {
     return new mapboxgl.Popup({
