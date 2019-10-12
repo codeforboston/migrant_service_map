@@ -29,11 +29,11 @@ export default class SavedProvidersList extends React.Component {
           {type}
         </div>
         <div className={"details"}>
-          <div className={"address"}>{address}</div>
-          <div className={"email"}>{email}</div>
-          <div className={"telephone"}>{telephone}</div>
+          <div className={"address"}>Address: {address}</div>
+          <div className={"email"}>Email: {email}</div>
+          <div className={"telephone"}>Phone: {telephone}</div>
           <div className={"website"}>
-            <a href={website}>{website}</a>
+            Website: <a href={website}>{website}</a>
           </div>
           <div className={"mission"}>{mission}</div>
         </div>
@@ -44,14 +44,14 @@ export default class SavedProvidersList extends React.Component {
   printSavedProviders(providers) {
     const printPage = (
       <div className={"print"}>
-        <div className={"category"}>{_.map(providers, toProviderDiv)}</div>
+        <div className={"category"}>{_.map(providers, this.toProviderDiv)}</div>
       </div>
     );
     printJSX(printPage);
   }
 
   emailSavedProviders(providers) {
-    const email = Array.map(providers, provider => {
+    const email = providers.map(provider => {
       const { name, address, website, telephone, email } = provider;
       return [
         name,
