@@ -22,7 +22,6 @@ import {
 import "./menu-dropdown-item.css";
 import DetailsPane from "components/DetailsPane";
 import providerTypeToColor from "provider-type-to-color.json";
-import {bboxPolygon, booleanContains} from "@turf/turf";
 
 const isPresent = value => value && value !== "n/a";
 
@@ -42,20 +41,7 @@ export default class DropdownMenuItem extends React.Component {
   toggleSave = e => {
     e.stopPropagation();
     this.props.toggleSavedStatus();
-  };
-  shouldFlyToProvider = () => {
-    const {listRef, provider} = this.props;
-    const pinLocation = {
-      type: "Feature",
-      geometry: {
-        type: "Point",
-        coordinates: provider.coordinates
-      }
-    };
-    const boundingRect = listRef.current.getBoundingClientRect();
-    const polygon = bboxPolygon([boundingRect.left, boundingRect.right, boundingRect.bottom, boundingRect.top]);
-    return booleanContains(polygon, pinLocation);
-  };
+  }
   
   render() {
     const { provider, isSaved, isHighlighted, flyToProvider } = this.props;
@@ -132,7 +118,7 @@ export default class DropdownMenuItem extends React.Component {
             )}
           </div>
         </div>
-        {isExpanded && <DetailsPane provider={provider} flyToProvider={this.shouldFlyToProvider(provider.coordinates) && flyToProvider} />}
+        {isExpanded && <DetailsPane provider={provider} flyToProvider={flyToProvider} />}
       </div>
     );
   }
