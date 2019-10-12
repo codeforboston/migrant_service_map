@@ -30,7 +30,7 @@ export default class SortDropdown extends React.Component {
     }
   };
 
-  componentDidUpdate() {
+  componentDidMount() {
     ReactTooltip.rebuild();
   }
 
