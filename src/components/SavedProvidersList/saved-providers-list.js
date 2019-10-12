@@ -25,13 +25,15 @@ export default class SavedProvidersList extends React.Component {
     return (
       <div className={"provider"} key={id}>
         <div className={"name"}>{name}</div>
-        <div className={"type"}>{type}</div>
+        <div className={"type"} style={{ fontStyle: "italic" }}>
+          {type}
+        </div>
         <div className={"details"}>
-          <div className={"address"}>{address}</div>
-          <div className={"email"}>{email}</div>
-          <div className={"telephone"}>{telephone}</div>
+          <div className={"address"}>Address: {address}</div>
+          <div className={"email"}>Email: {email}</div>
+          <div className={"telephone"}>Phone: {telephone}</div>
           <div className={"website"}>
-            <a href={website}>{website}</a>
+            Website: <a href={website}>{website}</a>
           </div>
           <div className={"mission"}>{mission}</div>
         </div>
@@ -39,51 +41,28 @@ export default class SavedProvidersList extends React.Component {
     );
   };
 
-  printSavedProviders = providers => {
-    const byTypeName = _.groupBy(providers, provider => provider.typeName);
+  printSavedProviders(providers) {
     const printPage = (
       <div className={"print"}>
-        {_.map(byTypeName, (providers, typeName) => {
-          return (
-            <div className={"category"} key={typeName}>
-              <div className={"header"}>{typeName}</div>
-              {_.map(providers, this.toProviderDiv)}
-            </div>
-          );
-        })}
+        <div className={"category"}>{_.map(providers, this.toProviderDiv)}</div>
       </div>
     );
     printJSX(printPage);
-  };
+  }
 
-  emailSavedProviders = providers => {
-    const byTypeName = _.groupBy(providers, provider => provider.typeName);
-    let emailBodyString = "";
-    const newLine = "\n";
-    _.forEach(byTypeName, (providers, typeName) => {
-      let providerString = "";
-      providerString += typeName + ":" + newLine;
-      providers.forEach(provider => {
-        providerString = providerString +=
-          newLine +
-          provider.name +
-          newLine +
-          "Address: " +
-          provider.address +
-          newLine +
-          "Website: " +
-          provider.website +
-          newLine +
-          "Phone: " +
-          provider.telephone +
-          newLine +
-          "Email: " +
-          provider.email +
-          newLine;
-      });
-      emailBodyString += providerString + newLine;
-    });
-    const uriEncodedBody = encodeURIComponent(emailBodyString);
+  emailSavedProviders(providers) {
+    const email = providers.map(provider => {
+      const { name, address, website, telephone, email } = provider;
+      return [
+        name,
+        `Address: ${address}`,
+        `Website: ${website}`,
+        `Phone: ${telephone}`,
+        `Email: ${email}`
+      ].join("\n");
+    }).join("\n\n");
+
+    const uriEncodedBody = encodeURIComponent(email);
 
     let myWindow;
 
@@ -109,7 +88,7 @@ export default class SavedProvidersList extends React.Component {
     }
 
     openWin();
-  };
+  }
 
   componentDidMount() {
     ReactTooltip.rebuild();
