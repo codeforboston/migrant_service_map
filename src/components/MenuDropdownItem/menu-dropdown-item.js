@@ -17,7 +17,8 @@ import {
   faFileContract,
   faHospital,
   faBed,
-  faBalanceScale
+  faBalanceScale,
+  faGripVertical
 } from "@fortawesome/free-solid-svg-icons";
 import "./menu-dropdown-item.css";
 import DetailsPane from "components/DetailsPane";
@@ -38,24 +39,41 @@ export const cardIconMappings = {
 };
 
 export default class DropdownMenuItem extends React.Component {
+  
+  state = { isActive: false }
+  
   toggleSave = e => {
     e.stopPropagation();
     this.props.toggleSavedStatus();
   }
-  
+
+  setActive = (e) => {this.setState({isActive: true})}
+  unsetActive = (e) => {this.setState({isActive: false})}
+
   render() {
-    const { provider, isSaved, isHighlighted, flyToProvider } = this.props;
+    const { provider, isSaved, isHighlighted, isDragging, flyToProvider } = this.props;
+    const {isActive} = this.state;
     const inSavedMenu = !!this.props.inSavedMenu;
     const isExpanded = isHighlighted;
+    const activeClass = isActive ? "active" : "";
+    const dragClass = isDragging ? "dragging" : "resting";
     const expandClass = isExpanded ? "expanded" : "wrapped";
     const menuClass = inSavedMenu ? "saved" : "search";
-
     const cardIcon = cardIconMappings[provider.typeName];
     return (
       <div
-        className={`provider-card ${menuClass}`}
+        className={`provider-card ${menuClass} card-${expandClass} card-${dragClass} ${activeClass}` }
         id={`provider-${provider.id}`}
+        onMouseDown={this.setActive}
+        onMouseUp={this.unsetActive}
+        onMouseLeave={this.unsetActive}
       >
+        {inSavedMenu && (<div className="card-draggable-icon">
+        <FontAwesomeIcon
+                  icon={faGripVertical}
+                />
+        </div>)}
+        <div className="card-layout">
         <div className="card-container">
           <div className="card-header">
             <h5 className={expandClass}>
@@ -94,7 +112,11 @@ export default class DropdownMenuItem extends React.Component {
           </div>
           <div className="save-button-container">
             {inSavedMenu ? (
-              <button className={`remoteButton`} onClick={this.toggleSave}>
+              <button className={`remoteButton`} 
+                onClick={this.toggleSave}
+                onMouseDown={(e) => e.stopPropagation()}
+                onMouseUp={(e) => e.stopPropagation()}
+              >
                 <FontAwesomeIcon icon={faTrashAlt} />
                 Remove
               </button>
@@ -102,6 +124,8 @@ export default class DropdownMenuItem extends React.Component {
               <button
                 className={`button ${isSaved}`}
                 onClick={this.toggleSave}
+                onMouseDown={(e) => e.stopPropagation()}
+                onMouseUp={(e) => e.stopPropagation()}
               >
                 {isSaved === "saved" ? (
                   <Fragment>
@@ -119,6 +143,7 @@ export default class DropdownMenuItem extends React.Component {
           </div>
         </div>
         {isExpanded && <DetailsPane provider={provider} flyToProvider={flyToProvider} />}
+        </div>
       </div>
     );
   }
