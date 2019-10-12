@@ -16,6 +16,8 @@ import {
   providersById
 } from "./utilities.js";
 
+const SPECIAL_NO_RESULTS_ID = 'notfound.0';
+
 mapboxgl.accessToken =
   "pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw";
 
@@ -25,6 +27,13 @@ const boundingBox = [
   -70.647115,
   42.599752 // Longitude, Latitute near Gloucester MA
 ];
+
+// The map has a zoom level between 0 (zoomed entirely out)
+// and 22 (zoomed entirely in). Zoom level is configured as integers but
+// the map can zoom to decimal values. The effective zoom level is
+// Math.floor(map.getZoom()).
+const MAX_CLUSTERED_ZOOM = 14,
+  MIN_UNCLUSTERED_ZOOM = 15;
 
 class Map extends Component {
   constructor(props) {
@@ -89,12 +98,40 @@ class Map extends Component {
     searchBox.className += " msm-map-search-box";
     document.getElementById("nav-search").appendChild(searchBox);
 
+    geocoder.on('results', ev => {
+    /* Fun hack to show "no results found" in the search box. This solution depends on the implementation of
+     * this specific version of the geocoder.
+     *
+     * You can see that the response passed to the 'results' event is then used to set the dropdown result:
+     * https://github.com/mapbox/mapbox-gl-geocoder/blob/d2db50aede1ef6777083435f2dc533d5e1846a7e/lib/index.js#L203
+     * 
+     * Typeahead instances render suggestions via method getItemValue:
+     * https://github.com/tristen/suggestions/blob/9328f1f3d21598c40014892e3e0329027dd2b538/src/suggestions.js#L221
+     * 
+     * Geocoder overrides getItemValue to look at the "place_name" property:
+     * https://github.com/mapbox/mapbox-gl-geocoder/blob/d2db50aede1ef6777083435f2dc533d5e1846a7e/lib/index.js#L103
+     * 
+     * Geocoder API response object documentation:
+     * https://docs.mapbox.com/api/search/#geocoding-response-object
+     */
+      if (!ev.features || !ev.features.length) {
+        ev.features = [{ 
+          id: SPECIAL_NO_RESULTS_ID,
+          place_name: 'No search results',
+        }];
+      }
+    });
+
     geocoder.on("result", ev => {
       // display service providers results tab
       const { selectTab } = this.props;
       selectTab(0)
       // ev.result contains id, place_name, text
       let { geometry, id, text } = ev.result;
+      if (id === SPECIAL_NO_RESULTS_ID) {
+        geocoder._clear();
+        return;
+      }
       let zoom;
       if (!this.props.filters.distance) {
         zoom = this.zoomToDistance(1.5);
@@ -110,10 +147,14 @@ class Map extends Component {
     });
 
     geocoder.on("clear", ev => {
-      let center = [-71.066954, 42.359947];
-      this.removeReferenceLocation(this.map);
-      this.props.setSearchCenterCoordinates(center, 1, "");
+      this.clearLocationSearch();
     });
+  }
+
+  clearLocationSearch = () => {
+    let center = [-71.066954, 42.359947];
+    this.removeReferenceLocation(this.map);
+    this.props.setSearchCenterCoordinates(center, 1, "");
   }
 
   zoomToDistance = distance => {
@@ -224,7 +265,7 @@ class Map extends Component {
           features: []
         },
         cluster: true,
-        clusterMaxZoom: 80, // Max zoom to cluster points on
+        clusterMaxZoom: MAX_CLUSTERED_ZOOM,
         clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
       });
     }
@@ -240,21 +281,21 @@ class Map extends Component {
   };
 
   addClusterClickHandlerToMapLayer = clusterName => {
-    this.map.on("click", clusterName, function(e) {
-      let mapView = this;
-      let features = mapView.queryRenderedFeatures(e.point, {
+    this.map.on("click", clusterName, e => {
+      let features = this.map.queryRenderedFeatures(e.point, {
         layers: [clusterName]
       });
 
       let clusterId = features[0].properties.cluster_id;
-      mapView
+      this.map
         .getSource("displayData")
-        .getClusterExpansionZoom(clusterId, function(err, zoom) {
+        .getClusterExpansionZoom(clusterId, (err, zoom) => {
           if (err) return;
 
-          mapView.easeTo({
+          const mapZoom = this.map.getZoom();
+          this.map.easeTo({
             center: features[0].geometry.coordinates,
-            zoom: zoom
+            zoom: mapZoom >= zoom ? mapZoom + 1 : zoom 
           });
         });
     });
@@ -442,7 +483,7 @@ class Map extends Component {
           // Left padding accounts for provider list UI.
           padding: { top: 100, bottom: 100, left: 450, right: 100 },
           duration: 2000,
-          maxZoom: 13,
+          maxZoom: MIN_UNCLUSTERED_ZOOM,
           linear: false
         }
       );
@@ -516,7 +557,7 @@ class Map extends Component {
         ];
         this.map.flyTo({
           center: coordinates,
-          zoom: 15
+          zoom: MIN_UNCLUSTERED_ZOOM
         });
       }
       if (this.props.search.zoomToFitKey !== prevProps.search.zoomToFitKey) {
