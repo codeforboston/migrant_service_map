@@ -49,4 +49,45 @@ const typeImages = [
   }
 ];
 
+const keyImages = [
+ {
+   type: "job-placement",
+   image: require("./icons/key job placement.svg")
+ },
+ {
+   type: "community-centers",
+   image: require("./icons/key comm ctr.svg")
+ },
+ {
+   type: "cash/food-assistance",
+   image: require("./icons/key food_cash.svg")
+ },
+ {
+   type: "education",
+   image: require("./icons/key education.svg")
+ },
+ {
+   type: "resettlement",
+   image: require("./icons/key resettlement.svg")
+ },
+ {
+   type: "housing",
+   image: require("./icons/key housing.svg")
+ },
+ {
+   type: "health",
+   image: require("./icons/key health.svg")
+ },
+ {
+   type: "mental-health",
+   image: require("./icons/key mental health.svg")
+ },
+ {
+   type: "legal",
+   image: require("./icons/key legal.svg")
+ },
+];
+
+export { keyImages };
+
 export default typeImages;
