@@ -15,7 +15,6 @@ import {
   filterProviderIds,
   providersById
 } from "./utilities.js";
-import {bboxPolygon, booleanContains} from "@turf/turf";
 
 const SPECIAL_NO_RESULTS_ID = 'notfound.0';
 
@@ -549,21 +548,8 @@ class Map extends Component {
           zoom: this.zoomToDistance(this.props.filters.distance)
         });
       }
-      const shouldFlyToProvider = () => {
-        const {listRef, provider} = this.props;
-        const pinLocation = {
-          type: "Feature",
-          geometry: {
-            type: "Point",
-            coordinates: provider.coordinates
-          }
-        };
-        const boundingRect = listRef.current.getBoundingClientRect();
-        const polygon = bboxPolygon([boundingRect.left, boundingRect.right, boundingRect.bottom, boundingRect.top]);
-        return booleanContains(polygon, pinLocation);
-      };
       if (
-        shouldFlyToProvider() || this.props.search.flyToProviderKey !== prevProps.search.flyToProviderKey
+        this.props.search.flyToProviderKey !== prevProps.search.flyToProviderKey
       ) {
         const { flyToProviderId } = this.props.search;
         const { coordinates } = providersById(this.props.visibleProviders)[
