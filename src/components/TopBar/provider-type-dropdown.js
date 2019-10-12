@@ -4,8 +4,6 @@ import { Row, Column } from "simple-flexbox";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { cardIconMappings } from "../../components/MenuDropdownItem/menu-dropdown-item.js";
 import providerTypeToColor from "provider-type-to-color.json";
-import { keyImages } from "../../assets/images.js";
-import { SSL_OP_NO_TLSv1_1 } from "constants";
 
 const defaultSubheaderText = "Not Selected";
 export default class ProviderTypeDropdown extends React.Component {
@@ -20,17 +18,17 @@ export default class ProviderTypeDropdown extends React.Component {
 
   clearProviderTypes = event => {
     event.stopPropagation();
-    const { onChange = () => { } } = this.props;
+    const { onChange = () => {} } = this.props;
     onChange(undefined);
   };
 
   selectAllProviderTypes = event => {
     event.stopPropagation();
-    const { onChange = () => { } } = this.props;
+    const { onChange = () => {} } = this.props;
     const { providerTypes } = this.props;
 
     providerTypes.allIds.forEach(providerType => {
-      onChange(providerType)
+      onChange(providerType);
     });
   };
 
@@ -40,12 +38,12 @@ export default class ProviderTypeDropdown extends React.Component {
     });
   };
 
-
   render() {
     const { expanded } = this.state;
     const { className, providerTypes } = this.props;
     let subheaderText = defaultSubheaderText;
-    let selectOrClearCommand = providerTypes.visible.length > 0 ? "clear all" : "select all"
+    let selectOrClearCommand =
+      providerTypes.visible.length > 0 ? "clear all" : "select all";
 
     if (providerTypes.visible.length === 1) {
       const selectedProviderType =
@@ -58,29 +56,21 @@ export default class ProviderTypeDropdown extends React.Component {
     return (
       <CheckBoxDropdown
         className={className}
-        // options={providerTypes.allIds.map
-        options={providerTypes.allIds.sort((a, b) => {
-          if (providerTypes.byId[a].name <= providerTypes.byId[b].name) { return -1; }
-          if (providerTypes.byId[a].name > providerTypes.byId[b].name) { return +1; }
-
-          return 0;
-        }).map
-
-          (id => ({
+        options={providerTypes.allIds
+          .sort((a, b) => a.localeCompare(b))
+          .map(id => ({
             id,
-            display:
+            display: (
               <span>
                 <FontAwesomeIcon
                   icon={cardIconMappings[providerTypes.byId[id].name]}
                   color={providerTypeToColor[providerTypes.byId[id].name]}
-                />
-                {' '}
+                  fixedWidth
+                />{" "}
                 {providerTypes.byId[id].name}
-
               </span>
-
+            )
           }))}
-
         expanded={expanded}
         setExpanded={this.setExpanded}
         onChange={this.onCheckboxChanged}
@@ -94,7 +84,11 @@ export default class ProviderTypeDropdown extends React.Component {
               </Column>
               <div
                 className="clear-icon-container"
-                onClick={providerTypes.visible.length > 0 ? this.clearProviderTypes : this.selectAllProviderTypes}
+                onClick={
+                  providerTypes.visible.length > 0
+                    ? this.clearProviderTypes
+                    : this.selectAllProviderTypes
+                }
               >
                 {selectOrClearCommand}
               </div>
