@@ -8,17 +8,15 @@ import "./top-bar.css";
 
 class TopBar extends Component {
 
-  onDistanceSelected = distance => {
-    const { changeDistanceFilter } = this.props;
-    changeDistanceFilter(distance);
-  };
-
   render() {
     const {
-      // changeVisaFilter,
+      distance,
+      changeDistanceFilter,
+      clearDistanceFilter,
       providerTypes,
-      toggleProviderVisibility
+      toggleProviderVisibility,
       // visaTypes
+      // changeVisaFilter,
     } = this.props;
     const topBarItemClass = "top-bar-item";
 
@@ -39,7 +37,9 @@ class TopBar extends Component {
         />
         <DistanceDropdown
           className={topBarItemClass}
-          onChange={this.onDistanceSelected}
+          currentDistance={distance}
+          onChange={changeDistanceFilter}
+          onClear={clearDistanceFilter}
         />
       </div>
     );
