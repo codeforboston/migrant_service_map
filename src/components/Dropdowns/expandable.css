@@ -36,6 +36,16 @@
   margin-top: 0.5rem;
 }
 
+.expandable-container .dropdown-input-wrapper:hover {
+  color: #202020;
+  background-color: #ead3ff;
+}
+
+.expandable-container .dropdown-input-wrapper .expandable-label {
+  width: 100%;
+  cursor: pointer;
+}
+
 .expandable-container .expanded-content {
   height: 0px;
   opacity: 0;
