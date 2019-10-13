@@ -18,20 +18,99 @@ text-overflow: ellipsis;
 .provider-card {
   display: flex;
   width: 100%;
-  flex-flow: column nowrap;
-  padding: 10px;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  flex-flow: row nowrap;
+  background-color: #FFFFFF;
+  border: 2px solid #C8A2EB;
+  box-shadow: 1px 3px 4px rgba(96, 1, 185, 0.25); 
+  outline: none;
   user-select: none;
 }
 
-.provider-card.saved {
-  background-color: #faf7fe;
+.provider-card.card-expanded {
+  background: #F9F2FF;
+  border: 2px solid #8C45CF;
+  box-sizing: border-box;
+  border-radius: 1px;
+  box-shadow: 1px 3px 4px rgba(184, 147, 217, 0.4);
 }
 
+.provider-card.card-expanded:hover {
+  box-shadow: 3px 5px 8px rgba(184, 147, 217, 0.8);
+}
+
+.provider-card.card-wrapped {
+  background: #FFFFFF;
+  border: 2px solid #DCCFE8;
+  border-radius: 1px;
+  box-shadow: 1px 3px 4px rgba(96, 1, 185, 0.25);
+}
+
+.provider-card.card-wrapped:hover {
+  border: 2px solid #C8A2EB;
+  box-shadow: 1px 3px 4px rgba(110, 2, 207, 0.4);
+}
+
+.provider-card.card-expanded .card-draggable-icon {
+  color: #A36DD6;
+}
+
+.provider-card.card-expanded:hover .card-draggable-icon {
+  color: #8C45CF;
+}
+
+.provider-card.card-wrapped .card-draggable-icon {
+  color: #DCCFE8;
+}
+
+.provider-card.card-wrapped:hover .card-draggable-icon {
+  color: #D4A5FF;
+}
+
+.provider-card.card-dragging .card-draggable-icon {
+  color: #8C45CF;
+}
+
+.provider-card.active {
+  background: #EFDFFD;
+  border: 2px solid #B799D2;
+  box-sizing: border-box;
+  border-radius: 1px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), inset 0px 3px 4px rgba(89, 0, 168, 0.4) !important;
+}
+
+.provider-card.card-dragging:active {
+  background: #EFDFFD;
+  border: 2px solid #8C45CF;
+  box-sizing: border-box;
+  border-radius: 1px;
+  box-shadow: 3px 5px 8px rgba(184, 147, 217, 0.8) !important;
+}
+
+.card-layout {
+  display: flex;
+  flex-flow: column nowrap;
+  flex-grow: 1;
+  flex-shrink: 0;
+  padding: 10px;
+  width: 100%;
+}
+
+.provider-card.saved .card-layout{
+  padding-left: 41px;
+  margin-left: -31px;
+}
+
+.card-draggable-icon {
+  align-self: center;
+  padding: 10px 10px;
+  flex: 0 0 auto;
+  color: #C8A2EB
+}
+/*
 .provider-card.search {
-  background-color: #f5fbff;
+   background-color: #f5fbff; 
 }
-
+*/
 .provider-card .card-container {
   position: relative;
   display: flex;
@@ -112,6 +191,7 @@ h5.expanded {
 
 .wrapped-icons {
   color: #7e7e7e;
+  display: none;
 }
 
 .save-button-container {

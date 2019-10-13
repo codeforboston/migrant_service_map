@@ -43,4 +43,10 @@
   flex: auto;
   min-height: 0;
   box-shadow: 0 0 6px grey;
+  height: 100%;
+}
+
+.selected-tab-panel {
+  display: flex;
+  flex-direction: column;
 }

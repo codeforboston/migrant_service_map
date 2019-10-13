@@ -7,22 +7,16 @@ import "./top-bar.css";
 // import VisaStatusDropdown from "./visa-status-dropdown";
 
 class TopBar extends Component {
-  onSearchInputClick = () => {
-    const { selectTab } = this.props;
-    selectTab(0);
-  };
-
-  onDistanceSelected = distance => {
-    const { changeDistanceFilter } = this.props;
-    changeDistanceFilter(distance);
-  };
 
   render() {
     const {
-      // changeVisaFilter,
+      distance,
+      changeDistanceFilter,
+      clearDistanceFilter,
       providerTypes,
-      toggleProviderVisibility
+      toggleProviderVisibility,
       // visaTypes
+      // changeVisaFilter,
     } = this.props;
     const topBarItemClass = "top-bar-item";
 
@@ -40,11 +34,12 @@ class TopBar extends Component {
         />
         <Search
           className={topBarItemClass}
-          onSearchInputClick={this.onSearchInputClick}
         />
         <DistanceDropdown
           className={topBarItemClass}
-          onChange={this.onDistanceSelected}
+          currentDistance={distance}
+          onChange={changeDistanceFilter}
+          onClear={clearDistanceFilter}
         />
       </div>
     );
