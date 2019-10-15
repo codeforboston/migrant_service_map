@@ -20,9 +20,9 @@ export default class RadioButtonDropdown extends React.Component {
             id={text}
             type="radio"
             name={text}
-            value={text}
-            onChange={() => onChange(value, text)}
-            checked={text === selected}
+            value={value}
+            onChange={() => onChange(value)}
+            checked={value === selected}
           />
           <label className="expandable-label" htmlFor={text}>
             {text}
