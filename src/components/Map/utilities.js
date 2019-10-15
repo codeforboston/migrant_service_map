@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMapMarkerAlt, faMapMarker } from "@fortawesome/free-solid-svg-icons";
 import ReactDOM from "react-dom";
 import React from "react";
-import _ from "lodash";
 
 const convertProvidersToGeoJSON = providers => {
   return providers.map(provider => ({
@@ -47,86 +46,6 @@ const removeDistanceMarkers = markerArray => {
   return markerArray.map(marker => marker.remove());
 };
 
-const cleanFeatures = providerFeatures => {
-  // The dataset contains some duplicate providers.
-  // Deduplicate by comparing coordinates and name, to allow for multiple providers at the
-  // same location. In that case, mapbox will render one icon over the other.
-  return _.uniqWith(
-    providerFeatures,
-    (f1, f2) =>
-      _.isEqual(f1.geometry.coordinates, f2.geometry.coordinates) &&
-      _.isEqual(
-        f1.properties["Organization Name"],
-        f2.properties["Organization Name"]
-      )
-  );
-};
-
-const normalizeProviders = providerFeatures => {
-  const providerTypes = { byId: {}, allIds: [] };
-  const providers = { byId: {} };
-  providerFeatures = cleanFeatures(providerFeatures);
-  providerFeatures.forEach(
-    ({ id, geometry: { coordinates }, properties }, index) => {
-      let formattedTypeId = properties["Type of Service"]
-        .toLowerCase()
-        .split(" ")
-        .join("-");
-      id = index;
-      const typeExists = providerTypes.allIds.includes(formattedTypeId);
-      if (formattedTypeId === "community-center") {
-        // special case
-        formattedTypeId = "community-centers";
-      }
-      if (typeExists) {
-        providerTypes.byId[formattedTypeId] = {
-          ...providerTypes.byId[formattedTypeId],
-          id: formattedTypeId,
-          name: properties["Type of Service"],
-          providers: [...providerTypes.byId[formattedTypeId].providers, id]
-        };
-      } else {
-        if (!providerTypes.allIds.includes(formattedTypeId)) {
-          providerTypes.allIds.push(formattedTypeId);
-        }
-        providerTypes.byId[formattedTypeId] = {
-          id: formattedTypeId,
-          name: properties["Type of Service"],
-          providers: [id]
-        };
-      }
-
-      providers.byId[id] = {
-        id,
-        coordinates,
-        address:
-          properties[
-            "Address (#, Street Name, District/city, State, Zip Code)"
-          ],
-        email: properties["Email:"],
-        mission: properties["Mission:"],
-        name: properties["Organization Name"],
-        telephone: properties["Telephone:"],
-        timestamp: properties.Timestamp,
-        // Type of Service
-        typeName: properties["Type of Service"],
-        typeId: formattedTypeId,
-        // Validated By
-        website: properties.Website,
-      };
-    }
-  );
-  // sorted by name
-  providerTypes.allIds.map(id => {
-    const providersByType = providerTypes.byId[id].providers;
-    return providersByType.sort((a, b) =>
-      providers.byId[a].name.localeCompare(providers.byId[b].name)
-    );
-  });
-  // commit map query result to redux
-  return { providerTypes, providers };
-};
-
 const getBoundingBox = (providersById, providerIds) => {
   const providers = lookupProviders(providersById, providerIds),
     lngs = providers.map(provider => provider.coordinates[0]),
@@ -162,7 +81,6 @@ export {
   convertProvidersToGeoJSON,
   createCenterMarker,
   createDistanceMarker,
-  normalizeProviders,
   removeDistanceMarkers,
   getBoundingBox,
   lookupProviders,

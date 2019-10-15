@@ -9,7 +9,6 @@ import {
   convertProvidersToGeoJSON,
   createCenterMarker,
   createDistanceMarker,
-  normalizeProviders,
   removeDistanceMarkers,
   getBoundingBox,
   filterProviderIds,
@@ -46,8 +45,6 @@ class Map extends Component {
   }
 
   onMapLoaded = () => {
-    const { initializeProviders } = this.props;
-
     // Initialize static sources and layers. Layers for provider icons are
     // added as they're enabled in the UI. Layers are drawn in the order they
     // are added to the map.
