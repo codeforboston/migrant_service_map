@@ -20,12 +20,8 @@ const SPECIAL_NO_RESULTS_ID = 'notfound.0';
 mapboxgl.accessToken =
   "pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw";
 
-const boundingBox = [
-  -71.562762,
-  42.154131, // Longitude,Latitude near Milford MA
-  -70.647115,
-  42.599752 // Longitude, Latitute near Gloucester MA
-];
+// Approximate bounding box of Massachusetts.
+const boundingBox = [-73.56055, 41.158671, -69.80923, 42.994435];
 
 // The map has a zoom level between 0 (zoomed entirely out)
 // and 22 (zoomed entirely in). Zoom level is configured as integers but

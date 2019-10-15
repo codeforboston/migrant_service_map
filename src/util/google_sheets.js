@@ -120,7 +120,7 @@ const loadSpreadsheet = url => {
 
 const alertLoadFailure = url => {
   window.alert(
-    `An error occured while loading the provider spreadsheet at ${url}. Please check developer tools for more information.`
+    `An error occurred while loading the provider spreadsheet at ${url}. Please check developer tools for more information.`
   );
 };
 
