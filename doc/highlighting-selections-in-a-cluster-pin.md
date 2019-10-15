@@ -39,6 +39,10 @@ location remains highlighted.
 * Doesn't tell you which one is selected
 * Can't tell how many are selected if more than one is selected
 
+### 10/12/19 discussion
+
+We can avoid the first two cons by animating a single provider icon when the provider is selected. When the animation stops, the marker fades out, and the containing cluster changes colors to indicate the selected icon. This should look like the provider marker appears, then "melts" back into the cluster. 
+
 ## "Pop out" selected location
 
 ### How it Works
