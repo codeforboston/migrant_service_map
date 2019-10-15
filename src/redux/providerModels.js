@@ -5,7 +5,7 @@ import _ from "lodash";
  */
 class InvalidProviderError extends Error {
   constructor(messageOrCause) {
-    const message = typeof messageOrCause === "string" ? messageOrCause : "";
+    const message = String(messageOrCause);
     super(message);
     this.name = this.constructor.name;
     if (messageOrCause instanceof Error) {
