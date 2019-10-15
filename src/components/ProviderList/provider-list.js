@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { MenuDropdown, CollapsibleMenuDropdown, MenuDropdownItem } from "..";
+import { MenuDropdown, MenuDropdownItem } from "..";
 import SortDropdown from "./sort-dropdown.js";
 
 import "./provider-list.css";
@@ -95,11 +95,12 @@ class ProviderList extends Component {
               {providersList.map(providerType => (
                 <li key={providerType.id}>
                 {!!providerType.providers.length && ( //if there is not providers MenuDropdown is not shown
-                  <CollapsibleMenuDropdown
+                  <MenuDropdown
                     key={providerType.id}
                     id={providerType.id}
                     text={providerType.name}
                     collapsed={this.state.collapsedProviderTypes.includes(providerType.id)}
+                    collapsible={providersList.length > 1}
                     handleToggle={() => {this.toggleProviderType(providerType.id)}}
                   >
                     <ul className="providers-sublist">
@@ -136,7 +137,7 @@ class ProviderList extends Component {
                           </li>
                         ))}
                     </ul>
-                  </CollapsibleMenuDropdown>
+                  </MenuDropdown>
                 )}
                 </li>
               ))}
