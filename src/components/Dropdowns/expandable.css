@@ -36,6 +36,11 @@
   margin-top: 0.5rem;
 }
 
+.expandable-container .dropdown-input-wrapper input, 
+.expandable-container .dropdown-input-wrapper label {
+  cursor: pointer;
+}
+
 .expandable-container .expanded-content {
   height: 0px;
   opacity: 0;
@@ -49,4 +54,8 @@
   max-height: 300px;
   opacity: 1;
   pointer-events: auto;
+}
+
+.expandable-label {
+  flex: auto;
 }
