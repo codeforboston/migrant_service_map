@@ -26,10 +26,12 @@ class ProviderList extends Component {
   componentDidUpdate(previousProps) {
     let nowHighlighted = this.props.highlightedProviders;
     
-    if (nowHighlighted.length && nowHighlighted[0] !== previousProps.highlightedProviders[0]) {
+    // only scroll if the change in highlightedProviders is due to adding a new item
+    if (nowHighlighted.length && !previousProps.highlightedProviders.includes(nowHighlighted[0])) {
 
       // expand provider type first if necessary
-      for(let providerType of this.props.providersList) {
+      let providerType;
+      for(providerType of this.props.providersList) {
         let providerTypeProviders = providerType.providers.map(p => p.id);
         let typeIsCollapsed = this.state.collapsedProviderTypes.includes(providerType.id);
         if (typeIsCollapsed && providerTypeProviders.includes(nowHighlighted[0])) { this.toggleProviderType(providerType.id); }
@@ -38,13 +40,13 @@ class ProviderList extends Component {
       // add a small delay when updating scrollTop to avoid edge case 
       // of 'open' height not being taken into account 
       // when scrolling the list upward
-      let timeoutID = setTimeout( () => {
-        this.listElementRef.current.scrollTop = this.lastHighlightedRef.current.offsetTop
+      setTimeout( () => {
+        this.listElementRef.current.scrollTop = this.lastHighlightedRef.current.offsetTop - 8;
         // NOTE: setting property "scroll-behavior: smooth" in the CSS
         // lets the browser take care of the animation on scrollTop update
         },
         60
-      )
+      );
 
     }
   }
