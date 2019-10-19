@@ -34,7 +34,7 @@ to match.
   width: 100%;
   border: 0;
   background-color: transparent;
-  height: 40px;
+  height: 47px;
   margin: 0;
   color: rgba(0, 0, 0, 0.5);
   padding: 10px 10px 10px 40px;
@@ -51,7 +51,7 @@ to match.
 
 .mapboxgl-ctrl-geocoder .geocoder-icon-search {
   position: absolute;
-  top: 10px;
+  top: 13.5px;
   left: 10px;
 }
 .mapboxgl-ctrl-geocoder button {
