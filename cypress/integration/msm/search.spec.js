@@ -6,14 +6,14 @@ context('Search', () => {
   })
 
   it('results in concentric circles', () => {
-  	// Search
+  	// Sanity check
 	cy.get('.header-subtext')
 		.should('have.text', 'Use the filters in the top bar to adjust the number of results')
 	
-	// Filter
+	// Perform the search
 	cy.get('.mapboxgl-ctrl-geocoder input').type('One Broadway')
 
-	// This might not be necessary but it may help in some circumstances
+	// This is not necessary but it may help in some circumstances
 	cy.wait(3000)
 
 	// Select a search result
