@@ -43,6 +43,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "cypress": "^3.4.1",
     "prettier": "^1.15.3"
   }
 }
