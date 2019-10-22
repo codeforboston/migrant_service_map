@@ -35,11 +35,7 @@ to match.
   font-weight: 700;
   border: 0;
   background-color: transparent;
-<<<<<<< HEAD
   height: 5%;
-=======
-  height: 47px;
->>>>>>> ec7155e0e35f880eecf06c5f1ec8238a6c96f313
   margin: 0;
   color: grey;
   padding: 0px 10px 0px 40px;
@@ -56,11 +52,7 @@ to match.
 
 .mapboxgl-ctrl-geocoder .geocoder-icon-search {
   position: absolute;
-<<<<<<< HEAD
   top: 0px;
-=======
-  top: 13.5px;
->>>>>>> ec7155e0e35f880eecf06c5f1ec8238a6c96f313
   left: 10px;
 }
 .mapboxgl-ctrl-geocoder button {

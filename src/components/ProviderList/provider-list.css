@@ -51,11 +51,6 @@ label {
   scroll-behavior: smooth;
   margin: 0;
   padding: 8px 16px 8px 16px;
-<<<<<<< HEAD
-=======
-  height: -webkit-fill-available;
-  flex: auto;
->>>>>>> ec7155e0e35f880eecf06c5f1ec8238a6c96f313
 }
 
 @media (prefers-reduced-motion: reduce) {
