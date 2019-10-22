@@ -63,7 +63,7 @@ export default class SortDropdown extends React.Component {
           checked={option === incomingState}
           onChange={() => {}}
         />
-        <label className="expandable-label" htmlFor={option}>
+        <label htmlFor={option}>
           {option.toString()}
         </label>
       </div>
