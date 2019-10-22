@@ -25,6 +25,11 @@
   border-radius: 8px;
 }
 
+#logo {
+  display: flex;
+  justify-content: center;
+}
+
 .mapboxgl-ctrl-geocoder {
   height: 100%;
   border-radius: 0px;
