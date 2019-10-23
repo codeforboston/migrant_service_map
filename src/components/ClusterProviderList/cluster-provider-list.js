@@ -25,7 +25,7 @@ render(){
         lineHeight: "1.5em",
     }
     const listStyle = {
-        paddingTop: "1em",
+        // margin: '0.5em'
         //height of 9 elements
         // height: '324px'
     }
@@ -35,11 +35,19 @@ render(){
         height: "20px",
         verticalAlign: "top",
     }
+    const wrapper = {
+        backgroundColor: 'white',
+        padding: '15px',
+        border: '1px solid #D7ADFF',
+        borderRadius: '8px'
+    }
+    // const more = {
+    //     paddingBottom: '1em'
+    // }
     const listLength = this.props.list.length
 
     return (
-        <div id="clusterList-wrapper" className="expandable-container">
-            <div id="clusterList-inner" className="expandable-content-wrapper">
+            <div id="clusterList-inner" className="expandable-content-wrapper" style={wrapper}>
                 <div className="expandable-content" style={listStyle}>
                     {this.props.list.map(
                         (item, i) => { if (i < 9) {
@@ -57,7 +65,6 @@ render(){
                     </div>}
                 </div>
             </div>
-        </div>
     );
 
     }

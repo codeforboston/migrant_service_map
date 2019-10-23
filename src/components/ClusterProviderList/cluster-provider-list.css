@@ -68,3 +68,7 @@ button.geocoder-icon.geocoder-icon-close {
 .clear-icon-container {
   padding: 10px;
 }
+
+.expandable-content-wrapper {
+  background-color: white;
+}
