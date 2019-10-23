@@ -19,14 +19,14 @@ export default class SavedProvidersList extends React.Component {
       mission,
       name,
       telephone,
-      "Type of Service": type,
+      typeName,
       website
     } = provider;
     return (
       <div className={"provider"} key={id}>
         <div className={"name"}>{name}</div>
         <div className={"type"} style={{ fontStyle: "italic" }}>
-          {type}
+          {typeName}
         </div>
         <div className={"details"}>
           <div className={"address"}>Address: {address}</div>
@@ -159,7 +159,6 @@ export default class SavedProvidersList extends React.Component {
                         <MenuDropdownItem
                           key={provider.id}
                           provider={provider}
-                          providerTypeName={provider["Type of Service"]}
                           isSaved="saved"
                           toggleSavedStatus={() => saveProvider(provider.id)}
                           flyToProvider={() => flyToProvider(provider.id)}
