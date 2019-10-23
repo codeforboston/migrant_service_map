@@ -9,20 +9,56 @@ class ProviderList extends Component {
     super(props);
     this.listElementRef = React.createRef();
     this.lastHighlightedRef = React.createRef();
-  }
-
-  componentDidUpdate(previousProps) {
-    let newhlp = this.props.highlightedProviders;
-    if (newhlp.length && newhlp[0] !== previousProps.highlightedProviders[0]) {
-      // CSS 'scroll-behavior: smooth' animates the scroll when scrollTop is updated;
-      // adding a delay avoids edge case of scroll-upward not taking 'open' height into account
-      setTimeout(
-        () =>
-          (this.listElementRef.current.scrollTop = this.lastHighlightedRef.current.offsetTop),
-        60
-      );
+    this.state = {
+      collapsedProviderTypes: [],
+      lastHighlightedViaSidebar: null, // providers not highlighted via map-click do not trigger scroll
     }
   }
+
+  toggleProviderType = (id) => {
+    console.log('toggling provider type', id);
+    let collapsed = this.state.collapsedProviderTypes;
+    let updated = collapsed.includes(id) ? collapsed.filter(c => c !== id) : [id, ...collapsed];
+    this.setState({ collapsedProviderTypes: updated });
+  }
+
+  // if highlightedProviders has changed,
+  // we want to scroll providers list to most recent one
+  componentDidUpdate(previousProps) {
+    let nowHighlighted = this.props.highlightedProviders;
+    let wasHighlightedViaSidebar = (nowHighlighted[0] === this.state.lastHighlightedViaSidebar);
+    let wasHighlightedAlready = previousProps.highlightedProviders.includes(nowHighlighted[0]);
+
+    // only scroll if the change in highlightedProviders
+    // comes from clicking a map icon to add a new provider
+    if (
+      nowHighlighted.length
+      && !wasHighlightedViaSidebar
+      && !wasHighlightedAlready
+    ) {
+
+      // expand provider type first if necessary
+      let providerType;
+      for(providerType of this.props.providersList) {
+        let providerTypeProviders = providerType.providers.map(p => p.id);
+        let typeIsCollapsed = this.state.collapsedProviderTypes.includes(providerType.id);
+        if (typeIsCollapsed && providerTypeProviders.includes(nowHighlighted[0])) { this.toggleProviderType(providerType.id); }
+      }
+
+      // add a small delay when updating scrollTop 
+      // (avoids 'open' height not being taken into account 
+      //  when target item is earlier than visible section of list)
+      setTimeout( () => {
+        this.listElementRef.current.scrollTop = this.lastHighlightedRef.current.offsetTop - 8;
+        // NOTE: setting property "scroll-behavior: smooth" in the CSS
+        // lets the browser take care of the animation on scrollTop update
+        },
+        60
+      );
+
+    }
+  }
+
 
   render() {
     const {
@@ -38,6 +74,12 @@ class ProviderList extends Component {
       flyToProvider,
       zoomToFit
     } = this.props;
+
+    let handleProviderClick = (id) => {
+      this.setState({ lastHighlightedViaSidebar: id });
+      displayProviderInformation(id);
+    }
+
     return (
       <div className="service-providers">
         {!providersList.length && (
@@ -68,10 +110,14 @@ class ProviderList extends Component {
             <ul className="providers-list" ref={this.listElementRef}>
               {providersList.map(providerType => (
                 <li key={providerType.id}>
+                {!!providerType.providers.length && ( //if there is not providers MenuDropdown is not shown
                   <MenuDropdown
                     key={providerType.id}
                     id={providerType.id}
                     text={providerType.name}
+                    collapsed={this.state.collapsedProviderTypes.includes(providerType.id)}
+                    collapsible={providersList.length > 1}
+                    handleToggle={() => {this.toggleProviderType(providerType.id)}}
                   >
                     <ul className="providers-sublist">
                       {!!providerType.providers.length && //if there is not providers MenuDropdown is not shown
@@ -84,7 +130,7 @@ class ProviderList extends Component {
                                 : null
                             }
                             onClick={() =>
-                              displayProviderInformation(provider.id)
+                              handleProviderClick(provider.id)
                             }
                             className="search-item-container"
                           >
@@ -108,6 +154,7 @@ class ProviderList extends Component {
                         ))}
                     </ul>
                   </MenuDropdown>
+                )}
                 </li>
               ))}
             </ul>
