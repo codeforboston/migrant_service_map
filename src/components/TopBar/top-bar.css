@@ -30,6 +30,11 @@
   justify-content: center;
 }
 
+#logo img {
+  width: 100%;
+  max-width: 350px;
+}
+
 .mapboxgl-ctrl-geocoder {
   height: 100%;
   border-radius: 0px;
