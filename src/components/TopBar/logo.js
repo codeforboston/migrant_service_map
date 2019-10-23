@@ -5,9 +5,11 @@ export default class Logo extends React.Component {
   render() {
     return (
         <div id="logo">
-            <img src={logo}
-            alt="Migrate Service Map"
-            />
+            <a href="https://refugeeswelcomehome.org/">
+              <img src={logo}
+                alt="Migrate Service Map"
+              />
+            </a>
         </div>
     );
   }
