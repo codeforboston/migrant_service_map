@@ -18,10 +18,7 @@ import {
   faHospital,
   faBed,
   faBalanceScale,
-  faGripVertical,
-  faPlus,
-  faCheck,
-  faMinus
+  faGripVertical
 } from "@fortawesome/free-solid-svg-icons";
 import "./menu-dropdown-item.css";
 import DetailsPane from "components/DetailsPane";
