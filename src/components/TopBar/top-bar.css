@@ -23,6 +23,7 @@
   margin: 0 8px;
   height: 100%;
   border-radius: 8px;
+  cursor: default;
 }
 
 #logo {
@@ -71,4 +72,5 @@ button.geocoder-icon.geocoder-icon-close {
 
 .clear-icon-container {
   padding: 10px;
+  cursor: default;
 }

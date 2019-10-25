@@ -105,7 +105,7 @@ label {
 .dropdown-list-container {
   flex: 1;
   margin: 0 8px;
-  cursor: pointer;
+  /* cursor: pointer; */
   z-index: 10;
   background-color: white;
   border: 1px solid #8c45cf;
@@ -182,7 +182,7 @@ label {
 }
 
 .dropdown-menu {
-  cursor: pointer;
+  /* cursor: pointer; */
   color: gray;
   font-weight: bold;
   margin: 0px 2px;
