@@ -144,7 +144,6 @@ h5.expanded {
   color: #000;
   text-overflow: ellipsis;
   cursor: pointer;
-  height: 18px;
 }
 
 .wrapped-info {
