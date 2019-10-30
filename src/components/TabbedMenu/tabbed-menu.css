@@ -25,6 +25,9 @@
   border-radius: 8px 8px 0 0;
   flex: 1 1 auto;
   text-align: center;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;      
 }
 .react-tabs__tab--selected {
   background: white;
