@@ -9,7 +9,6 @@ import {
   convertProvidersToGeoJSON,
   createCenterMarker,
   createDistanceMarker,
-  normalizeProviders,
   removeDistanceMarkers,
   getBoundingBox,
   filterProviderIds,
@@ -21,12 +20,8 @@ const SPECIAL_NO_RESULTS_ID = "notfound.0";
 mapboxgl.accessToken =
   "pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw";
 
-const boundingBox = [
-  -71.562762,
-  42.154131, // Longitude,Latitude near Milford MA
-  -70.647115,
-  42.599752 // Longitude, Latitute near Gloucester MA
-];
+// Approximate bounding box of Massachusetts.
+const boundingBox = [-73.56055, 41.158671, -69.80923, 42.994435];
 
 // The map has a zoom level between 0 (zoomed entirely out)
 // and 22 (zoomed entirely in). Zoom level is configured as integers but
@@ -46,21 +41,12 @@ class Map extends Component {
   }
 
   onMapLoaded = () => {
-    const { initializeProviders } = this.props;
-
     // Initialize static sources and layers. Layers for provider icons are
     // added as they're enabled in the UI. Layers are drawn in the order they
     // are added to the map.
     this.setSingleSourceInMap();
     this.addDistanceIndicatorLayer();
     this.findClustersInMap();
-
-    // Pull data from Mapbox style and initialize application state
-    const providerFeatures = this.map.querySourceFeatures("composite", {
-      sourceLayer: "Migrant_Services_-_MSM_Final_1"
-    });
-    const normalizedProviders = normalizeProviders(providerFeatures);
-    initializeProviders(normalizedProviders);
 
     this.loadProviderTypeImage(typeImages);
     this.setState({ loaded: true });
@@ -74,7 +60,6 @@ class Map extends Component {
       center: mapCenter,
       zoom: 11 // starting zoom
     });
-
     map.addControl(new mapboxgl.NavigationControl());
     map.on("load", this.onMapLoaded);
 
