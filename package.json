@@ -15,7 +15,7 @@
     "mapbox": "^1.0.0-beta10",
     "mapbox-gl": "^0.51.0",
     "memoize-one": "^5.1.1",
-    "npm": "^6.9.0",
+    "npm": "^6.12.1",
     "papaparse": "^5.0.0",
     "react": "^16.8.5",
     "react-beautiful-dnd": "^11.0.5",
