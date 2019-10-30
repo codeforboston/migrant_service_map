@@ -51,6 +51,8 @@ label {
   scroll-behavior: smooth;
   margin: 0;
   padding: 8px 16px 8px 16px;
+  height: -webkit-fill-available;
+  flex: auto;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -84,7 +86,7 @@ label {
 }
 
 .nav-search {
-  margin-top: 0px;
+  margin-top: 5px;
 }
 
 .upper-bar {

@@ -26,18 +26,11 @@ export default class DetailsPane extends React.Component {
             <a href={"mailto:" + email}>{email}</a>
           </ProviderDetailsInfo>
           <ProviderDetailsInfo icon="language" label="website" ellipsis>
-            <a href={website} target="_blank">
-              {" "}
-              {website}
-            </a>
+            <a href={website}> {website}</a>
           </ProviderDetailsInfo>
         </Row>
         <Row>
-          <ProviderDetailsInfo
-            icon="home"
-            label="address"
-            onClick={flyToProvider}
-          >
+          <ProviderDetailsInfo icon="home" label="address" onClick={flyToProvider}>
             {address || "address"}
           </ProviderDetailsInfo>
           <ProviderDetailsInfo icon="perm_phone_msg" label="phone">
@@ -46,7 +39,6 @@ export default class DetailsPane extends React.Component {
         </Row>
         <div
           className={"missions" + (isMissionTextExpanded ? " expanded" : "")}
-          onClick={e => this.onMissionTextExpanderClicked(e)}
         >
           {mission}
         </div>

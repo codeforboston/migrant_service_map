@@ -15,7 +15,7 @@ import {
   providersById
 } from "./utilities.js";
 
-const SPECIAL_NO_RESULTS_ID = "notfound.0";
+const SPECIAL_NO_RESULTS_ID = 'notfound.0';
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw";
@@ -74,7 +74,7 @@ class Map extends Component {
     const geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
       proximity: coordinateObject,
-      placeholder: "Enter an address",
+      placeholder: "Location",
       marker: false,
       bbox: boundingBox
     });
@@ -83,36 +83,34 @@ class Map extends Component {
     searchBox.className += " msm-map-search-box";
     document.getElementById("nav-search").appendChild(searchBox);
 
-    geocoder.on("results", ev => {
-      /* Fun hack to show "no results found" in the search box. This solution depends on the implementation of
-       * this specific version of the geocoder.
-       *
-       * You can see that the response passed to the 'results' event is then used to set the dropdown result:
-       * https://github.com/mapbox/mapbox-gl-geocoder/blob/d2db50aede1ef6777083435f2dc533d5e1846a7e/lib/index.js#L203
-       *
-       * Typeahead instances render suggestions via method getItemValue:
-       * https://github.com/tristen/suggestions/blob/9328f1f3d21598c40014892e3e0329027dd2b538/src/suggestions.js#L221
-       *
-       * Geocoder overrides getItemValue to look at the "place_name" property:
-       * https://github.com/mapbox/mapbox-gl-geocoder/blob/d2db50aede1ef6777083435f2dc533d5e1846a7e/lib/index.js#L103
-       *
-       * Geocoder API response object documentation:
-       * https://docs.mapbox.com/api/search/#geocoding-response-object
-       */
+    geocoder.on('results', ev => {
+    /* Fun hack to show "no results found" in the search box. This solution depends on the implementation of
+     * this specific version of the geocoder.
+     *
+     * You can see that the response passed to the 'results' event is then used to set the dropdown result:
+     * https://github.com/mapbox/mapbox-gl-geocoder/blob/d2db50aede1ef6777083435f2dc533d5e1846a7e/lib/index.js#L203
+     * 
+     * Typeahead instances render suggestions via method getItemValue:
+     * https://github.com/tristen/suggestions/blob/9328f1f3d21598c40014892e3e0329027dd2b538/src/suggestions.js#L221
+     * 
+     * Geocoder overrides getItemValue to look at the "place_name" property:
+     * https://github.com/mapbox/mapbox-gl-geocoder/blob/d2db50aede1ef6777083435f2dc533d5e1846a7e/lib/index.js#L103
+     * 
+     * Geocoder API response object documentation:
+     * https://docs.mapbox.com/api/search/#geocoding-response-object
+     */
       if (!ev.features || !ev.features.length) {
-        ev.features = [
-          {
-            id: SPECIAL_NO_RESULTS_ID,
-            place_name: "No search results"
-          }
-        ];
+        ev.features = [{ 
+          id: SPECIAL_NO_RESULTS_ID,
+          place_name: 'No search results',
+        }];
       }
     });
 
     geocoder.on("result", ev => {
       // display service providers results tab
       const { selectTab } = this.props;
-      selectTab(0);
+      selectTab(0)
       // ev.result contains id, place_name, text
       let { geometry, id, text } = ev.result;
       if (id === SPECIAL_NO_RESULTS_ID) {
@@ -142,7 +140,7 @@ class Map extends Component {
     let center = [-71.066954, 42.359947];
     this.removeReferenceLocation(this.map);
     this.props.setSearchCenterCoordinates(center, 1, "");
-  };
+  }
 
   zoomToDistance = distance => {
     let resolution = window.screen.height;
@@ -282,7 +280,7 @@ class Map extends Component {
           const mapZoom = this.map.getZoom();
           this.map.easeTo({
             center: features[0].geometry.coordinates,
-            zoom: mapZoom >= zoom ? mapZoom + 1 : zoom
+            zoom: mapZoom >= zoom ? mapZoom + 1 : zoom 
           });
         });
     });
