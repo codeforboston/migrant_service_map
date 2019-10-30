@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Column } from "simple-flexbox";
+import { Column } from "simple-flexbox";
 import "./mapbox-gl-geocoder.css";
 
 export default class Search extends React.Component {
