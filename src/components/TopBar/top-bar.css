@@ -6,9 +6,9 @@
   display: flex;
   flex: 0 0 auto;
   margin: -70px 0 0 0;
-  position: fixed;
+  /* position: flex; */
   padding: 10px;
-  justify-content: stretch;
+  /* justify-content: stretch; */
   height: 70px;
 }
 
@@ -41,6 +41,10 @@
   margin-top: 5px;
 }
 
+.nav-help {
+  margin-top: 5px;
+}
+
 .mapboxgl-ctrl-geocoder {
   border-radius: 8px !important;
 }
@@ -53,6 +57,12 @@ button.geocoder-icon.geocoder-icon-close {
   box-shadow: none !important;
   width: 100% !important;
   background-color: transparent;
+}
+
+#nav-help {
+  /* width: 50% !important; */
+  background-color: transparent;
+  flex: .2 1 auto;
 }
 
 .dropdown-row ul {

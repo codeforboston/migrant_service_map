@@ -3,6 +3,7 @@ import "components/ProviderList/provider-list.css";
 import ProviderTypeDropdown from "./provider-type-dropdown";
 import Search from "./search";
 import DistanceDropdown from "./distance-dropdown";
+import HelpIcon from "./help-icon.js";
 import "./top-bar.css";
 // import VisaStatusDropdown from "./visa-status-dropdown";
 
@@ -45,6 +46,10 @@ class TopBar extends Component {
         <DistanceDropdown
           className={topBarItemClass}
           onChange={this.onDistanceSelected}
+        />
+        <HelpIcon
+          className={topBarItemClass}
+          // onChange={this.onDistanceSelected}
         />
       </div>
     );
