@@ -15,6 +15,7 @@
   text-overflow: ellipsis;
   font-size: 15px;
   padding: 10px 0px 10px 0px;
+  cursor: pointer;
 }
 
 .details-pane .missions.expanded {
@@ -25,6 +26,9 @@
   float: right;
   font-weight: bold;
   font-size: 8px;
+  font-size: 10px;
   color: royalblue;
   cursor: pointer;
+  width: 100%;
+  text-align: center;
 }
