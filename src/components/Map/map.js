@@ -36,7 +36,6 @@ class Map extends Component {
     super(props);
     this.map = null;
     this.markerList = []; //need to keep track of marker handles ourselves -- cannot be queried from map
-    this.selectionMarkers = [];
     this.state = {
       loaded: false
     };
@@ -309,9 +308,9 @@ class Map extends Component {
       return
     }
     const provider = providers.byId[newSelection[0]];
-    const marker = new AnimatedMarker(provider);// AnimatedMarker(provider.id, provider.typeId);
+    const marker = new AnimatedMarker(provider);
     marker.addTo(this.map);
-    this.selectionMarkers.push({providerId: provider.id, marker: marker});
+
    }
 
   createPopup = () => {
@@ -527,13 +526,12 @@ class Map extends Component {
     if (this.state.loaded) {
       const features = this.geoJSONFeatures();
       this.setSourceFeatures(features);
-      this.selectionMarkers.forEach(item => item.marker.remove());
       this.props.loadedProviderTypeIds.map(typeId =>
         this.findLayerInMap(typeId)
       );
-      this.markRecentSelection(prevProps);
       this.setSpecialLayerInMap("highlighted", "highlighted");
       this.updatePinAndDistanceIndicator(prevProps);
+      this.markRecentSelection(prevProps);
       this.zoomToShowNewProviders(prevProps);
       if (
         this.props.filters.distance &&
