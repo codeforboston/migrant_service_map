@@ -302,12 +302,12 @@ class Map extends Component {
   };
 
   markRecentSelection(prevProps) {
-    let { providers, highlightedProviders } = this.props;
+    let { visibleProviders, highlightedProviders } = this.props;
     const newSelection = highlightedProviders.filter(provider => prevProps.highlightedProviders.includes(provider) === false);
     if (newSelection.length === 0 ) {
       return
     }
-    const provider = providers.byId[newSelection[0]];
+    const provider = visibleProviders[newSelection[0]];
     const marker = new AnimatedMarker(provider);
     marker.addTo(this.map);
 
