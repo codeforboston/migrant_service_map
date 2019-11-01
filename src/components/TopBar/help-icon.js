@@ -1,20 +1,26 @@
 import React, { Component } from 'react';
 // import "./mapbox-gl-geocoder.css";
 
+
+const topBarItemClass = "top-bar-item";
+
 class HelpIcon extends React.Component {
     render() {
       const { className, onSearchInputClick } = this.props;
       return (
        <>
           <div
+          
             className={className}
             id="nav-help"
-            // onClick={onSearchInputClick}
-          
+            onClick={onSearchInputClick}
           />
+          
         </>
+        
       );
     }
   }
+    
  
 export default HelpIcon;
