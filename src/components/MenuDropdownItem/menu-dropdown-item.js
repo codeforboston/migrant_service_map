@@ -117,8 +117,8 @@ export default class DropdownMenuItem extends React.Component {
                 onMouseDown={(e) => e.stopPropagation()}
                 onMouseUp={(e) => e.stopPropagation()}
               >
-                <FontAwesomeIcon icon={faTrashAlt} />
-                Remove
+                <FontAwesomeIcon icon={faTrashAlt} size="2x" />
+                DELETE
               </button>
             ) : (
               <button
@@ -129,12 +129,12 @@ export default class DropdownMenuItem extends React.Component {
               >
                 {isSaved === "saved" ? (
                   <Fragment>
-                    <FontAwesomeIcon icon={faFolderOpen} />
+                    <FontAwesomeIcon icon={faFolderOpen} size="3x" />
                     SAVED
                   </Fragment>
                 ) : (
                   <>
-                    <FontAwesomeIcon icon={faFolderPlus} />
+                    <FontAwesomeIcon icon={faFolderPlus} size="3x"/>
                     SAVE
                   </>
                 )}

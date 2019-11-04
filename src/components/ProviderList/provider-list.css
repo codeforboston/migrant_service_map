@@ -78,7 +78,6 @@ label {
 }
 
 .top-nav {
-  /* display: flex; */
   overflow: visible;
   height: 10%;
   background-color: white;
@@ -106,7 +105,6 @@ label {
 .dropdown-list-container {
   flex: 1;
   margin: 0 8px;
-  cursor: pointer;
   z-index: 10;
   background-color: white;
   border: 1px solid #8c45cf;
@@ -122,8 +120,6 @@ label {
   display: flex;
   flex-direction: column;
   height: 0;
-  /* max-height: 100%; */
-  /* width: 100%; */
   padding-top: 0px;
   text-align: left;
   opacity: 0;
@@ -167,7 +163,6 @@ label {
 
 .dropdown-button {
   height: 0;
-  /* max-height: 100%;  */
   width: 100%;
   margin: 0 24px;
   padding: 0 10px;
@@ -183,7 +178,6 @@ label {
 }
 
 .dropdown-menu {
-  cursor: pointer;
   color: gray;
   font-weight: bold;
   margin: 0px 2px;
