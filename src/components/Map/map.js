@@ -63,6 +63,7 @@ class Map extends Component {
     });
     map.addControl(new mapboxgl.NavigationControl());
     map.on("load", this.onMapLoaded);
+
     this.map = map;
 
     const coordinateObject = {
@@ -177,16 +178,8 @@ class Map extends Component {
           visibility: "visible"
         }
       });
-      this.map.on("click", typeId, e => this.providerLayerClickHandler(e));
-
-      let popup = this.createPopup();
-
-      this.map.on("mouseover", typeId, e => {
-        this.addPopup(popup, e);
-      });
-      this.map.on("mouseleave", typeId, () => {
-        popup.remove();
-      });
+      this.addClickHandlerToMapIdLayer(typeId);
+      this.addHoverHandlerToMapIdLayer(typeId);
     }
   };
 
@@ -245,6 +238,8 @@ class Map extends Component {
         "text-halo-width": 2
       }
     });
+
+    this.addClusterClickHandlerToMapLayer(clusterName);
   };
 
   setSingleSourceInMap = () => {
@@ -271,10 +266,12 @@ class Map extends Component {
     );
   };
 
-  clusterClickHandler = event => {
-    let features = this.map.queryRenderedFeatures(event.point, {
-      layers: [event.features[0].layer.id]
-    });
+  addClusterClickHandlerToMapLayer = clusterName => {
+    this.map.on("click", clusterName, e => {
+      let features = this.map.queryRenderedFeatures(e.point, {
+        layers: [clusterName]
+      });
+
       let clusterId = features[0].properties.cluster_id;
       this.map
         .getSource("displayData")
@@ -287,48 +284,54 @@ class Map extends Component {
             zoom: mapZoom >= zoom ? mapZoom + 1 : zoom 
           });
         });
+    });
   };
 
-  providerLayerClickHandler = e => {
+  addClickHandlerToMapIdLayer = typeId => {
     let { displayProviderInformation, highlightedProviders } = this.props;
+    this.map.on("click", typeId, e => {
       const providerElement = document.getElementById(
         `provider-${e.features[0].properties.id}`
       );
-      if (e.features[0].properties.typeId !== "highlightedProviders" && providerElement) {
+      if (typeId !== "highlightedProviders" && providerElement) {
         displayProviderInformation(e.features[0].properties.id);
       } else if (!highlightedProviders.includes(e.features[0].properties.id)) {
         displayProviderInformation(e.features[0].properties.id);
       }
+    });
   };
 
   markRecentSelection(prevProps) {
     let { visibleProviders, highlightedProviders } = this.props;
-    const newSelection = highlightedProviders.filter(provider => prevProps.highlightedProviders.includes(provider) === false);
-    if (newSelection.length === 0 ) {
-      return
-    }
-    const provider = visibleProviders[newSelection[0]];
+    const newSelection = highlightedProviders.find(providerId => !prevProps.highlightedProviders.includes(providerId));
+    if (!newSelection) { return; }
+    const provider = visibleProviders.find(provider => provider.id === newSelection);
     const marker = new AnimatedMarker(provider);
     marker.addTo(this.map);
 
    }
 
-  createPopup = () => {
-    return new mapboxgl.Popup({
+  addHoverHandlerToMapIdLayer = typeId => {
+    let popup = new mapboxgl.Popup({
       closeButton: false,
       closeOnClick: false,
       className: "name-popup",
       offset: 20
     });
-  };
 
-  addPopup = (popup, e) => {
-    let popupCoordinates = e.features[0].geometry.coordinates.slice();
-    let name = e.features[0].properties.name;
-    popup
-      .setLngLat(popupCoordinates)
-      .setHTML(name)
-      .addTo(this.map);
+    this.map.on("mouseenter", typeId, e => {
+      let popupCoordinates = e.features[0].geometry.coordinates.slice();
+      let name = e.features[0].properties.name;
+
+      popup
+        .setLngLat(popupCoordinates)
+        .setHTML(name)
+        .addTo(this.map);
+    });
+
+    this.map.on("mouseleave", typeId, () => {
+      popup.remove();
+    });
   };
 
   geoJSONFeatures = () => {

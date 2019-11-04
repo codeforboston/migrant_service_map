@@ -6,12 +6,13 @@ import {bboxPolygon, point, booleanPointInPolygon} from '@turf/turf';
 class AnimatedMarker {
     constructor(provider) {
         this.provider = provider;
-        this.element = this.createMarkerElement(this.provider.id, this.provider.typeId);
+        this.markerElement = this.createMarkerElement(this.provider.id, this.provider.typeId);
+        this.element = this.markerElement.element;
+        this.markerIcon = this.markerElement.icon;
+        this.markerIconHighlight = this.markerElement.highlight;
         this.marker = new mapboxgl.Marker({
             element: this.element
         }).setLngLat(provider.coordinates);
-        this.markerIcon = this.marker.getElement().firstChild;
-        this.markerIconHighlight = this.markerIcon.nextSibling.firstChild;
     }
 
     isInView = (map) => {
@@ -28,7 +29,6 @@ class AnimatedMarker {
         this.markerIcon.addEventListener('animationend', this.remove);
     };
 
-
     addTo(map) {
         this.marker.addTo(map);
         if (this.isInView(map)) {
@@ -43,11 +43,10 @@ class AnimatedMarker {
         this.marker.remove();
     };
 
-
     createMarkerElement = (providerId, typeId) => {
-        const marker = document.createElement("div");
-        marker.id = `marker-${providerId}`;
-        marker.className = "marker";
+        const element = document.createElement("div");
+        element.id = `marker-${providerId}`;
+        element.className = "marker";
         const icon = document.createElement("img");
         icon.id = `marker-icon-${providerId}`;
         icon.src = this.getPin(typeId);
@@ -58,10 +57,9 @@ class AnimatedMarker {
         const highlightContainer = document.createElement("div");
         highlightContainer.className = "marker-highlight-container";
         highlightContainer.appendChild(highlight);
-        marker.appendChild(icon);
-        marker.appendChild(highlightContainer);
-
-        return marker;
+        element.appendChild(icon);
+        element.appendChild(highlightContainer);
+        return { element, icon, highlight };
     };
 
     getPin = typeId => {
