@@ -307,7 +307,7 @@ class Map extends Component {
     });
   };
 
-  markRecentSelection(prevProps) {
+  markRecentSelection(prevProps, mapBounds) {
     let { visibleProviders, highlightedProviders } = this.props;
     const newSelection = highlightedProviders.find(
       providerId => !prevProps.highlightedProviders.includes(providerId)
@@ -319,7 +319,7 @@ class Map extends Component {
       provider => provider.id === newSelection
     );
     const marker = new AnimatedMarker(provider);
-    marker.addTo(this.map, this.getPaddedMapBounds());
+    marker.addTo(this.map, mapBounds);
   }
 
   addHoverHandlerToMapIdLayer = typeId => {
@@ -525,7 +525,7 @@ class Map extends Component {
    * cases is best done using more granular props passed to the map rather than having the map
    * track changes to highlighted props.
    */
-  zoomToShowNewProviders = prevProps => {
+  zoomToShowNewProviders = (prevProps, mapBounds) => {
     const prevIds = filterProviderIds(
         providersById(prevProps.visibleProviders),
         prevProps.highlightedProviders
@@ -540,10 +540,9 @@ class Map extends Component {
       return;
     }
     const newFeatureBounds = getProviderBoundingBox(
-        providersById(this.props.visibleProviders),
-        newIds
-      ),
-      mapBounds = this.getPaddedMapBounds();
+      providersById(this.props.visibleProviders),
+      newIds
+    );
     if (
       newFeatureBounds.getNorth() > mapBounds.getNorth() ||
       newFeatureBounds.getEast() > mapBounds.getEast() ||
@@ -563,8 +562,9 @@ class Map extends Component {
       );
       this.setSpecialLayerInMap("highlighted", "highlighted");
       this.updatePinAndDistanceIndicator(prevProps);
-      this.markRecentSelection(prevProps);
-      this.zoomToShowNewProviders(prevProps);
+      const mapBounds = this.getPaddedMapBounds();
+      this.markRecentSelection(prevProps, mapBounds);
+      this.zoomToShowNewProviders(prevProps, mapBounds);
       if (
         this.props.filters.distance &&
         this.props.filters.distance !== prevProps.filters.distance
