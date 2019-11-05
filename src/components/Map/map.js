@@ -319,7 +319,7 @@ class Map extends Component {
       provider => provider.id === newSelection
     );
     const marker = new AnimatedMarker(provider);
-    marker.addTo(this.map);
+    marker.addTo(this.map, this.getPaddedMapBounds());
   }
 
   addHoverHandlerToMapIdLayer = typeId => {
