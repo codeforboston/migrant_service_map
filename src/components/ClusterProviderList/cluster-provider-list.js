@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import mapboxgl from "mapbox-gl";
+import './cluster-provider-list.css'
 import { keyImages } from "../../assets/images.js";
 
 
@@ -10,7 +11,7 @@ class ClusterList extends Component {
         return keyImages.filter(image => image.type === typeId)
     }
 
-render(){
+render() {
     const itemStyle = {
         color: "#8c45cf",
         fontWeight: "400",
@@ -47,14 +48,14 @@ render(){
     const listLength = this.props.list.length
 
     return (
-            <div id="clusterList-inner" className="expandable-content-wrapper" style={wrapper}>
-                <div className="expandable-content" style={listStyle}>
+            <div id="clusterList-inner" className="expandable-content-wrapper">
+                <div className="expandable-content">
                     {this.props.list.map(
                         (item, i) => { if (i < 9) {
                             return (
                                 <div key={i}>
-                                    <img style={imageStyle} src={this.getImage(item.typeId)[0].image} alt='provider type icon'/>
-                                    <p style={itemStyle}>{item.name}</p>
+                                    <img className="image" src={this.getImage(item.typeId)[0].image} alt='provider type icon'/>
+                                    <p className="item">{item.name}</p>
                                 </div>
                             )
                         }}

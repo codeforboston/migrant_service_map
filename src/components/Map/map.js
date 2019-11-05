@@ -328,7 +328,6 @@ componentDidMount() {
     });
 
     this.map.on('mouseout', clusterName, e => {
-      console.log('event', e)
       clusterListMarker.remove()
     })
   };

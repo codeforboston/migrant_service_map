@@ -72,3 +72,31 @@ button.geocoder-icon.geocoder-icon-close {
 .expandable-content-wrapper {
   background-color: white;
 }
+
+#clusterList-inner {
+  background-color: white;
+  padding: 15px;
+  border: 1px solid #D7ADFF;
+  border-radius: 8px;
+}
+
+.image {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  vertical-align: top;
+}
+
+.item {
+  color: #8c45cf;
+  font-weight: 400;
+  font-size: 15px;
+  vertical-align: top;
+  display: inline-block;
+  width: 20em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding: 0px 6px;
+  line-height: 1.5em;
+}
