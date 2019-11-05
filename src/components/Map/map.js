@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import mapboxgl from "mapbox-gl";
-import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
+import mapboxgl from "./mapbox-gl-wrapper";
 import "./map.css";
 import { circle, point, transformTranslate } from "@turf/turf";
 import typeImages from "assets/images";
@@ -14,14 +13,6 @@ import {
   filterProviderIds,
   providersById
 } from "./utilities.js";
-
-const SPECIAL_NO_RESULTS_ID = 'notfound.0';
-
-mapboxgl.accessToken =
-  "pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw";
-
-// Approximate bounding box of Massachusetts.
-const boundingBox = [-73.56055, 41.158671, -69.80923, 42.994435];
 
 // The map has a zoom level between 0 (zoomed entirely out)
 // and 22 (zoomed entirely in). Zoom level is configured as integers but
@@ -53,7 +44,7 @@ class Map extends Component {
   };
 
   componentDidMount() {
-    const { mapCenter, coordinates } = this.props.search;
+    const { mapCenter } = this.props.search;
     const map = new mapboxgl.Map({
       container: "map", // container id
       style: "mapbox://styles/refugeeswelcome/cjxmgxala1t5b1dtea37lbi2p", // stylesheet location
@@ -64,94 +55,7 @@ class Map extends Component {
     map.on("load", this.onMapLoaded);
 
     this.map = map;
-
-    const coordinateObject = {
-      // initiating geocoder requires this as an object
-      longitude: coordinates[0],
-      latitude: coordinates[1]
-    };
-
-    const geocoder = new MapboxGeocoder({
-      accessToken: mapboxgl.accessToken,
-      proximity: coordinateObject,
-      placeholder: "Location",
-      marker: false,
-      bbox: boundingBox
-    });
-
-    const searchBox = geocoder.onAdd(map);
-    searchBox.className += " msm-map-search-box";
-    document.getElementById("nav-search").appendChild(searchBox);
-
-    geocoder.on('results', ev => {
-    /* Fun hack to show "no results found" in the search box. This solution depends on the implementation of
-     * this specific version of the geocoder.
-     *
-     * You can see that the response passed to the 'results' event is then used to set the dropdown result:
-     * https://github.com/mapbox/mapbox-gl-geocoder/blob/d2db50aede1ef6777083435f2dc533d5e1846a7e/lib/index.js#L203
-     * 
-     * Typeahead instances render suggestions via method getItemValue:
-     * https://github.com/tristen/suggestions/blob/9328f1f3d21598c40014892e3e0329027dd2b538/src/suggestions.js#L221
-     * 
-     * Geocoder overrides getItemValue to look at the "place_name" property:
-     * https://github.com/mapbox/mapbox-gl-geocoder/blob/d2db50aede1ef6777083435f2dc533d5e1846a7e/lib/index.js#L103
-     * 
-     * Geocoder API response object documentation:
-     * https://docs.mapbox.com/api/search/#geocoding-response-object
-     */
-      if (!ev.features || !ev.features.length) {
-        ev.features = [{ 
-          id: SPECIAL_NO_RESULTS_ID,
-          place_name: 'No search results',
-        }];
-      }
-    });
-
-    geocoder.on("result", ev => {
-      // display service providers results tab
-      const { selectTab } = this.props;
-      selectTab(0)
-      // ev.result contains id, place_name, text
-      let { geometry, id, text } = ev.result;
-      if (id === SPECIAL_NO_RESULTS_ID) {
-        geocoder._clear();
-        return;
-      }
-      let zoom;
-      if (!this.props.filters.distance) {
-        zoom = this.zoomToDistance(1.5);
-      } else {
-        zoom = this.zoomToDistance(this.props.filters.distance);
-      }
-
-      this.props.setSearchCenterCoordinates(geometry.coordinates, id, text);
-      map.flyTo({
-        center: geometry.coordinates,
-        zoom: zoom
-      });
-    });
-
-    geocoder.on("clear", ev => {
-      this.clearLocationSearch();
-    });
   }
-
-  clearLocationSearch = () => {
-    let center = [-71.066954, 42.359947];
-    this.removeReferenceLocation(this.map);
-    this.props.setSearchCenterCoordinates(center, 1, "");
-  }
-
-  zoomToDistance = distance => {
-    let resolution = window.screen.height;
-    let latitude = this.props.search.coordinates[1];
-    let milesPerPixel = (distance * 8) / resolution;
-    return (
-      Math.log2(
-        (24901 * Math.cos((latitude * Math.PI) / 180)) / milesPerPixel
-      ) - 8
-    );
-  };
 
   setSourceFeatures = features => {
     this.setSingleSourceInMap(); // checks source exists, adds if not
@@ -280,7 +184,7 @@ class Map extends Component {
           const mapZoom = this.map.getZoom();
           this.map.easeTo({
             center: features[0].geometry.coordinates,
-            zoom: mapZoom >= zoom ? mapZoom + 1 : zoom 
+            zoom: mapZoom >= zoom ? mapZoom + 1 : zoom
           });
         });
     });
@@ -351,9 +255,7 @@ class Map extends Component {
     this.addDistanceIndicatorLayer();
     // If no distance filter is set, display all distance indicators.
     let distanceIndicatorRadii = distance ? [distance] : distances.sort();
-    let userSearch = ![1, "default"].includes(
-      this.props.search.currentLocation
-    );
+    let userSearch = this.props.search.currentLocation !== "default";
 
     if (distance || userSearch) {
       const centerMarker = createCenterMarker();
@@ -404,20 +306,7 @@ class Map extends Component {
     const zoom = distance ? distance : 1.5;
     this.map.easeTo({
       center: this.props.search.coordinates,
-      zoom: this.zoomToDistance(zoom)
-    });
-  };
-
-  removeReferenceLocation = map => {
-    removeDistanceMarkers(this.markerList);
-    map.getSource("distance-indicator-source").setData({
-      type: "FeatureCollection",
-      features: []
-    });
-
-    map.flyTo({
-      center: [-71.066954, 42.359947],
-      zoom: 12
+      zoom: this.getZoomForDistance(zoom)
     });
   };
 
@@ -514,6 +403,17 @@ class Map extends Component {
     }
   };
 
+  getZoomForDistance = distance => {
+    let resolution = window.screen.height;
+    let latitude = this.props.search.coordinates[1];
+    let milesPerPixel = (distance * 8) / resolution;
+    return (
+      Math.log2(
+        (24901 * Math.cos((latitude * Math.PI) / 180)) / milesPerPixel
+      ) - 8
+    );
+  };
+
   componentDidUpdate(prevProps) {
     if (this.state.loaded) {
       const features = this.geoJSONFeatures();
@@ -530,7 +430,7 @@ class Map extends Component {
       ) {
         this.map.flyTo({
           center: this.props.search.coordinates,
-          zoom: this.zoomToDistance(this.props.filters.distance)
+          zoom: this.getZoomForDistance(this.props.filters.distance)
         });
       }
       if (
@@ -547,6 +447,12 @@ class Map extends Component {
       }
       if (this.props.search.zoomToFitKey !== prevProps.search.zoomToFitKey) {
         this.zoomToFit();
+      }
+      if (this.props.search.searchKey !== prevProps.search.searchKey) {
+        this.map.flyTo({
+          center: this.props.search.coordinates,
+          zoom: this.getZoomForDistance(this.props.filters.distance || 1.5)
+        });
       }
     }
   }

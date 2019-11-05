@@ -1,50 +1,30 @@
 import React from "react";
 import { connect } from "react-redux";
-import {
-  initializeVisaFilter,
-  setSearchCenterCoordinates,
-  displayProviderInformation,
-  setMapObject,
-  selectTab
-} from "redux/actions";
-import { getMapProviders } from "redux/selectors";
-import Map from "./map";
+import Geocoder from "./geocoder";
+import { setSearchResult, clearSearchResult } from "redux/actions";
 
-const MapContainer = props => {
-  return <Map {...props} />;
+const GeocoderContainer = props => {
+  return <Geocoder {...props} />;
 };
 
 const mapStateToProps = state => {
   return {
-    visibleProviders: getMapProviders(state),
-    loadedProviderTypeIds: state.providerTypes.allIds,
-    highlightedProviders: state.highlightedProviders,
-    filters: state.filters,
-    search: state.search
+    searchProximityCoordinates: state.search.coordinates,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    initializeVisaFilter: visas => {
-      dispatch(initializeVisaFilter(visas));
+    setSearchResult: (searchCoordinates, mapboxId, searchText) => {
+      dispatch(setSearchResult(searchCoordinates, mapboxId, searchText));
     },
-    displayProviderInformation: id => {
-      dispatch(displayProviderInformation(id));
+    clearSearchResult: () => {
+      dispatch(clearSearchResult());
     },
-    setMapObject: mapObject => {
-      dispatch(setMapObject(mapObject));
-    },
-    setSearchCenterCoordinates: (coordinates, mapboxId, text) => {
-      dispatch(setSearchCenterCoordinates(coordinates, mapboxId, text));
-    },
-    selectTab: index => {
-      dispatch(selectTab(index));
-    }
   };
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(MapContainer);
+)(GeocoderContainer);
