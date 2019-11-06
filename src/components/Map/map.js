@@ -6,7 +6,6 @@ import "./map.css";
 import { circle, point, transformTranslate } from "@turf/turf";
 import typeImages from "assets/images";
 import distances from "assets/distances";
-import { createClusterList } from "../ClusterProviderList/cluster-provider-list.js";
 import {
   convertProvidersToGeoJSON,
   createCenterMarker,
@@ -47,17 +46,12 @@ class Map extends Component {
   }
 
   onMapLoaded = () => {
-    const {initializeProviders} = this.props;
     // Initialize static sources and layers. Layers for provider icons are
     // added as they're enabled in the UI. Layers are drawn in the order they
     // are added to the map.
     this.setSingleSourceInMap();
     this.addDistanceIndicatorLayer();
     this.findClustersInMap();
-    const providerFeatures = this.map.querySourceFeatures("composite", {
-      sourceLayer: "Migrant_Services_-_MSM_Final_1"
-    });
-
     this.loadProviderTypeImage(typeImages);
     this.setState({loaded: true});
   };
@@ -288,8 +282,6 @@ componentDidMount() {
       let features = this.map.queryRenderedFeatures(e.point, {
         layers: [clusterName]
       });
-      let clusterSource = this.map.getSource("displayData");
-      let sourceFeatures = this.map.querySourceFeatures(clusterSource);
       let clusterId = features[0].properties.cluster_id;
       this.map
         .getSource("displayData")
