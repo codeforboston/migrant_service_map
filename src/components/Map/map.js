@@ -326,6 +326,11 @@ componentDidMount() {
         this.addClusterList(clusterLngLat, childList);
       });
     });
+
+    this.map.on('mouseout', clusterName, e => {
+      console.log('event', e)
+      clusterListMarker.remove()
+    })
   };
 
 
