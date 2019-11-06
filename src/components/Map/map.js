@@ -56,11 +56,6 @@ class Map extends Component {
     this.setState({loaded: true});
   };
 
-
-  addClusterList = (clusterCenter, list) => {
-    ReactDOM.render(<ClusterList list={list} />, document.getElementById("clusterList"));
-  }
-
 componentDidMount() {
     const { mapCenter, coordinates } = this.props.search;
     const map = new mapboxgl.Map({
@@ -296,6 +291,10 @@ componentDidMount() {
         });
     });
   };
+
+  addClusterList = (clusterCenter, list) => {
+    ReactDOM.render(<ClusterList list={list} />, document.getElementById("clusterList"));
+  }
 
   addClusterMouseOverHandlerToMapLayer = clusterName => {
     const clusterEl = document.createElement("div");
