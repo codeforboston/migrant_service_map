@@ -14,13 +14,14 @@
   flex: initial;
   margin: 0;
   padding: 0;
+  border: 0;
 }
 
 .react-tabs__tab {
   border: none;
   background: #aaa;
   color: white;
-  border-radius: 15px 15px 0 0;
+  border-radius: 8px 8px 0 0;
   flex: 1 1 auto;
 }
 .react-tabs__tab--selected {
