@@ -39,6 +39,7 @@ export default class DetailsPane extends React.Component {
         </Row>
         <div
           className={"missions" + (isMissionTextExpanded ? " expanded" : "")}
+          onClick={e => this.onMissionTextExpanderClicked(e)}
         >
           {mission}
         </div>
