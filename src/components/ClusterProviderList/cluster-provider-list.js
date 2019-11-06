@@ -1,19 +1,13 @@
-
-
-import React from "react";
+import React, { Component } from "react";
 import ReactDOM from "react-dom";
+import mapboxgl from "mapbox-gl";
 
 
-const createClusterList = (clusterListProviders) => {
-    let markerDiv = document.createElement("div");
-        let clusterListEl = document.createElement("p");
-        clusterListEl.innerText = "a,b,c";
+class ClusterList extends Component {
 
-        markerDiv.appendChild(clusterListEl);
-        markerDiv.classList.add("");
 
-        ReactDOM.render(clusterListEl, document.getElementById("clusterList"));
 }
 
+// ReactDOM.render(clusterListEl, document.getElementById("clusterListMarker"));
 
-export { createClusterList }
+export { ClusterList }
