@@ -27,7 +27,6 @@ export default class DetailsPane extends React.Component {
           </ProviderDetailsInfo>
           <ProviderDetailsInfo icon="language" label="website" ellipsis>
             <a href={website} target="_blank">
-              {" "}
               {website}
             </a>
           </ProviderDetailsInfo>
