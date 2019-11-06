@@ -2,10 +2,8 @@ import React from "react";
 import { connect } from "react-redux";
 import {
   initializeVisaFilter,
-  setSearchCenterCoordinates,
   displayProviderInformation,
   setMapObject,
-  selectTab
 } from "redux/actions";
 import { getMapProviders } from "redux/selectors";
 import Map from "./map";
@@ -35,12 +33,6 @@ const mapDispatchToProps = dispatch => {
     setMapObject: mapObject => {
       dispatch(setMapObject(mapObject));
     },
-    setSearchCenterCoordinates: (coordinates, mapboxId, text) => {
-      dispatch(setSearchCenterCoordinates(coordinates, mapboxId, text));
-    },
-    selectTab: index => {
-      dispatch(selectTab(index));
-    }
   };
 };
 
