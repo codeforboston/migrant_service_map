@@ -6,7 +6,8 @@ export const CLEAR_DISTANCE = "CLEAR_DISTANCE";
 export const CHANGE_VISA = "CHANGE_VISA";
 export const CLEAR_VISA = "CLEAR_VISA";
 export const HIGHLIGHT_PROVIDER = "HIGHLIGHT_PROVIDER";
-export const SET_SEARCH_COORDINATES = "SET_SEARCH_COORDINATES";
+export const SET_SEARCH_RESULT = "SET_SEARCH_RESULT";
+export const CLEAR_SEARCH_RESULT = "CLEAR_SEARCH_RESULT";
 export const FILTER_PROVIDERS = "FILTER_PROVIDERS";
 export const FILTER_NAME = "FILTER_NAME";
 export const SAVE_PROVIDER = "SAVE_PROVIDER";
@@ -91,12 +92,20 @@ export function clearVisaFilter() {
   };
 }
 
-export function setSearchCenterCoordinates(coordinates, mapboxId, text) {
+export function setSearchResult(searchCoordinates, mapboxId, searchText) {
   return {
-    type: SET_SEARCH_COORDINATES,
-    coordinates,
+    type: SET_SEARCH_RESULT,
+    coordinates: searchCoordinates,
     mapboxId,
-    text
+    text: searchText,
+    key: nextActionKey()
+  };
+}
+
+export function clearSearchResult() {
+  return {
+    type: CLEAR_SEARCH_RESULT,
+    key: nextActionKey()
   };
 }
 

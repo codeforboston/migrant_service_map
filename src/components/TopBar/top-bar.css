@@ -47,10 +47,6 @@
   margin-top: 0;
 }
 
-.nav-search {
-  margin-top: 5px;
-}
-
 .mapboxgl-ctrl-geocoder {
   border-radius: 8px !important;
 }
@@ -59,7 +55,7 @@ button.geocoder-icon.geocoder-icon-close {
   background-color: #FDFAFF;
 }
 
-#nav-search .msm-map-search-box {
+.msm-map-search-box {
   box-shadow: none !important;
   width: 100% !important;
   background-color: transparent;
