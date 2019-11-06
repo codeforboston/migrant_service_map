@@ -14,6 +14,7 @@ import {
   filterProviderIds,
   providersById
 } from "./utilities.js";
+import { AnimatedMarker } from "../AnimatedMarker/animated-marker.js";
 
 const SPECIAL_NO_RESULTS_ID = 'notfound.0';
 
@@ -300,6 +301,16 @@ class Map extends Component {
     });
   };
 
+  markRecentSelection(prevProps) {
+    let { visibleProviders, highlightedProviders } = this.props;
+    const newSelection = highlightedProviders.find(providerId => !prevProps.highlightedProviders.includes(providerId));
+    if (!newSelection) { return; }
+    const provider = visibleProviders.find(provider => provider.id === newSelection);
+    const marker = new AnimatedMarker(provider);
+    marker.addTo(this.map);
+
+   }
+
   addHoverHandlerToMapIdLayer = typeId => {
     let popup = new mapboxgl.Popup({
       closeButton: false,
@@ -523,6 +534,7 @@ class Map extends Component {
       );
       this.setSpecialLayerInMap("highlighted", "highlighted");
       this.updatePinAndDistanceIndicator(prevProps);
+      this.markRecentSelection(prevProps);
       this.zoomToShowNewProviders(prevProps);
       if (
         this.props.filters.distance &&
