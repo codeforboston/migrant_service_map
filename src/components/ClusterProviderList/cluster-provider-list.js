@@ -10,18 +10,20 @@ class ClusterList extends Component {
 
   render() {
       const listLength = this.props.list.length
+      const firstNineProviders = this.props.list.slice(0, 9)
       return (
         <div id="clusterList-inner" className="expandable-content-wrapper">
           <div className="expandable-content">
-            {this.props.list.map(
-              (item, i) => { if (i < 9) {
+            {this.props.list.for}
+            {firstNineProviders.map(
+              (item, i) => {
                 return (
                   <div key={i}>
                     <img className="image" src={this.getImage(item.typeId)[0].image} alt='provider type icon'/>
                       <p className="item">{item.name}</p>
                   </div>
                 )
-              }}
+              }
             )}
             {listLength > 9 &&
               <div key='9'>
