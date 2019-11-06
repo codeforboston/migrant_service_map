@@ -5,6 +5,7 @@ import "./map.css";
 import { circle, point, transformTranslate } from "@turf/turf";
 import typeImages from "assets/images";
 import distances from "assets/distances";
+import { createClusterList } from "../ClusterProviderList/cluster-provider-list.js";
 import {
   convertProvidersToGeoJSON,
   createCenterMarker,
@@ -14,6 +15,7 @@ import {
   filterProviderIds,
   providersById
 } from "./utilities.js";
+
 import { AnimatedMarker } from "../AnimatedMarker/animated-marker.js";
 
 const SPECIAL_NO_RESULTS_ID = 'notfound.0';
@@ -53,7 +55,18 @@ class Map extends Component {
     this.setState({ loaded: true });
   };
 
-  componentDidMount() {
+  addClusterList = () => {
+      const clusterListStyle = "height: 100px; width: 40px; background-color: green";
+      let CLM = document.createElement("div");
+      CLM.id = "cluster-list";
+      CLM.classList.add("cluster-list-marker");
+      CLM.innerText = "a, b, c, d, e";
+      CLM.style = clusterListStyle;
+      let clusterListMarker = new mapboxgl.Marker(CLM);
+      clusterListMarker.setLngLat(this.props.search.mapCenter)
+  }
+
+componentDidMount() {
     const { mapCenter, coordinates } = this.props.search;
     const map = new mapboxgl.Map({
       container: "map", // container id
@@ -61,8 +74,10 @@ class Map extends Component {
       center: mapCenter,
       zoom: 11 // starting zoom
     });
+
     map.addControl(new mapboxgl.NavigationControl());
     map.on("load", this.onMapLoaded);
+
 
     this.map = map;
 
@@ -90,18 +105,18 @@ class Map extends Component {
      *
      * You can see that the response passed to the 'results' event is then used to set the dropdown result:
      * https://github.com/mapbox/mapbox-gl-geocoder/blob/d2db50aede1ef6777083435f2dc533d5e1846a7e/lib/index.js#L203
-     * 
+     *
      * Typeahead instances render suggestions via method getItemValue:
      * https://github.com/tristen/suggestions/blob/9328f1f3d21598c40014892e3e0329027dd2b538/src/suggestions.js#L221
-     * 
+     *
      * Geocoder overrides getItemValue to look at the "place_name" property:
      * https://github.com/mapbox/mapbox-gl-geocoder/blob/d2db50aede1ef6777083435f2dc533d5e1846a7e/lib/index.js#L103
-     * 
+     *
      * Geocoder API response object documentation:
      * https://docs.mapbox.com/api/search/#geocoding-response-object
      */
       if (!ev.features || !ev.features.length) {
-        ev.features = [{ 
+        ev.features = [{
           id: SPECIAL_NO_RESULTS_ID,
           place_name: 'No search results',
         }];
@@ -240,6 +255,7 @@ class Map extends Component {
     });
 
     this.addClusterClickHandlerToMapLayer(clusterName);
+    this.addClusterMouseOverHandlerToMapLayer(clusterName);
   };
 
   setSingleSourceInMap = () => {
@@ -281,11 +297,21 @@ class Map extends Component {
           const mapZoom = this.map.getZoom();
           this.map.easeTo({
             center: features[0].geometry.coordinates,
-            zoom: mapZoom >= zoom ? mapZoom + 1 : zoom 
+            zoom: mapZoom >= zoom ? mapZoom + 1 : zoom
           });
         });
     });
   };
+
+  addClusterMouseOverHandlerToMapLayer = clusterName => {
+    this.map.on("click", clusterName, function(e) {
+      let mapView = this;
+      let features = mapView.queryRenderedFeatures(e.point, {
+        layers: [clusterName]
+      })
+      console.log(features);
+    })
+  }
 
   addClickHandlerToMapIdLayer = typeId => {
     let { displayProviderInformation, highlightedProviders } = this.props;
