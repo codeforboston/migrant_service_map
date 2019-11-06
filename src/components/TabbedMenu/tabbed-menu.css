@@ -11,6 +11,7 @@
 }
 
 .react-tabs__tab-list {
+  display: flex;
   flex: initial;
   margin: 0;
   padding: 0;
@@ -23,6 +24,10 @@
   color: white;
   border-radius: 8px 8px 0 0;
   flex: 1 1 auto;
+  text-align: center;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;      
 }
 .react-tabs__tab--selected {
   background: white;
