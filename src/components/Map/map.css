@@ -11,6 +11,13 @@
   position: absolute;
 }
 
+<<<<<<< HEAD
+=======
+.grow {
+  overflow: visible;
+}
+
+>>>>>>> save--
 .distance-marker {
   justify-content: center;
   align-items: center;
