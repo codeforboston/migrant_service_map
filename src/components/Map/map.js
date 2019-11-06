@@ -613,7 +613,6 @@ componentDidMount() {
     }
   }
 
-
   componentWillUnmount() {
     this.map.remove();
   }
