@@ -50,7 +50,6 @@ class Map extends Component {
 		this.setSingleSourceInMap();
 		this.addDistanceIndicatorLayer();
 		this.findClustersInMap();
-		
 		this.loadProviderTypeImage(typeImages);
 		this.setState({loaded: true});
 		
@@ -324,14 +323,6 @@ class Map extends Component {
       .setData({ type: "FeatureCollection", features: circles });
   };
 
-	updateZoom = distance => {
-		const zoom = distance ? distance : 1.5;
-		this.map.easeTo({
-			center: this.props.search.coordinates,
-      zoom: this.getZoomForDistance(zoom)
-    });
-  };
-
   addDistanceIndicatorLayer = () => {
     if (!this.map.getSource("distance-indicator-source")) {
       this.map.addSource("distance-indicator-source", {
@@ -365,17 +356,6 @@ class Map extends Component {
 		}
 	}
 	
-	updateMapPos = (centerCoordinates, zoomLevel) => {
-		const shouldMapPosUpdate = true;
-		//centCoor !== prevCentCoor, zoomL !== prevZoomLevel
-		if (shouldMapPosUpdate === true) {
-			this.map.flyTo({
-				center: centerCoordinates,
-				zoom: zoomLevel
-			})
-        }
-  };
-
   zoomToFit = providerIds => {
     providerIds =
       providerIds ||
@@ -396,7 +376,7 @@ class Map extends Component {
       );
     }
   };
-
+	
   getPaddedMapBounds() {
     const width = this.mapRef.current.clientWidth,
       height = this.mapRef.current.clientHeight,
@@ -412,36 +392,40 @@ class Map extends Component {
     ]);
   }
 
-  /**
-	 * Checks if newly selected providers are within map active bounds. triggers zoomToFit if not.
-   *
-   * TODO: This treats all selections the same. We may want to do different things depending
-   * on how the provider was selected. For example, when selecting a provider from the list,
-   * maybe we should zoom to that specific provider if not in view, but when deselecting
-   * a distance filter, maybe we want to zoom to fit all selected providers. Handling these
-   * cases is best done using more granular props passed to the map rather than having the map
-   * track changes to highlighted props.
-   */
-	isNewSelectionInView = (prevProps) => {
-		const prevIds = filterProviderIds(
-			providersById(prevProps.visibleProviders),
-			prevProps.highlightedProviders
-			),
-			currIds = filterProviderIds(
-				providersById(this.props.visibleProviders),
-				this.props.highlightedProviders
-			),
-			newIds = currIds.filter(id => !prevIds.includes(id));
-		if (newIds.length === 0) {
-			// The set of selected providers stayed the same or got smaller, no need to zoom.
-      return;
-		}
+	/**
+	 * Checks if newly selected providers are within map active bounds.
+	 *
+	 * TODO: This treats all selections the same. We may want to do different things depending
+	 * on how the provider was selected. For example, when selecting a provider from the list,
+	 * maybe we should zoom to that specific provider if not in view, but when deselecting
+	 * a distance filter, maybe we want to zoom to fit all selected providers. Handling these
+	 * cases is best done using more granular props passed to the map rather than having the map
+	 * track changes to highlighted props.
+	 */
+	isNewSelectionInView = prevProps => {
+/*		still need to account for case with multiple selections
+		do check in update for presence of selectproviderkey in general, use .find to check highlighted providers from top of stack*/
+		if (this.props.selectProviderKey && this.props.selectProviderKey !== prevProps.selectProviderKey) {
+			/*		const prevIds = filterProviderIds(
+						providersById(prevProps.visibleProviders),
+						prevProps.highlightedProviders
+						),
+						currIds = filterProviderIds(
+							providersById(this.props.visibleProviders),
+							this.props.highlightedProviders
+						),
+						newIds = currIds.filter(id => !prevIds.includes(id));
+					if (newIds.length === 0) {
+						// The set of selected providers stayed the same or got smaller, no need to zoom.
+						return;
+					}*/
 			const mapBounds = this.map.getBounds().toArray().flat();
 			const mapBoundPoly = bboxPolygon(mapBounds);
-			const idToProvider = providersById(this.props.visibleProviders);
-			const newProviders = newIds.map(id => idToProvider[id]);
-			const isWithinBounds = provider => booleanPointInPolygon(point(provider.coordinates), mapBoundPoly);
-			return newProviders.every(isWithinBounds);
+			// const idToProvider = providersById(this.props.visibleProviders);
+			// const newProviders = newIds.map(id => idToProvider[id]);
+			const newSelection = providersById(this.props.visibleProviders)[this.props.selectProviderId];
+			return booleanPointInPolygon(point(newSelection.coordinates), mapBoundPoly);
+		};
 	};
 	
   getZoomForDistance = distance => {
@@ -456,9 +440,10 @@ class Map extends Component {
   };
   
   keyChange = ( prevProps ) => {
+		console.log(this.props.search);
+  	if (this.isNewSelectionInView(prevProps)){return "zoomToFitKey"}
 		if (this.props.filters["distance"] && this.props.filters["distance"] !== prevProps.filters["distance"]){return "distance"}
 		if (this.props.search["searchKey"] && this.props.search["searchKey"] !== prevProps.search["searchKey"]){return "searchKey"}
-  	if (this.isNewSelectionInView(prevProps)){return "zoomToFitKey"}
 		if (this.props.search["flyToProviderKey"] && this.props.search["flyToProviderKey"] !== prevProps.search["flyToProviderKey"]){return "flyToProviderKey"}
     if (this.props.search["zoomToFitKey"] && this.props.search["zoomToFitKey"] !== prevProps.search["zoomToFitKey"]){return "zoomToFitKey"}
 		return false
@@ -476,16 +461,15 @@ class Map extends Component {
       );
       this.setSpecialLayerInMap("highlighted", "highlighted");
       this.updatePinAndDistanceIndicator(prevProps);
-      const mapBounds = this.getPaddedMapBounds();
-      this.markRecentSelection(prevProps, mapBounds);
+      this.markRecentSelection(prevProps);
       
-			console.log(this.keyChange(prevProps, mapBounds), flyToProviderId, distance, coordinates);
+			console.log(this.keyChange(prevProps), flyToProviderId, distance, coordinates);
 			
       switch(this.keyChange(prevProps)) {
 				case "distance":
 					return this.map.flyTo({
 						center: coordinates,
-						zoom: this.zoomLevels[distance] //this.getZoomForDistance(distance)
+						zoom: this.getZoomForDistance(distance)   //this.zoomLevels[distance] //
 					});
 				case "zoomToFitKey":
 					return this.zoomToFit();
@@ -500,7 +484,7 @@ class Map extends Component {
 				case "searchKey":
 					return this.map.flyTo({
 						center: this.props.search.coordinates,
-						zoom: this.zoomLevels[distance] || this.zoomLevels[1.5] // this.getZoomForDistance(distance || 1.5)
+						zoom: this.getZoomForDistance(distance || 1.5)  //this.zoomLevels[distance] || this.zoomLevels[1.5] // t
 					});
 				default:
 					return console.log("keyChange none")

@@ -72,14 +72,16 @@ class ProviderList extends Component {
       highlightedProviders,
       displayProviderInformation,
       flyToProvider,
-      zoomToFit
+      zoomToFit,
+      selectProvider
     } = this.props;
 
     let handleProviderClick = (id) => {
       this.setState({ lastHighlightedViaSidebar: id });
       displayProviderInformation(id);
       zoomToFit(id);
-    }
+      selectProvider(id);
+    };
 
     return (
       <div className="service-providers">

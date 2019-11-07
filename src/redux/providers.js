@@ -3,7 +3,8 @@ import {
   SAVE_PROVIDER,
   CHANGE_SORT_ORDER,
   CHANGE_SORT_DIRECTION,
-  REORDER_SAVED_PROVIDERS
+  REORDER_SAVED_PROVIDERS,
+  SELECT_NEW_PROVIDER
 } from "./actions";
 
 const INITIAL_STATE = {
@@ -35,6 +36,12 @@ export default function providers(state = INITIAL_STATE, action) {
         ...state,
         savedProviders: action.ids
       };
+    case SELECT_NEW_PROVIDER:
+      return {
+        ...state,
+        selectProviderId: action.ids,
+        selectProviderKey: action.key
+      }
     default:
       return state;
   }
