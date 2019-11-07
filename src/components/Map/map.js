@@ -20,7 +20,7 @@ import {
   providersById,
   getBoundingBox
 } from "./utilities.js";
-import { AnimatedMarker } from "../AnimatedMarker/animated-marker.js";
+import {AnimatedMarker} from "../AnimatedMarker/animated-marker.js";
 
 const zoomPadding = { top: 100, bottom: 100, left: 450, right: 100 };
 
@@ -37,7 +37,7 @@ class Map extends Component {
 		this.map = null;
 		this.markerList = []; //need to keep track of marker handles ourselves -- cannot be queried from map
     this.mapRef = React.createRef();
-		this.zoomLevels={};
+		this.zoomLevels = {};
 		this.state = {
 			loaded: false
 		};
@@ -56,11 +56,10 @@ class Map extends Component {
 		distances.forEach(distance =>
 			this.zoomLevels[distance] = this.getZoomForDistance(distance)
 		);
-		console.log(this.zoomLevels)
 	};
 	
 	componentDidMount() {
-    const { mapCenter, coordinates } = this.props.search;
+		const {mapCenter} = this.props.search;
 		const map = new mapboxgl.Map({
       container: this.mapRef.current,
 			style: "mapbox://styles/refugeeswelcome/cjxmgxala1t5b1dtea37lbi2p", // stylesheet location
@@ -72,278 +71,281 @@ class Map extends Component {
 		
 		this.map = map;
 	}
-
-  setSourceFeatures = features => {
-    this.setSingleSourceInMap(); // checks source exists, adds if not
-    this.map.getSource("displayData").setData({
-      type: "FeatureCollection",
-      features: features
-    });
-  };
-
-  findLayerInMap = typeId => {
-    if (!this.map.getLayer(typeId)) {
-      this.map.addLayer({
-        id: typeId,
-        source: "displayData",
-        type: "symbol",
-        filter: ["all", ["!=", "has", "point_count"], ["==", "typeId", typeId]],
-        layout: {
-          "icon-image": typeId + "icon",
-          "icon-size": 0.4,
-          "icon-allow-overlap": true,
-          "icon-ignore-placement": true,
-          "icon-padding": 10,
-          visibility: "visible"
-        }
-      });
-      this.addClickHandlerToMapIdLayer(typeId);
-      this.addHoverHandlerToMapIdLayer(typeId);
-    }
-  };
-
-  setSpecialLayerInMap = (property, layerName) => {
-    if (!this.map.getLayer(layerName)) {
-      this.map.addLayer({
-        id: layerName,
-        source: "displayData",
-        type: "symbol",
-        filter: ["==", property, layerName],
-        layout: {
-          "icon-image": layerName + "icon",
-          "icon-size": 0.4,
-          "icon-allow-overlap": true,
-          "icon-ignore-placement": true,
-          "icon-padding": 10,
-          visibility: "visible"
-        }
-      });
-    }
-  };
-
-  findClustersInMap = () => {
-    this.map.addLayer({
-      id: "clusterCircle",
-      source: "displayData",
-      type: "symbol",
-      filter: ["has", "point_count"],
-      layout: {
-        "icon-image": "clustersicon",
-        "icon-size": 0.5,
-        "icon-allow-overlap": true,
-        "icon-ignore-placement": true
-      }
-    });
-
-    let clusterName = "cluster";
-    this.map.addLayer({
-      id: clusterName,
-      source: "displayData",
-      type: "symbol",
-      filter: ["has", "point_count"],
-      layout: {
-        "icon-size": 0.4,
-        "text-field": "{point_count_abbreviated}",
-        "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-        "text-size": 26,
-        "text-offset": [0, -0.3],
-        "icon-allow-overlap": true,
-        "icon-ignore-placement": true,
-        visibility: "visible"
-      },
-      paint: {
-        "text-color": "black",
-        "text-halo-color": "#ffffff",
-        "text-halo-width": 2
-      }
-    });
-
-    this.addClusterClickHandlerToMapLayer(clusterName);
-  };
-
-  setSingleSourceInMap = () => {
-    if (!this.map.getSource("displayData")) {
-      this.map.addSource("displayData", {
-        type: "geojson",
-        data: {
-          type: "FeatureCollection",
-          features: []
-        },
-        cluster: true,
-        clusterMaxZoom: MAX_CLUSTERED_ZOOM,
-        clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
-      });
-    }
-  };
-
-  loadProviderTypeImage = images => {
-    images.map(typeImage =>
-      this.map.loadImage(typeImage.image, (error, image) => {
-        if (error) throw error;
-        this.map.addImage(`${typeImage.type}icon`, image);
-      })
-    );
-  };
-
-  addClusterClickHandlerToMapLayer = clusterName => {
-    this.map.on("click", clusterName, e => {
-      let features = this.map.queryRenderedFeatures(e.point, {
-        layers: [clusterName]
-      });
-
-      let clusterId = features[0].properties.cluster_id;
-      this.map
-        .getSource("displayData")
-        .getClusterExpansionZoom(clusterId, (err, zoom) => {
-          if (err) return;
-
-          const mapZoom = this.map.getZoom();
-          this.map.easeTo({
-            center: features[0].geometry.coordinates,
-            zoom: mapZoom >= zoom ? mapZoom + 1 : zoom
-          });
-        });
-    });
-  };
-
-  addClickHandlerToMapIdLayer = typeId => {
-    let { displayProviderInformation, highlightedProviders } = this.props;
-    this.map.on("click", typeId, e => {
-      const providerElement = document.getElementById(
-        `provider-${e.features[0].properties.id}`
-      );
-      if (typeId !== "highlightedProviders" && providerElement) {
-        displayProviderInformation(e.features[0].properties.id);
-      } else if (!highlightedProviders.includes(e.features[0].properties.id)) {
-        displayProviderInformation(e.features[0].properties.id);
-      }
-    });
-  };
-
-  markRecentSelection(prevProps) {
-    let { visibleProviders, highlightedProviders } = this.props;
-    const newSelection = highlightedProviders.find(providerId => !prevProps.highlightedProviders.includes(providerId));
-    if (!newSelection) { return; }
-    const provider = visibleProviders.find(provider => provider.id === newSelection);
-    const marker = new AnimatedMarker(provider);
-    marker.addTo(this.map);
-
-   }
-
-  addHoverHandlerToMapIdLayer = typeId => {
-    let popup = new mapboxgl.Popup({
-      closeButton: false,
-      closeOnClick: false,
-      className: "name-popup",
-      offset: 20
-    });
-
-    this.map.on("mouseenter", typeId, e => {
-      let popupCoordinates = e.features[0].geometry.coordinates.slice();
-      let name = e.features[0].properties.name;
-
-      popup
-        .setLngLat(popupCoordinates)
-        .setHTML(name)
-        .addTo(this.map);
-    });
-
-    this.map.on("mouseleave", typeId, () => {
-      popup.remove();
-    });
-  };
-
-  geoJSONFeatures = () => {
-    let { highlightedProviders, visibleProviders = [] } = this.props;
-    let provider;
-    for (provider of visibleProviders) {
-      provider.highlighted = highlightedProviders.includes(provider.id)
-        ? "highlighted"
-        : "not-highlighted";
-    }
-    return convertProvidersToGeoJSON(visibleProviders);
-  };
-
-  updatePinAndDistanceIndicator = prevProps => {
-    const distance = this.props.filters.distance;
-    const searchCoordinates = this.props.search.coordinates;
-    if (
-      distance === prevProps.filters.distance &&
-      searchCoordinates === prevProps.search.coordinates
-    ) {
-      // Do not render if the relevant props have not changed. This includes
-      // the first render of this component, so the marker is not shown until
-      // the user starts interacting with the app.
-      return;
-    }
-    removeDistanceMarkers(this.markerList);
-    this.addDistanceIndicatorLayer();
-    // If no distance filter is set, display all distance indicators.
-    let distanceIndicatorRadii = distance ? [distance] : distances.sort();
-    let userSearch = this.props.search.currentLocation !== "default";
-
-    if (distance || userSearch) {
-      const centerMarker = createCenterMarker();
-      const mapPin = new mapboxgl.Marker({ element: centerMarker })
-        .setLngLat(searchCoordinates)
-        .addTo(this.map);
-      this.markerList.push(mapPin);
-
-      const labels = distanceIndicatorRadii.map((radius, i) => {
-        const radiusOffset = transformTranslate(
-          point(searchCoordinates),
-          radius,
-          90,
-          { units: "miles" }
-        );
-        const distanceMarker = createDistanceMarker(radius);
-        const marker = new mapboxgl.Marker({ element: distanceMarker });
-        this.markerList.push(marker);
-        return marker.setLngLat(radiusOffset.geometry.coordinates);
-      });
-      labels.map(label => label.addTo(this.map));
-    } else {
-      distanceIndicatorRadii = [];
-    }
-    const innerColor = "hsla(317, 100%, 84%, .1)";
-    const outerColor = "hsla(317, 100%, 84%, .15)";
-    const circles = distanceIndicatorRadii
-      .slice()
-      .reverse()
-      .map((radius, i) =>
-        circle(searchCoordinates, radius, {
-          steps: 100,
-          units: "miles",
-          properties: { color: i === 0 ? outerColor : innerColor }
-        })
-      );
-
-    this.map
-      .getSource("distance-indicator-source")
-      .setData({ type: "FeatureCollection", features: circles });
-  };
-
-  addDistanceIndicatorLayer = () => {
-    if (!this.map.getSource("distance-indicator-source")) {
-      this.map.addSource("distance-indicator-source", {
-        type: "geojson",
-        data: {
-          type: "FeatureCollection",
-          features: []
-        }
-      });
-    }
-    if (!this.map.getLayer("distance-indicator-fill")) {
-      this.map.addLayer({
-        id: "distance-indicator-fill",
-        type: "fill",
-        source: "distance-indicator-source",
-        paint: {
-          "fill-color": ["get", "color"]
-        }
-      });
-    }
-    if (!this.map.getLayer("distance-indicator-stroke")) {
+	
+	setSourceFeatures = features => {
+		this.setSingleSourceInMap(); // checks source exists, adds if not
+		this.map.getSource("displayData").setData({
+			type: "FeatureCollection",
+			features: features
+		});
+	};
+	
+	findLayerInMap = typeId => {
+		if (!this.map.getLayer(typeId)) {
+			this.map.addLayer({
+				id: typeId,
+				source: "displayData",
+				type: "symbol",
+				filter: ["all", ["!=", "has", "point_count"], ["==", "typeId", typeId]],
+				layout: {
+					"icon-image": typeId + "icon",
+					"icon-size": 0.4,
+					"icon-allow-overlap": true,
+					"icon-ignore-placement": true,
+					"icon-padding": 10,
+					visibility: "visible"
+				}
+			});
+			this.addClickHandlerToMapIdLayer(typeId);
+			this.addHoverHandlerToMapIdLayer(typeId);
+		}
+	};
+	
+	setSpecialLayerInMap = (property, layerName) => {
+		if (!this.map.getLayer(layerName)) {
+			this.map.addLayer({
+				id: layerName,
+				source: "displayData",
+				type: "symbol",
+				filter: ["==", property, layerName],
+				layout: {
+					"icon-image": layerName + "icon",
+					"icon-size": 0.4,
+					"icon-allow-overlap": true,
+					"icon-ignore-placement": true,
+					"icon-padding": 10,
+					visibility: "visible"
+				}
+			});
+		}
+	};
+	
+	findClustersInMap = () => {
+		this.map.addLayer({
+			id: "clusterCircle",
+			source: "displayData",
+			type: "symbol",
+			filter: ["has", "point_count"],
+			layout: {
+				"icon-image": "clustersicon",
+				"icon-size": 0.5,
+				"icon-allow-overlap": true,
+				"icon-ignore-placement": true
+			}
+		});
+		
+		let clusterName = "cluster";
+		this.map.addLayer({
+			id: clusterName,
+			source: "displayData",
+			type: "symbol",
+			filter: ["has", "point_count"],
+			layout: {
+				"icon-size": 0.4,
+				"text-field": "{point_count_abbreviated}",
+				"text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+				"text-size": 26,
+				"text-offset": [0, -0.3],
+				"icon-allow-overlap": true,
+				"icon-ignore-placement": true,
+				visibility: "visible"
+			},
+			paint: {
+				"text-color": "black",
+				"text-halo-color": "#ffffff",
+				"text-halo-width": 2
+			}
+		});
+		
+		this.addClusterClickHandlerToMapLayer(clusterName);
+	};
+	
+	setSingleSourceInMap = () => {
+		if (!this.map.getSource("displayData")) {
+			this.map.addSource("displayData", {
+				type: "geojson",
+				data: {
+					type: "FeatureCollection",
+					features: []
+				},
+				cluster: true,
+				clusterMaxZoom: MAX_CLUSTERED_ZOOM,
+				clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
+			});
+		}
+	};
+	
+	loadProviderTypeImage = images => {
+		images.map(typeImage =>
+			this.map.loadImage(typeImage.image, (error, image) => {
+				if (error) throw error;
+				this.map.addImage(`${typeImage.type}icon`, image);
+			})
+		);
+	};
+	
+	addClusterClickHandlerToMapLayer = clusterName => {
+		this.map.on("click", clusterName, e => {
+			let features = this.map.queryRenderedFeatures(e.point, {
+				layers: [clusterName]
+			});
+			
+			let clusterId = features[0].properties.cluster_id;
+			this.map
+				.getSource("displayData")
+				.getClusterExpansionZoom(clusterId, (err, zoom) => {
+					if (err) return;
+					
+					const mapZoom = this.map.getZoom();
+					this.map.easeTo({
+						center: features[0].geometry.coordinates,
+						zoom: mapZoom >= zoom ? mapZoom + 1 : zoom
+					});
+				});
+		});
+	};
+	
+	addClickHandlerToMapIdLayer = typeId => {
+		let {displayProviderInformation, highlightedProviders} = this.props;
+		this.map.on("click", typeId, e => {
+			const providerElement = document.getElementById(
+				`provider-${e.features[0].properties.id}`
+			);
+			if (typeId !== "highlightedProviders" && providerElement) {
+				displayProviderInformation(e.features[0].properties.id);
+			} else if (!highlightedProviders.includes(e.features[0].properties.id)) {
+				displayProviderInformation(e.features[0].properties.id);
+			}
+		});
+	};
+	
+	markRecentSelection(prevProps) {
+		let {visibleProviders, highlightedProviders} = this.props;
+		const newSelection = highlightedProviders.find(providerId => !prevProps.highlightedProviders.includes(providerId));
+		if (!newSelection) {
+			return;
+		}
+		const provider = visibleProviders.find(provider => provider.id === newSelection);
+		const marker = new AnimatedMarker(provider);
+		marker.addTo(this.map);
+		
+	}
+	
+	addHoverHandlerToMapIdLayer = typeId => {
+		let popup = new mapboxgl.Popup({
+			closeButton: false,
+			closeOnClick: false,
+			className: "name-popup",
+			offset: 20
+		});
+		
+		this.map.on("mouseenter", typeId, e => {
+			let popupCoordinates = e.features[0].geometry.coordinates.slice();
+			let name = e.features[0].properties.name;
+			
+			popup
+				.setLngLat(popupCoordinates)
+				.setHTML(name)
+				.addTo(this.map);
+		});
+		
+		this.map.on("mouseleave", typeId, () => {
+			popup.remove();
+		});
+	};
+	
+	geoJSONFeatures = () => {
+		let {highlightedProviders, visibleProviders = []} = this.props;
+		let provider;
+		for (provider of visibleProviders) {
+			provider.highlighted = highlightedProviders.includes(provider.id)
+				? "highlighted"
+				: "not-highlighted";
+		}
+		return convertProvidersToGeoJSON(visibleProviders);
+	};
+	
+	updatePinAndDistanceIndicator = prevProps => {
+		const distance = this.props.filters.distance;
+		const searchKey = this.props.search.searchKey;
+		const searchCoordinates = this.props.search.coordinates;
+		if (
+			distance === prevProps.filters.distance && !searchKey
+		) {
+			// Do not render if the relevant props have not changed. This includes
+			// the first render of this component, so the marker is not shown until
+			// the user starts interacting with the app.
+			return;
+		}
+		removeDistanceMarkers(this.markerList);
+		this.addDistanceIndicatorLayer();
+		// If no distance filter is set, display all distance indicators.
+		let distanceIndicatorRadii = distance ? [distance] : distances.sort();
+		let userSearch = this.props.search.currentLocation !== "default";
+		
+		if (distance || userSearch) {
+			const centerMarker = createCenterMarker();
+			//TODO: extract the creation of the visual features
+			const mapPin = new mapboxgl.Marker({element: centerMarker})
+				.setLngLat(searchCoordinates)
+				.addTo(this.map);
+			this.markerList.push(mapPin);
+			
+			const labels = distanceIndicatorRadii.map((radius, i) => {
+				const radiusOffset = transformTranslate(
+					point(searchCoordinates),
+					radius,
+					90,
+					{units: "miles"}
+				);
+				const distanceMarker = createDistanceMarker(radius);
+				const marker = new mapboxgl.Marker({element: distanceMarker});
+				this.markerList.push(marker);
+				return marker.setLngLat(radiusOffset.geometry.coordinates);
+			});
+			labels.map(label => label.addTo(this.map));
+		} else {
+			distanceIndicatorRadii = [];
+		}
+		const innerColor = "hsla(317, 100%, 84%, .1)";
+		const outerColor = "hsla(317, 100%, 84%, .15)";
+		const circles = distanceIndicatorRadii
+			.slice()
+			.reverse()
+			.map((radius, i) =>
+				circle(searchCoordinates, radius, {
+					steps: 100,
+					units: "miles",
+					properties: {color: i === 0 ? outerColor : innerColor}
+				})
+			);
+		
+		this.map
+			.getSource("distance-indicator-source")
+			.setData({type: "FeatureCollection", features: circles});
+	};
+	
+	addDistanceIndicatorLayer = () => {
+		if (!this.map.getSource("distance-indicator-source")) {
+			this.map.addSource("distance-indicator-source", {
+				type: "geojson",
+				data: {
+					type: "FeatureCollection",
+					features: []
+				}
+			});
+		}
+		if (!this.map.getLayer("distance-indicator-fill")) {
+			this.map.addLayer({
+				id: "distance-indicator-fill",
+				type: "fill",
+				source: "distance-indicator-source",
+				paint: {
+					"fill-color": ["get", "color"]
+				}
+			});
+		}
+		if (!this.map.getLayer("distance-indicator-stroke")) {
 			this.map.addLayer({
 				id: "distance-indicator-stroke",
 				type: "line",
@@ -352,31 +354,31 @@ class Map extends Component {
 					"line-color": "#D561B5",
 					"line-width": 2
 				}
-		})
+			})
 		}
 	}
 	
-  zoomToFit = providerIds => {
-    providerIds =
-      providerIds ||
-      filterProviderIds(
-        providersById(this.props.visibleProviders),
-        this.props.highlightedProviders
-      );
-    if (providerIds.length > 0) {
-      this.map.fitBounds(
-        getBoundingBox(providersById(this.props.visibleProviders), providerIds),
-        {
-          // Left padding accounts for provider list UI.
+	zoomToFit = providerIds => {
+		providerIds =
+			providerIds ||
+			filterProviderIds(
+				providersById(this.props.visibleProviders),
+				this.props.highlightedProviders
+			);
+		if (providerIds.length > 0) {
+			this.map.fitBounds(
+				getBoundingBox(providersById(this.props.visibleProviders), providerIds),
+				{
+					// Left padding accounts for provider list UI.
           padding: zoomPadding,
-          duration: 2000,
-          maxZoom: MIN_UNCLUSTERED_ZOOM,
-          linear: false
-        }
-      );
-    }
-  };
-	
+					duration: 2000,
+					maxZoom: MIN_UNCLUSTERED_ZOOM,
+					linear: false
+				}
+			);
+		}
+	};
+ 
   getPaddedMapBounds() {
     const width = this.mapRef.current.clientWidth,
       height = this.mapRef.current.clientHeight,
@@ -391,7 +393,6 @@ class Map extends Component {
       this.map.unproject([leftX, bottomY])
     ]);
   }
-
 	/**
 	 * Checks if newly selected providers are within map active bounds.
 	 *
@@ -402,119 +403,83 @@ class Map extends Component {
 	 * cases is best done using more granular props passed to the map rather than having the map
 	 * track changes to highlighted props.
 	 */
-	isNewSelectionInView = prevProps => {
-/*		still need to account for case with multiple selections
-		do check in update for presence of selectproviderkey in general, use .find to check highlighted providers from top of stack*/
-		if (this.props.selectProviderKey && this.props.selectProviderKey !== prevProps.selectProviderKey) {
-			/*		const prevIds = filterProviderIds(
-						providersById(prevProps.visibleProviders),
-						prevProps.highlightedProviders
-						),
-						currIds = filterProviderIds(
-							providersById(this.props.visibleProviders),
-							this.props.highlightedProviders
-						),
-						newIds = currIds.filter(id => !prevIds.includes(id));
-					if (newIds.length === 0) {
-						// The set of selected providers stayed the same or got smaller, no need to zoom.
-						return;
-					}*/
-			const mapBounds = this.map.getBounds().toArray().flat();
-			const mapBoundPoly = bboxPolygon(mapBounds);
-			// const idToProvider = providersById(this.props.visibleProviders);
-			// const newProviders = newIds.map(id => idToProvider[id]);
-			const newSelection = providersById(this.props.visibleProviders)[this.props.selectProviderId];
-			return booleanPointInPolygon(point(newSelection.coordinates), mapBoundPoly);
-		};
+	areNewSelectionsInView = prevProps => {
+		const mapBounds = this.map.getBounds().toArray().flat();
+		const mapBoundPoly = bboxPolygon(mapBounds);
+		const newSelection = this.props.highlightedProviders.filter(providerId => !prevProps.highlightedProviders.includes(providerId));
+		newSelection.find(providerId => {
+			const providerObj = providersById(this.props.visibleProviders)[providerId];
+			return !booleanPointInPolygon(point(providerObj.coordinates), mapBoundPoly);
+		})
 	};
 	
-  getZoomForDistance = distance => {
-    let resolution = window.screen.height;
-    let latitude = this.props.search.coordinates[1];
-    let milesPerPixel = (distance * 8) / resolution;
-    return (
-      Math.log2(
-        (24901 * Math.cos((latitude * Math.PI) / 180)) / milesPerPixel
-      ) - 8
-    );
-  };
-  
-  keyChange = ( prevProps ) => {
-		console.log(this.props.search);
-  	if (this.isNewSelectionInView(prevProps)){return "zoomToFitKey"}
-		if (this.props.filters["distance"] && this.props.filters["distance"] !== prevProps.filters["distance"]){return "distance"}
-		if (this.props.search["searchKey"] && this.props.search["searchKey"] !== prevProps.search["searchKey"]){return "searchKey"}
-		if (this.props.search["flyToProviderKey"] && this.props.search["flyToProviderKey"] !== prevProps.search["flyToProviderKey"]){return "flyToProviderKey"}
-    if (this.props.search["zoomToFitKey"] && this.props.search["zoomToFitKey"] !== prevProps.search["zoomToFitKey"]){return "zoomToFitKey"}
+	getZoomForDistance = distance => {
+		let resolution = window.screen.height;
+		let latitude = this.props.search.coordinates[1];
+		let milesPerPixel = (distance * 8) / resolution;
+		return (
+			Math.log2(
+				(24901 * Math.cos((latitude * Math.PI) / 180)) / milesPerPixel
+			) - 8
+		);
+	};
+	
+	didKeyChange = (prevProps) => {
+		if (this.props.filters["distance"] && this.props.filters["distance"] !== prevProps.filters["distance"]) {
+			return "distance"
+		}
+		if (this.props.search["searchKey"] && this.props.search["searchKey"] !== prevProps.search["searchKey"]) {
+			return "searchKey"
+		}
+		if (this.props.search["flyToProviderKey"] && this.props.search["flyToProviderKey"] !== prevProps.search["flyToProviderKey"]) {
+			return "flyToProviderKey"
+		}
+		if (this.props.search["zoomToFitKey"] && this.props.search["zoomToFitKey"] !== prevProps.search["zoomToFitKey"]) {
+			return "zoomToFitKey"
+		}
+		if (this.props.selectProviderKey && this.props.selectProviderKey !== prevProps.selectProviderKey) {
+			return this.areNewSelectionsInView(prevProps) || "zoomToFitKey"
+		}
 		return false
 	};
-
-  componentDidUpdate(prevProps) {
-  	let { distance } = this.props.filters;
-  	let { coordinates, flyToProviderId} = this.props.search;
-  	
-    if (this.state.loaded) {
-      const features = this.geoJSONFeatures();
-      this.setSourceFeatures(features);
-      this.props.loadedProviderTypeIds.map(typeId =>
-        this.findLayerInMap(typeId)
-      );
-      this.setSpecialLayerInMap("highlighted", "highlighted");
-      this.updatePinAndDistanceIndicator(prevProps);
-      this.markRecentSelection(prevProps);
-      
-			console.log(this.keyChange(prevProps), flyToProviderId, distance, coordinates);
+	
+	smoothFlyTo = (zoom, coordinates = this.props.search.coordinates) => {
+		return this.map.flyTo({
+			center: coordinates,
+			zoom: zoom,
+			speed: 0.5,
+		})
+	};
+	
+	componentDidUpdate(prevProps) {
+		let {distance} = this.props.filters;
+		let {flyToProviderId} = this.props.search;
+		let idLookUp = providersById(this.props.visibleProviders);
+		
+		
+		if (this.state.loaded) {
+			const features = this.geoJSONFeatures();
+			this.setSourceFeatures(features);
+			this.props.loadedProviderTypeIds.map(typeId => this.findLayerInMap(typeId));
+			this.setSpecialLayerInMap("highlighted", "highlighted");
 			
-      switch(this.keyChange(prevProps)) {
+			this.updatePinAndDistanceIndicator(prevProps);
+			this.markRecentSelection();
+			
+			/*decides whether map should move and how*/
+			switch (this.didKeyChange(prevProps)) {
 				case "distance":
-					return this.map.flyTo({
-						center: coordinates,
-						zoom: this.getZoomForDistance(distance)   //this.zoomLevels[distance] //
-					});
+					return this.smoothFlyTo(this.getZoomForDistance(distance));
 				case "zoomToFitKey":
 					return this.zoomToFit();
-				case "flyToProviderKey": {
-					const {coordinates: providerCoordinate} = providersById(this.props.visibleProviders)[flyToProviderId];
-					console.log("flying to provider");
-					return this.map.flyTo({
-						center: providerCoordinate,
-						zoom: MIN_UNCLUSTERED_ZOOM
-					});
-				}
+				case "flyToProviderKey":
+					return this.smoothFlyTo(MIN_UNCLUSTERED_ZOOM, idLookUp[flyToProviderId]);
 				case "searchKey":
-					return this.map.flyTo({
-						center: this.props.search.coordinates,
-						zoom: this.getZoomForDistance(distance || 1.5)  //this.zoomLevels[distance] || this.zoomLevels[1.5] // t
-					});
+					return this.smoothFlyTo(this.getZoomForDistance(distance || 1.5));
 				default:
-					return console.log("keyChange none")
+					return console.log("didKeyChange none");
 			}
 			
-    /*
-      if ( distance && distance !== prevProps.filters.distance) {
-        this.map.flyTo({
-          center: coordinates,
-          zoom: this.zoomLevels[distance] //this.getZoomForDistance(distance)
-				});
-			}
-			if (flyToProviderKey !== prevProps.search.flyToProviderKey) {
-				const {coordinates: providerCoordinate} = providersById(this.props.visibleProviders)[
-					flyToProviderId
-					];
-				this.map.flyTo({
-					center: providerCoordinate,
-					zoom: MIN_UNCLUSTERED_ZOOM
-				});
-			}
-			if (this.isNewSelectionInView(prevProps) || zoomToFitKey !== prevProps.search.zoomToFitKey) {
-				this.zoomToFit();
-			}
-      if (searchKey !== prevProps.search.searchKey) {
-        this.map.flyTo({
-          center: coordinates,
-          zoom: this.getZoomForDistance(distance || 1.5)
-        });
-      }*/
 		}
 	}
 	

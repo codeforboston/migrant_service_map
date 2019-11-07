@@ -39,7 +39,7 @@ export default function providers(state = INITIAL_STATE, action) {
     case SELECT_NEW_PROVIDER:
       return {
         ...state,
-        selectProviderId: action.ids,
+        selectProviderId: action.id,
         selectProviderKey: action.key
       }
     default:

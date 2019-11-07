@@ -18,7 +18,8 @@ const mapStateToProps = state => {
     loadedProviderTypeIds: state.providerTypes.allIds,
     highlightedProviders: state.highlightedProviders,
     filters: state.filters,
-    search: state.search
+    search: state.search,
+    selectProviderId: state.selectProviderId
   };
 };
 
