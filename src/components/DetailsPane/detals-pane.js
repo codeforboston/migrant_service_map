@@ -23,7 +23,13 @@ export default class DetailsPane extends React.Component {
       <div className="details-pane provider-info">
         <Row>
           <ProviderDetailsInfo icon="email" label="email" ellipsis>
-            <a href={"mailto:" + email}>{email}</a>
+            <a
+              href={"mailto:" + email}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {email}
+            </a>
           </ProviderDetailsInfo>
           <ProviderDetailsInfo icon="language" label="website" ellipsis>
             <a href={website} target="_blank" rel="noopener noreferrer">
