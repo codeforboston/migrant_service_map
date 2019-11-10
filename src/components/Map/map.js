@@ -206,30 +206,20 @@ class Map extends Component {
 	};
 	
 	addClickHandlerToMapIdLayer = typeId => {
-		let {displayProviderInformation, highlightedProviders} = this.props;
+		let {displayProviderInformation, highlightedProviders, selectProvider} = this.props;
 		this.map.on("click", typeId, e => {
+			const providerId = e.features[0].properties.id;
+			selectProvider(providerId);
 			const providerElement = document.getElementById(
-				`provider-${e.features[0].properties.id}`
+				`provider-${providerId}`
 			);
 			if (typeId !== "highlightedProviders" && providerElement) {
-				displayProviderInformation(e.features[0].properties.id);
-			} else if (!highlightedProviders.includes(e.features[0].properties.id)) {
-				displayProviderInformation(e.features[0].properties.id);
+				displayProviderInformation(providerId);
+			} else if (!highlightedProviders.includes(providerId)) {
+				displayProviderInformation(providerId);
 			}
 		});
 	};
-	
-	markRecentSelection(prevProps) {
-		let {visibleProviders, highlightedProviders} = this.props;
-		const newSelection = highlightedProviders.find(providerId => !prevProps.highlightedProviders.includes(providerId));
-		if (!newSelection) {
-			return;
-		}
-		const provider = visibleProviders.find(provider => provider.id === newSelection);
-		const marker = new AnimatedMarker(provider);
-		marker.addTo(this.map);
-		
-	}
 	
 	addHoverHandlerToMapIdLayer = typeId => {
 		let popup = new mapboxgl.Popup({
@@ -254,6 +244,39 @@ class Map extends Component {
 		});
 	};
 	
+	addDistanceIndicatorLayer = () => {
+		if (!this.map.getSource("distance-indicator-source")) {
+			this.map.addSource("distance-indicator-source", {
+				type: "geojson",
+				data: {
+					type: "FeatureCollection",
+					features: []
+				}
+			});
+		}
+		if (!this.map.getLayer("distance-indicator-fill")) {
+			this.map.addLayer({
+				id: "distance-indicator-fill",
+				type: "fill",
+				source: "distance-indicator-source",
+				paint: {
+					"fill-color": ["get", "color"]
+				}
+			});
+		}
+		if (!this.map.getLayer("distance-indicator-stroke")) {
+			this.map.addLayer({
+				id: "distance-indicator-stroke",
+				type: "line",
+				source: "distance-indicator-source",
+				paint: {
+					"line-color": "#D561B5",
+					"line-width": 2
+				}
+			})
+		}
+	}
+	
 	geoJSONFeatures = () => {
 		let {highlightedProviders, visibleProviders = []} = this.props;
 		let provider;
@@ -264,6 +287,22 @@ class Map extends Component {
 		}
 		return convertProvidersToGeoJSON(visibleProviders);
 	};
+	
+	setSourceFeatures = features => {
+		this.setSingleSourceInMap(); // checks source exists, adds if not
+		this.map.getSource("displayData").setData({
+			type: "FeatureCollection",
+			features: features
+		});
+	};
+	
+	markRecentSelection(prevProps) {
+		let {visibleProviders, selectProviderKey, selectProviderId} = this.props;
+		if (selectProviderKey === prevProps.selectProviderKey) { return ;}
+		const provider = providersById(visibleProviders)[selectProviderId];
+		const marker = new AnimatedMarker(provider);
+		marker.addTo(this.map);
+	}
 	
 	updatePinAndDistanceIndicator = prevProps => {
 		const distance = this.props.filters.distance;
@@ -325,39 +364,6 @@ class Map extends Component {
 			.setData({type: "FeatureCollection", features: circles});
 	};
 	
-	addDistanceIndicatorLayer = () => {
-		if (!this.map.getSource("distance-indicator-source")) {
-			this.map.addSource("distance-indicator-source", {
-				type: "geojson",
-				data: {
-					type: "FeatureCollection",
-					features: []
-				}
-			});
-		}
-		if (!this.map.getLayer("distance-indicator-fill")) {
-			this.map.addLayer({
-				id: "distance-indicator-fill",
-				type: "fill",
-				source: "distance-indicator-source",
-				paint: {
-					"fill-color": ["get", "color"]
-				}
-			});
-		}
-		if (!this.map.getLayer("distance-indicator-stroke")) {
-			this.map.addLayer({
-				id: "distance-indicator-stroke",
-				type: "line",
-				source: "distance-indicator-source",
-				paint: {
-					"line-color": "#D561B5",
-					"line-width": 2
-				}
-			})
-		}
-	}
-	
 	zoomToFit = providerIds => {
 		providerIds =
 			providerIds ||
@@ -378,7 +384,7 @@ class Map extends Component {
 			);
 		}
 	};
- 
+	
   getPaddedMapBounds() {
     const width = this.mapRef.current.clientWidth,
       height = this.mapRef.current.clientHeight,
@@ -477,7 +483,7 @@ class Map extends Component {
 				case "searchKey":
 					return this.smoothFlyTo(this.getZoomForDistance(distance || 1.5));
 				default:
-					return console.log("didKeyChange none");
+					return ;
 			}
 			
 		}

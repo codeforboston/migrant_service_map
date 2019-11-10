@@ -42,7 +42,7 @@ class AnimatedMarker {
     this.marker.remove();
   };
 
-  createMarkerElement = (providerId, typeId) => {
+    createMarkerElement = (providerId, typeId) => {
     const element = document.createElement("div");
     element.id = `marker-${providerId}`;
     element.className = "marker";

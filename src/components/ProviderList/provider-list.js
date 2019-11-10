@@ -25,7 +25,6 @@ class ProviderList extends Component {
   // if highlightedProviders has changed,
   // we want to scroll providers list to most recent one
   componentDidUpdate(previousProps) {
-    console.log("provider list did update");
     let nowHighlighted = this.props.highlightedProviders;
     let wasHighlightedViaSidebar = (nowHighlighted[0] === this.state.lastHighlightedViaSidebar);
     let wasHighlightedAlready = previousProps.highlightedProviders.includes(nowHighlighted[0]);

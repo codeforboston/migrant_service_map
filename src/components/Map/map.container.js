@@ -19,7 +19,8 @@ const mapStateToProps = state => {
     highlightedProviders: state.highlightedProviders,
     filters: state.filters,
     search: state.search,
-    selectProviderId: state.selectProviderId
+    selectProviderId: state.providers.selectProviderId,
+    selectProviderKey: state.providers.selectProviderKey
   };
 };
 
