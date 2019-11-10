@@ -16,7 +16,6 @@ class ProviderList extends Component {
   }
 
   toggleProviderType = (id) => {
-    console.log('toggling provider type', id);
     let collapsed = this.state.collapsedProviderTypes;
     let updated = collapsed.includes(id) ? collapsed.filter(c => c !== id) : [id, ...collapsed];
     this.setState({ collapsedProviderTypes: updated });

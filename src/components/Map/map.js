@@ -184,6 +184,22 @@ class Map extends Component {
 		);
 	};
 	
+	addClickHandlerToMapIdLayer = typeId => {
+		let {displayProviderInformation, highlightedProviders, selectProvider} = this.props;
+		this.map.on("click", typeId, e => {
+			const providerId = e.features[0].properties.id;
+			selectProvider(providerId);
+			const providerElement = document.getElementById(
+				`provider-${providerId}`
+			);
+			if (typeId !== "highlightedProviders" && providerElement) {
+				displayProviderInformation(providerId);
+			} else if (!highlightedProviders.includes(providerId)) {
+				displayProviderInformation(providerId);
+			}
+		});
+	};
+	
 	addClusterClickHandlerToMapLayer = clusterName => {
 		this.map.on("click", clusterName, e => {
 			let features = this.map.queryRenderedFeatures(e.point, {
@@ -202,22 +218,6 @@ class Map extends Component {
 						zoom: mapZoom >= zoom ? mapZoom + 1 : zoom
 					});
 				});
-		});
-	};
-	
-	addClickHandlerToMapIdLayer = typeId => {
-		let {displayProviderInformation, highlightedProviders, selectProvider} = this.props;
-		this.map.on("click", typeId, e => {
-			const providerId = e.features[0].properties.id;
-			selectProvider(providerId);
-			const providerElement = document.getElementById(
-				`provider-${providerId}`
-			);
-			if (typeId !== "highlightedProviders" && providerElement) {
-				displayProviderInformation(providerId);
-			} else if (!highlightedProviders.includes(providerId)) {
-				displayProviderInformation(providerId);
-			}
 		});
 	};
 	
@@ -485,7 +485,6 @@ class Map extends Component {
 				default:
 					return ;
 			}
-			
 		}
 	}
 	
