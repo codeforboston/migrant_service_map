@@ -262,13 +262,13 @@ class Map extends Component {
 
   geoJSONFeatures = () => {
     const { highlightedProviders, visibleProviders = [] } = this.props;
-    const visibleProvidersAugumented = visibleProviders.map(
+    const visibleProvidersAugmented = visibleProviders.map(
       (provider) => {
         provider.highlighted = highlightedProviders.includes(provider.id) ? 1 : 0;
         return provider;
       }
     ); 
-    return convertProvidersToGeoJSON(visibleProvidersAugumented);
+    return convertProvidersToGeoJSON(visibleProvidersAugmented);
   };
 
   updatePinAndDistanceIndicator = prevProps => {
