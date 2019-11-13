@@ -8,6 +8,10 @@
 
 ### [Live Demo](https://migrant-service-map.web.app)
 
+## About the Project
+
+The Migrant Service Map is an application which allows service providers to more effectively network with one another in order to provide the best recommendations to their clients. 
+
 ### Partners: MapBox and Code for Boston
 
 Thanks for choosing to support our initiative to support and strengthen migrant service provision in the greater Boston area. For more information about our organization, vist [Refugees Welcome](https://refugeeswelcomehome.org/).
@@ -20,32 +24,33 @@ Thanks for choosing to support our initiative to support and strengthen migrant 
 
 - Marena Brinkhurst marena.brinkhurst@mapbox.com
 - Sam Fader sam.fader@mapbox.com
-- Mall Wood mal.wood@mapbox.com,
-- Joe Clark joe.clark@mapbox.com,
+- Mall Wood mal.wood@mapbox.com
+- Joe Clark joe.clark@mapbox.com
 
 ### Code for Boston Support:
 
 - Liam Morley liam@codeforboston.org
-- Matt mattz@codeforboston.org
+- Matt Zagaja mattz@codeforboston.org
 
 ## Project Materials and Communications
 
 - Slack Channel: #migrantservicemap
   - [Join Code for Boston's Slack Workplace](https://communityinviter.com/apps/cfb-public/code-for-boston)
 - [Project Board](https://trello.com/invite/b/rVNLIxod/2c7ced88a95f6514f8ef49eb2e622cd8/migrant-service-map)
-- [Weekly Meeting Minutes](https://docs.google.com/document/d/1Q4KbIK_mSc1YiAWd6nZ9qgy0cJgI_m5sBXKJMqfagHo/edit?usp=sharing)
-- [Draft Link](https://bl.ocks.org/malwoodsantoro/raw/bb965255726264a1187d0de845f32c41/)
+- [Design Google Drive](https://drive.google.com/drive/folders/12cSCKSf9IQT1nMJUomWFQNyG2PLCsmOw)
 - [Database](https://docs.google.com/spreadsheets/d/1yuYBtejcDPPxkY3ogHkqGEp7h3RrZ_3B2SUsraASWcs/edit?usp=sharing)
+
+## Why? 
 
 ## Summary
 
-The Migrant Service Map (MSM) was conceptualized as a part of our ongoing research on streamlining migrant services in Boston. The objective of the map is to act as a spatial guide for migrants and service providers to find specific types of services closest to them and their clients. The database would include a comprehensive list of all service providers and services offered desegregated by service type and migrant status. The data on service providers in Boston has already been collected by Refugees Welcome! and is geocoded.
+The Migrant Service Map (MSM) was conceptualized as a part of Refugees Welcome!'s ongoing research on streamlining migrant services in Boston. The objective of the map is to act as a spatial guide for migrants and service providers to find specific types of services closest to them and their clients. The database includes a comprehensive list of all service providers and the services they offer. The data on service providers in Boston has already been collected by Refugees Welcome! and is geocoded.
 
-## Features
+## Ideal Product Vision
+ 
+The migrant or service provider is able to click on the MSM link and be transferred to a questionnaire page where they would be asked whether they are service providers or migrants. The next page would ask the service provider if they have become a part of the Refugees Welcome! network and offer a separate link to apply to the RW! Network. This page would also ask what the legal status is of their client, the address of the client, and what types of services they are looking for. The legal status is important because undocumented and asylum seekers cannot receive all public services.
 
-The migrant or service provider would needs to be able to click on the MSM link and be transferred to a questionnaire page where they would be asked whether they are service providers or migrants. The next page would ask the service provider if they have become a part of our network and offer a separate link to apply to the RW! Network. This page would also ask what the legal status is of their client, the address of the client, and what types of services they are looking for. The legal status is important because undocumented and asylum seekers cannot receive all public services.
-
-The types of services include, housing, work placement, english, legal assistance, registration, health, mental health, community centers, and education. The map would conduct a spatial analysis to highlight each service provider within .5, 1, 3, and 5 miles of the address entered for whichever legal status and service applies to their search. The migrant or service provider will be able to click on the service provider points and is provided with a comprehensive overview of the services provided and contact information. This tool will be used by service providers and migrants to find and plan the integration of new arrivals to Boston. As a result, it would be helpful if the platform could keep a record of each point of interest that then could be easily printed. That way service providers can give clients an easy list of service providers to contact upon arrival.
+The types of services include housing, work placement, english, legal assistance, registration, health, mental health, community centers, and education. The map would conduct a spatial analysis to highlight each service provider within .5, 1, 3, and 5 miles of the address entered for whichever legal status and service applies to their search. The migrant or service provider will be able to click on the service provider points and is provided with a comprehensive overview of the services provided and contact information. This tool will be used by service providers and migrants to find and plan the integration of new arrivals to Boston. As a result, it would be helpful if the platform could keep a record of each point of interest that then could be easily printed. That way service providers can give clients an easy list of service providers to contact upon arrival.
 
 ## Getting Started
 
