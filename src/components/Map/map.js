@@ -241,8 +241,8 @@ componentDidMount() {
         "icon-size": 0.4,
         "text-field": "{point_count_abbreviated}",
         "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-        "text-size": 26,
-        "text-offset": [0, -0.3],
+        "text-size": 20,
+        "text-offset": [-0.05, -0.4],
         "icon-allow-overlap": true,
         "icon-ignore-placement": true,
         visibility: "visible"
