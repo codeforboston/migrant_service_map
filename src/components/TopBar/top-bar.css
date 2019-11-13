@@ -72,5 +72,5 @@ button.geocoder-icon.geocoder-icon-close {
 
 .clear-icon-container {
   padding: 10px;
-  cursor: default;
+  cursor: pointer;
 }
