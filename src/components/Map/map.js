@@ -9,11 +9,14 @@ import {
   createCenterMarker,
   createDistanceMarker,
   removeDistanceMarkers,
-  getBoundingBox,
+  getProviderBoundingBox,
   filterProviderIds,
-  providersById
+  providersById,
+  getBoundingBox
 } from "./utilities.js";
 import { AnimatedMarker } from "../AnimatedMarker/animated-marker.js";
+
+const zoomPadding = { top: 100, bottom: 100, left: 450, right: 100 };
 
 // The map has a zoom level between 0 (zoomed entirely out)
 // and 22 (zoomed entirely in). Zoom level is configured as integers but
@@ -27,6 +30,7 @@ class Map extends Component {
     super(props);
     this.map = null;
     this.markerList = []; //need to keep track of marker handles ourselves -- cannot be queried from map
+    this.mapRef = React.createRef();
     this.state = {
       loaded: false
     };
@@ -47,7 +51,7 @@ class Map extends Component {
   componentDidMount() {
     const { mapCenter } = this.props.search;
     const map = new mapboxgl.Map({
-      container: "map", // container id
+      container: this.mapRef.current,
       style: "mapbox://styles/refugeeswelcome/cjxmgxala1t5b1dtea37lbi2p", // stylesheet location
       center: mapCenter,
       zoom: 11 // starting zoom
@@ -205,15 +209,20 @@ class Map extends Component {
     });
   };
 
-  markRecentSelection(prevProps) {
+  markRecentSelection(prevProps, mapBounds) {
     let { visibleProviders, highlightedProviders } = this.props;
-    const newSelection = highlightedProviders.find(providerId => !prevProps.highlightedProviders.includes(providerId));
-    if (!newSelection) { return; }
-    const provider = visibleProviders.find(provider => provider.id === newSelection);
+    const newSelection = highlightedProviders.find(
+      providerId => !prevProps.highlightedProviders.includes(providerId)
+    );
+    if (!newSelection) {
+      return;
+    }
+    const provider = visibleProviders.find(
+      provider => provider.id === newSelection
+    );
     const marker = new AnimatedMarker(provider);
-    marker.addTo(this.map);
-
-   }
+    marker.addTo(this.map, mapBounds);
+  }
 
   addHoverHandlerToMapIdLayer = typeId => {
     let popup = new mapboxgl.Popup({
@@ -363,10 +372,13 @@ class Map extends Component {
       );
     if (providerIds.length > 0) {
       this.map.fitBounds(
-        getBoundingBox(providersById(this.props.visibleProviders), providerIds),
+        getProviderBoundingBox(
+          providersById(this.props.visibleProviders),
+          providerIds
+        ),
         {
           // Left padding accounts for provider list UI.
-          padding: { top: 100, bottom: 100, left: 450, right: 100 },
+          padding: zoomPadding,
           duration: 2000,
           maxZoom: MIN_UNCLUSTERED_ZOOM,
           linear: false
@@ -374,6 +386,21 @@ class Map extends Component {
       );
     }
   };
+
+  getPaddedMapBounds() {
+    const width = this.mapRef.current.clientWidth,
+      height = this.mapRef.current.clientHeight,
+      leftX = zoomPadding.left,
+      topY = zoomPadding.top,
+      rightX = width - zoomPadding.right,
+      bottomY = height - zoomPadding.bottom;
+    return getBoundingBox([
+      this.map.unproject([leftX, topY]),
+      this.map.unproject([rightX, topY]),
+      this.map.unproject([rightX, bottomY]),
+      this.map.unproject([leftX, bottomY])
+    ]);
+  }
 
   /**
    * Zooms to fit when there are new providers not currently in view.
@@ -385,7 +412,7 @@ class Map extends Component {
    * cases is best done using more granular props passed to the map rather than having the map
    * track changes to highlighted props.
    */
-  zoomToShowNewProviders = prevProps => {
+  zoomToShowNewProviders = (prevProps, mapBounds) => {
     const prevIds = filterProviderIds(
         providersById(prevProps.visibleProviders),
         prevProps.highlightedProviders
@@ -399,11 +426,10 @@ class Map extends Component {
       // The set of selected providers stayed the same or got smaller, no need to zoom.
       return;
     }
-    const newFeatureBounds = getBoundingBox(
-        providersById(this.props.visibleProviders),
-        newIds
-      ),
-      mapBounds = this.map.getBounds();
+    const newFeatureBounds = getProviderBoundingBox(
+      providersById(this.props.visibleProviders),
+      newIds
+    );
     if (
       newFeatureBounds.getNorth() > mapBounds.getNorth() ||
       newFeatureBounds.getEast() > mapBounds.getEast() ||
@@ -434,8 +460,9 @@ class Map extends Component {
       );
       this.setSpecialLayerInMap("highlighted", "highlighted");
       this.updatePinAndDistanceIndicator(prevProps);
-      this.markRecentSelection(prevProps);
-      this.zoomToShowNewProviders(prevProps);
+      const mapBounds = this.getPaddedMapBounds();
+      this.markRecentSelection(prevProps, mapBounds);
+      this.zoomToShowNewProviders(prevProps, mapBounds);
       if (
         this.props.filters.distance &&
         this.props.filters.distance !== prevProps.filters.distance
@@ -474,7 +501,7 @@ class Map extends Component {
   }
 
   render() {
-    return <div id="map" className="map" />;
+    return <div className="map" ref={this.mapRef} />;
   }
 }
 
