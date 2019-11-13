@@ -93,7 +93,7 @@ class Map extends Component {
         id: layerName,
         source: "displayData",
         type: "symbol",
-        filter: ["==", property, layerName],
+        filter: ["==", property, 1],
         layout: {
           "icon-image": layerName + "icon",
           "icon-size": 0.4,
@@ -107,30 +107,49 @@ class Map extends Component {
   };
 
   findClustersInMap = () => {
+    // Cluster pin
     this.map.addLayer({
       id: "clusterCircle",
       source: "displayData",
       type: "symbol",
-      filter: ["has", "point_count"],
+      filter: ["all", ["has", "point_count"], ["==", "sum", 0]],
       layout: {
-        "icon-image": "clustersicon",
+        "icon-image": "clusters-multiicon",
         "icon-size": 0.5,
         "icon-allow-overlap": true,
         "icon-ignore-placement": true
       }
     });
 
-    let clusterName = "cluster";
+
+    // Cluster pin highlighted
+    this.map.addLayer({
+      id: "clusterCircleHighlighted",
+      source: "displayData",
+      type: "symbol",
+      filter: ["all", ["has", "point_count"], [">", "sum", 0]],
+      layout: {
+        "icon-image": "clusters-multi-highlightedicon",
+        "icon-size": 0.5,
+        "icon-allow-overlap": true,
+        "icon-ignore-placement": true
+      }
+    });
+
+    const clusterName = "clusterText";
+
+    // Cluster text
     this.map.addLayer({
       id: clusterName,
       source: "displayData",
       type: "symbol",
       filter: ["has", "point_count"],
+      // filter: ["all", ["has", "point_count"], [">", "sum", 0]],
       layout: {
         "icon-size": 0.4,
         "text-field": "{point_count_abbreviated}",
         "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-        "text-size": 26,
+        "text-size": 18,
         "text-offset": [0, -0.3],
         "icon-allow-overlap": true,
         "icon-ignore-placement": true,
@@ -146,15 +165,18 @@ class Map extends Component {
     this.addClusterClickHandlerToMapLayer(clusterName);
   };
 
-  setSingleSourceInMap = () => {
+  setSingleSourceInMap = (features = []) => {
     if (!this.map.getSource("displayData")) {
       this.map.addSource("displayData", {
         type: "geojson",
         data: {
           type: "FeatureCollection",
-          features: []
+          features: features
         },
         cluster: true,
+        clusterProperties: {
+          "sum": ["+", ["get", "highlighted"]]
+        },
         clusterMaxZoom: MAX_CLUSTERED_ZOOM,
         clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
       });
@@ -239,14 +261,14 @@ class Map extends Component {
   };
 
   geoJSONFeatures = () => {
-    let { highlightedProviders, visibleProviders = [] } = this.props;
-    let provider;
-    for (provider of visibleProviders) {
-      provider.highlighted = highlightedProviders.includes(provider.id)
-        ? "highlighted"
-        : "not-highlighted";
-    }
-    return convertProvidersToGeoJSON(visibleProviders);
+    const { highlightedProviders, visibleProviders = [] } = this.props;
+    const visibleProvidersAugumented = visibleProviders.map(
+      (provider) => {
+        provider.highlighted = highlightedProviders.includes(provider.id) ? 1 : 0;
+        return provider;
+      }
+    ); 
+    return convertProvidersToGeoJSON(visibleProvidersAugumented);
   };
 
   updatePinAndDistanceIndicator = prevProps => {
