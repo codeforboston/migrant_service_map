@@ -5,7 +5,7 @@ node_js: node
 
 # TODO: If deployment becomes unreliable, use a package-lock.json and npm ci
 install: npm install
-script: npm run build
+script: npm test && npm run build
 
 deploy:
   provider: firebase

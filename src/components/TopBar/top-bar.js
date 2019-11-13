@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "components/ProviderList/provider-list.css";
+import Logo from "./logo";
 import ProviderTypeDropdown from "./provider-type-dropdown";
 import Search from "./search";
 import DistanceDropdown from "./distance-dropdown";
@@ -27,6 +28,7 @@ class TopBar extends Component {
           onChange={changeVisaFilter}
           visaTypes={visaTypes}
         /> */}
+        <Logo />
         <ProviderTypeDropdown
           className={topBarItemClass}
           providerTypes={providerTypes}

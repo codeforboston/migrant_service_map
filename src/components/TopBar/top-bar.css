@@ -22,7 +22,18 @@
   box-shadow: 1px 3px 4px rgba(96, 1, 185, 0.25);
   margin: 0 8px;
   height: 100%;
-  border-radius: 8px;
+  border-radius: 2px;
+  cursor: default;
+}
+
+#logo {
+  display: flex;
+  justify-content: center;
+}
+
+#logo img {
+  width: 100%;
+  max-width: 350px;
 }
 
 .mapboxgl-ctrl-geocoder {
@@ -36,10 +47,6 @@
   margin-top: 0;
 }
 
-.nav-search {
-  margin-top: 5px;
-}
-
 .mapboxgl-ctrl-geocoder {
   border-radius: 8px !important;
 }
@@ -48,7 +55,7 @@ button.geocoder-icon.geocoder-icon-close {
   background-color: #FDFAFF;
 }
 
-#nav-search .msm-map-search-box {
+.msm-map-search-box {
   box-shadow: none !important;
   width: 100% !important;
   background-color: transparent;
@@ -61,4 +68,5 @@ button.geocoder-icon.geocoder-icon-close {
 
 .clear-icon-container {
   padding: 10px;
+  cursor: default;
 }

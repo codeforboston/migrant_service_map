@@ -1,12 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 import {
-  initializeProviders,
   initializeVisaFilter,
-  setSearchCenterCoordinates,
   displayProviderInformation,
   setMapObject,
-  selectTab
 } from "redux/actions";
 import { getMapProviders } from "redux/selectors";
 import Map from "./map";
@@ -27,9 +24,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    initializeProviders: providers => {
-      dispatch(initializeProviders(providers));
-    },
     initializeVisaFilter: visas => {
       dispatch(initializeVisaFilter(visas));
     },
@@ -39,12 +33,6 @@ const mapDispatchToProps = dispatch => {
     setMapObject: mapObject => {
       dispatch(setMapObject(mapObject));
     },
-    setSearchCenterCoordinates: (coordinates, mapboxId, text) => {
-      dispatch(setSearchCenterCoordinates(coordinates, mapboxId, text));
-    },
-    selectTab: index => {
-      dispatch(selectTab(index));
-    }
   };
 };
 
