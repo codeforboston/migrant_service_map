@@ -454,16 +454,6 @@ class Map extends Component {
 		{
 			this.smoothFlyTo(MIN_UNCLUSTERED_ZOOM, idLookUp[flyToProviderId].coordinates);
 		}
-		
-		
-/*		check for should move??
-		inview etc
-		
-		if move type is
-			this.smoothFlyTo (coordinates, zoomlevel)
-		else
-			this.zoomToFit()
- */
 
 	};
 	
