@@ -248,12 +248,17 @@ class Map extends Component {
   };
 
   geoJSONFeatures = () => {
-    let { highlightedProviders, visibleProviders = [] } = this.props;
+    let { highlightedProviders, visibleProviders = [], hoveredProvider } = this.props;
     let provider;
     for (provider of visibleProviders) {
       provider.highlighted = highlightedProviders.includes(provider.id)
         ? "highlighted"
         : "not-highlighted";
+      if (hoveredProvider === provider.id) {
+        provider.hovered = "hovered";
+      } else {
+        provider.hovered = null;
+      }
     }
     return convertProvidersToGeoJSON(visibleProviders);
   };
@@ -459,6 +464,7 @@ class Map extends Component {
         this.findLayerInMap(typeId)
       );
       this.setSpecialLayerInMap("highlighted", "highlighted");
+      this.setSpecialLayerInMap("hovered", "hovered");
       this.updatePinAndDistanceIndicator(prevProps);
       const mapBounds = this.getPaddedMapBounds();
       this.markRecentSelection(prevProps, mapBounds);

@@ -18,6 +18,7 @@ export const CHANGE_SORT_DIRECTION = "CHANGE_SORT_DIRECTION";
 export const SET_MAP_OBJECT = "SET_MAP_OBJECT";
 export const FLY_TO_PROVIDER = "FLY_TO_PROVIDER";
 export const ZOOM_TO_FIT = "ZOOM_TO_FIT";
+export const HOVERED_PROVIDER = "HOVERED_PROVIDER";
 
 /**
  * Returns a new number each time it's called, useful to differentiate actions that would
@@ -171,4 +172,12 @@ export function zoomToFit() {
     type: ZOOM_TO_FIT,
     key: nextActionKey()
   };
+}
+
+export function setHoveredProvider(id) {
+  return {
+    type: HOVERED_PROVIDER,
+    key: nextActionKey(),
+    id
+  }
 }

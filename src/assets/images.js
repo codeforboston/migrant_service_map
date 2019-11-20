@@ -40,6 +40,10 @@ const typeImages = [
     image: require("./icons/pin-highlight.png")
   },
   {
+    type: "hovered",
+    image: require("./icons/pin-hover.png")
+  },
+  {
     type: "clusters",
     image: require("./icons/pin-blank-clusters.png")
   },
