@@ -243,9 +243,8 @@ componentDidMount() {
       },
     });
 
-    // this.addClusterClickHandlerToMapLayer(clusterName);
     this.addClusterClickHandlerToMapLayer("clusterCircle");
-    this.addClusterMouseOverHandlerToMapLayer(clusterName);
+    this.addClusterMouseOverHandlerToMapLayer("clusterCircle");
   };
 
   setSingleSourceInMap = () => {
@@ -306,7 +305,7 @@ componentDidMount() {
       offset: [0, -15],
     });
 
-    this.map.on("mouseover", clusterName, e => {
+    this.map.on("mouseenter", clusterName, e => {
       const clusterId = e.features[0].id;
       const mySource = this.map.getSource("displayData");
       const clusterLngLat = e.lngLat;
@@ -318,7 +317,7 @@ componentDidMount() {
       });
     });
 
-    this.map.on('mouseout', clusterName, e => {
+    this.map.on('mouseleave', clusterName, e => {
       clusterListMarker.remove()
     })
   };
