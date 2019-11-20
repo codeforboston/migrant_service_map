@@ -78,7 +78,9 @@ class ProviderList extends Component {
     let handleProviderClick = (id) => {
       this.setState({ lastHighlightedViaSidebar: id });
       displayProviderInformation(id);
-      zoomToFit(id);
+      if(!highlightedProviders.includes(id)) {
+        zoomToFit(id);
+      }
       selectProvider(id);
     };
 

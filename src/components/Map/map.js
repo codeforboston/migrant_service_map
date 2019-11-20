@@ -188,15 +188,17 @@ class Map extends Component {
 		let {displayProviderInformation, highlightedProviders, selectProvider} = this.props;
 		this.map.on("click", typeId, e => {
 			const providerId = e.features[0].properties.id;
-			selectProvider(providerId);
 			const providerElement = document.getElementById(
 				`provider-${providerId}`
 			);
+					selectProvider(providerId);
+				
 			if (typeId !== "highlightedProviders" && providerElement) {
 				displayProviderInformation(providerId);
 			} else if (!highlightedProviders.includes(providerId)) {
 				displayProviderInformation(providerId);
 			}
+			
 		});
 	};
 	
@@ -297,8 +299,8 @@ class Map extends Component {
 	};
 	
 	markRecentSelection(prevProps) {
-		let {visibleProviders, selectProviderKey, selectProviderId} = this.props;
-		if (selectProviderKey === prevProps.selectProviderKey) { return ;}
+		let {highlightedProviders, visibleProviders, selectProviderKey, selectProviderId} = this.props;
+		if (selectProviderKey === prevProps.selectProviderKey || highlightedProviders.length < prevProps.highlightedProviders.length ) { return ;}
 		const provider = providersById(visibleProviders)[selectProviderId];
 		const marker = new AnimatedMarker(provider);
 		marker.addTo(this.map);
@@ -409,10 +411,10 @@ class Map extends Component {
 	 * cases is best done using more granular props passed to the map rather than having the map
 	 * track changes to highlighted props.
 	 */
-	areNewSelectionsInView = prevProps => {
+	
+	areProvidersInView = (newSelection) => {
 		const mapBounds = this.map.getBounds().toArray().flat();
 		const mapBoundPoly = bboxPolygon(mapBounds);
-		const newSelection = this.props.highlightedProviders.filter(providerId => !prevProps.highlightedProviders.includes(providerId));
 		newSelection.find(providerId => {
 			const providerObj = providersById(this.props.visibleProviders)[providerId];
 			return !booleanPointInPolygon(point(providerObj.coordinates), mapBoundPoly);
@@ -430,26 +432,43 @@ class Map extends Component {
 		);
 	};
 	
-	didKeyChange = (prevProps) => {
-		if (this.props.filters["distance"] && this.props.filters["distance"] !== prevProps.filters["distance"]) {
-			return "distance"
+	updateMapPosition = (prevProps) => {
+		let { zoomToFitKey, searchKey, flyToProviderKey, flyToProviderId } = this.props.search;
+		let { distance } = this.props.filters;
+		
+		const idLookUp = providersById(this.props.visibleProviders);
+		const newSelection = this.props.highlightedProviders.filter(providerId => !prevProps.highlightedProviders.includes(providerId));
+		
+		if (zoomToFitKey && zoomToFitKey !== prevProps.search.zoomToFitKey) {
+			this.zoomToFit();
 		}
-		if (this.props.search["searchKey"] && this.props.search["searchKey"] !== prevProps.search["searchKey"]) {
-			return "searchKey"
+		else if (distance || searchKey)
+		{
+			this.smoothFlyTo(this.getZoomForDistance(distance || 1.5), this.props.search.coordinates);
 		}
-		if (this.props.search["flyToProviderKey"] && this.props.search["flyToProviderKey"] !== prevProps.search["flyToProviderKey"]) {
-			return "flyToProviderKey"
+		else if (newSelection.length > 0 && this.props.highlightedProviders > 1 && !this.areProvidersInView(newSelection))
+		{
+			this.zoomToFit();
 		}
-		if (this.props.search["zoomToFitKey"] && this.props.search["zoomToFitKey"] !== prevProps.search["zoomToFitKey"]) {
-			return "zoomToFitKey"
+		else if ( flyToProviderKey !== prevProps.flyToProviderKey && !this.areProvidersInView(newSelection))
+		{
+			this.smoothFlyTo(MIN_UNCLUSTERED_ZOOM, idLookUp[flyToProviderId].coordinates);
 		}
-		if (this.props.selectProviderKey && this.props.selectProviderKey !== prevProps.selectProviderKey) {
-			return this.areNewSelectionsInView(prevProps) || "zoomToFitKey"
-		}
-		return false
+		
+		
+/*		check for should move??
+		inview etc
+		
+		if move type is
+			this.smoothFlyTo (coordinates, zoomlevel)
+		else
+			this.zoomToFit()
+ */
+
 	};
 	
-	smoothFlyTo = (zoom, coordinates = this.props.search.coordinates) => {
+	
+	smoothFlyTo = (zoom, coordinates) => {
 		return this.map.flyTo({
 			center: coordinates,
 			zoom: zoom,
@@ -458,11 +477,6 @@ class Map extends Component {
 	};
 	
 	componentDidUpdate(prevProps) {
-		let {distance} = this.props.filters;
-		let {flyToProviderId} = this.props.search;
-		let idLookUp = providersById(this.props.visibleProviders);
-		
-		
 		if (this.state.loaded) {
 			const features = this.geoJSONFeatures();
 			this.setSourceFeatures(features);
@@ -472,19 +486,8 @@ class Map extends Component {
 			this.updatePinAndDistanceIndicator(prevProps);
 			this.markRecentSelection();
 			
-			/*decides whether map should move and how*/
-			switch (this.didKeyChange(prevProps)) {
-				case "distance":
-					return this.smoothFlyTo(this.getZoomForDistance(distance));
-				case "zoomToFitKey":
-					return this.zoomToFit();
-				case "flyToProviderKey":
-					return this.smoothFlyTo(MIN_UNCLUSTERED_ZOOM, idLookUp[flyToProviderId]);
-				case "searchKey":
-					return this.smoothFlyTo(this.getZoomForDistance(distance || 1.5));
-				default:
-					return ;
-			}
+			this.updateMapPosition(prevProps);
+
 		}
 	}
 	
