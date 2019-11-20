@@ -11,6 +11,7 @@ class ProviderList extends Component {
     this.lastHighlightedRef = React.createRef();
     this.state = {
       collapsedProviderTypes: [],
+      lastHighlightedViaSidebar: null, // providers not highlighted via map-click do not trigger scroll
     }
   }
 
@@ -25,9 +26,16 @@ class ProviderList extends Component {
   // we want to scroll providers list to most recent one
   componentDidUpdate(previousProps) {
     let nowHighlighted = this.props.highlightedProviders;
-    
-    // only scroll if the change in highlightedProviders is due to adding a new item
-    if (nowHighlighted.length && !previousProps.highlightedProviders.includes(nowHighlighted[0])) {
+    let wasHighlightedViaSidebar = (nowHighlighted[0] === this.state.lastHighlightedViaSidebar);
+    let wasHighlightedAlready = previousProps.highlightedProviders.includes(nowHighlighted[0]);
+
+    // only scroll if the change in highlightedProviders
+    // comes from clicking a map icon to add a new provider
+    if (
+      nowHighlighted.length
+      && !wasHighlightedViaSidebar
+      && !wasHighlightedAlready
+    ) {
 
       // expand provider type first if necessary
       let providerType;
@@ -37,9 +45,9 @@ class ProviderList extends Component {
         if (typeIsCollapsed && providerTypeProviders.includes(nowHighlighted[0])) { this.toggleProviderType(providerType.id); }
       }
 
-      // add a small delay when updating scrollTop to avoid edge case 
-      // of 'open' height not being taken into account 
-      // when scrolling the list upward
+      // add a small delay when updating scrollTop 
+      // (avoids 'open' height not being taken into account 
+      //  when target item is earlier than visible section of list)
       setTimeout( () => {
         this.listElementRef.current.scrollTop = this.lastHighlightedRef.current.offsetTop - 8;
         // NOTE: setting property "scroll-behavior: smooth" in the CSS
@@ -66,6 +74,12 @@ class ProviderList extends Component {
       flyToProvider,
       zoomToFit
     } = this.props;
+
+    let handleProviderClick = (id) => {
+      this.setState({ lastHighlightedViaSidebar: id });
+      displayProviderInformation(id);
+    }
+
     return (
       <div className="service-providers">
         {!providersList.length && (
@@ -116,7 +130,7 @@ class ProviderList extends Component {
                                 : null
                             }
                             onClick={() =>
-                              displayProviderInformation(provider.id)
+                              handleProviderClick(provider.id)
                             }
                             className="search-item-container"
                           >

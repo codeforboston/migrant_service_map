@@ -24,6 +24,7 @@ text-overflow: ellipsis;
   box-shadow: 1px 3px 4px rgba(96, 1, 185, 0.25); 
   outline: none;
   user-select: none;
+  overflow: hidden;
 }
 
 .provider-card.card-expanded {
@@ -41,7 +42,7 @@ text-overflow: ellipsis;
 .provider-card.card-wrapped {
   background: #FFFFFF;
   border: 2px solid #DCCFE8;
-  border-radius: 1px;
+  border-radius: 4px;
   box-shadow: 1px 3px 4px rgba(96, 1, 185, 0.25);
 }
 
@@ -134,6 +135,7 @@ h5.wrapped {
   text-overflow: ellipsis;
   white-space: nowrap;
   cursor: pointer;
+  height: 18px;
 }
 
 h5.expanded {
@@ -196,17 +198,18 @@ h5.expanded {
 
 .save-button-container {
   position: absolute;
-  top: 5px;
-  right: 0;
+  top: -10px;
+  right: -10px;
 }
 
 .button {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 40px;
+  height: 73px;
   width: 70px;
   border: 0;
+  flex-direction: column;
   cursor: pointer;
   outline: none;
 }
@@ -218,39 +221,26 @@ h5.expanded {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  height: 40px;
+  height: 73px;
   width: 70px;
   cursor: pointer;
   background-color: transparent;
   font-size: 12px;
   font-weight: bold;
-  color: red;
+  background-color: #E08963;
+  color: #FFF;
 }
 
 .remoteButton > svg {
-  font-size: 20px;
+  margin-bottom: 0.25em;
 }
 
 .button.saved {
-  background-color: #70b5ee;
-  border-radius: 5px;
+  background-color: #382E77;
   color: #fff;
 }
 
 .button.unsaved {
-  background-color: #2699fb;
-  border-radius: 5px;
+  background-color: #6563E0;
   color: #fff;
-}
-
-.button > svg {
-  font-size: 25px;
-}
-
-.button.unsaved > svg {
-  margin-right: 5px;
-}
-
-.button.saved > svg {
-  margin-bottom: 5px;
 }

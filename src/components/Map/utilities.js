@@ -1,11 +1,9 @@
-import iconColors from "../../assets/icon-colors";
-import mapboxgl from "mapbox-gl";
+import mapboxgl from "./mapbox-gl-wrapper";
 import memoizeOne from "memoize-one";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMapMarkerAlt, faMapMarker } from "@fortawesome/free-solid-svg-icons";
 import ReactDOM from "react-dom";
 import React from "react";
-import _ from "lodash";
 
 const convertProvidersToGeoJSON = providers => {
   return providers.map(provider => ({
@@ -48,102 +46,18 @@ const removeDistanceMarkers = markerArray => {
   return markerArray.map(marker => marker.remove());
 };
 
-const cleanFeatures = providerFeatures => {
-  // The dataset contains some duplicate providers.
-  // Deduplicate by comparing coordinates and name, to allow for multiple providers at the
-  // same location. In that case, mapbox will render one icon over the other.
-  return _.uniqWith(
-    providerFeatures,
-    (f1, f2) =>
-      _.isEqual(f1.geometry.coordinates, f2.geometry.coordinates) &&
-      _.isEqual(
-        f1.properties["Organization Name"],
-        f2.properties["Organization Name"]
-      )
+const getProviderBoundingBox = (providersById, providerIds) => {
+  return getBoundingBox(
+    lookupProviders(providersById, providerIds).map(
+      provider => provider.coordinates
+    )
   );
 };
 
-const normalizeProviders = providerFeatures => {
-  const providerTypes = { byId: {}, allIds: [] };
-  const providers = { byId: {} };
-  providerFeatures = cleanFeatures(providerFeatures);
-  providerFeatures.forEach(
-    ({ id, geometry: { coordinates }, properties }, index) => {
-      let formattedTypeId = properties["Type of Service"]
-        .toLowerCase()
-        .split(" ")
-        .join("-");
-      id = index;
-      const typeExists = providerTypes.allIds.includes(formattedTypeId);
-      if (formattedTypeId === "community-center") {
-        // special case
-        formattedTypeId = "community-centers";
-      }
-      if (typeExists) {
-        providerTypes.byId[formattedTypeId] = {
-          ...providerTypes.byId[formattedTypeId],
-          id: formattedTypeId,
-          name: properties["Type of Service"],
-          providers: [...providerTypes.byId[formattedTypeId].providers, id]
-        };
-      } else {
-        if (!providerTypes.allIds.includes(formattedTypeId)) {
-          providerTypes.allIds.push(formattedTypeId);
-        }
-        providerTypes.byId[formattedTypeId] = {
-          id: formattedTypeId,
-          name: properties["Type of Service"],
-          providers: [id]
-        };
-      }
-
-      providers.byId[id] = {
-        id,
-        coordinates,
-        address:
-          properties[
-            "Address (#, Street Name, District/city, State, Zip Code)"
-          ],
-        email: properties["Email:"],
-        mission: properties["Mission:"],
-        name: properties["Organization Name"],
-        telephone: properties["Telephone:"],
-        timestamp: properties.Timestamp,
-        // Type of Service
-        typeName: properties["Type of Service"], // synonym for next line
-        typeId: formattedTypeId,
-        "Type of Service": properties["Type of Service"], // as referenced in reducer helper function
-        // Validated By
-        website: properties.Website,
-        color: iconColors.formattedTypeId
-      };
-    }
-  );
-  // sorted by name
-  providerTypes.allIds.map(id => {
-    const providersByType = providerTypes.byId[id].providers;
-    return providersByType.sort((a, b) =>
-      providers.byId[a].name.localeCompare(providers.byId[b].name)
-    );
-  });
-  // commit map query result to redux
-  return { providerTypes, providers };
-};
-
-const getBoundingBox = (providersById, providerIds) => {
-  const providers = lookupProviders(providersById, providerIds),
-    lngs = providers.map(provider => provider.coordinates[0]),
-    lats = providers.map(provider => provider.coordinates[1]);
-
-  const maxLngs = lngs.reduce((a, b) => Math.max(a, b));
-  const minLngs = lngs.reduce((a, b) => Math.min(a, b));
-  const maxLats = lats.reduce((a, b) => Math.max(a, b));
-  const minLats = lats.reduce((a, b) => Math.min(a, b));
-
-  return mapboxgl.LngLatBounds.convert([
-    [minLngs, minLats],
-    [maxLngs, maxLats]
-  ]);
+const getBoundingBox = allCoordinates => {
+  const bounds = new mapboxgl.LngLatBounds();
+  allCoordinates.forEach(c => bounds.extend(c));
+  return bounds;
 };
 
 /** Looks up all providers in the given map with an id in the given array. */
@@ -165,8 +79,8 @@ export {
   convertProvidersToGeoJSON,
   createCenterMarker,
   createDistanceMarker,
-  normalizeProviders,
   removeDistanceMarkers,
+  getProviderBoundingBox,
   getBoundingBox,
   lookupProviders,
   filterProviderIds,
