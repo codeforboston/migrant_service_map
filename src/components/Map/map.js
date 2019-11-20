@@ -453,7 +453,7 @@ class Map extends Component {
       this.props.loadedProviderTypeIds.map(typeId =>
         this.findLayerInMap(typeId)
       );
-      this.setHighlightedIconsLayer("highlighted", "highlighted");
+      this.setHighlightedIconsLayer();
       this.updatePinAndDistanceIndicator(prevProps);
       this.markRecentSelection(prevProps);
       this.zoomToShowNewProviders(prevProps);
