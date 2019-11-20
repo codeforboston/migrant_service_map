@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-// import "./mapbox-gl-geocoder.css";
-
+// import circle_question from '../../assets/icons';
 
 const topBarItemClass = "top-bar-item";
 
@@ -14,13 +13,13 @@ class HelpIcon extends React.Component {
             className={className}
             id="nav-help"
             onClick={onSearchInputClick}
+          //  logo={circle_question}
+            
           />
-          
         </>
         
       );
     }
-  }
-    
+  } 
  
 export default HelpIcon;
