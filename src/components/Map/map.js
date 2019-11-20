@@ -87,15 +87,15 @@ class Map extends Component {
     }
   };
 
-  setSpecialLayerInMap = (property, layerName) => {
-    if (!this.map.getLayer(layerName)) {
+  setHighlightedIconsLayer = () => {
+    if (!this.map.getLayer("highlighted")) {
       this.map.addLayer({
-        id: layerName,
+        id: "highlighted",
         source: "displayData",
         type: "symbol",
-        filter: ["==", property, 1],
+        filter: ["==", "highlighted", 1],
         layout: {
-          "icon-image": layerName + "icon",
+          "icon-image": "highlightedicon",
           "icon-size": 0.4,
           "icon-allow-overlap": true,
           "icon-ignore-placement": true,
@@ -144,7 +144,6 @@ class Map extends Component {
       source: "displayData",
       type: "symbol",
       filter: ["has", "point_count"],
-      // filter: ["all", ["has", "point_count"], [">", "sum", 0]],
       layout: {
         "icon-size": 0.4,
         "text-field": "{point_count_abbreviated}",
@@ -165,13 +164,13 @@ class Map extends Component {
     this.addClusterClickHandlerToMapLayer(clusterName);
   };
 
-  setSingleSourceInMap = (features = []) => {
+  setSingleSourceInMap = () => {
     if (!this.map.getSource("displayData")) {
       this.map.addSource("displayData", {
         type: "geojson",
         data: {
           type: "FeatureCollection",
-          features: features
+          features: []
         },
         cluster: true,
         clusterProperties: {
@@ -261,14 +260,14 @@ class Map extends Component {
   };
 
   geoJSONFeatures = () => {
-    const { highlightedProviders, visibleProviders = [] } = this.props;
-    const visibleProvidersAugmented = visibleProviders.map(
+    let { highlightedProviders, visibleProviders = [] } = this.props;
+    visibleProviders.forEach(
       (provider) => {
         provider.highlighted = highlightedProviders.includes(provider.id) ? 1 : 0;
         return provider;
       }
     ); 
-    return convertProvidersToGeoJSON(visibleProvidersAugmented);
+    return convertProvidersToGeoJSON(visibleProviders);
   };
 
   updatePinAndDistanceIndicator = prevProps => {
@@ -454,7 +453,7 @@ class Map extends Component {
       this.props.loadedProviderTypeIds.map(typeId =>
         this.findLayerInMap(typeId)
       );
-      this.setSpecialLayerInMap("highlighted", "highlighted");
+      this.setHighlightedIconsLayer("highlighted", "highlighted");
       this.updatePinAndDistanceIndicator(prevProps);
       this.markRecentSelection(prevProps);
       this.zoomToShowNewProviders(prevProps);
