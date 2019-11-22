@@ -57,14 +57,6 @@
   margin-top: 0;
 }
 
-.nav-search {
-  margin-top: 5px;
-}
-
-.nav-help {
-  margin-top: 5px;
-}
-
 .mapboxgl-ctrl-geocoder {
   border-radius: 8px !important;
 }
@@ -80,6 +72,7 @@ button.geocoder-icon.geocoder-icon-close {
 }
 
 #nav-help {
+  cursor: pointer;
   flex: 0 1 5.5em;
   display: inline-flex;
   padding: 9px 0px 9px 10px;

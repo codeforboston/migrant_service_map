@@ -46,7 +46,7 @@ class TopBar extends Component {
         />
         <HelpIcon
           className={topBarItemClass}
-          onSearchInputClick={this.onSearchInputClick}
+          onSearchInputClick={this.onHelpClick}
         />
       </div>
     );

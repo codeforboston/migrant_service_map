@@ -5,16 +5,29 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "./top-bar.css";
 
+let helpWindowReference = null;
 
 class HelpIcon extends Component {
+    constructor() {
+      super();
+      this.helpUrl = "/help/help-guide.html";
+      this.handleClick = () => {
+        if (helpWindowReference == null || helpWindowReference.closed) {
+          helpWindowReference= window.open(this.helpUrl);
+        } else {
+          helpWindowReference.focus();
+        }
+      }
+    }
+
     render() {
-      const { className, onSearchInputClick } = this.props;
+      const { className } = this.props;
       return (
        
           <div
             className={className}
             id="nav-help"
-            onClick={onSearchInputClick}>
+            onClick={this.handleClick}>
              <FontAwesomeIcon
                   icon={faQuestionCircle}
                   color={"Purple"}
