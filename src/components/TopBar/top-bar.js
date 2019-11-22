@@ -7,7 +7,13 @@ import HelpIcon from "./help-icon.js";
 import "./top-bar.css";
 // import VisaStatusDropdown from "./visa-status-dropdown";
 
+let helpUrl = "/help/help-guide.html";
+
 class TopBar extends Component {
+  onHelpClick() {
+    var helpWindow = window.open(helpUrl);
+  }
+
   onSearchInputClick = () => {
     const { selectTab } = this.props;
     selectTab(0);
@@ -49,7 +55,7 @@ class TopBar extends Component {
         />
         <HelpIcon
           className={topBarItemClass}
-          onSearchInputClick={this.onSearchInputClick}
+          onSearchInputClick={this.onHelpClick}
         />
       </div>
     );
