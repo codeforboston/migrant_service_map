@@ -62,9 +62,13 @@ button.geocoder-icon.geocoder-icon-close {
 #nav-help {
   /* width: 50% !important; */
   background-color: transparent;
-  flex: .1 1 auto;
+  flex: 0 1 5.5em;
   display: inline-flex;
-  
+  padding: 7px 0px 16px 10px;
+}
+
+#nav-help svg {
+margin-top: 8px;
 }
 
 .dropdown-row ul {
