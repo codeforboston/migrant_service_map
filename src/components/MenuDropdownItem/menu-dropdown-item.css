@@ -21,6 +21,7 @@ text-overflow: ellipsis;
   flex-flow: row nowrap;
   background-color: #FFFFFF;
   border: 2px solid #C8A2EB;
+  border-radius: 4px;
   box-shadow: 1px 3px 4px rgba(96, 1, 185, 0.25); 
   outline: none;
   user-select: none;
@@ -31,7 +32,6 @@ text-overflow: ellipsis;
   background: #F9F2FF;
   border: 2px solid #8C45CF;
   box-sizing: border-box;
-  border-radius: 1px;
   box-shadow: 1px 3px 4px rgba(184, 147, 217, 0.4);
 }
 
@@ -42,7 +42,6 @@ text-overflow: ellipsis;
 .provider-card.card-wrapped {
   background: #FFFFFF;
   border: 2px solid #DCCFE8;
-  border-radius: 4px;
   box-shadow: 1px 3px 4px rgba(96, 1, 185, 0.25);
 }
 
@@ -75,7 +74,6 @@ text-overflow: ellipsis;
   background: #EFDFFD;
   border: 2px solid #B799D2;
   box-sizing: border-box;
-  border-radius: 1px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), inset 0px 3px 4px rgba(89, 0, 168, 0.4) !important;
 }
 
@@ -83,7 +81,6 @@ text-overflow: ellipsis;
   background: #EFDFFD;
   border: 2px solid #8C45CF;
   box-sizing: border-box;
-  border-radius: 1px;
   box-shadow: 3px 5px 8px rgba(184, 147, 217, 0.8) !important;
 }
 
