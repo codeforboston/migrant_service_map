@@ -59,6 +59,13 @@ export default class Geocoder extends Component {
 
     geocoder.on("result", ev => {
       // ev.result contains id, place_name, text
+
+      // Check for no results.
+      if (ev.result.id === SPECIAL_NO_RESULTS_ID) {
+        geocoder._clear();
+        return;
+      };
+
       const {
         geometry: { coordinates: searchCoordinates },
         id: mapboxId,
