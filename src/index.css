@@ -69,14 +69,6 @@ h2 {
   padding: 0.2rem;
 }
 
-#HelpIcon {
-  text-align: center;
-}
-
-#questionMark {
-  position: relative;
-}
-
 nav {
   padding: 0;
   max-height: 3rem;
