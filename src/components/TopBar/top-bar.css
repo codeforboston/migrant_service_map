@@ -64,6 +64,7 @@ button.geocoder-icon.geocoder-icon-close {
   background-color: transparent;
   flex: .1 1 auto;
   display: inline-flex;
+  
 }
 
 .dropdown-row ul {
