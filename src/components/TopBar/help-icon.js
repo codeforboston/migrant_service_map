@@ -3,27 +3,21 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
  faQuestionCircle, faAlignCenter
 } from "@fortawesome/free-solid-svg-icons";
-import { Z_BLOCK } from 'zlib';
 import "./top-bar.css";
-import { noAuto } from '@fortawesome/fontawesome-svg-core';
-
-const topBarItemClass = "top-bar-item";
 
 
-class HelpIcon extends React.Component {
+class HelpIcon extends Component {
     render() {
-      const { className, onSearchInputClick, questionMark } = this.props;
+      const { className, onSearchInputClick } = this.props;
       return (
        
           <div
-          className={className}
+            className={className}
             id="nav-help"
             onClick={onSearchInputClick}>
              <FontAwesomeIcon
-                  // id={nav-SVG}
                   icon={faQuestionCircle}
                   color={"Purple"}
-                  style={faAlignCenter}
                 />
           <h2 style={faAlignCenter} id={HelpIcon}>HELP</h2>
           

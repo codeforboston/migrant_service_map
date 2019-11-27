@@ -20,6 +20,7 @@
   flex: 1;
 }
 
+#nav-help,
 .top-bar .top-bar-item {
   background-color: #FDFAFF;
   border: 1px solid #D7ADFF;
@@ -79,15 +80,14 @@ button.geocoder-icon.geocoder-icon-close {
 }
 
 #nav-help {
-  /* width: 50% !important; */
-  background-color: transparent;
   flex: 0 1 5.5em;
   display: inline-flex;
-  padding: 7px 0px 16px 10px;
+  padding: 9px 0px 9px 10px;
 }
 
 #nav-help svg {
-margin-top: 8px;
+  margin-top: 6px;
+  margin-right: 2px;
 }
 
 .dropdown-row ul {
