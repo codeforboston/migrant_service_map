@@ -1,4 +1,10 @@
-import { SET_SEARCH_COORDINATES, SELECT_TAB, FLY_TO_PROVIDER, ZOOM_TO_FIT } from "./actions";
+import {
+  SELECT_TAB,
+  FLY_TO_PROVIDER,
+  ZOOM_TO_FIT,
+  CLEAR_SEARCH_RESULT,
+  SET_SEARCH_RESULT,
+} from "./actions";
 
 const INITIAL_STATE = {
   mapCenter: [-71.066954, 42.359947],
@@ -17,11 +23,13 @@ export default function search(state = INITIAL_STATE, action) {
   switch (action.type) {
     case SELECT_TAB:
       return { ...state, selectedTabIndex: action.index };
-    case SET_SEARCH_COORDINATES:
+    case SET_SEARCH_RESULT:
       return {
         ...state,
+        searchKey: action.key,
         coordinates: action.coordinates,
         currentLocation: action.mapboxId,
+        selectedTabIndex: 0,
         history: {
           ...state.history,
           [action.mapboxId]: {
@@ -30,6 +38,12 @@ export default function search(state = INITIAL_STATE, action) {
           }
         }
       };
+    case CLEAR_SEARCH_RESULT:
+      return {
+        ...INITIAL_STATE,
+        searchKey: action.key,
+        selectedTabIndex: state.selectedTabIndex
+      }
     case FLY_TO_PROVIDER:
       return {
         ...state,

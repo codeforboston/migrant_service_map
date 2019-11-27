@@ -1,13 +1,14 @@
 .top-bar {
   overflow: visible;
   z-index: 8;
+  background-color: #0072B3;
   border-bottom: 1px solid #8c45cf;
   width: 100%;
   display: flex;
   flex: 0 0 auto;
   margin: -70px 0 0 0;
   position: fixed;
-  padding: 10px;
+  padding: 10px 10px 10px 20px;
   justify-content: stretch;
   height: 70px;
 }
@@ -29,11 +30,16 @@
 #logo {
   display: flex;
   justify-content: center;
+  flex: 0 0 191px;
+}
+
+#logo a {
+  text-align: center;
 }
 
 #logo img {
-  width: 100%;
-  max-width: 350px;
+  height: 110%;
+  margin-top: -2%;
 }
 
 .mapboxgl-ctrl-geocoder {
@@ -47,10 +53,6 @@
   margin-top: 0;
 }
 
-.nav-search {
-  margin-top: 5px;
-}
-
 .mapboxgl-ctrl-geocoder {
   border-radius: 8px !important;
 }
@@ -59,7 +61,7 @@ button.geocoder-icon.geocoder-icon-close {
   background-color: #FDFAFF;
 }
 
-#nav-search .msm-map-search-box {
+.msm-map-search-box {
   box-shadow: none !important;
   width: 100% !important;
   background-color: transparent;
@@ -72,5 +74,5 @@ button.geocoder-icon.geocoder-icon-close {
 
 .clear-icon-container {
   padding: 10px;
-  cursor: default;
+  cursor: pointer;
 }
