@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
- faQuestionCircle, faAlignCenter
+ faQuestionCircle
 } from "@fortawesome/free-solid-svg-icons";
 import "./top-bar.css";
 
@@ -32,7 +32,7 @@ class HelpIcon extends Component {
                   icon={faQuestionCircle}
                   color={"Purple"}
                 />
-          <h2 style={faAlignCenter} id={HelpIcon}>HELP</h2>
+          <h2>HELP</h2>
           
           </div>
     
