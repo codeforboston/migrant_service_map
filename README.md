@@ -138,7 +138,19 @@ We use [Travis CI](https://docs.travis-ci.com/) for continuous integration and d
 
 Travis builds the app (it runs `npm run build`) when a commit is added to a branch or open pull request. This provides a basic sanity check for the app. Pull requests should build successfully before being merged.
 
-TODO: Unit/Functional tests
+We use [Cypress](https://www.cypress.io) for functional (e2e) testing. To install Cypress, run the following from within the `migrant_service_map` directory:
+
+```
+npm install cypress --save-dev
+```
+
+Running the test suite requires that a local version of the site is available at [http://localhost:3000/]. This can be done with the command `npm start`. Then in a separate terminal, run the following to open the Cypress interface:
+
+```
+$(npm bin)/cypress open
+```
+
+All tests can be run by clicking `Run all specs` in the top-right of the application window.
 
 ## Deployment
 

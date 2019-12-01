@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../../assets/icons/msm_logo.png";
+import logo from "../../assets/icons/msm_logo.svg";
 
 export default class Logo extends React.Component {
   render() {
