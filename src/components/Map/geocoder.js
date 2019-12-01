@@ -72,11 +72,6 @@ export default class Geocoder extends Component {
         text: searchText
       } = ev.result;
 
-      if (mapboxId === SPECIAL_NO_RESULTS_ID) {
-        geocoder._clear();
-        return;
-      }
-
       this.props.setSearchResult(searchCoordinates, mapboxId, searchText);
     });
 
