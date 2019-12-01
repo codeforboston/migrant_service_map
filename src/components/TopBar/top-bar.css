@@ -80,6 +80,10 @@ button.geocoder-icon.geocoder-icon-close {
   margin-right: 2px;
 }
 
+.help-icon {
+  color: var(--msm-purple);
+}
+
 .dropdown-row ul {
   display: flex;
   flex-direction: row;

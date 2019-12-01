@@ -30,7 +30,7 @@ class HelpIcon extends Component {
             onClick={this.handleClick}>
              <FontAwesomeIcon
                   icon={faQuestionCircle}
-                  color={"Purple"}
+                  className="help-icon"
                 />
           <h2>HELP</h2>
           

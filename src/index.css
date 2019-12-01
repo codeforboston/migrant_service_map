@@ -2,6 +2,7 @@
   --msm-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
   "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
   sans-serif;
+  --msm-purple: #8c45cf;
 }
 
 body {
@@ -59,7 +60,7 @@ h4,
 h5,
 h6,
 i {
-  color: #8c45cf;
+  color: var(--msm-purple);
   text-decoration: none;
 }
 
