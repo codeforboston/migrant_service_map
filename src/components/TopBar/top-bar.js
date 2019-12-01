@@ -9,14 +9,13 @@ import "./top-bar.css";
 // import VisaStatusDropdown from "./visa-status-dropdown";
 
 class TopBar extends Component {
-
   render() {
     const {
       distance,
       changeDistanceFilter,
       clearDistanceFilter,
       providerTypes,
-      toggleProviderVisibility,
+      toggleProviderVisibility
       // visaTypes
       // changeVisaFilter,
     } = this.props;
@@ -35,9 +34,7 @@ class TopBar extends Component {
           providerTypes={providerTypes}
           onChange={toggleProviderVisibility}
         />
-        <Search
-          className={topBarItemClass}
-        />
+        <Search className={topBarItemClass} />
         <DistanceDropdown
           className={topBarItemClass}
           currentDistance={distance}

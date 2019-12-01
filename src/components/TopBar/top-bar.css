@@ -1,7 +1,7 @@
 .top-bar {
   overflow: visible;
   z-index: 8;
-  background-color: #0072B3;
+  background-color: #0072b3;
   border-bottom: 1px solid #8c45cf;
   width: 100%;
   display: flex;
@@ -19,8 +19,8 @@
 
 #nav-help,
 .top-bar .top-bar-item {
-  background-color: #FDFAFF;
-  border: 1px solid #D7ADFF;
+  background-color: #fdfaff;
+  border: 1px solid #d7adff;
   box-shadow: 1px 3px 4px rgba(96, 1, 185, 0.25);
   margin: 0 8px;
   height: 100%;
@@ -59,7 +59,7 @@
 }
 
 button.geocoder-icon.geocoder-icon-close {
-  background-color: #FDFAFF;
+  background-color: #fdfaff;
 }
 
 .msm-map-search-box {
