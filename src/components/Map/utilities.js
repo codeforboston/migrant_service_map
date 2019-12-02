@@ -1,4 +1,4 @@
-import mapboxgl from "mapbox-gl";
+import mapboxgl from "./mapbox-gl-wrapper";
 import memoizeOne from "memoize-one";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMapMarkerAlt, faMapMarker } from "@fortawesome/free-solid-svg-icons";
@@ -46,20 +46,18 @@ const removeDistanceMarkers = markerArray => {
   return markerArray.map(marker => marker.remove());
 };
 
-const getBoundingBox = (providersById, providerIds) => {
-  const providers = lookupProviders(providersById, providerIds),
-    lngs = providers.map(provider => provider.coordinates[0]),
-    lats = providers.map(provider => provider.coordinates[1]);
+const getProviderBoundingBox = (providersById, providerIds) => {
+  return getBoundingBox(
+    lookupProviders(providersById, providerIds).map(
+      provider => provider.coordinates
+    )
+  );
+};
 
-  const maxLngs = lngs.reduce((a, b) => Math.max(a, b));
-  const minLngs = lngs.reduce((a, b) => Math.min(a, b));
-  const maxLats = lats.reduce((a, b) => Math.max(a, b));
-  const minLats = lats.reduce((a, b) => Math.min(a, b));
-
-  return mapboxgl.LngLatBounds.convert([
-    [minLngs, minLats],
-    [maxLngs, maxLats]
-  ]);
+const getBoundingBox = allCoordinates => {
+  const bounds = new mapboxgl.LngLatBounds();
+  allCoordinates.forEach(c => bounds.extend(c));
+  return bounds;
 };
 
 /** Looks up all providers in the given map with an id in the given array. */
@@ -82,6 +80,7 @@ export {
   createCenterMarker,
   createDistanceMarker,
   removeDistanceMarkers,
+  getProviderBoundingBox,
   getBoundingBox,
   lookupProviders,
   filterProviderIds,

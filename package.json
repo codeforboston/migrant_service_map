@@ -13,7 +13,7 @@
     "dot-prop-immutable": "^1.5.0",
     "lodash": "^4.17.11",
     "mapbox": "^1.0.0-beta10",
-    "mapbox-gl": "^0.51.0",
+    "mapbox-gl": "^1.5.0",
     "memoize-one": "^5.1.1",
     "npm": "^6.9.0",
     "papaparse": "^5.1.0",
@@ -44,6 +44,8 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "cypress": "^3.6.1",
+    "eslint-plugin-cypress": "^2.7.0",
     "prettier": "^1.15.3"
   }
 }
