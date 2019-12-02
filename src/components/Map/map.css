@@ -1,6 +1,6 @@
 .map {
   /* Cross-browser compatability issues:
-  ** Proper map display in Chrome, Safari, and Firefox 
+  ** Proper map display in Chrome, Safari, and Firefox
   ** requires '-webkit-fill-available' + absolute positioning
   ** (prevents map height collapsing to 0)
   */
@@ -9,6 +9,10 @@
   width: 100%;
   z-index: 0;
   position: absolute;
+}
+
+.grow {
+  overflow: visible;
 }
 
 .distance-marker {
