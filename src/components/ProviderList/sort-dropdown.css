@@ -16,7 +16,7 @@
   color: #8c45cf;
   z-index: 2;
   border-bottom: 1px solid hsla(271, 34%, 86%, 0.5);
-  border-radius: 0 8px 8px 8px;
+  /* border-radius: 0 8px 8px 8px; */
   box-shadow: 1px 3px 4px rgba(184, 147, 217, 0.2);
   flex: none;
 }

@@ -93,3 +93,9 @@ button.geocoder-icon.geocoder-icon-close {
   padding: 10px;
   cursor: pointer;
 }
+
+@media only screen and (max-width: 1187px) {
+  .responsive-disappear {
+    display: none;
+  }
+}
