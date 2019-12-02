@@ -1,0 +1,33 @@
+body {
+    color: #1b181e;
+    line-height: 1.4;
+}
+
+body > header {
+    background-color: #0072B3;
+    border-bottom: 1px solid #8c45cf;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 10px 10px 10px 20px;
+}
+header h1 {
+    color: white;
+}
+#rw-logo {
+    flex: 0 1 256px;
+    margin: 0 0 0 auto;
+}
+
+nav,
+section {
+    margin: 3em;
+
+}
+
+summary {
+    color: gray;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 0.5rem 0;
+}
