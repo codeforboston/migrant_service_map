@@ -9,8 +9,9 @@ class ClusterList extends Component {
   }
 
   render() {
+      const maxProviders = 9
       const listLength = this.props.list.length
-      const firstNineProviders = this.props.list.slice(0, 9)
+      const firstNineProviders = this.props.list.slice(0, maxProviders)
       return (
         <div id="clusterList-inner" className="expandable-content-wrapper">
           <div className="expandable-content">
@@ -25,9 +26,9 @@ class ClusterList extends Component {
                 )
               }
             )}
-            {listLength > 9 &&
-              <div key='9'>
-                <p>{listLength - 9} more...</p>
+            {listLength > maxProviders &&
+              <div key={maxProviders}>
+                <p>{listLength - maxProviders} more...</p>
               </div>}
           </div>
         </div>

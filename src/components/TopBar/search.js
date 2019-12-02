@@ -1,10 +1,11 @@
 import React from "react";
 import { Column } from "simple-flexbox";
 import "./mapbox-gl-geocoder.css";
+import { Geocoder } from "components/Map";
 
 export default class Search extends React.Component {
   render() {
-    const { className, onSearchInputClick } = this.props;
+    const { className } = this.props;
     return (
       <>
         <div className={className}>
@@ -19,7 +20,7 @@ export default class Search extends React.Component {
               >
                 NEAR
               </h2>
-              <div id="nav-search" onClick={onSearchInputClick} />
+              <Geocoder/>
             </Column>
           </div>
         </div>

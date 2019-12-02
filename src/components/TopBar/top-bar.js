@@ -4,18 +4,18 @@ import Logo from "./logo";
 import ProviderTypeDropdown from "./provider-type-dropdown";
 import Search from "./search";
 import DistanceDropdown from "./distance-dropdown";
+import HelpIcon from "./help-icon.js";
 import "./top-bar.css";
 // import VisaStatusDropdown from "./visa-status-dropdown";
 
 class TopBar extends Component {
-
   render() {
     const {
       distance,
       changeDistanceFilter,
       clearDistanceFilter,
       providerTypes,
-      toggleProviderVisibility,
+      toggleProviderVisibility
       // visaTypes
       // changeVisaFilter,
     } = this.props;
@@ -34,14 +34,16 @@ class TopBar extends Component {
           providerTypes={providerTypes}
           onChange={toggleProviderVisibility}
         />
-        <Search
-          className={topBarItemClass}
-        />
+        <Search className={topBarItemClass} />
         <DistanceDropdown
           className={topBarItemClass}
           currentDistance={distance}
           onChange={changeDistanceFilter}
           onClear={clearDistanceFilter}
+        />
+        <HelpIcon
+          className={topBarItemClass}
+          onSearchInputClick={this.onHelpClick}
         />
       </div>
     );
