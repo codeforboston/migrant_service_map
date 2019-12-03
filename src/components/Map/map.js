@@ -356,27 +356,6 @@ class Map extends Component {
     return convertProvidersToGeoJSON(visibleProviders);
   };
 
-  markRecentSelection(prevProps) {
-    let {
-      highlightedProviders,
-      visibleProviders,
-      selectProviderKey,
-      selectProviderId
-    } = this.props;
-    if (selectProviderKey && selectProviderKey === prevProps.selectProviderKey)
-      return;
-    if (
-      highlightedProviders &&
-      highlightedProviders.length < prevProps.highlightedProviders.length
-    )
-      return;
-    const provider = providersById(visibleProviders)[selectProviderId];
-    if (provider) {
-      const marker = new AnimatedMarker(provider);
-      marker.addTo(this.map);
-    }
-  }
-
   updatePinAndDistanceIndicator = prevProps => {
     const distance = this.props.filters.distance;
     const searchKey = this.props.search.searchKey;
