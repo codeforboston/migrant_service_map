@@ -103,7 +103,7 @@ class Map extends Component {
         id: layerName,
         source: "displayData",
         type: "symbol",
-        filter: ["==", property, layerName],
+        filter: ["==", layerName, 1],
         layout: {
           "icon-image": layerName + "icon",
           "icon-size": 0.4,
