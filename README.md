@@ -8,13 +8,13 @@
 
 ### [Live Demo](https://migrantservicemap.com)
 
-#### The Migrant Service Map is an application which allows service providers to more effectively network with one another in order to provide the best recommendations to their clients. 
+ The Migrant Service Map is an application which allows service providers to more effectively network with one another in order to provide the best recommendations to their clients. 
 
 ### Partners: MapBox and Code for Boston
 
-Thanks for choosing to support our initiative to support and strengthen migrant service provision in the greater Boston area. For more information about our organization, vist [Refugees Welcome](https://refugeeswelcomehome.org/).
+Thanks for choosing to support our initiative to support and strengthen migrant service provision in the greater Boston area. For more information about our organization, visit [Refugees Welcome](https://refugeeswelcomehome.org/).
 
-### Project Lead:
+### Project Founder:
 
 - Charla M. Burnett ([Refugees Welcome](https://refugeeswelcomehome.org/)) charla.burnett89@gmail.com
 
@@ -37,7 +37,7 @@ Thanks for choosing to support our initiative to support and strengthen migrant 
 - [Project Board](https://trello.com/invite/b/rVNLIxod/2c7ced88a95f6514f8ef49eb2e622cd8/migrant-service-map)
 - [Design Google Drive](https://drive.google.com/drive/folders/12cSCKSf9IQT1nMJUomWFQNyG2PLCsmOw)
 - [Database](https://docs.google.com/spreadsheets/d/e/2PACX-1vT4MST1klxwmBdfvMhOycfV5C-lxGe0_sidJnmGS8U42irBYhgazisd-OUjrI4V9l_GqnazklGhNjzJ/pub)
-
+- [Planning Documentation](https://drive.google.com/drive/folders/1VnylhChsStemQu7hPk4bITtXmPQ1IAoY)
 
 ## Summary
 
@@ -45,11 +45,11 @@ The Migrant Service Map (MSM) was conceptualized as a part of Refugees Welcome!'
 
 ## Ideal Product Vision
  
-The migrant or service provider is able to click on the MSM link and be transferred to a questionnaire page where they would be asked whether they are service providers or migrants. The next page would ask the service provider if they have become a part of the Refugees Welcome! network and offer a separate link to apply to the RW! Network. This page would also ask what the legal status is of their client, the address of the client, and what types of services they are looking for. The legal status is important because undocumented and asylum seekers cannot receive all public services.
+The migrant or service provider is able to click on the MSM link and be transferred to a questionnaire page where they would be asked whether they are service providers or migrants. The next page would ask the service provider if they have become a part of the Refugees Welcome! network and offer a separate link to apply to the RW! Network. This page would also ask what the legal status is of their client, the address of the client, and what types of services they are looking for. The legal status is important because undocumented and asylum seekers cannot receive all public services. None of this data would be collected or stored due to security concerns.
 
 The types of services include housing, work placement, english, legal assistance, registration, health, mental health, community centers, and education. The map would conduct a spatial analysis to highlight each service provider within .5, 1, 3, and 5 miles of the address entered for whichever legal status and service applies to their search. The migrant or service provider will be able to click on the service provider points and is provided with a comprehensive overview of the services provided and contact information. This tool will be used by service providers and migrants to find and plan the integration of new arrivals to Boston. As a result, it would be helpful if the platform could keep a record of each point of interest that then could be easily printed. That way service providers can give clients an easy list of service providers to contact upon arrival.
 
-## Phase One (The Product as of the December 2019 Refugees Welcome! Summit)
+## Phase One (The Product as of the December 2019 Refugees Welcome! Resource Forum)
 
 Phase one of the Migrant Service Map is geared primarily toward service providers. When they arrive on the site, the service provider is able to select the type of provider(s) that they are looking for, specify a location to search near (such as their client's home or workplace), and choose a distance from that location (.5, 1, 3 and 5 miles) by which to filter their results by. 
 
@@ -57,13 +57,13 @@ The categories of providers which are currently included in the map are: Cash/Fo
 
 Once a user has found organizations which they would like to recommend to a client, they may choose to save them, populating their "Saved" tab. In this tab, the user may reorder organizations manually to provide a list which is most logical to their client, then share this list via email or print it out.  
 
-//FIXME: Switching from "service provider" to "user" could be confusing
+Service providers are also able to update their data or add themselves to the organizations included in the map. There is a form which allows users to provide feedback on the tool as well as complete help documentation.
 
 ## Next Steps
 
 The next step in this process is soliciting user feedback about the tool. This is essential because the Migrant Service Map did not have substantial user feedback throughout its design or development stages. Getting feedback and input from service providers who are using the phase one of this product should primarily inform design decisions moving forward. 
 
-With that said, however, some features were intended for future phases in the original product vision. Those include making the tool accesible for migrants (ie by making it mobile friendly and translating it), creating a profiles for providers so that they may save lists or preferences across sessions or clients, and expanding to providers beyond the Boston area. For a complete list of features which were identified for future phases, visit https://refugeeswelcomehome.org/migmap-services/.
+With that said, however, some features were intended for future phases in the original product vision. Those include making the tool accesible for migrants (ie by making it mobile friendly and translating it), creating profiles for providers so that they may save lists or preferences across sessions or clients, and expanding to providers beyond the Boston area. For a complete list of features which were identified for future phases, visit https://refugeeswelcomehome.org/migmap-services/.
 
 
 ## Getting Started
