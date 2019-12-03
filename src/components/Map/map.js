@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import ReactDOM from "react-dom";
 import mapboxgl from "./mapbox-gl-wrapper";
 import "./map.css";
 import {
@@ -22,6 +23,8 @@ import {
 } from "./utilities.js";
 import { AnimatedMarker } from "../AnimatedMarker/animated-marker.js";
 
+import { ClusterList } from "../ClusterProviderList/cluster-provider-list.js";
+
 const zoomPadding = { top: 100, bottom: 100, left: 450, right: 100 };
 
 // The map has a zoom level between 0 (zoomed entirely out)
@@ -37,7 +40,6 @@ class Map extends Component {
     this.map = null;
     this.markerList = []; //need to keep track of marker handles ourselves -- cannot be queried from map
     this.mapRef = React.createRef();
-    this.zoomLevels = {};
     this.state = {
       loaded: false
     };
@@ -50,6 +52,7 @@ class Map extends Component {
     this.setSingleSourceInMap();
     this.addDistanceIndicatorLayer();
     this.findClustersInMap();
+
     this.loadProviderTypeImage(typeImages);
     this.setState({ loaded: true });
   };
@@ -172,6 +175,7 @@ class Map extends Component {
     });
 
     this.addClusterClickHandlerToMapLayer(clusterName);
+    this.addClusterMouseOverHandlerToMapLayer("clusterCircle");
   };
 
   setSingleSourceInMap = () => {
@@ -201,25 +205,6 @@ class Map extends Component {
     );
   };
 
-  addClickHandlerToMapIdLayer = typeId => {
-    let {
-      displayProviderInformation,
-      highlightedProviders,
-      selectProvider
-    } = this.props;
-    this.map.on("click", typeId, e => {
-      const providerId = e.features[0].properties.id;
-      const providerElement = document.getElementById(`provider-${providerId}`);
-      selectProvider(providerId);
-
-      if (typeId !== "highlightedProviders" && providerElement) {
-        displayProviderInformation(providerId);
-      } else if (!highlightedProviders.includes(providerId)) {
-        displayProviderInformation(providerId);
-      }
-    });
-  };
-
   addClusterClickHandlerToMapLayer = clusterName => {
     this.map.on("click", clusterName, e => {
       let features = this.map.queryRenderedFeatures(e.point, {
@@ -240,6 +225,69 @@ class Map extends Component {
         });
     });
   };
+
+  addClusterList = (clusterCenter, list) => {
+    ReactDOM.render(
+      <ClusterList list={list} />,
+      document.getElementById("clusterList")
+    );
+  };
+
+  addClusterMouseOverHandlerToMapLayer = clusterName => {
+    const clusterEl = document.createElement("div");
+    clusterEl.id = "clusterList";
+
+    const clusterListMarker = new mapboxgl.Marker({
+      element: clusterEl,
+      anchor: "bottom",
+      offset: [0, -15]
+    });
+
+    this.map.on("mouseenter", clusterName, e => {
+      const clusterId = e.features[0].id;
+      const mySource = this.map.getSource("displayData");
+      const clusterLngLat = e.lngLat;
+
+      mySource.getClusterLeaves(clusterId, 100, 0, (error, children) => {
+        const childList = children.map(child => child.properties);
+        clusterListMarker.setLngLat(clusterLngLat).addTo(this.map);
+        this.addClusterList(clusterLngLat, childList);
+      });
+    });
+
+    this.map.on("mouseleave", clusterName, e => {
+      clusterListMarker.remove();
+    });
+  };
+
+  addClickHandlerToMapIdLayer = typeId => {
+    let { displayProviderInformation, highlightedProviders } = this.props;
+    this.map.on("click", typeId, e => {
+      const providerElement = document.getElementById(
+        `provider-${e.features[0].properties.id}`
+      );
+      if (typeId !== "highlightedProviders" && providerElement) {
+        displayProviderInformation(e.features[0].properties.id);
+      } else if (!highlightedProviders.includes(e.features[0].properties.id)) {
+        displayProviderInformation(e.features[0].properties.id);
+      }
+    });
+  };
+
+  markRecentSelection(prevProps, mapBounds) {
+    let { visibleProviders, highlightedProviders } = this.props;
+    const newSelection = highlightedProviders.find(
+      providerId => !prevProps.highlightedProviders.includes(providerId)
+    );
+    if (!newSelection) {
+      return;
+    }
+    const provider = visibleProviders.find(
+      provider => provider.id === newSelection
+    );
+    const marker = new AnimatedMarker(provider);
+    marker.addTo(this.map, mapBounds);
+  }
 
   addHoverHandlerToMapIdLayer = typeId => {
     let popup = new mapboxgl.Popup({
@@ -304,7 +352,7 @@ class Map extends Component {
         provider.highlighted = highlightedProviders.includes(provider.id) ? 1 : 0;
         return provider;
       }
-    );
+    ); 
     return convertProvidersToGeoJSON(visibleProviders);
   };
 
@@ -347,7 +395,6 @@ class Map extends Component {
 
     if (distance || userSearch) {
       const centerMarker = createCenterMarker();
-      //TODO: extract the creation of the visual features
       const mapPin = new mapboxgl.Marker({ element: centerMarker })
         .setLngLat(searchCoordinates)
         .addTo(this.map);
