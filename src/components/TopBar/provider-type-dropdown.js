@@ -80,7 +80,7 @@ export default class ProviderTypeDropdown extends React.Component {
             <Row alignItems="center">
               <Column flexGrow={1}>
                 <h2 style={{ flex: 1 }}>PROVIDER TYPE</h2>
-                <p>{subheaderText}</p>
+                <p className="responsive-disappear">{subheaderText}</p>
               </Column>
               <div
                 className="clear-icon-container"
