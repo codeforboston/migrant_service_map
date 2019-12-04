@@ -113,6 +113,25 @@ class Map extends Component {
     }
   };
 
+  setHoveredIconsLayer = () => {
+    if (!this.map.getLayer("hovered")) {
+      this.map.addLayer({
+        id: "hovered",
+        source: "displayData",
+        type: "symbol",
+        filter: ["==", "hovered", true],
+        layout: {
+          "icon-image": "hoveredicon",
+          "icon-size": 0.4,
+          "icon-allow-overlap": true,
+          "icon-ignore-placement": true,
+          "icon-padding": 10,
+          visibility: "visible"
+        }
+      });
+    }
+  };
+
   findClustersInMap = () => {
     // Cluster pin
     this.map.addLayer({
@@ -313,9 +332,9 @@ class Map extends Component {
         provider.highlighted = highlightedProviders.includes(provider.id) ? 1 : 0;
 
         if (hoveredProvider === provider.id) {
-          provider.hovered = "hovered";
+          provider.hovered = true;
         } else {
-          provider.hovered = null;
+          provider.hovered = false;
         }
       }
     );
@@ -522,7 +541,7 @@ class Map extends Component {
       this.props.loadedProviderTypeIds.map(typeId =>
         this.findLayerInMap(typeId)
       );
-      this.setSpecialLayerInMap("hovered", "hovered");
+      this.setHoveredIconsLayer();
       this.setHighlightedIconsLayer();
       this.updatePinAndDistanceIndicator(prevProps);
       const mapBounds = this.getPaddedMapBounds();
