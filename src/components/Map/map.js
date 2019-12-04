@@ -100,15 +100,34 @@ class Map extends Component {
     }
   };
 
-  setSpecialLayerInMap = (property, layerName) => {
-    if (!this.map.getLayer(layerName)) {
+  setHighlightedIconsLayer = () => {
+    if (!this.map.getLayer("highlighted")) {
       this.map.addLayer({
-        id: layerName,
+        id: "highlighted",
         source: "displayData",
         type: "symbol",
-        filter: ["==", layerName, 1],
+        filter: ["==", "highlighted", 1],
         layout: {
-          "icon-image": layerName + "icon",
+          "icon-image": "highlightedicon",
+          "icon-size": 0.4,
+          "icon-allow-overlap": true,
+          "icon-ignore-placement": true,
+          "icon-padding": 10,
+          visibility: "visible"
+        }
+      });
+    }
+  };
+
+  setHoveredIconsLayer = () => {
+    if (!this.map.getLayer("hovered")) {
+      this.map.addLayer({
+        id: "hovered",
+        source: "displayData",
+        type: "symbol",
+        filter: ["==", "hovered", true],
+        layout: {
+          "icon-image": "hoveredicon",
           "icon-size": 0.4,
           "icon-allow-overlap": true,
           "icon-ignore-placement": true,
@@ -346,13 +365,18 @@ class Map extends Component {
   };
 
   geoJSONFeatures = () => {
-    let { highlightedProviders, visibleProviders = [] } = this.props;
+    let { highlightedProviders, visibleProviders = [], hoveredProvider } = this.props;
     visibleProviders.forEach(
       (provider) => {
         provider.highlighted = highlightedProviders.includes(provider.id) ? 1 : 0;
-        return provider;
+
+        if (hoveredProvider === provider.id) {
+          provider.hovered = true;
+        } else {
+          provider.hovered = false;
+        }
       }
-    ); 
+    );
     return convertProvidersToGeoJSON(visibleProviders);
   };
 
@@ -360,7 +384,10 @@ class Map extends Component {
     const distance = this.props.filters.distance;
     const searchKey = this.props.search.searchKey;
     const searchCoordinates = this.props.search.coordinates;
-    if (distance === prevProps.filters.distance && !searchKey) {
+    if (
+      distance === prevProps.filters.distance &&
+      searchCoordinates === prevProps.search.coordinates
+    ) {
       // Do not render if the relevant props have not changed. This includes
       // the first render of this component, so the marker is not shown until
       // the user starts interacting with the app.
@@ -379,6 +406,7 @@ class Map extends Component {
         .addTo(this.map);
       this.markerList.push(mapPin);
 
+      // Create distance labels drawn from smallest to largest
       const labels = distanceIndicatorRadii.map((radius, i) => {
         const radiusOffset = transformTranslate(
           point(searchCoordinates),
@@ -395,6 +423,9 @@ class Map extends Component {
     } else {
       distanceIndicatorRadii = [];
     }
+
+    // Create concentric circles, drawn from largest to smallest, with the
+    // largest circle having a different fill color than the others.
     const innerColor = "hsla(317, 100%, 84%, .1)";
     const outerColor = "hsla(317, 100%, 84%, .15)";
     const circles = distanceIndicatorRadii
@@ -536,7 +567,7 @@ class Map extends Component {
       this.props.loadedProviderTypeIds.map(typeId =>
         this.findLayerInMap(typeId)
       );
-      this.setSpecialLayerInMap("highlighted", "highlighted");
+      this.setHighlightedIconsLayer("highlighted", "highlighted");
   
       this.markRecentSelection(prevProps);
       this.updateMapPosition(prevProps);
