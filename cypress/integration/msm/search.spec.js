@@ -3,6 +3,7 @@
 context("Search", () => {
   before(() => {
     cy.visit("http://localhost:3000");
+    cy.get(".map-loaded", { timeout: 10000 });
   });
 
   it("results in concentric circles", () => {
@@ -14,9 +15,6 @@ context("Search", () => {
 
     // Perform the search
     cy.get(".mapboxgl-ctrl-geocoder input").type("One Broadway");
-
-    // This is not necessary but it may help in some circumstances
-    cy.wait(3000);
 
     // Select a search result
     cy.get(".suggestions .active a").click();
