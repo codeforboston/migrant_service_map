@@ -42,7 +42,7 @@ export default class DistanceDropdown extends React.Component {
             <Row alignItems="center">
               <Column flexGrow={1}>
                 <h2 style={{ flex: 1 }}>Distance</h2>
-                <p>{distanceText(currentDistance)}</p>
+                <p className="responsive-disappear">{distanceText(currentDistance)}</p>
               </Column>
               <div
                 className="clear-icon-container"
