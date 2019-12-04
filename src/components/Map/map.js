@@ -54,6 +54,8 @@ class Map extends Component {
     this.findClustersInMap();
 
     this.loadProviderTypeImage(typeImages);
+
+    this.mapRef.current.classList.add("map-loaded");
     this.setState({ loaded: true });
   };
 
