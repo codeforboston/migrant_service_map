@@ -384,7 +384,6 @@ class Map extends Component {
 
   updatePinAndDistanceIndicator = prevProps => {
     const distance = this.props.filters.distance;
-    const searchKey = this.props.search.searchKey;
     const searchCoordinates = this.props.search.coordinates;
     if (
       distance === prevProps.filters.distance &&
