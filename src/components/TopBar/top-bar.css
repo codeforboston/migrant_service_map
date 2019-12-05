@@ -16,8 +16,10 @@
 .top-bar > * {
   flex: 1;
 }
+.top-bar .help-container {
+  flex: 0 1 auto; /* help item doesn't grow */
+}
 
-#nav-help,
 .top-bar .top-bar-item {
   background-color: #fdfaff;
   border: 1px solid #d7adff;
@@ -41,6 +43,11 @@
 #logo img {
   height: 110%;
   margin-top: -2%;
+}
+
+#help-icon {
+  height: 40px;
+  width: 40px;
 }
 
 .mapboxgl-ctrl-geocoder {
@@ -68,16 +75,43 @@ button.geocoder-icon.geocoder-icon-close {
   background-color: transparent;
 }
 
-#nav-help {
-  cursor: pointer;
-  flex: 0 1 5.5em;
-  display: inline-flex;
-  padding: 9px 0px 9px 10px;
+.help-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  z-index: 110;
 }
 
-#nav-help svg {
-  margin-top: 6px;
-  margin-right: 2px;
+.help-links {
+  /* display: none; */
+  position: absolute;
+  right: -6px;
+  top: 110%;
+  visibility: hidden;
+  text-align: right;
+  width: 14em;
+
+  background-color: #fdfaff;
+  border: 1px solid #d7adff;
+  box-shadow: 1px 3px 4px rgba(96, 1, 185, 0.25);
+  border-radius: 3px;
+  padding: 0.3em;
+}
+.help-links::before {
+  content: "";
+  width: 0;
+  border-color: transparent transparent white transparent;
+  border-style: solid;
+  border-width: 0 14px 10px;
+  position: absolute;
+  bottom: 100%;
+  z-index: 200;
+  right: 12px;
+}
+.help-container:hover .help-links {
+  /* display: block; */
+  visibility: visible;
 }
 
 .help-icon {

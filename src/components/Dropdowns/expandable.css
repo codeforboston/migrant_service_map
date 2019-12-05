@@ -35,6 +35,7 @@
   margin-top: 0.5rem;
 }
 
+.help-container a:hover h2,
 .expandable-container .dropdown-input-wrapper:hover {
   color: #202020;
   background-color: #ead3ff;
