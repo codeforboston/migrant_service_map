@@ -3,25 +3,23 @@ import mapboxgl from "mapbox-gl";
 import { bboxPolygon, point, booleanPointInPolygon } from "@turf/turf";
 
 class AnimatedMarker {
-  constructor(provider) {
-    this.provider = provider;
-    this.markerElement = this.createMarkerElement(
-      this.provider.id,
-      this.provider.typeId
-    );
-    this.element = this.markerElement.element;
-    this.markerIcon = this.markerElement.icon;
-    this.markerIconHighlight = this.markerElement.highlight;
-    this.marker = new mapboxgl.Marker({
-      element: this.element
-    }).setLngLat(provider.coordinates);
-  }
+    constructor(provider) {
+        this.provider = provider;
+        this.markerElement = this.createMarkerElement(this.provider.id, this.provider.typeId);
+        this.element = this.markerElement.element;
+        this.markerIcon = this.markerElement.icon;
+        this.markerIconHighlight = this.markerElement.highlight;
+        this.marker = new mapboxgl.Marker({
+            element: this.element
+        }).setLngLat(provider.coordinates);
+    }
 
-  isInView = bounds => {
-    const poly = bboxPolygon(bounds.toArray().flat());
-    const pt = point(this.provider.coordinates);
-    return booleanPointInPolygon(pt, poly);
-  };
+    isInView = (map) => {
+        const mapBoundsArray = map.getBounds().toArray().flat();
+        const poly = bboxPolygon(mapBoundsArray);
+        const pt = point(this.provider.coordinates);
+        return booleanPointInPolygon(pt, poly);
+    };
 
   bounceIcon = () => {
     this.markerIcon.classList.add("bounceOn");
@@ -30,21 +28,21 @@ class AnimatedMarker {
     this.markerIcon.addEventListener("animationend", this.remove);
   };
 
-  addTo(map, bounds) {
-    this.marker.addTo(map);
-    if (this.isInView(bounds)) {
-      this.bounceIcon();
-    } else {
-      map.once("moveend", this.bounceIcon);
+    addTo(map) {
+        this.marker.addTo(map);
+        if (this.isInView(map)) {
+            this.bounceIcon()
+        } else {
+            map.once('moveend', this.bounceIcon)
+        }
     }
-  }
 
   remove = () => {
     this.markerIcon.removeEventListener("animationend", this.remove);
     this.marker.remove();
   };
 
-  createMarkerElement = (providerId, typeId) => {
+    createMarkerElement = (providerId, typeId) => {
     const element = document.createElement("div");
     element.id = `marker-${providerId}`;
     element.className = "marker";

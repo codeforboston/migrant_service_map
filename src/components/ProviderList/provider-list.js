@@ -16,7 +16,6 @@ class ProviderList extends Component {
   }
 
   toggleProviderType = (id) => {
-    console.log('toggling provider type', id);
     let collapsed = this.state.collapsedProviderTypes;
     let updated = collapsed.includes(id) ? collapsed.filter(c => c !== id) : [id, ...collapsed];
     this.setState({ collapsedProviderTypes: updated });
@@ -72,13 +71,18 @@ class ProviderList extends Component {
       highlightedProviders,
       displayProviderInformation,
       flyToProvider,
-      zoomToFit
+      zoomToFit,
+      selectProvider
     } = this.props;
 
     let handleProviderClick = (id) => {
       this.setState({ lastHighlightedViaSidebar: id });
       displayProviderInformation(id);
-    }
+      if(!highlightedProviders.includes(id)) {
+        zoomToFit(id);
+      }
+      selectProvider(id);
+    };
 
     return (
       <div className="service-providers">
