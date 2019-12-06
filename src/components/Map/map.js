@@ -48,6 +48,8 @@ class Map extends Component {
     this.findClustersInMap();
 
     this.loadProviderTypeImage(typeImages);
+
+    this.mapRef.current.classList.add("map-loaded");
     this.setState({ loaded: true });
   };
 
@@ -103,6 +105,25 @@ class Map extends Component {
         filter: ["==", "highlighted", 1],
         layout: {
           "icon-image": "highlightedicon",
+          "icon-size": 0.4,
+          "icon-allow-overlap": true,
+          "icon-ignore-placement": true,
+          "icon-padding": 10,
+          visibility: "visible"
+        }
+      });
+    }
+  };
+
+  setHoveredIconsLayer = () => {
+    if (!this.map.getLayer("hovered")) {
+      this.map.addLayer({
+        id: "hovered",
+        source: "displayData",
+        type: "symbol",
+        filter: ["==", "hovered", true],
+        layout: {
+          "icon-image": "hoveredicon",
           "icon-size": 0.4,
           "icon-allow-overlap": true,
           "icon-ignore-placement": true,
@@ -307,11 +328,16 @@ class Map extends Component {
   };
 
   geoJSONFeatures = () => {
-    let { highlightedProviders, visibleProviders = [] } = this.props;
+    let { highlightedProviders, visibleProviders = [], hoveredProvider } = this.props;
     visibleProviders.forEach(
       (provider) => {
         provider.highlighted = highlightedProviders.includes(provider.id) ? 1 : 0;
-        return provider;
+
+        if (hoveredProvider === provider.id) {
+          provider.hovered = true;
+        } else {
+          provider.hovered = false;
+        }
       }
     );
     return convertProvidersToGeoJSON(visibleProviders);
@@ -517,6 +543,7 @@ class Map extends Component {
       this.props.loadedProviderTypeIds.map(typeId =>
         this.findLayerInMap(typeId)
       );
+      this.setHoveredIconsLayer();
       this.setHighlightedIconsLayer();
       this.updatePinAndDistanceIndicator(prevProps);
       const mapBounds = this.getPaddedMapBounds();

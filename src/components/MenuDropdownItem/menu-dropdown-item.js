@@ -39,16 +39,30 @@ export const cardIconMappings = {
 };
 
 export default class DropdownMenuItem extends React.Component {
-  
+
   state = { isActive: false }
-  
+
   toggleSave = e => {
     e.stopPropagation();
     this.props.toggleSavedStatus();
   }
 
-  setActive = (e) => {this.setState({isActive: true})}
-  unsetActive = (e) => {this.setState({isActive: false})}
+  setActive = (e) => {
+    this.setState({isActive: true})
+  }
+
+  unsetActive = (e) => {
+    this.setState({isActive: false})
+  }
+
+  setHovered = isHovered => {
+    const { provider, setHovered } = this.props;
+    if (isHovered) {
+      setHovered(provider.id);
+    } else {
+      setHovered(null);
+    }
+  };
 
   render() {
     const { provider, isSaved, isHighlighted, isDragging, flyToProvider } = this.props;
@@ -66,7 +80,13 @@ export default class DropdownMenuItem extends React.Component {
         id={`provider-${provider.id}`}
         onMouseDown={this.setActive}
         onMouseUp={this.unsetActive}
-        onMouseLeave={this.unsetActive}
+        onMouseEnter={() => {
+          this.setHovered(true);
+        }}
+        onMouseLeave={() => {
+          this.setHovered(false);
+          this.unsetActive();
+        }}
       >
         {inSavedMenu && (<div className="card-draggable-icon">
         <FontAwesomeIcon
@@ -112,7 +132,7 @@ export default class DropdownMenuItem extends React.Component {
           </div>
           <div className="save-button-container">
             {inSavedMenu ? (
-              <button className={`remoteButton`} 
+              <button className={`remoteButton`}
                 onClick={this.toggleSave}
                 onMouseDown={(e) => e.stopPropagation()}
                 onMouseUp={(e) => e.stopPropagation()}
