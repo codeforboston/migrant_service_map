@@ -4,7 +4,7 @@ import Logo from "./logo";
 import ProviderTypeDropdown from "./provider-type-dropdown";
 import Search from "./search";
 import DistanceDropdown from "./distance-dropdown";
-import HelpIcon from "./help-icon.js";
+import HelpMenu from "./help-menu";
 import "./top-bar.css";
 // import VisaStatusDropdown from "./visa-status-dropdown";
 
@@ -41,9 +41,8 @@ class TopBar extends Component {
           onChange={changeDistanceFilter}
           onClear={clearDistanceFilter}
         />
-        <HelpIcon
-          className={topBarItemClass}
-          onSearchInputClick={this.onHelpClick}
+        <HelpMenu
+          className="help-container"
         />
       </div>
     );
