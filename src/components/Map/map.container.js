@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import {
   initializeVisaFilter,
   displayProviderInformation,
-  setMapObject,
+  selectProvider
 } from "redux/actions";
 import { getMapProviders } from "redux/selectors";
 import Map from "./map";
@@ -18,7 +18,10 @@ const mapStateToProps = state => {
     loadedProviderTypeIds: state.providerTypes.allIds,
     highlightedProviders: state.highlightedProviders,
     filters: state.filters,
-    search: state.search
+    search: state.search,
+    hoveredProvider: state.hoveredProvider,
+    selectProviderId: state.providers.selectProviderId,
+    selectProviderKey: state.providers.selectProviderKey
   };
 };
 
@@ -30,9 +33,9 @@ const mapDispatchToProps = dispatch => {
     displayProviderInformation: id => {
       dispatch(displayProviderInformation(id));
     },
-    setMapObject: mapObject => {
-      dispatch(setMapObject(mapObject));
-    },
+    selectProvider: id => {
+      dispatch(selectProvider(id))
+    }
   };
 };
 

@@ -6,7 +6,8 @@ import {
   changeSortOrder,
   changeSortDirection,
   flyToProvider,
-  zoomToFit
+  zoomToFit,
+  selectProvider
 } from "redux/actions";
 import { getProvidersSorted } from "redux/selectors.js";
 import ProviderList from "./provider-list";
@@ -49,6 +50,9 @@ const mapDispatchToProps = dispatch => {
     },
     zoomToFit: () => {
       dispatch(zoomToFit());
+    },
+    selectProvider: id => {
+      dispatch(selectProvider(id))
     }
   };
 };
