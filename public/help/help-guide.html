@@ -1,3 +1,4 @@
+<!-- This document in sync with the content from this Google Doc: https://docs.google.com/document/d/1PgTq7g04-2_4V-dHK7vQcQK4rlr5ZgRfANMb3ZOgk4k/edit -->
 <html>
     <head>
         <title>Help Guide: Migrant Service Map</title>
@@ -8,99 +9,419 @@
 
 <body>
     <header>
-        <img src="/static/media/msm_logo.ad117bec.svg" alt="Migrate Service Map">
+        <img src="/static/media/msm_logo.ad117bec.svg" alt="Migrant Service Map">
         <h1>Help Guide</h1>
-        <img id="rw-logo" src="/help/images/cropped-rw-logo.png">
     </header>
-
-    <nav>
-        <h2>Contents</h2>
-        <ul>
-            <li><a href="#reference">Reference</a></li>
-            <li><a href="#about">About Migrant Service Map</a></li>
-            <li><a href="#instructions">Instructions</a></li>
-            <li><a href="#instructions">Privacy</a></li>
-            <li><a href="#instructions">Feedback</a></li>
-        </ul>
-    </nav>
-
-    <section>
-        <h1>Reference</h1>
-        (links and resources)
-    </section>
+    
+    <div class="intro">
+        <nav>
+            <h2>Contents</h2>
+            <ul>
+                <li><a href="#about">About Migrant Service Map</a></li>
+                <li><a href="#instructions">Instructions</a></li>
+                <ol>
+                    <li><a href="#searching">Searching</a></li>
+                    <li><a href="#sorting">Sorting</a></li>
+                    <li><a href="#saving">Saving</a></li>
+                    <li><a href="#sharing">Sharing</a></li>
+                </ol>
+                <li><a href="#map">Interacting with the Map</a></li>
+                <li><a href="#privacy">Privacy</a></li>
+                <li><a href="#feedback">Feedback</a></li>
+            </ul>
+        </nav>
+        <section id="rw-logo">
+            <h2>a project of:</h2>
+            <img src="/help/images/rw-logo.png">
+        </section>
+    </div>
 
     <section id="about">
-        <h1>About Migrant Service Map</h1>
+        <h1>About the Migrant Service Map</h1>
         <details>
-            <summary>What is the Migrant Service Map?</summary>
-            <p>The Migrant Service Map is an interactive mapping tool designed to streamline common workflows for service providers who assist immigrant communities.  It helps providers locate organizations in Boston – such as community centers, education resources, legal and healthcare assistance – and share these with their clients.</p>
-            <p>Built in 2019, the map is a result of Refugee’s Welcome!’s ongoing research into methods to improve immigrant service provision.  Development has been a joint effort between Refugees Welcome!, the MapBox Community Development Office, and Code for Boston.</p>
-            <p>Built in 2019, the map is a result of <a href="https://refugeeswelcomehome.org/">Refugee&rsquo;s Welcome!</a>&rsquo;s ongoing research into methods to improve immigrant service provision. Development has been a joint effort between <a href="https://refugeeswelcomehome.org/">Refugees Welcome!</a>, the <a href="https://www.mapbox.com/community/">MapBox Community Development Office</a>, and <a href="https://www.codeforboston.org/">Code for Boston</a>.</p>
+            <summary>Who is Refugees Welcome! ?</summary>
+
+            <p>Refugees Welcome! is a 501(c)3 nonprofit embedded in the University of Massachusetts Boston’s Center for Peace, Development, and Democracy. [RW!]’s <b>mission is to strengthen and streamline immigrant and refugee services across the greater Boston area.</b> The organization does this by engaging with migrant service providers through a participatory line of inquiry to solve the most pressing issues facing migrants in our city. [RW!] serves as a platform for organizing immigrant and refugee services, provides capacity building trainings for organizations, advocates for the expansion of immigrant and refugee services, and assists service providers by helping to fill any programmatic gaps through connecting them with resources, developing new initiatives, and supporting their work.</p>
+
+            <p>To assist refugee service providers, Refugees Welcome! focuses on five thematic areas (or teams): Research, Communication, Capacity Building, Technology, and Grant Writing and Fundraising. The Leadership Team, Research Fellows, and Interns work on specific teams to develop programmatic activities that are geared towards our clients&rsquo; needs.</p>
+
+            <p>To find out more about Refugees Welcome!, visit <a href="https://refugeeswelcomehome.org/">refugeeswelcomehome.org</a> or email <a href="mailto:refugeeswelcomehome@gmail.com">refugeeswelcomehome@gmail.com</a>.</p>
         </details>
+
         <details>
-            <summary>What can I do with the map?</summary>
-            <p>The Migrant Service Map helps migrant service providers explore the organizations serving immigrant communities in the Boston area.  They can then make personalized recommendations for their clients, based on the type of assistance an organization offers and its location convenience.</p>
+            <summary> 
+                Why did we create the Migrant Service Map?
+            </summary>
+
+            <p>The Migrant Service Map is an interactive mapping tool designed to streamline common workflows for service providers who assist immigrant and refugee communities.  It helps providers locate organizations in Boston – such as community centers, education resources, legal and healthcare assistance – and share these with their clients.</p>
+
+            <p>Built in 2019, the map is a result of <a href="https://refugeeswelcomehome.org/">Refugees Welcome!&rsquo;s</a> ongoing research into methods to improve immigrant and refugee service provision.  Development has been a joint effort between <a href="https://refugeeswelcomehome.org/">Refugees Welcome!</a>, the <a href="https://www.mapbox.com/community/">MapBox Community Development Office</a>, and <a href="https://www.codeforboston.org/">Code for Boston</a>.</p>
+
+            <p>The map is populated by a list of approved locations compiled by Refugees Welcome! and contains up to date contact information for the organizations included.</p>
+        </details>
+
+        <details id="whats-next">
+            <summary> What&rsquo;s next? </summary>
+            The upgraded Migrant Service Map would include features that were identified by 35 immigrant service providers, such as:</p>
+            <ul>
+                <li>Complete control over user content, removing Refugee&rsquo;s Welcome! as the data collector, allowing for organizations to update their information in real time through the creation of an online portal where each organization would receive its own user profile</li>
+                <li>Profile forms ensure uniformity among descriptive information on immigrant service provision allowing for streamline of information</li>
+                <li>Signaling feature within the pop-up that allows organizations to signal whether or not they are taking on more clients</li>
+                <li>Strategic anonymous pop-up surveys to collect data on issues relevant to immigrant service provision and immigration needs across time and space</li>
+                <li>Calendar sharing for events and strengthening networks</li>
+                <li>And messaging system for client referrals across service types.</li>
+            </ul>
+            <p>Additional features to allow providers to add, edit and update their own information as well as expanding to new locations are in the project’s roadmap, and depend on funding.</p>
+        </details>
+
+        <details> 
+            <summary> 
+                When will you offer this in [my city]? 
+            </summary>
+            <p> Our Research Team is searching for funding to expand the application’s borders beyond Boston – to multiple nonprofit fields and cities. </p>
+        </details>
+
+        <details> 
+            <summary> Future Plans </summary>
+            <p> Moving forward, the project will solicit nonprofits across Boston for feedback during every product management phase to make the application easily accessible and usable by immigration service providers. For partnership and investment inquires, please email <a href="mailto:charla.burnett@refugeeswelcomehome.org">charla.burnett@refugeeswelcomehome.org</a>. </p>
+        </details>
+
+        <details>
+            <summary>
+                What can I do with the Migrant Service Map?
+            </summary>
+            <p>The Migrant Service Map helps migrant service providers explore the organizations serving immigrant and refugee communities in the Boston area.  They can then make personalized recommendations for their clients, based on the type of assistance an organization offers and its location convenience.</p>
 
             <p>Providers can use the map to:
             <ul>
-                <li>Easily search for services by type, location, and legal status;</li>
+                <li>Easily search for services by type, location</li>
                                 
-                <li>Pop-up information about each organization;</li>
+                <li>Pop-up information about each organization</li>
                                 
-                <li>Add to cart – a feature that allows immigrant service providers to create, manage, and send lists of services with email, address, phone number, and maps to migrant clients;</li>
-                                
-                <li>And scroll to view non-georeferenced organizations who do not have physical locations so every organization can participate.</li>
+                <li>Create, manage, and send lists of services with email, address, phone number, and website to migrant clients</li>
+                
             </ul></p>
-            <p>The map is populated by a list of approved locations compiled by Refugees Welcome! and contains up to date contact information for the organizations included.</p>
         </details>
+
         <details>
-            <summary>How is your information about providers curated? &nbsp;What type of providers are available?</summary>
-            <p>Refugees Welcome! compiled up to date information for the service providers included in the map.  Additional features to allow providers to add, edit and update their own information are in the project’s roadmap and expand to new locations, funding dependent.  [See <a href="#whats-next">What&rsquo;s next?</a>]</p>
+            <summary>
+                How is your information about providers curated?
+            </summary>
+            <p>Refugees Welcome! compiled up to date information for the service providers included in the map. </p>
         </details>
+        
         <details>
-            <summary>What is Refugees Welcome?</summary>
-            <p>Refugees Welcome! is a 501(c)3 nonprofit embedded in the University of Massachusetts Boston&rsquo;s Center for Peace, Development, and Democracy. [RW!]&rsquo;s mission is to strengthen and streamline immigrant and refugee services across the greater Boston area. The organization does this by engaging with migrant service providers through a participatory line of inquiry to solve the most pressing issues facing migrants in our city. [RW!] serves as a platform for organizing immigrant and refugee services, provides capacity building trainings for organizations, advocates for the expansion of immigrant and refugee services, and assists service providers by helping to fill any programmatic gaps through connecting them with resources, developing new initiatives, and supporting their work.</p>
-            <p>To assist refugee service providers, Refugees Welcome! focuses on five thematic areas (or teams); Research, Communication, Capacity Building, Technology, and Grant Writing and Fundraising. Board Members, Research Fellows, and Interns work on specific teams to develop programmatic activities that are geared towards our clients&rsquo; needs.</p>
-            <dl><dt>website</dt><dd><a href="https://refugeeswelcomehome.org/">Refugee&rsquo;s Welcome!</a></dd></dl>
-        </details>
-        <details id="whats-next">
-            <summary>What&rsquo;s next? When will you offer this in [My City]?</summary>
-            Our Research Team is searching for funding to expand the application&rsquo;s borders beyond Boston to multiple nonprofit fields and cities. The upgraded Migrant Service Map would include features that were identified by 35 immigrant service providers, such as:</p>
-            <ul>
-                <li>Complete control over user content, removing Refugee&rsquo;s Welcome! as the data collector, allowing for organizations to update their information in real time through the creation of an online portal where each organization would receive its own user profile;</li>
-                <li>Profile forms ensure uniformity among descriptive information on immigrant service provision allowing for streamline of information;</li>
-                <li>Signaling feature within the pop-up that allows organizations to signal whether or not they are taking on more clients;</li>
-                <li>Strategic anonymous pop-up surveys to collect data on issues relevant to immigrant service provision and immigration needs across time and space;</li>
-                <li>Calendar sharing for events and strengthening networks;</li>
-                <li>And messaging system for client referrals across service types.</li>
-            </ul>
-            <p>Moving forward, the project will solicit nonprofits across Boston for feedback during every product management phase to make the application easily accessible and usable by immigration service providers.</p>
-            <p>For partnership and investment inquires, please email charla.burnett@refugeeswelcomehome.org.</p>
-            <p>For more information on [RW!], please visit our website at <a href="http://refugeeswelcomehome.org">refugeeswelcomehome.org</a>.</p>
-            <p>Featured Stories:</p>
-            <p><a href="https://www.umb.edu/news/detail/phd_candidate_partners_with_mapbox_and_code_for_boston">https://www.umb.edu/news/detail/phd_candidate_partners_with_mapbox_and_code_for_boston</a></p>
+            <summary>
+                How do I use the Migrant Service Map app to create a custom list of service providers for my client?
+            </summary>
+
+            <p>Begin a search for appropriate providers by first narrowing down which services are needed, and then further selecting providers appropriate to the clients’ needs and location.</p>
+            <ol>
+                <li> Selecting appropriate service provider types for your clients by type of service and </li>
+                <li> Centering the area searched around a location in Boston, </li>
+                <li> Then selecting individual service providers based on your clients’ needs and </li>
+                <li> Creating a customized saved Service Provider list then </li>
+                <li> Finally, emailing it or printing it for your client or yourself. </li>
+            </ol>
         </details>
     </section>
     <section id="instructions">
         <h1>Instructions</h1>
-        <h2>Searching/Filtering</h2>
+        <h2 id = 'searching'>Searching</h2>
         <details>
             <summary>
-                    How do I begin a search? 
-                    <ol><li>Search for providers near a location?</li><li>Search for providers a certain distance from a location?</li><li>Narrow down the type of providers by type?</li><li>&hellip; &nbsp;All of the above at the same time!</li></ol>
+                   How do I search for all service providers around a location?
             </summary>
-            (content coming)
+            <p>
+            The Migrant Service Map enables the user to choose service providers from within a selected area of the city. In order to search for all providers, click select all in the top PROVIDER TYPE box. This will display providers of all types in both the list and the map.
+            </p>
+            <p> Use the DISTANCE and NEAR boxes to define the search circle on the map. You can choose the center location of your search circle first, or its size. </p>
+            <p> Click the DISTANCE box to enlarge or reduce the search area and click a button to choose the distance from the search circle center.
+            </p>
+            Click the NEAR box to indicate the geographical center for your search. Enter the street address or name of the location in the text box. This could be your clients&rsquo; workplace, school, home or some other convenient spot. Click the enter key to apply your choice. This icon <img src = "images/image12.png" alt = "chosen location icon" style="width: 20.00px; height: 30.83px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"/> will appear in the center of the search circle. </p>
+            
         </details>
-        <h2>Saving and Saved Lists</h2>
-        <h2>Sharing</h2>
+        <details>
+            <summary> 
+                How do I search for service providers of a specific type around a chosen location? 
+            </summary>
+            <p>The PROVIDER TYPE menu in the top bar displays service providers by type.   You can select from this list to create a custom list of providers for your client. These providers will be selected from those available in an area centered on your chosen location.</p>
+            <p>
+            From the top bar, click the PROVIDER TYPE menu and click on the corresponding boxes to choose the types of service providers to include in your custom list. The chosen service providers will appear under the SERVICE PROVIDER tab and in the map. Clicking on a box a second time will remove the service provider from the SERVICE PROVIDER tab list and the map.
+            </p>
+        </details>
+        <details>
+            <summary> 
+                How do I search for service providers of a specific type without specifying a location? 
+            </summary>
+            <p>From the top bar, click the PROVIDER TYPE menu and click on the corresponding boxes to choose the types of service providers to include in your custom list. The chosen service providers will appear under the SERVICE PROVIDER tab and in the map. Clicking on a box a second time will remove the service provider from the SERVICE PROVIDER tab list and the map.</p>
+            <!--<p>
+            To move around the map, please refer to the navigation tips here. PUT LINK IN HERE
+            TODO: Link to Navigation Tips
+            </p>-->
+        </details>
+        <details>
+        <summary> 
+            What happens if I search without specifying a location? 
+        </summary>
+        <p> If you haven&rsquo;t selected a search area, the default area will display around the center of Boston. </p>
+        <p> The area of the search can be increased or decreased using the <img src = 'images/zoom-controls.png' alt = 'zoom controls'style="width: 37.00px; height: 93.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"/> button.
+        </p>
+        <p>The <img src = 'images/zoom_to_fit.png' alt = 'zoom to fit icon'style="width: 31.73px; height: 37.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"/> icon will enable you to display all of the locations of your expanded provider cards in the searched area on the map.</p>
+        </details>
+        <details>
+        <summary>
+            How can I clear my selections and start a new search?
+        </summary>
+        <p> If you would like to clear all of your provider type selections, click “clear all” in the PROVIDER TYPE menu. To start a new search, simply select your new desired provider types from the PROVIDER TYPE menu. If you’d like to specify a central location and distance circle size, type a location into the NEAR box and select a distance from the DISTANCE dropdown respectively. 
+        </p>
+        </details>
+        <h2 id = 'sorting'>Sorting</h2>
+        <details>
+        <summary>
+            How do I use the SERVICE PROVIDERS tab tools?    
+        </summary>
+        <p> The service providers you have chosen will appear under the SERVICE PROVIDERS tab. </p>
+        <img src = 'images/image10.png' alt = 'service provider list' style='width: 404.00px; height: 523.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);'/>
+        <p>
+        You can expand an individual service provider listing to view more information by clicking in the listing box. Clicking the listing box a second time will minimize the listing.
+        </p>
+        <p>
+        By default, the results list under the SERVICE PROVIDER tab will be alphabetical. Use this icon <img src = 'images/a-z.png' alt = 'a to z icon' style="width: 40.00px; height: 41.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"/>to change the list from alphabetical (a to z) to reverse order (z to a).
+        </p>
+        <p>
+        The list of selected SERVICE PROVIDERS can be further sorted for easier exploration and selection. Click on the SORTED BY: box, and select from one of the offered sort criteria.
+        </p>
+        <p>
+        If you are sorting your SERVICE PROVIDERS by DISTANCE, use the <img src = 'images/1-9.png' alt = '1 to 9 icon' style="width: 40.00px; height: 41.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"/> icon to change the list from ascending distance (closest to furthest) to descending distance (furthest to closest).
+        </p>
+        <p>
+        Use the PROVIDER TYPE menu in the top bar to add or remove provider listings of a given type from the SERVICE PROVIDER list. 
+        </p>
+        </details>
+        <details>
+        <summary>
+            Where can I find the contact information for providers in the map?
+        </summary>
+        Clicking on a listing in the SERVICE PROVIDERS tab will display information about an individual provider. </p>
+        <p><img src = 'images/open_listing.png' alt = 'expanded listing' style="width: 315.00px; height: 185.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"/></p>
+        <p> Here you will find contact information such as address, phone number, email, website, mission, and provider type. If you’d like more information about the provider, click on SEE MORE at the bottom of the listing to expand the listing further. </p>
+        </details>
+        <details>
+        <summary>
+            How do I filter my providers based on their distance from my specified location?
+        </summary>
+        <p>Click the NEAR box to indicate the geographical center for your search. Enter the street address or name of the location in the text box. This could be your clients&rsquo; workplace, school, home or some other convenient spot. Click the enter key to apply your choice. This icon <img src = "images/image12.png" alt = "chosen location icon" style="width: 20.00px; height: 30px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"/> will appear in the center of the search circle.
+        </p>
+        <p>
+        Click the DISTANCE box to enlarge or reduce the search area and click a button to choose the distance from the search circle center. </p>
+        <p>
+        <img src = 'images/distance_menu.png' alt = 'filter by distance dropdown' style="width: 211.00px; height: 147px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"/>
+        </p>
+        <p>
+        You can specify different distances, and only the providers within the distance circle you specify will be shown on the map and the list.</p>
+        </details>
+        <h2 id = 'saving'>Saving</h2>
+        <details>
+        <summary>
+        How do I save a provider from the map?
+        </summary>
+        <p>
+        Each pin icon on the map represents at least one service provider. If it is visible on the map, a service provider will also be listed in the SERVICE PROVIDERS tab. When you click on the pin icon of a service provider on the map, the SERVICE PROVIDERS tab will present the listing and expand it. Use the SAVE button in the listing to add it to the list under the SAVED (custom) tab. 
+        </p>
+        <p>
+        <img src = 'images/open_listing.png' alt = 'expanded listing' style="width: 315.00px; height: 185.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"/>
+        </p>
+        <p>
+        Once a provider is saved, the listing in the SERVICE PROVIDERS tab has a SAVED icon where the SAVE button was like in the image below. To unsave a provider, click this SAVED icon. 
+        </p>
+        <p>
+        <img src = 'images/saved_listing.png' alt = 'saved listing' style="width: 315.00px; height: 185.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"/>
+        </p>
+        </details>
+        <details>
+        <summary>
+        How do I save a provider from the SERVICE PROVIDERS list?
+        </summary>
+        <p>
+        Add a provider to the customized list by clicking the SAVE button on the individual listing under the SERVICE PROVIDER tab. The listing will be added to the SAVED tab, which you can view by clicking that tab.
+        </p>
+        <p>
+        <img src = 'images/open_listing.png' alt = 'expanded listing' style="width: 315.00px; height: 185.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"/>
+        </p>
+        <p>
+        Once a provider is saved, the listing in the SERVICE PROVIDERS tab has a SAVED icon where the SAVE button was like in the image below. To unsave a provider, click this SAVED icon. 
+        </p>
+        <p>
+        <img src = 'images/saved_listing.png' alt = 'saved listing' style="width: 315.00px; height: 185.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"/>
+        </p>
+        </details>
+        <details>
+        <summary>
+        How do I add and remove providers in the SAVED (custom) list?
+        </summary>
+        You can continue to add or remove providers in the SAVED list. If you click the <img src = 'images/delete.png' alt = 'delete icon' style="width: 40.08px; height: 40.60px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"/> icon next to a listing, the service provider will be deleted from the SAVED list. To add more providers to the SAVED list, click the <img src = 'images/save_button.png' alt = 'save icon' style="width: 40.08px; height: 40.60px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"/> icon (SAVE button) in the listing under the SERVICE PROVIDERS tab.
+        </details>
+        <details>
+        <summary>
+            How do I change the order of the service providers in the SAVED list?
+        </summary>
+        The SAVED tab allows you to preview your list of service providers before you share or print it. In this list, you can also reorder the selections so that they are logical and easy to understand for you and your clients. You can use the <img src = 'images/drag_drop.png' alt = ' drag and drop icon' style="width: 30.08px; height: 45.60px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"/> icon on the side of each card to drag and drop cards to change their order. 
+
+        </details>
+
+        <details>
+        <summary>
+            How can I view the providers that I&rsquo;ve saved?
+        </summary>
+        To view the providers that you have saved, click on the SAVED tab. 
+        </details>
+        <h2 id = 'sharing'>Sharing</h2>
+        <details>
+        <summary>
+            How do I email my SAVED list to my client or myself?
+        </summary>
+        Once you are satisfied with the list which you have developed and the order that it is in, you can easily email it to anyone you would like. To do this, click on the email icon button <img src = 'images/email.png' alt = 'email icon'style="width: 28.0px; height: 21.0px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"/> and enter the email addresses which you would like to send your list to in the window that appears.
+        </details>
+
+        <details>
+        <summary>
+            How do I print my SAVED list?
+        </summary>
+        Once you are satisfied with the list which you have developed and the order that it is in, you can easily print it. To do this, click on the print icon button <img src = 'images/printer.png' alt = 'printer icon' style="width: 28.0px; height: 28.0px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"/> and move through the dialog box that appears.
+        </details>
+    </section>
+    <section id="map">
+        <h1>Interacting with the Map</h1>
+        <p>The icons on the map indicate the location of service providers.</p>
+        <details>
+            <summary>What can I learn from hovering over the icons in the map?</summary>
+            <p>If an icon indicates the location of a single provider, hovering over that icon will display the name of the provider. The name which is displayed is not clickable.</p>
+            <p>If the icon represents multiple listings in close proximity, a box will pop up over the icon that will list all the providers at that location. The listings in this box are also not clickable.</p>
+        </details>
+        <details>
+            <summary>What can I learn from hovering over the listings in the SERVICE PROVIDERS list?</summary>
+            <p>If you hold the mouse over a listing in the SERVICE PROVIDERS tab, the icon on the map will turn green.</p>
+        </details>
+        <details>
+            <summary>What can I learn from clicking on the icons in the map?</summary>
+            <p>Clicking on an icon will display the name of the organization in the top of the SERVICE PROVIDERS tab, animate the icon and cause the icon to turn yellow. The icon will remain yellow as long as the listing is open in the SERVICE PROVIDERS tab.</p>
+            <p>If the pin icon represents multiple listings in close proximity, clicking on it will zoom in to the map at that location.</p>
+        </details>
+        <details>
+            <summary>What can I learn from clicking on the listings in the SERVICE PROVIDERS list?</summary>
+            <p>When you have selected a listing, whether individual or multiple, the corresponding map pin will animate and turn yellow. A pin will remain yellow as long the provider listing is expanded in the list. You can have multiple listings open at the same time in the SERVICE PROVIDERS tab. When you minimize the listing in the SERVICE PROVIDERS tab, the map icons will return to their original colors.</p>
+        </details>
+        <details>
+            <summary>What do all these icons on the map mean?</summary>
+
+            <table id="icons">
+                    <tr><td><img alt="" src="images/resettlement.png"></td><td>Indicates the location of a service provider. See below for the particular icon used to distinguish each type of service provider.</td></tr>
+        
+                    <tr><td><img alt="" src="images/loc-search.png"></td><td>Indicates a location that was identified by your search description.</td></tr>
+                  
+                    <tr><td><img alt="" src="images/cluster.png"></td><td>Indicates a location with multiple services or services in close proximity. You can click once on an icon like this one in order to zoom in and show the providers which have been grouped. The names of the services in the cluster will also be shown in a pop-up when hovering the mouse over this icon.</td></tr>
+                  
+                <tr><td colspan="2">Service provider icons by type:</td></tr>
+                    <tr><td><img alt="" src="images/health.png"></td><td>Hospital, medical facility, clinic, doctor.</td></tr>
+                    
+                    
+                    <tr><td><img alt="" src="images/job.png"></td><td>Job training, occupational training, job help assistance.</td></tr>
+                    
+                    <tr><td><img alt="" src="images/cash_food.png"></td><td>Financial assistance, food assistance, nutrition information, food bank, free meals</td></tr>
+                    
+                    <tr><td><img alt="" src="images/legal.png"></td><td>Legal</td></tr>
+                    
+                    <tr><td><img alt="" src="images/community_center.png"></td><td>Community Center</td></tr>
+                  
+                    <tr><td><img alt="" src="images/mental_health.png"></td><td>Mental health clinic, mental health services, behavioral health</td></tr>
+                    
+                    <tr><td><img alt="" src="images/education.png"></td><td>Education, schools, English as a second language programs</td></tr>
+
+                    <tr><td><img alt="" src="images/resettlement.png"></td><td>Resettlement</td></tr>
+
+                    <tr><td><img alt="" src="images/housing.png"></td><td>Housing, shelters</td></tr>
+                    </table>
+                  
+        </details>
     </section>
     <section>
-        <h1>Privacy</h1>
-        (to be added)
+        <h1 id = 'privacy'>Privacy</h1>
+        <details>
+        <summary>
+            Why aren&rsquo;t all provider contact details available on the map?
+        </summary>
+        <p>
+        Providers may have different privacy requirements and choose not to disclose certain information. If you would like to find the details of a provider that are not listed, please contact that provider directly using other contact information which they have provided. 
+        </p>
+        </details>
+
+        <details>
+        <summary>
+        My client is concerned about privacy. How can I ensure that information I enter here is anonymous, secure, and safe for them to use?
+        </summary>
+        <p>
+        The potentially sensitive nature of information provided through this tool was considered from the start. The design and development process worked to minimize risk involved in its use.
+        </p>
+        <p>
+        The tool incorporates privacy and security in a number of ways. All network communications use an https connection which is the most secure type of connection to the internet available. It also does not use or store cookies, which are small bits of information that the browser collects. On a similar note, the tool does not save any information to a database or server, so there is no data gathering or information retained by the app. 
+        </p>
+        <p>
+        Essentially, the development team has taken many steps to make this tool as secure as possible and ensures that the app gathers as little information as is necessary for basic functionality. While we still advise using best internet practices as you would on any site, the map is geared towards safeguarding user identities.
+        </p>
+        </details>
+
+        <details>
+        <summary>
+        How does the Migrant Service Map protect the privacy of service providers that require privacy?
+        </summary>
+        <p>
+        We understand that some organizations providing services to immigrants would like to keep certain information from public access. When registering, they are able to disclose whatever info they are comfortable sharing.
+        </p>
+        <p>
+        Currently, providers without an address do not appear in results in any form. Including such providers in the results list is a planned but incomplete feature. If your organization would like to see this implemented, please see the following section for details on providing feedback.
+        </p>
+        </details>
     </section>
     <section>
-        <h1>Feedback</h1>
-        (to be added)
+        <h1 id = 'feedback'>Feedback</h1>
+        <details>
+        <summary>
+            I&rsquo;m interested in learning more about Refugees Welcome!. How can I get involved?
+        </summary>
+        <p>To find out more about Refugees Welcome!, visit <a href="https://refugeeswelcomehome.org/">refugeeswelcomehome.org</a> or email <a href="mailto:refugeeswelcomehome@gmail.com">refugeeswelcomehome@gmail.com</a>.</p>
+        </details>
+
+        <details>
+        <summary>
+            I have feedback!  How do I get in touch with the Migrant Service Map team?
+        </summary>
+        <p>
+        Please navigate to the feedback form for Migrant Service Map <a href = 'https://forms.gle/HDpvZTXtNrz9ozp9A'>here</a>. If you would like a response from the team, please include your email in the feedback form. A team member will respond as soon as possible.
+        </p>
+        </details>
+
+        <details>
+        <summary>
+            I would like to help test this application!  How do I get in touch with the Migrant Service Map team?
+        </summary>
+        Please send a message to Refugees Welcome! at <a href="mailto:refugeeswelcomehome@gmail.com?subject=Testing the Migrant Service Map">refugeeswelcomehome@gmail.com</a> with the subject “Testing the Migrant Service Map”. Refugees Welcome would love to connect with you regarding testing the tool and will get back to you as soon as possible!
+        </details>
+
+        <details>
+        <summary>
+            I would like to add my organization to the map! How can I do that?
+        </summary>
+        Please navigate to the Change Your Information form <a href = 'https://forms.gle/MQav7cNUDyETEjz78'>here</a>. Your information should be added to the map shortly after you submit it on the form.
+        </details>
+
+         <details>
+        <summary>
+            I would like to update my organization’s information in the map! How can I do that?
+        </summary>
+        Please navigate to the Change Your Information form <a href = 'https://forms.gle/MQav7cNUDyETEjz78'>here</a>. Your information should be updated in the map shortly after you submit it on the form. 
+        </details>
+
     </section>
 </body>
 </html>
