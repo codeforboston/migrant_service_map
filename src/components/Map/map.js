@@ -489,11 +489,11 @@ class Map extends Component {
       .toArray()
       .flat();
     const mapBoundPoly = bboxPolygon(mapBounds);
-    newSelection.find(providerId => {
+    return newSelection.every(providerId => {
       const providerObj = providersById(this.props.visibleProviders)[
         providerId
       ];
-      return !booleanPointInPolygon(
+      return booleanPointInPolygon(
         point(providerObj.coordinates),
         mapBoundPoly
       );
@@ -537,14 +537,13 @@ class Map extends Component {
     } else if (
       /*a new selection has been made that is not within the visible area of the map*/
       newSelection.length > 0 &&
-      this.props.highlightedProviders > 1 &&
       !this.areProvidersInView(newSelection)
     ) {
       this.zoomToFit();
     } else if (
       /*an address has been selected for a provider that is not in view*/
-      flyToProviderKey !== prevProps.flyToProviderKey &&
-      !this.areProvidersInView(newSelection)
+      flyToProviderKey !== prevProps.search.flyToProviderKey &&
+      !this.areProvidersInView([flyToProviderId])
     ) {
       this.smoothFlyTo(
         MIN_UNCLUSTERED_ZOOM,
