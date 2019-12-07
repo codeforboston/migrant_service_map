@@ -529,7 +529,10 @@ class Map extends Component {
     if (zoomToFitKey && zoomToFitKey !== prevProps.search.zoomToFitKey) {
       /*the zoom to fit button has been pressed*/
       this.zoomToFit();
-    } else if (distance || searchKey) {
+    } else if (
+      distance !== prevProps.filters.distance ||
+      searchKey !== prevProps.search.searchKey
+    ) {
       /* a new dropdown selection has been made */
       this.smoothFlyTo(
         this.getZoomForDistance(distance || 1.5),
