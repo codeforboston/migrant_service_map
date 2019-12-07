@@ -535,7 +535,6 @@ class Map extends Component {
         this.getZoomForDistance(distance || 1.5),
         this.props.search.coordinates
       );
-      this.updatePinAndDistanceIndicator(prevProps);
     } else if (
       /*a new selection has been made that is not within the visible area of the map*/
       newSelection.length > 0 &&
@@ -571,6 +570,7 @@ class Map extends Component {
       );
       this.setHoveredIconsLayer();
       this.setHighlightedIconsLayer();
+      this.updatePinAndDistanceIndicator(prevProps);
       this.markRecentSelection(prevProps);
       this.updateMapPosition(prevProps);
     }
