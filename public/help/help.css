@@ -31,3 +31,7 @@ summary {
     font-weight: bold;
     padding: 0.5rem 0;
 }
+
+#icons img {
+    width: 40px;
+}
