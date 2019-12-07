@@ -32,6 +32,16 @@ summary {
     padding: 0.5rem 0;
 }
 
+#icons {
+    /* border: 1px solid #8c45cf; */
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin: 2rem;
+}
 #icons img {
     width: 40px;
+}
+th, td {
+    border: 1px solid #ddc8f0;
+    padding: 1rem;
 }
