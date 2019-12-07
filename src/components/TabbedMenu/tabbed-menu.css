@@ -56,3 +56,19 @@
   display: flex;
   flex-direction: column;
 }
+
+#provider-counter {
+	font-size: 14px;
+	background-color: #939393;
+  border-radius: 50%;
+  color: white;
+	display: block;
+	position: absolute;
+	right: 1em;
+	top: 50%;
+	transform: translateY(-50%);
+	padding: .1em .5em .15em .4em;
+}
+.react-tabs__tab--selected #provider-counter {
+  background-color: #bbb;
+}

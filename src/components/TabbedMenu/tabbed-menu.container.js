@@ -9,6 +9,7 @@ const TabbedMenuContainer = props => {
 
 const mapStateToProps = state => {
   return {
+    savedProviderCount: state.providers.savedProviders.length,
     selectedTabIndex: state.search.selectedTabIndex
   };
 };

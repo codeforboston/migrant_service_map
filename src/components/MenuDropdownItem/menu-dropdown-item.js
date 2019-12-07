@@ -10,7 +10,6 @@ import {
   faPhone,
   faTrashAlt,
   faBriefcase,
-  faPlaceOfWorship,
   faGraduationCap,
   faMoneyBillWave,
   faLandmark,
@@ -18,7 +17,8 @@ import {
   faHospital,
   faBed,
   faBalanceScale,
-  faGripVertical
+  faGripVertical,
+  faUsers
 } from "@fortawesome/free-solid-svg-icons";
 import "./menu-dropdown-item.css";
 import DetailsPane from "components/DetailsPane";
@@ -28,7 +28,7 @@ const isPresent = value => value && value !== "n/a";
 
 export const cardIconMappings = {
   "Job Placement": faBriefcase,
-  "Community Center": faPlaceOfWorship,
+  "Community Center": faUsers,
   Education: faGraduationCap,
   "Cash/Food Assistance": faMoneyBillWave,
   Resettlement: faLandmark,

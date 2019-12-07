@@ -5,7 +5,15 @@ import { ProviderList, SavedProvidersList } from "components";
 import "react-tabs/style/react-tabs.css";
 import "./tabbed-menu.css";
 
-const TabbedMenu = ({ selectedTabIndex, selectTab }) => {
+function Counter({count}) {
+  if (count > 0) {
+    return <span id="provider-counter">{count}</span>
+  } else {
+    return null;
+  }
+}
+
+const TabbedMenu = ({ savedProviderCount, selectedTabIndex, selectTab }) => {
   return (
     <Tabs
       className="side-menu"
@@ -18,7 +26,10 @@ const TabbedMenu = ({ selectedTabIndex, selectTab }) => {
           <h3>Service Providers</h3>
         </Tab>
         <Tab>
-          <h3>Saved</h3>
+          <h3>
+            Saved
+            <Counter count={savedProviderCount} />
+          </h3>
         </Tab>
       </TabList>
 
