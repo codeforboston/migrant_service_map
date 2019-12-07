@@ -155,7 +155,6 @@ class Map extends Component {
       }
     });
 
-
     // Cluster pin highlighted
     this.map.addLayer({
       id: "clusterCircleHighlighted",
@@ -209,7 +208,7 @@ class Map extends Component {
         },
         cluster: true,
         clusterProperties: {
-          "sum": ["+", ["get", "highlighted"]]
+          sum: ["+", ["get", "highlighted"]]
         },
         clusterMaxZoom: MAX_CLUSTERED_ZOOM,
         clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
@@ -367,18 +366,20 @@ class Map extends Component {
   };
 
   geoJSONFeatures = () => {
-    let { highlightedProviders, visibleProviders = [], hoveredProvider } = this.props;
-    visibleProviders.forEach(
-      (provider) => {
-        provider.highlighted = highlightedProviders.includes(provider.id) ? 1 : 0;
+    let {
+      highlightedProviders,
+      visibleProviders = [],
+      hoveredProvider
+    } = this.props;
+    visibleProviders.forEach(provider => {
+      provider.highlighted = highlightedProviders.includes(provider.id) ? 1 : 0;
 
-        if (hoveredProvider === provider.id) {
-          provider.hovered = true;
-        } else {
-          provider.hovered = false;
-        }
+      if (hoveredProvider === provider.id) {
+        provider.hovered = true;
+      } else {
+        provider.hovered = false;
       }
-    );
+    });
     return convertProvidersToGeoJSON(visibleProviders);
   };
 
@@ -526,14 +527,15 @@ class Map extends Component {
     );
 
     if (zoomToFitKey && zoomToFitKey !== prevProps.search.zoomToFitKey) {
-    	/*the zoom to fit button has been pressed*/
+      /*the zoom to fit button has been pressed*/
       this.zoomToFit();
     } else if (distance || searchKey) {
       /* a new dropdown selection has been made */
-			this.smoothFlyTo(
-				this.getZoomForDistance(distance || 1.5),
-				this.props.search.coordinates)
-				this.updatePinAndDistanceIndicator(prevProps);
+      this.smoothFlyTo(
+        this.getZoomForDistance(distance || 1.5),
+        this.props.search.coordinates
+      );
+      this.updatePinAndDistanceIndicator(prevProps);
     } else if (
       /*a new selection has been made that is not within the visible area of the map*/
       newSelection.length > 0 &&
@@ -569,7 +571,6 @@ class Map extends Component {
       );
       this.setHoveredIconsLayer();
       this.setHighlightedIconsLayer();
-  
       this.markRecentSelection(prevProps);
       this.updateMapPosition(prevProps);
     }
