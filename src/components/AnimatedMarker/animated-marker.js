@@ -15,10 +15,7 @@ class AnimatedMarker {
     }
 
     isInView = (map) => {
-        const mapBoundsArray = map
-          .getBounds()
-          .toArray()
-          .reduce((flattened, point) => flattened.concat(point), []);
+        const mapBoundsArray = map.getBounds().toArray().flat();
         const poly = bboxPolygon(mapBoundsArray);
         const pt = point(this.provider.coordinates);
         return booleanPointInPolygon(pt, poly);

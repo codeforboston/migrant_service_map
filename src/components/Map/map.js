@@ -488,7 +488,7 @@ class Map extends Component {
   areProvidersInView = newSelection => {
     const mapBounds = this.getPaddedMapBounds()
       .toArray()
-      .reduce((flattened, point) => flattened.concat(point), []);
+      .flat();
     const mapBoundPoly = bboxPolygon(mapBounds);
     return newSelection.every(providerId => {
       const providerObj = providersById(this.props.visibleProviders)[
