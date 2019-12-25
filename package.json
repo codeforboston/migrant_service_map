@@ -9,6 +9,7 @@
     "@mapbox/mapbox-gl-geocoder": "^2.3.0",
     "@turf/turf": "^5.1.6",
     "classnames": "^2.2.6",
+    "concurrently": "^5.0.0",
     "core-js": "^3.2.1",
     "dot-prop-immutable": "^1.5.0",
     "lodash": "^4.17.11",
@@ -26,12 +27,16 @@
     "react-tooltip": "^3.11.0",
     "redux": "^4.0.1",
     "reselect": "^4.0.0",
-    "simple-flexbox": "^1.2.0"
+    "simple-flexbox": "^1.2.0",
+    "wait-on": "^3.3.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:cy": "./run-cypress",
+    "test:cy-start-server": "./run-cypress --start-server",
+    "test:all": "CI=true npm test && npm run test:cy-start-server",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

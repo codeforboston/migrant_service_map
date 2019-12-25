@@ -1,0 +1,29 @@
+#!/bin/bash
+#
+# Script to run cypress tests using `npm test:cy` or `npm test:cy-start-server`.
+
+# Upload the test run to the Cypress dashboard iff the record key is present.
+# Forks and PR builds do not have access to the record key.
+if [ -n "$CYPRESS_RECORD_KEY" ]; then
+  enable_record=true
+else
+  enable_record=false
+fi
+
+run-cypress-tests() {
+  wait-on http://localhost:${PORT:-3000} && \
+    $(npm bin)/cypress run --record $enable_record
+}
+
+if [ "$1" = "--start-server" ]; then
+  # Run the server and cypress tests at the same time. Kill the server once the
+  # tests complete, and exit with success only if the tests pass.
+  concurrently \
+    -n "server,cypress" \
+    -k \
+    -s first \
+    "BROWSER=none npm start" \
+    "./run-cypress"
+else
+  run-cypress-tests
+fi
