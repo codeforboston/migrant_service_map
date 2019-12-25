@@ -3,7 +3,7 @@
 context("Search", () => {
   before(() => {
     cy.visit("http://localhost:3000");
-    cy.get(".map-loaded", { timeout: 10000 });
+    cy.get(".map-loaded", { timeout: 30000 });
   });
 
   it("results in concentric circles", () => {
