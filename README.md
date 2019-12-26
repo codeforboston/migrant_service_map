@@ -134,23 +134,21 @@ npm install
 
 ## Testing
 
-We use [Travis CI](https://docs.travis-ci.com/) for continuous integration and deployment (automatically run tests and deploy the website). Travis is configured in `.travis.yml` and builds are viewable in the [Travis dashboard](https://travis-ci.org/codeforboston/migrant_service_map).
+Run unit tests with `npm start`. Tests will automatically re-run as you update files.
 
-Travis builds the app (it runs `npm run build`) when a commit is added to a branch or open pull request. This provides a basic sanity check for the app. Pull requests should build successfully before being merged.
+We use [Travis CI](https://docs.travis-ci.com/) for continuous integration and deployment. When a commit is added to a branch or a PR, travis runs tests, builds the app, and reports results in the PR conversation. Travis is configured in `.travis.yml` and builds are viewable in the [Travis dashboard](https://travis-ci.org/codeforboston/migrant_service_map). Travis should pass before merging PR's.
 
-We use [Cypress](https://www.cypress.io) for functional (e2e) testing. To install Cypress, run the following from within the `migrant_service_map` directory:
+We use [Cypress](https://www.cypress.io) for functional (e2e) testing. Cypress test results from Travis branch builds are viewable in the [Cypress dashboard](https://dashboard.cypress.io/projects/wxgyq3/runs).
 
-```
-npm install cypress --save-dev
-```
-
-Running the test suite requires that a local version of the site is available at [http://localhost:3000/]. This can be done with the command `npm start`. Then in a separate terminal, run the following to open the Cypress interface:
+Running the Cypress test suite requires that a local version of the site is available at [http://localhost:3000/]. This can be done with the command `npm start`. Then in a separate terminal, run the following to open the Cypress interface:
 
 ```
 $(npm bin)/cypress open
 ```
 
 All tests can be run by clicking `Run all specs` in the top-right of the application window.
+
+You can run Cypress tests from the command line using `npm run test:cy` against a running server, or `npm run test:cy-start-server` to start a server, run tests, and then shut everything down.
 
 ## Deployment
 
