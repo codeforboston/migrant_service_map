@@ -4,7 +4,7 @@ import store from "../redux/store";
 import { ProviderBuilder } from "../redux/providerModels";
 import _ from "lodash";
 
-const providersSheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT4MST1klxwmBdfvMhOycfV5C-lxGe0_sidJnmGS8U42irBYhgazisd-OUjrI4V9l_GqnazklGhNjzJ/pub?output=csv";
+const providersSheetUrl = "https://docs.google.com/spreadsheets/d/1Rd_U5KrD5LOoYgCO91WwJCxbji2FVbDoBqHa5qy2b0M/gviz/tq?tqx=out:csv&sheet=Form+Responses+1";
 
 const column = (prefix, fieldName) => ({
   prefix,
