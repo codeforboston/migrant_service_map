@@ -22,7 +22,7 @@ export default class DetailsPane extends React.Component {
     return (
       <div className="details-pane provider-info">
         <Row>
-          <ProviderDetailsInfo icon="email" label="email" ellipsis>
+          <ProviderDetailsInfo type="email" label="email" ellipsis>
             <a
               href={"mailto:" + email}
               target="_blank"
@@ -31,7 +31,7 @@ export default class DetailsPane extends React.Component {
               {email}
             </a>
           </ProviderDetailsInfo>
-          <ProviderDetailsInfo icon="language" label="website" ellipsis>
+          <ProviderDetailsInfo type="website" label="website" ellipsis>
             <a href={website} target="_blank" rel="noopener noreferrer">
               {website}
             </a>
@@ -39,13 +39,13 @@ export default class DetailsPane extends React.Component {
         </Row>
         <Row>
           <ProviderDetailsInfo
-            icon="home"
+            type="address"
             label="address"
             onClick={flyToProvider}
           >
             {address || "address"}
           </ProviderDetailsInfo>
-          <ProviderDetailsInfo icon="perm_phone_msg" label="phone">
+          <ProviderDetailsInfo type="phone" label="phone">
             {telephone}
           </ProviderDetailsInfo>
         </Row>

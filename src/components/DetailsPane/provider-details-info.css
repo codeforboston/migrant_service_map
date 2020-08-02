@@ -18,6 +18,10 @@
   margin-right: 0.5em;
 }
 
+.provider-details-icon {
+  color: var(--msm-purple)
+}
+
 .provider-details-info .providers-detail-content {
   color: royalblue;
   text-overflow: ellipsis;
