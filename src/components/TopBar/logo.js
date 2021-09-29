@@ -5,7 +5,7 @@ export default class Logo extends React.Component {
   render() {
     return (
         <div id="logo">
-            <a href="https://bostonmapnetwork.weebly.com/" target="_blank" rel="noopener noreferrer">
+            <a href="https://bostonmapnetwork.org/" target="_blank" rel="noopener noreferrer">
               <img src={logo} alt="Migrant Service Map" />
             </a>
         </div>
