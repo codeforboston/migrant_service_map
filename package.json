@@ -16,19 +16,19 @@
     "mapbox": "^1.0.0-beta10",
     "mapbox-gl": "^1.5.0",
     "memoize-one": "^5.1.1",
-    "npm": "^6.13.1",
+    "npm": "^11.4.2",
     "papaparse": "^5.1.0",
     "react": "^16.12.0",
     "react-beautiful-dnd": "^11.0.5",
     "react-dom": "^16.12.0",
     "react-redux": "^6.0.0",
-    "react-scripts": "^3.2.0",
+    "react-scripts": "^5.0.1",
     "react-tabs": "^3.0.0",
     "react-tooltip": "^3.11.0",
     "redux": "^4.0.1",
     "reselect": "^4.0.0",
     "simple-flexbox": "^1.2.0",
-    "wait-on": "^3.3.0"
+    "wait-on": "^8.0.3"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -49,7 +49,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "cypress": "^3.6.1",
+    "cypress": "^14.5.2",
     "eslint-plugin-cypress": "^2.7.0",
     "prettier": "^1.15.3"
   }
