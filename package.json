@@ -22,7 +22,7 @@
     "react-beautiful-dnd": "^11.0.5",
     "react-dom": "^16.12.0",
     "react-redux": "^6.0.0",
-    "react-scripts": "^3.2.0",
+    "react-scripts": "^5.0.1",
     "react-tabs": "^3.0.0",
     "react-tooltip": "^3.11.0",
     "redux": "^4.0.1",
@@ -49,7 +49,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "cypress": "^3.6.1",
+    "cypress": "^14.5.3",
     "eslint-plugin-cypress": "^2.7.0",
     "prettier": "^1.15.3"
   }
